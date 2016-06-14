@@ -1,0 +1,36 @@
+PODS:
+  - APIKit (2.0.1):
+    - Result (~> 2.0.0)
+  - Himotoki (2.0.1)
+  - PINCache (2.2.2)
+  - QueryKit (0.12.1)
+  - Realm (1.0.0):
+    - Realm/Headers (= 1.0.0)
+  - Realm/Headers (1.0.0)
+  - RealmSwift (1.0.0):
+    - Realm (= 1.0.0)
+  - Result (2.0.0)
+  - RxSwift (2.5.0)
+  - Timepiece (0.4.2)
+
+DEPENDENCIES:
+  - APIKit
+  - Himotoki
+  - PINCache
+  - QueryKit
+  - RealmSwift
+  - RxSwift
+  - Timepiece
+
+SPEC CHECKSUMS:
+  APIKit: 7b61788273235bab213477b22f1897872047da10
+  Himotoki: 21fa47e457cc7da39996fe7825a0e97b00344cf1
+  PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
+  QueryKit: 6a8dbe9f33ffac00c424143695681a949b58518d
+  Realm: e15cd8e7c11d3e576f628ba0b7cb855269b4991c
+  RealmSwift: 3229306d020d96f83b335f87a0dcbf2cef0e6a2b
+  Result: 9e75e1111c774c6ac594e14907b15057053a7959
+  RxSwift: 402b41a50e922a0368fc14cb3bc9f4427920e8ae
+  Timepiece: cf53bb908bf542acc0e3d5f69cabfed869df4ebd
+
+COCOAPODS: 0.39.0
