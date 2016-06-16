@@ -32,6 +32,16 @@ public enum RequestState: Int {
     case None, Requesting, Error, Done
 }
 
+protocol PlayerAdoptable: class {
+    
+    var count: Int { get }
+    
+    var changes: Observable<CollectionChange> { get }
+    
+//    var paginated: Bool { get }
+    
+    func track(atIndex index: Int) -> Track
+}
 
 public protocol PlaylistType: class {
     
@@ -40,9 +50,11 @@ public protocol PlaylistType: class {
     var changes: Observable<CollectionChange> { get }
 }
 
-protocol PlaylistTypeInternal: PlaylistType {
+protocol PlaylistTypeInternal: PlaylistType, PlayerAdoptable {
     
-    var objects: List<_Track> { get }
+    associatedtype Element: Object
+    
+    var objects: List<Element> { get }
     
 //    var createAt: NSDate { get }
 //    var updateAt: NSDate { get }
@@ -54,29 +66,135 @@ extension PlaylistTypeInternal where Self: CollectionType {
     
     var endIndex: Int { return objects.endIndex }
     
-    subscript (index: Int) -> Track {
-        return objects[index] as Track
-    }
+    subscript (index: Int) -> Element { return objects[index] }
 }
 
-public final class AnyPlaylist: PlaylistTypeInternal, PlaylistType {
+class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {
     
-    var objects: List<_Track> { return base.objects }
+    var objects: List<Element> { return base.objects }
     
 //    var createAt: NSDate { return base.createAt }
 //    
 //    var updateAt: NSDate { return base.updateAt }
     
-    public var name: String { return base.name }
+    var name: String { return base.name }
     
-    public var changes: Observable<CollectionChange> { return base.changes }
+    var changes: Observable<CollectionChange> { return base.changes }
     
-    private let base: PlaylistTypeInternal
+//    var paginated: Bool { return base.paginated }
     
-    init(playlist: PlaylistTypeInternal) {
-        base = playlist
+    private let base: _AnyPlaylistBase<Element>
+    
+    init<Playlist: PlaylistTypeInternal where Playlist.Element == Element>(playlist: Playlist) {
+        base = _AnyPlaylist(playlist: playlist)
+    }
+    
+    func track(atIndex index: Int) -> Track {
+        return base.track(atIndex: index)
     }
 }
+
+class AnyPaginatedPlaylist<Element: RealmSwift.Object>: AnyPlaylist<Element>, PaginatorTypeInternal {
+    
+    var requestState: Observable<RequestState> { return base.requestState }
+    
+    func fetch() { base.fetch() }
+    
+    func refresh(force force: Bool) { base.refresh(force: force) }
+    
+    var hasNoPaginatedContents: Bool { return base.hasNoPaginatedContents }
+    
+    override init<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal> where Playlist.Element == Element>(playlist: Playlist) {
+        super.init(playlist: playlist)
+    }
+}
+
+extension AnyPlaylist {
+    
+    var startIndex: Int { return base.startIndex }
+    
+    var endIndex: Int { return base.endIndex }
+    
+    subscript (index: Int) -> Element { return base[index] }
+}
+
+
+private class _AnyPlaylistBase<Element: RealmSwift.Object>: PlaylistTypeInternal, CollectionType {
+    
+//    typealias Index = List<Element>.Index
+    
+    private var objects: List<Element> { fatalError() }
+    
+    private var name: String { fatalError() }
+    
+    private var changes: Observable<CollectionChange> { fatalError() }
+    
+//    private var paginated: Bool { fatalError() }
+    
+    private var requestState: Observable<RequestState> { fatalError() }
+    
+    var hasNoPaginatedContents: Bool { fatalError() }
+    
+    
+    private func track(atIndex index: Int) -> Track { fatalError() }
+    
+    
+    private func fetch() { fatalError() }
+    
+    private func refresh(force force: Bool) { fatalError() }
+}
+
+extension _AnyPlaylistBase {
+    
+    private var startIndex: Int { return objects.startIndex }
+    
+    private var endIndex: Int { return objects.endIndex }
+    
+    subscript (index: Int) -> Element { return objects[index] }
+}
+
+
+private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Playlist.Element> {
+    
+    typealias Element = Playlist.Element
+    
+    private let base: Playlist
+    
+    private override var objects: List<Element> { return base.objects }
+    
+    private override var name: String { return base.name }
+    
+    private override var changes: Observable<CollectionChange> { return base.changes }
+    
+//    private override var paginated: Bool { return base.paginated }
+    
+    init(playlist: Playlist) {
+        base = playlist
+        
+        super.init()
+    }
+    
+    private override func track(atIndex index: Int) -> Track {
+        return base.track(atIndex: index)
+    }
+    
+//}
+//
+//extension _AnyPlaylist where Playlist: PaginatorTypeInternal {
+    
+    private override var requestState: Observable<RequestState> { return (base as! PaginatorTypeInternal).requestState }
+
+    private override var hasNoPaginatedContents: Bool { return (base as! PaginatorTypeInternal).hasNoPaginatedContents }
+    
+    private override func fetch() {
+        (base as! PaginatorTypeInternal).fetch()
+    }
+    
+    private override func refresh(force force: Bool) {
+        (base as! PaginatorTypeInternal).refresh(force: force)
+    }
+}
+
 
 public protocol PaginatorType {
     
@@ -90,36 +208,4 @@ public protocol PaginatorType {
 protocol PaginatorTypeInternal: PaginatorType {
     
     var hasNoPaginatedContents: Bool { get }
-}
-
-public final class AnyPaginatedPlaylist: PlaylistType, PaginatorType {
-    
-    var objects: List<_Track> { return base.objects }
-    
-    public var name: String { return base.name }
-    
-    public var changes: Observable<CollectionChange> { return base.changes }
-    
-    public var requestState: Observable<RequestState> { return base.requestState }
-    
-    private let base: protocol<PlaylistTypeInternal, PaginatorType>
-    
-    init(playlist: protocol<PlaylistTypeInternal, PaginatorType>) {
-        base = playlist
-    }
-    
-    public func fetch() { base.fetch() }
-    
-    public func refresh(force force: Bool) { base.refresh(force: force) }
-}
-
-extension AnyPaginatedPlaylist: CollectionType {
-    
-    public var startIndex: Int { return objects.startIndex }
-    
-    public var endIndex: Int { return objects.endIndex }
-    
-    public subscript (index: Int) -> Track {
-        return objects[index] as Track
-    }
 }

@@ -22,6 +22,7 @@
 		D91B42A61D0D53B900AAAD58 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A51D0D53B900AAAD58 /* Player.swift */; };
 		D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A71D0EFBF700AAAD58 /* History.swift */; };
 		D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */; };
+		D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* HistoryRecord.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		D91B42A51D0D53B900AAAD58 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D91B42A71D0EFBF700AAAD58 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCache.swift; sourceTree = "<group>"; };
+		D9542EF41D12DB370073C8EE /* HistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecord.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				D91B428F1D044AE600AAAD58 /* Track.swift */,
+				D9542EF41D12DB370073C8EE /* HistoryRecord.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
+				D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */,
 				D91B42981D07085300AAAD58 /* SearchWithKeyword.swift in Sources */,
 				D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,

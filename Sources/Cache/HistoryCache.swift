@@ -12,16 +12,9 @@ import RxSwift
 import Himotoki
 
 
-class HistoryCacheToken: RealmSwift.Object {
-    
-    dynamic var _track: _Track?
-    
-    dynamic var createAt: NSDate = NSDate()
-}
-
 class HistoryCache: RealmSwift.Object {
     
-    let objects = List<HistoryCacheToken>()
+    let objects = List<_HistoryRecord>()
     
     dynamic var createAt: NSDate = NSDate()
     

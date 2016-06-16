@@ -19,7 +19,7 @@ history.changes.subscribe { changes in
 
 let player = Player()
 let search = Search(term: "シンフォギア")
-player.addPlaylist(search)
+player.addPlaylist(his)
 //if search.isEmpty {
 //    search.fetch()
 //    search.changes.subscribeNext { changes in

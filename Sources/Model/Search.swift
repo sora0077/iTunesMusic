@@ -27,11 +27,13 @@ private func getOrCreateCache(term term: String, realm: Realm) -> SearchCache {
 }
 
 
-final class Search: PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType, CollectionType {
+final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType {
     
     var objects: List<_Track> {
         return caches[0].objects
     }
+    
+    var count: Int { return objects.count }
     
     var name: String { return term }
     
@@ -83,7 +85,13 @@ final class Search: PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType, 
         }
     }
     
+    func track(atIndex index: Int) -> Track {
+        return self.objects[index]
+    }
+    
     func fetch() {
+        
+        print("fetch")
         request()
     }
     
@@ -135,6 +143,7 @@ final class Search: PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType, 
                     cache.updateAt = NSDate()
                     cache.offset += results.objects.count
                 }
+                print("search result cached")
                 self._requestState.value = results.objects.isEmpty ? .Done : .None
             case .Failure(let error):
                 print(error)

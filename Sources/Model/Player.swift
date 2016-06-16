@@ -28,7 +28,7 @@ private extension AVPlayerItem {
 
 public final class Player: NSObject {
     
-    private var _playlists: ArraySlice<(PlaylistTypeInternal, Int)> = []
+    private var _playlists: ArraySlice<(PlayerAdoptable, Int, DisposeBag)> = []
 
     private var _queue: ArraySlice<Preview> = []
     
@@ -86,35 +86,29 @@ public final class Player: NSObject {
     private func updateQueue() {
         
         if _player.items().count < 3 && !_playlists.isEmpty {
-            let (playlist, index) = _playlists[_playlists.startIndex]
-            if let playlist = playlist as? protocol<PlaylistTypeInternal, PaginatorTypeInternal> {
-                print("paginator type")
-                if playlist.hasNoPaginatedContents {
-                    _playlists = _playlists.dropFirst()
-                    updateQueue()
-                    return
-                } else {
-                    if playlist.objects.count - index < 3 {
-                        playlist.fetch()
-                    }
-                }
-                if playlist.objects.count > index {
-                    let track = playlist.objects[index]
-                    let preview = Preview(track: track)
-                    _playlists[_playlists.startIndex] = (playlist, index + 1)
-                    fetch(preview)
-                }
-            } else {
-                if playlist.objects.count > index {
-                    let track = playlist.objects[index]
-                    let preview = Preview(track: track)
-                    _playlists[_playlists.startIndex] = (playlist, index + 1)
-                    fetch(preview)
-                } else {
-                    _playlists = _playlists.dropFirst()
-                    updateQueue()
-                    return
-                }
+            let (playlist, index, _) = _playlists[_playlists.startIndex]
+            
+//            if playlist.paginated {
+            
+            let paginator = playlist as? PaginatorTypeInternal
+            print(paginator, playlist)
+            
+            if paginator?.hasNoPaginatedContents ?? false {
+                _playlists = _playlists.dropFirst()
+                updateQueue()
+                return
+            }
+            if playlist.count - index < 3 {
+                paginator?.fetch()
+            }
+            
+            if playlist.count > index {
+                let preview = Preview(track: playlist.track(atIndex: index))
+                _playlists[_playlists.startIndex].1 += 1
+                fetch(preview)
+            } else if paginator == nil {
+                _playlists = _playlists.dropFirst()
+                updateQueue()
             }
         }
     }
@@ -125,6 +119,7 @@ public final class Player: NSObject {
                 onNext: { [weak self] url, duration in
                     guard let `self` = self else { return }
                     
+                    print("will play \(url)")
                     let item = AVPlayerItem(asset: AVAsset(URL: url))
                     item.trackId = preview.id
                     if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
@@ -158,11 +153,11 @@ public final class Player: NSObject {
             .addDisposableTo(_disposeBag)
     }
     
-    public func addPlaylist(playlist: PlaylistType) {
-
-//        var initial = true
-        let playlist = playlist as! PlaylistTypeInternal
-        _playlists.append((playlist, 0))
+    func addPlaylist<Playlist: PlaylistTypeInternal>(playlist: Playlist) {
+        
+        let playlist = AnyPlaylist(playlist: playlist)
+        let disposeBag = DisposeBag()
+        _playlists.append((playlist, 0, disposeBag))
         updateQueue()
         playlist.changes
             .subscribeNext { [weak self, weak playlist = playlist] changes in
@@ -179,7 +174,31 @@ public final class Player: NSObject {
                     break
                 }
             }
-            .addDisposableTo(_disposeBag)
+            .addDisposableTo(disposeBag)
+    }
+    
+    func addPlaylist<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal>>(playlist: Playlist) {
+        
+        let playlist = AnyPaginatedPlaylist(playlist: playlist)
+        let disposeBag = DisposeBag()
+        _playlists.append((playlist, 0, disposeBag))
+        updateQueue()
+        playlist.changes
+            .subscribeNext { [weak self, weak playlist = playlist] changes in
+                guard let `self` = self, playlist = playlist else { return }
+                
+                switch changes {
+                case .Initial:
+                    break
+                case .Update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
+                    if self._playlists.first?.0 === playlist {
+                        self.updateQueue()
+                    }
+                default:
+                    break
+                }
+            }
+            .addDisposableTo(disposeBag)
     }
     
     @objc

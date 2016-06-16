@@ -24,16 +24,18 @@ private func getOrCreateCache(realm realm: Realm) -> HistoryCache {
 }
 
 
-final class History: PlaylistType {
+public final class History: PlaylistType, PlaylistTypeInternal {
     
-    var objects: List<HistoryCacheToken> {
+    var objects: List<_HistoryRecord> {
         return cache.objects
     }
     
-    let name = "履歴"
+    public let name = "履歴"
+    
+    var count: Int { return objects.count }
     
     private let _changes = PublishSubject<CollectionChange>()
-    private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
     private var objectsToken: NotificationToken?
     private let cache: HistoryCache
@@ -49,16 +51,18 @@ final class History: PlaylistType {
         }
     }
     
+    func track(atIndex index: Int) -> Track {
+        return self.objects[index].track
+    }
+    
     static let instance = History()
     
     static func add(track: Track, realm: Realm) {
         
-        let track = track as! _Track
         let cache = getOrCreateCache(realm: realm)
         try! realm.write {
-            let token = HistoryCacheToken()
-            token._track = track
-            cache.objects.append(token)
+            let record = _HistoryRecord(track: track)
+            cache.objects.append(record)
         }
     }
     
@@ -72,23 +76,4 @@ final class History: PlaylistType {
     }
 }
 
-extension History {
-    
-    func get(index: Int) -> (Track, NSDate) {
-        let token = objects[index]
-        return (token._track as! Track, token.createAt)
-    }
-    
-}
 
-extension History: CollectionType {
-    
-    var startIndex: Int { return objects.startIndex }
-    
-    var endIndex: Int { return objects.endIndex }
-    
-    subscript (index: Int) -> Track {
-        return get(index).0
-    }
-    
-}
