@@ -27,13 +27,13 @@ private func getOrCreateCache(term term: String, realm: Realm) -> SearchCache {
 }
 
 
-final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType {
+public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType {
     
     var objects: List<_Track> {
         return caches[0].objects
     }
     
-    var count: Int { return objects.count }
+    public var count: Int { return objects.count }
     
     var name: String { return term }
     
@@ -42,10 +42,10 @@ final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, P
     }
     
     private let _changes = PublishSubject<CollectionChange>()
-    private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
     private let _requestState = Variable<RequestState>(.None)
-    private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
+    public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
     
     private let _refreshing = Variable<Bool>(false)
     
@@ -56,7 +56,7 @@ final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, P
     private var token: NotificationToken!
     private var objectsToken: NotificationToken?
     
-    init(term: String) {
+    public init(term: String) {
         self.term = term
         
         let realm = try! Realm()
@@ -85,17 +85,21 @@ final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, P
         }
     }
     
-    func track(atIndex index: Int) -> Track {
+    public func track(atIndex index: Int) -> Track {
         return self.objects[index]
     }
     
-    func fetch() {
+    public func addInto(player player: Player) {
+        player.addPlaylist(self)
+    }
+    
+    public func fetch() {
         
         print("fetch")
         request()
     }
     
-    func refresh(force force: Bool) {
+    public func refresh(force force: Bool) {
         
         if force || NSDate() - getOrCreateCache(term: term, realm: try! Realm()).refreshAt > 60.minutes {
             request(refreshing: true)

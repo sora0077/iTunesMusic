@@ -32,30 +32,23 @@ public enum RequestState: Int {
     case None, Requesting, Error, Done
 }
 
-protocol PlayerAdoptable: class {
+public protocol PlaylistType: class {
     
     var count: Int { get }
     
     var changes: Observable<CollectionChange> { get }
     
-//    var paginated: Bool { get }
-    
     func track(atIndex index: Int) -> Track
+    
+    func addInto(player player: Player)
 }
 
-public protocol PlaylistType: class {
-    
-    var name: String { get }
-    
-    var changes: Observable<CollectionChange> { get }
-}
-
-protocol PlaylistTypeInternal: PlaylistType, PlayerAdoptable {
+protocol PlaylistTypeInternal: PlaylistType {
     
     associatedtype Element: Object
     
     var objects: List<Element> { get }
-    
+
 //    var createAt: NSDate { get }
 //    var updateAt: NSDate { get }
 }
@@ -73,12 +66,6 @@ class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistTyp
     
     var objects: List<Element> { return base.objects }
     
-//    var createAt: NSDate { return base.createAt }
-//    
-//    var updateAt: NSDate { return base.updateAt }
-    
-    var name: String { return base.name }
-    
     var changes: Observable<CollectionChange> { return base.changes }
     
 //    var paginated: Bool { return base.paginated }
@@ -91,6 +78,10 @@ class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistTyp
     
     func track(atIndex index: Int) -> Track {
         return base.track(atIndex: index)
+    }
+    
+    func addInto(player player: Player) {
+        fatalError()
     }
 }
 
@@ -125,8 +116,6 @@ private class _AnyPlaylistBase<Element: RealmSwift.Object>: PlaylistTypeInternal
     
     private var objects: List<Element> { fatalError() }
     
-    private var name: String { fatalError() }
-    
     private var changes: Observable<CollectionChange> { fatalError() }
     
 //    private var paginated: Bool { fatalError() }
@@ -142,6 +131,8 @@ private class _AnyPlaylistBase<Element: RealmSwift.Object>: PlaylistTypeInternal
     private func fetch() { fatalError() }
     
     private func refresh(force force: Bool) { fatalError() }
+    
+    private func addInto(player player: Player) { fatalError() }
 }
 
 extension _AnyPlaylistBase {
@@ -161,8 +152,6 @@ private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Pla
     private let base: Playlist
     
     private override var objects: List<Element> { return base.objects }
-    
-    private override var name: String { return base.name }
     
     private override var changes: Observable<CollectionChange> { return base.changes }
     

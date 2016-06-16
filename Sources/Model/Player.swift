@@ -28,7 +28,7 @@ private extension AVPlayerItem {
 
 public final class Player: NSObject {
     
-    private var _playlists: ArraySlice<(PlayerAdoptable, Int, DisposeBag)> = []
+    private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
 
     private var _queue: ArraySlice<Preview> = []
     
@@ -119,7 +119,6 @@ public final class Player: NSObject {
                 onNext: { [weak self] url, duration in
                     guard let `self` = self else { return }
                     
-                    print("will play \(url)")
                     let item = AVPlayerItem(asset: AVAsset(URL: url))
                     item.trackId = preview.id
                     if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {

@@ -72,8 +72,6 @@ public final class Preview {
         let id = self.id
         let url = self.url
         
-//        return Observable.just(test)
-        
         let realm = try! Realm()
         if
             let track = realm.objectForPrimaryKey(_Track.self, key: id),

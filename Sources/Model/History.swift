@@ -32,7 +32,7 @@ public final class History: PlaylistType, PlaylistTypeInternal {
     
     public let name = "履歴"
     
-    var count: Int { return objects.count }
+    public var count: Int { return objects.count }
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
@@ -51,11 +51,15 @@ public final class History: PlaylistType, PlaylistTypeInternal {
         }
     }
     
-    func track(atIndex index: Int) -> Track {
+    public func track(atIndex index: Int) -> Track {
         return self.objects[index].track
     }
     
-    static let instance = History()
+    public func addInto(player player: Player) {
+        player.addPlaylist(self)
+    }
+    
+    public static let instance = History()
     
     static func add(track: Track, realm: Realm) {
         
