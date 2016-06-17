@@ -32,22 +32,21 @@ public protocol PlaylistType: class {
     
     var changes: Observable<CollectionChange> { get }
     
-    func track(atIndex index: Int) -> Track
+    var count: Int { get }
+    var isEmpty: Bool { get }
     
     func addInto(player player: Player)
     
-    
-//    
-    var count: Int { get }
-//    
-//    subscript (index: Int) -> Track { get }
+    subscript (index: Int) -> Track { get }
 }
 
 protocol PlaylistTypeInternal: PlaylistType {
     
-    associatedtype Element: Object
+    associatedtype RealmElement: Object
     
-    var objects: List<Element> { get }
+    var objects: List<RealmElement> { get }
+    
+    func track(atIndex index: Int) -> Track
 }
 
 //extension PlaylistTypeInternal where Self: CollectionType {

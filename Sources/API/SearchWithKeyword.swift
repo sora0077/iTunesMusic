@@ -58,6 +58,8 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
     
     var offset: Int
     
+    var limit: Int = 5
+    
     var queryParameters: [String : AnyObject]? {
         return [
             "term": term,
@@ -66,7 +68,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
             "lang": lang,
             "country": country,
             "offset": offset,
-            "limit": 5
+            "limit": limit
         ]
     }
     

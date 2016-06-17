@@ -16,17 +16,18 @@ public enum RequestState: Int {
     case None, Requesting, Error, Done
 }
 
-class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {
+class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {
     
-    var objects: List<Element> { return base.objects }
+    var objects: List<RealmElement> { return base.objects }
     
     var changes: Observable<CollectionChange> { return base.changes }
     
+    subscript (index: Int) -> Track { return track(atIndex: index) }
 //    var paginated: Bool { return base.paginated }
     
-    private let base: _AnyPlaylistBase<Element>
+    private let base: _AnyPlaylistBase<RealmElement>
     
-    init<Playlist: PlaylistTypeInternal where Playlist.Element == Element>(playlist: Playlist) {
+    init<Playlist: PlaylistTypeInternal where Playlist.RealmElement == RealmElement>(playlist: Playlist) {
         base = _AnyPlaylist(playlist: playlist)
     }
     
@@ -39,7 +40,7 @@ class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistTyp
     }
 }
 
-class AnyPaginatedPlaylist<Element: RealmSwift.Object>: AnyPlaylist<Element>, PaginatorTypeInternal {
+class AnyPaginatedPlaylist<RealmElement: RealmSwift.Object>: AnyPlaylist<RealmElement>, PaginatorTypeInternal {
     
     var requestState: Observable<RequestState> { return base.requestState }
     
@@ -49,7 +50,7 @@ class AnyPaginatedPlaylist<Element: RealmSwift.Object>: AnyPlaylist<Element>, Pa
     
     var hasNoPaginatedContents: Bool { return base.hasNoPaginatedContents }
     
-    override init<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal> where Playlist.Element == Element>(playlist: Playlist) {
+    override init<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal> where Playlist.RealmElement == RealmElement>(playlist: Playlist) {
         super.init(playlist: playlist)
     }
 }
@@ -60,15 +61,15 @@ extension AnyPlaylist {
     
     var endIndex: Int { return base.endIndex }
     
-    subscript (index: Int) -> Element { return base[index] }
+//    subscript (index: Int) -> RealmElement { return base[index] }
 }
 
 
-private class _AnyPlaylistBase<Element: RealmSwift.Object>: PlaylistTypeInternal, CollectionType {
+private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, CollectionType {
     
 //    typealias Index = List<Element>.Index
     
-    private var objects: List<Element> { fatalError() }
+    private var objects: List<RealmElement> { fatalError() }
     
     private var changes: Observable<CollectionChange> { fatalError() }
     
@@ -77,6 +78,8 @@ private class _AnyPlaylistBase<Element: RealmSwift.Object>: PlaylistTypeInternal
     private var requestState: Observable<RequestState> { fatalError() }
     
     var hasNoPaginatedContents: Bool { fatalError() }
+    
+    subscript (index: Int) -> Track { fatalError() }
     
     
     private func track(atIndex index: Int) -> Track { fatalError() }
@@ -95,20 +98,22 @@ extension _AnyPlaylistBase {
     
     private var endIndex: Int { return objects.endIndex }
     
-    subscript (index: Int) -> Element { return objects[index] }
+//    subscript (index: Int) -> RealmElement { return objects[index] }
 }
 
 
-private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Playlist.Element> {
+private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Playlist.RealmElement> {
     
-    typealias Element = Playlist.Element
+    typealias RealmElement = Playlist.RealmElement
     
     private let base: Playlist
     
-    private override var objects: List<Element> { return base.objects }
+    private override var objects: List<RealmElement> { return base.objects }
     
     private override var changes: Observable<CollectionChange> { return base.changes }
     
+    
+    private override subscript (index: Int) -> Track { return base.track(atIndex: index) }
 //    private override var paginated: Bool { return base.paginated }
     
     init(playlist: Playlist) {

@@ -93,20 +93,25 @@ public final class Player: NSObject {
             let paginator = playlist as? PaginatorTypeInternal
             print(paginator, playlist)
             
-            if paginator?.hasNoPaginatedContents ?? false {
+            if playlist.count - index < 3 {
+                paginator?.fetch()
+                
+                if playlist.isEmpty {
+                    return
+                }
+            }
+            print("play", playlist.count)
+            
+            if playlist.count > index {
+                let preview = Preview(track: playlist[index])
+                _playlists[_playlists.startIndex].1 += 1
+                fetch(preview)
+            } else if let paginator = paginator where paginator.hasNoPaginatedContents {
                 _playlists = _playlists.dropFirst()
                 updateQueue()
                 return
-            }
-            if playlist.count - index < 3 {
-                paginator?.fetch()
-            }
+            } else {
             
-            if playlist.count > index {
-                let preview = Preview(track: playlist.track(atIndex: index))
-                _playlists[_playlists.startIndex].1 += 1
-                fetch(preview)
-            } else if paginator == nil {
                 _playlists = _playlists.dropFirst()
                 updateQueue()
             }
@@ -190,6 +195,7 @@ public final class Player: NSObject {
                 case .Initial:
                     break
                 case .Update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
+                    print(insertions)
                     if self._playlists.first?.0 === playlist {
                         self.updateQueue()
                     }

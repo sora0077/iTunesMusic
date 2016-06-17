@@ -27,13 +27,7 @@ private func getOrCreateCache(term term: String, realm: Realm) -> SearchCache {
 }
 
 
-public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInternal, PaginatorType {
-    
-    var objects: List<_Track> {
-        return caches[0].objects
-    }
-    
-    public var count: Int { return objects.count }
+public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
     
     var name: String { return term }
     
@@ -83,10 +77,6 @@ public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInte
             }
             
         }
-    }
-    
-    public func track(atIndex index: Int) -> Track {
-        return self.objects[index]
     }
     
     public func addInto(player player: Player) {
@@ -148,7 +138,8 @@ public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInte
                     cache.offset += results.objects.count
                 }
                 print("search result cached")
-                self._requestState.value = results.objects.isEmpty ? .Done : .None
+                self._requestState.value = results.objects.count != search.limit ? .Done : .None
+                print(self._requestState.value)
             case .Failure(let error):
                 print(error)
                 self._requestState.value = .Error
@@ -157,7 +148,19 @@ public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInte
     }
 }
 
+
+extension Search: PlaylistTypeInternal {
+    
+    var objects: List<_Track> { return caches[0].objects }
+    
+    func track(atIndex index: Int) -> Track { return objects[index] }
+}
+
 extension Search: CollectionType {
+    
+    public var count: Int { return objects.count }
+    
+    public var isEmpty: Bool { return objects.isEmpty }
     
     public var startIndex: Int { return objects.startIndex }
     

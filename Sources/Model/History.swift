@@ -24,15 +24,9 @@ private func getOrCreateCache(realm realm: Realm) -> HistoryCache {
 }
 
 
-public final class History: PlaylistType, PlaylistTypeInternal {
-    
-    var objects: List<_HistoryRecord> {
-        return cache.objects
-    }
+public final class History: PlaylistType {
     
     public let name = "履歴"
-    
-    public var count: Int { return objects.count }
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
@@ -49,10 +43,6 @@ public final class History: PlaylistType, PlaylistTypeInternal {
             
             self._changes.onNext(CollectionChange(changes))
         }
-    }
-    
-    public func track(atIndex index: Int) -> Track {
-        return objects[index].track
     }
     
     public func addInto(player player: Player) {
@@ -80,8 +70,19 @@ public final class History: PlaylistType, PlaylistTypeInternal {
     }
 }
 
+extension History: PlaylistTypeInternal {
+    
+    var objects: List<_HistoryRecord> { return cache.objects }
+    
+    func track(atIndex index: Int) -> Track { return objects[index].track }
+}
+
 
 extension History: CollectionType {
+    
+    public var count: Int { return objects.count }
+    
+    public var isEmpty: Bool { return objects.isEmpty }
     
     public var startIndex: Int { return objects.startIndex }
     
