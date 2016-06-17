@@ -52,7 +52,7 @@ public final class History: PlaylistType, PlaylistTypeInternal {
     }
     
     public func track(atIndex index: Int) -> Track {
-        return self.objects[index].track
+        return objects[index].track
     }
     
     public func addInto(player player: Player) {
@@ -80,4 +80,13 @@ public final class History: PlaylistType, PlaylistTypeInternal {
     }
 }
 
+
+extension History: CollectionType {
+    
+    public var startIndex: Int { return objects.startIndex }
+    
+    public var endIndex: Int { return objects.endIndex }
+    
+    public subscript (index: Int) -> Track { return track(atIndex: index) }
+}
 

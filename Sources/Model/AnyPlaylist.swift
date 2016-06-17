@@ -11,55 +11,9 @@ import RealmSwift
 import RxSwift
 
 
-public enum CollectionChange {
-    case Initial
-    case Update(deletions: [Int], insertions: [Int], modifications: [Int])
-    
-    init<T>(_ change: RealmCollectionChange<T>) {
-        
-        switch change {
-        case .Initial:
-            self = .Initial
-        case let .Update(_, deletions: deletions, insertions: insertions, modifications: modifications):
-            self = .Update(deletions: deletions, insertions: insertions, modifications: modifications)
-        case let .Error(error):
-            fatalError("\(error)")
-        }
-    }
-}
 
 public enum RequestState: Int {
     case None, Requesting, Error, Done
-}
-
-public protocol PlaylistType: class {
-    
-    var count: Int { get }
-    
-    var changes: Observable<CollectionChange> { get }
-    
-    func track(atIndex index: Int) -> Track
-    
-    func addInto(player player: Player)
-}
-
-protocol PlaylistTypeInternal: PlaylistType {
-    
-    associatedtype Element: Object
-    
-    var objects: List<Element> { get }
-
-//    var createAt: NSDate { get }
-//    var updateAt: NSDate { get }
-}
-
-extension PlaylistTypeInternal where Self: CollectionType {
-    
-    var startIndex: Int { return objects.startIndex }
-    
-    var endIndex: Int { return objects.endIndex }
-    
-    subscript (index: Int) -> Element { return objects[index] }
 }
 
 class AnyPlaylist<Element: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {

@@ -23,6 +23,7 @@
 		D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A71D0EFBF700AAAD58 /* History.swift */; };
 		D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */; };
 		D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* HistoryRecord.swift */; };
+		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		D91B42A71D0EFBF700AAAD58 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCache.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* HistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecord.swift; sourceTree = "<group>"; };
+		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 		D91B429C1D08625200AAAD58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
 				D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
@@ -332,6 +335,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
+				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
 				D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */,

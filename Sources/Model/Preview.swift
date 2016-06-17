@@ -15,14 +15,14 @@ import AVFoundation
 import PINCache
 
 
-public final class Preview {
+final class Preview {
     
     let id: Int
     let url: NSURL
     
     var duration: Int = 0
     
-    public init(track: Track) {
+    init(track: Track) {
         let track = track as! _Track
         id = track.trackId
         url = track.trackViewURL

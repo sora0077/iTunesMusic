@@ -156,3 +156,12 @@ public final class Search: PlaylistType, PlaylistTypeInternal, PaginatorTypeInte
         }
     }
 }
+
+extension Search: CollectionType {
+    
+    public var startIndex: Int { return objects.startIndex }
+    
+    public var endIndex: Int { return objects.endIndex }
+    
+    public subscript (index: Int) -> Track { return track(atIndex: index) }
+}
