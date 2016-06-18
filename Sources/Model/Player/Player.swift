@@ -15,6 +15,10 @@ import RealmSwift
 
 public protocol Player {
  
+    var nowPlaying: Observable<Track?> { get }
+    
+    var currentTime: Observable<Float64> { get }
+    
     func play()
     
     func pause()

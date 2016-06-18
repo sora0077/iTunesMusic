@@ -45,6 +45,10 @@ public final class History: PlaylistType {
         }
     }
     
+    public func record(atIndex index: Int) -> (Track, NSDate) {
+        return (objects[index].track, objects[index].createAt)
+    }
+    
     public func addInto(player player: Player) {
         (player as! PlayerTypeInternal).addPlaylist(self)
     }

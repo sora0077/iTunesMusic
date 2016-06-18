@@ -37,17 +37,26 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
     
     private let _disposeBag = DisposeBag()
     
+    private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
+    private let _nowPlayingTrack = Variable<Track?>(nil)
+    
+    private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
+    private let _currentTime = Variable<Float64>(0)
+    
     
     override init() {
         super.init()
         
-        _player.volume = 0.06
+        #if TARGET_OS_SIMULATOR
+            _player.volume = 0.06
+        #endif
         _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
         _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
         
         //        _player.currentTime()
         _player.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
             guard let `self` = self else { return }
+            self._currentTime.value = CMTimeGetSeconds(time)
             if let currentTime = self._player.currentItem?.duration {
                 let diff = CMTimeGetSeconds(CMTimeSubtract(currentTime, time))
                 print(diff)
@@ -73,6 +82,14 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
                 _player.play()
             }
         case "currentItem":
+            if let item = _player.currentItem {
+                dispatch_async(dispatch_get_main_queue()) {
+                    let realm = try! Realm()
+                    let track = realm.objectForPrimaryKey(_Track.self, key: item.trackId!)!
+                    self._nowPlayingTrack.value = track
+                    
+                }
+            }
             print(_player.items().count)
             print(_player.currentItem)
             updateQueue()
