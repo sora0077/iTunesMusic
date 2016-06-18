@@ -19,8 +19,8 @@ for h in history {
     
 }
 
-let player = Player()
-let search = Search(term: "ナイショの話 オルゴール")
+iTunesMusic.player
+let search = Search(term: "シンフォギア ")
 
 search.addInto(player: player)
 history.addInto(player: player)

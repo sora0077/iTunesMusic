@@ -19,11 +19,13 @@
 		D91B42A01D08640800AAAD58 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B429F1D08640800AAAD58 /* Search.swift */; };
 		D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */; };
 		D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A31D0CFA2700AAAD58 /* Preview.swift */; };
-		D91B42A61D0D53B900AAAD58 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A51D0D53B900AAAD58 /* Player.swift */; };
 		D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A71D0EFBF700AAAD58 /* History.swift */; };
 		D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */; };
 		D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* HistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
+		D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */; };
+		D9542EFF1D15189A0073C8EE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFD1D15189A0073C8EE /* Player.swift */; };
+		D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542F001D1518B90073C8EE /* PlayerImpl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,11 +57,13 @@
 		D91B429F1D08640800AAAD58 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPreviewUrl.swift; sourceTree = "<group>"; };
 		D91B42A31D0CFA2700AAAD58 /* Preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
-		D91B42A51D0D53B900AAAD58 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D91B42A71D0EFBF700AAAD58 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCache.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* HistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
+		D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
+		D9542EFD1D15189A0073C8EE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		D9542F001D1518B90073C8EE /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +148,7 @@
 			children = (
 				D91B42961D07071400AAAD58 /* API */,
 				D91B429C1D08625200AAAD58 /* Model */,
+				D9542EFA1D1518580073C8EE /* New Group */,
 				D91B42911D04C46C00AAAD58 /* Cache */,
 				D91B428E1D044AD200AAAD58 /* Entity */,
 				D91B42991D070FA600AAAD58 /* iTunesMusic.swift */,
@@ -181,14 +186,31 @@
 		D91B429C1D08625200AAAD58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D9542EFB1D1518730073C8EE /* Player */,
 				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
 				D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
-				D91B42A51D0D53B900AAAD58 /* Player.swift */,
 				D91B42A71D0EFBF700AAAD58 /* History.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		D9542EFA1D1518580073C8EE /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
+		D9542EFB1D1518730073C8EE /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				D9542EFD1D15189A0073C8EE /* Player.swift */,
+				D9542F001D1518B90073C8EE /* PlayerImpl.swift */,
+				D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,13 +360,15 @@
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
+				D9542EFF1D15189A0073C8EE /* Player.swift in Sources */,
 				D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */,
 				D91B42981D07085300AAAD58 /* SearchWithKeyword.swift in Sources */,
 				D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
+				D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */,
+				D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */,
 				D91B42901D044AE600AAAD58 /* Track.swift in Sources */,
-				D91B42A61D0D53B900AAAD58 /* Player.swift in Sources */,
 				D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */,
 				D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */,
 			);

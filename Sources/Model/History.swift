@@ -46,7 +46,7 @@ public final class History: PlaylistType {
     }
     
     public func addInto(player player: Player) {
-        player.addPlaylist(self)
+        (player as! PlayerTypeInternal).addPlaylist(self)
     }
     
     public static let instance = History()

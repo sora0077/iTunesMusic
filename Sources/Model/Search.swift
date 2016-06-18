@@ -80,7 +80,7 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
     }
     
     public func addInto(player player: Player) {
-        player.addPlaylist(self)
+        (player as! PlayerTypeInternal).addPlaylist(self)
     }
     
     public func fetch() {

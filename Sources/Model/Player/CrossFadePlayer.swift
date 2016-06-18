@@ -1,5 +1,5 @@
 //
-//  Player.swift
+//  CrossFadePlayer.swift
 //  iTunesMusic
 //
 //  Created by 林達也 on 2016/06/12.
@@ -26,22 +26,39 @@ private extension AVPlayerItem {
     }
 }
 
-public final class Player: NSObject {
+final class CrossFadePlayer: NSObject, Player, PlayerTypeInternal {
     
     private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
-
+    
     private var _queue: ArraySlice<Preview> = []
     
     private let _player = AVQueuePlayer()
+    private let _player2 = AVQueuePlayer()
     
     private let _disposeBag = DisposeBag()
- 
-    public override init() {
+    
+    
+    //    private
+    
+    
+    override init() {
         super.init()
         
         _player.volume = 0.06
         _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
         _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
+        _player2.volume = 0.06
+        _player2.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
+        _player2.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
+        
+        //        _player.currentTime()
+        _player2.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
+            guard let `self` = self else { return }
+            if let currentTime = self._player2.currentItem?.duration {
+                let diff = CMTimeGetSeconds(CMTimeSubtract(currentTime, time))
+                print(diff)
+            }
+        }
     }
     
     deinit {
@@ -52,7 +69,7 @@ public final class Player: NSObject {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
         guard let keyPath = keyPath else { return }
         
@@ -60,6 +77,10 @@ public final class Player: NSObject {
         case "status":
             if _player.status == .ReadyToPlay {
                 _player.play()
+            }
+            if _player2.status == .ReadyToPlay {
+                print("player2 == ReadyToPlay")
+                _player2.play()
             }
         case "currentItem":
             print(_player.items().count)
@@ -72,13 +93,13 @@ public final class Player: NSObject {
             break
         }
     }
-
-    public func play() {
+    
+    func play() {
         
         _player.play()
     }
     
-    public func pause() {
+    func pause() {
         
         _player.pause()
     }
@@ -88,7 +109,7 @@ public final class Player: NSObject {
         if _player.items().count < 3 && !_playlists.isEmpty {
             let (playlist, index, _) = _playlists[_playlists.startIndex]
             
-//            if playlist.paginated {
+            //            if playlist.paginated {
             
             let paginator = playlist as? PaginatorTypeInternal
             print(paginator, playlist)
@@ -111,7 +132,7 @@ public final class Player: NSObject {
                 updateQueue()
                 return
             } else {
-            
+                
                 _playlists = _playlists.dropFirst()
                 updateQueue()
             }
@@ -142,12 +163,18 @@ public final class Player: NSObject {
                     }
                     NSNotificationCenter.defaultCenter().addObserver(
                         self,
-                        selector: #selector(Player.didEndPlay),
+                        selector: #selector(self.didEndPlay),
                         name: AVPlayerItemDidPlayToEndTimeNotification,
                         object: item
                     )
                     
                     self._player.insertItem(item, afterItem: nil)
+                    let when = { dispatch_time(DISPATCH_TIME_NOW, Int64($0 * Double(NSEC_PER_SEC))) }
+                    dispatch_after(when(1), dispatch_get_main_queue()) {
+                        print("fetch player2")
+                        self._player2.insertItem(AVPlayerItem(asset: AVAsset(URL: url)), afterItem: nil)
+                        
+                    }
                 },
                 onError: { [weak self] error in
                     print(error)
