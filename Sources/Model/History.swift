@@ -72,9 +72,7 @@ public final class History: PlaylistType {
 
 extension History: PlaylistTypeInternal {
     
-    var objects: List<_HistoryRecord> { return cache.objects }
-    
-    func track(atIndex index: Int) -> Track { return objects[index].track }
+    var objects: AnyRealmCollection<_HistoryRecord> { return AnyRealmCollection(cache.objects) }
 }
 
 
@@ -88,6 +86,6 @@ extension History: CollectionType {
     
     public var endIndex: Int { return objects.endIndex }
     
-    public subscript (index: Int) -> Track { return track(atIndex: index) }
+    public subscript (index: Int) -> Track { return objects[index].track }
 }
 

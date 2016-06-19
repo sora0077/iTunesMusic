@@ -147,9 +147,7 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
 
 extension Search: PlaylistTypeInternal {
     
-    var objects: List<_Track> { return caches[0].objects }
-    
-    func track(atIndex index: Int) -> Track { return objects[index] }
+    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].objects) }
 }
 
 extension Search: CollectionType {
@@ -162,5 +160,5 @@ extension Search: CollectionType {
     
     public var endIndex: Int { return objects.endIndex }
     
-    public subscript (index: Int) -> Track { return track(atIndex: index) }
+    public subscript (index: Int) -> Track { return objects[index] }
 }

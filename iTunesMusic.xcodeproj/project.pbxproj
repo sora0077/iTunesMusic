@@ -26,6 +26,7 @@
 		D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */; };
 		D9542EFF1D15189A0073C8EE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFD1D15189A0073C8EE /* Player.swift */; };
 		D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542F001D1518B90073C8EE /* PlayerImpl.swift */; };
+		D9FD12E61D16D3CD0010E81D /* LocalSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
 		D9542EFD1D15189A0073C8EE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D9542F001D1518B90073C8EE /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
+		D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearch.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +192,7 @@
 				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
 				D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
+				D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */,
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
 				D91B42A71D0EFBF700AAAD58 /* History.swift */,
 			);
@@ -369,6 +372,7 @@
 				D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */,
 				D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */,
 				D91B42901D044AE600AAAD58 /* Track.swift in Sources */,
+				D9FD12E61D16D3CD0010E81D /* LocalSearch.swift in Sources */,
 				D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */,
 				D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */,
 			);

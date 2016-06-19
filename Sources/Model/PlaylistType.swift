@@ -42,17 +42,5 @@ protocol PlaylistTypeInternal: PlaylistType {
     
     associatedtype RealmElement: Object
     
-    var objects: List<RealmElement> { get }
-    
-    func track(atIndex index: Int) -> Track
+    var objects: AnyRealmCollection<RealmElement> { get }
 }
-
-
-//extension PlaylistTypeInternal where Self: CollectionType {
-//    
-//    var startIndex: Int { return objects.startIndex }
-//    
-//    var endIndex: Int { return objects.endIndex }
-//    
-//    subscript (index: Int) -> Element { return objects[index] }
-//}

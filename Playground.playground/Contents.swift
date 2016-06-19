@@ -11,14 +11,6 @@ let when = { dispatch_time(DISPATCH_TIME_NOW, Int64($0 * Double(NSEC_PER_SEC))) 
 XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
 let history = History.instance
-history.changes.subscribe { changes in
-    print("first", changes)
-}
-
-for h in history {
-    
-}
-
 class RootViewController: UIViewController {
     
     let playingTrackViewController = PlayingTrackViewController(player: iTunesMusic.player)
@@ -172,26 +164,31 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
 
 let search = Search(term: "ジョーカー・ゲーム DOUBLE")
 
-search.changes.subscribeNext { changes in
-    switch changes {
-    case .initial:
-        for t in search {
-//            player.add(track: t)
-        }
-    case let .update(_, insertions, _):
-        if !insertions.isEmpty {
-            
-            let track = search[0]
-            print("searched ", track.trackName)
-            player.add(track: track, afterPlaylist: true)
-        }
-    }
+//search.changes.subscribeNext { changes in
+//    switch changes {
+//    case .initial:
+//        for t in search {
+////            player.add(track: t)
+//        }
+//    case let .update(_, insertions, _):
+//        if !insertions.isEmpty {
+//            
+//            let track = search[0]
+//            print("searched ", track.trackName)
+//            player.add(track: track, afterPlaylist: true)
+//        }
+//    }
+//}
+
+//search.fetch()
+
+let localSearch = LocalSearch(term: "DOUBLE")
+localSearch.changes.subscribeNext { changes in
+    print("local search result ", changes)
 }
 
-search.fetch()
+player.add(playlist: search)
+player.add(playlist: history)
 
-//search.addInto(player: player)
-//history.addInto(player: player)
-//
 
 XCPlaygroundPage.currentPage.liveView = RootViewController()

@@ -76,6 +76,8 @@ class _Track: RealmSwift.Object, Track {
     
     dynamic var _isStreamable: Bool = false
     
+    dynamic var _createAt: NSDate = NSDate()
+    
     
     override class func primaryKey() -> String? { return "_trackId" }
 }

@@ -171,7 +171,7 @@ final class PlayerImpl: NSObject, Player {
     
     private func updatePlaylistQueue() {
         
-        if _player.items().count < 3 && (_playlists.reduce(0) { $0 + $1.0.count }) != 0 {
+        if _player.items().count < 3 && !_playlists.isEmpty {
             let (playlist, index, _) = _playlists[_playlists.startIndex]
             
             let paginator = playlist as? PaginatorTypeInternal
@@ -232,11 +232,8 @@ final class PlayerImpl: NSObject, Player {
         print(track.trackName)
         
         if afterPlaylist {
-            
-            
             add(playlist: OneTrackPlaylist(track: track))
         } else {
-            
             _playingQueue.append(track)
             updateQueue()
         }
@@ -247,6 +244,7 @@ final class PlayerImpl: NSObject, Player {
         case let playlist as History:
             _add(playlist: AnyPlaylist(playlist: playlist))
         case let playlist as Search:
+            print("search playlist added")
             _add(playlist: AnyPaginatedPlaylist(playlist: playlist))
         default:
             _add(playlist: playlist)
@@ -259,21 +257,26 @@ final class PlayerImpl: NSObject, Player {
         _playlists.append((playlist, 0, disposeBag))
         updatePlaylistQueue()
         playlist.changes
-            .subscribeNext { [weak self, weak playlist = playlist] changes in
-                guard let `self` = self, playlist = playlist else { return }
-                
-                switch changes {
-                case .initial:
-                    break
-                case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
-                    print(insertions)
-                    if self._playlists.first?.0 === playlist {
-                        self.updatePlaylistQueue()
+            .subscribe(
+                onNext: { [weak self, weak playlist = playlist] changes in
+                    guard let `self` = self, playlist = playlist else { return }
+                    
+                    switch changes {
+                    case .initial:
+                        break
+                    case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
+                        print(insertions)
+                        if self._playlists.first?.0 === playlist {
+                            self.updatePlaylistQueue()
+                        }
+                    default:
+                        break
                     }
-                default:
-                    break
+                },
+                onDisposed: { [weak playlist] in
+                    print("disposed ", playlist)
                 }
-            }
+            )
             .addDisposableTo(disposeBag)
     }
     

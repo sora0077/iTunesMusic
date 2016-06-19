@@ -18,21 +18,17 @@ public enum RequestState: Int {
 
 class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {
     
-    var objects: List<RealmElement> { return base.objects }
+    var objects: AnyRealmCollection<RealmElement> { return AnyRealmCollection(base.objects) }
     
     var changes: Observable<CollectionChange> { return base.changes }
     
-    subscript (index: Int) -> Track { return track(atIndex: index) }
+    subscript (index: Int) -> Track { return base[index] }
 //    var paginated: Bool { return base.paginated }
     
     private let base: _AnyPlaylistBase<RealmElement>
     
     init<Playlist: PlaylistTypeInternal where Playlist.RealmElement == RealmElement>(playlist: Playlist) {
         base = _AnyPlaylist(playlist: playlist)
-    }
-    
-    func track(atIndex index: Int) -> Track {
-        return base.track(atIndex: index)
     }
     
     func addInto(player player: Player) {
@@ -69,7 +65,7 @@ private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInt
     
 //    typealias Index = List<Element>.Index
     
-    private var objects: List<RealmElement> { fatalError() }
+    private var objects: AnyRealmCollection<RealmElement> { fatalError() }
     
     private var changes: Observable<CollectionChange> { fatalError() }
     
@@ -80,9 +76,6 @@ private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInt
     var hasNoPaginatedContents: Bool { fatalError() }
     
     subscript (index: Int) -> Track { fatalError() }
-    
-    
-    private func track(atIndex index: Int) -> Track { fatalError() }
     
     
     private func fetch() { fatalError() }
@@ -108,22 +101,18 @@ private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Pla
     
     private let base: Playlist
     
-    private override var objects: List<RealmElement> { return base.objects }
+    private override var objects: AnyRealmCollection<RealmElement> { return AnyRealmCollection(base.objects) }
     
     private override var changes: Observable<CollectionChange> { return base.changes }
     
     
-    private override subscript (index: Int) -> Track { return base.track(atIndex: index) }
+    private override subscript (index: Int) -> Track { return base[index] }
 //    private override var paginated: Bool { return base.paginated }
     
     init(playlist: Playlist) {
         base = playlist
         
         super.init()
-    }
-    
-    private override func track(atIndex index: Int) -> Track {
-        return base.track(atIndex: index)
     }
     
     private override var requestState: Observable<RequestState> { return (base as! PaginatorTypeInternal).requestState }
