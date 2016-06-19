@@ -2,7 +2,6 @@ PODS:
   - APIKit (2.0.1):
     - Result (~> 2.0.0)
   - Himotoki (2.0.1)
-  - PINCache (2.2.2)
   - QueryKit (0.12.1)
   - Realm (1.0.0):
     - Realm/Headers (= 1.0.0)
@@ -16,7 +15,6 @@ PODS:
 DEPENDENCIES:
   - APIKit
   - Himotoki
-  - PINCache
   - QueryKit
   - RealmSwift
   - RxSwift
@@ -25,7 +23,6 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   APIKit: 7b61788273235bab213477b22f1897872047da10
   Himotoki: 21fa47e457cc7da39996fe7825a0e97b00344cf1
-  PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
   QueryKit: 6a8dbe9f33ffac00c424143695681a949b58518d
   Realm: e15cd8e7c11d3e576f628ba0b7cb855269b4991c
   RealmSwift: 3229306d020d96f83b335f87a0dcbf2cef0e6a2b

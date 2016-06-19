@@ -22,6 +22,8 @@ public protocol Player {
     func play()
     
     func pause()
+
+    func add(track track: Track)
 }
 
 protocol PlayerTypeInternal {

@@ -126,10 +126,6 @@ private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Pla
         return base.track(atIndex: index)
     }
     
-//}
-//
-//extension _AnyPlaylist where Playlist: PaginatorTypeInternal {
-    
     private override var requestState: Observable<RequestState> { return (base as! PaginatorTypeInternal).requestState }
 
     private override var hasNoPaginatedContents: Bool { return (base as! PaginatorTypeInternal).hasNoPaginatedContents }

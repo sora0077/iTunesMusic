@@ -27,11 +27,32 @@ private extension AVPlayerItem {
 }
 
 
+private class OneTrackPlaylist: PlaylistType {
+    
+    let changes: Observable<CollectionChange> = asObservable(Variable(.Initial))
+    
+    let count: Int = 1
+    let isEmpty: Bool = false
+    
+    let objects: [Track]
+    
+    init(track: Track) {
+        objects = [track]
+    }
+    
+    func addInto(player player: Player) { fatalError() }
+    
+    subscript (index: Int) -> Track { return objects[index] }
+}
+
+
 final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
     
     private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
     
-    private var _queue: ArraySlice<Preview> = []
+    private var _playingQueue: ArraySlice<Track> = []
+    
+    private var _previewQueue: ArraySlice<Preview> = []
     
     private let _player = AVQueuePlayer()
     
@@ -47,9 +68,9 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
     override init() {
         super.init()
         
-        #if TARGET_OS_SIMULATOR
+//        #if TARGET_OS_SIMULATOR
             _player.volume = 0.06
-        #endif
+//        #endif
         _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
         _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
         
@@ -57,10 +78,6 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
         _player.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
             guard let `self` = self else { return }
             self._currentTime.value = CMTimeGetSeconds(time)
-            if let currentTime = self._player.currentItem?.duration {
-                let diff = CMTimeGetSeconds(CMTimeSubtract(currentTime, time))
-                print(diff)
-            }
         }
     }
     
@@ -90,9 +107,10 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
                     
                 }
             }
-            print(_player.items().count)
-            print(_player.currentItem)
-            updateQueue()
+            
+            print("queue state ", _player.items().count, _playlists.count, _playlists.map { $0.0.count })
+            print("currentItem ", _player.currentItem)
+            updatePlaylistQueue()
             if _player.currentItem == nil {
                 pause()
             }
@@ -114,10 +132,50 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
     
     private func updateQueue() {
         
-        if _player.items().count < 3 && !_playlists.isEmpty {
-            let (playlist, index, _) = _playlists[_playlists.startIndex]
+        if _player.items().count < 3 && !_playingQueue.isEmpty {
             
-            //            if playlist.paginated {
+            let track = _playingQueue[_playingQueue.startIndex] as! _Track
+            if let string = track._longPreviewUrl, duration = track._longPreviewDuration.value, url = NSURL(string: string) {
+                
+                _playingQueue = _playingQueue.dropFirst()
+                
+                print("now play ", track._trackName)
+                
+                let item = AVPlayerItem(asset: AVAsset(URL: url))
+                item.trackId = track.trackId
+                if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
+                    let inputParams = AVMutableAudioMixInputParameters(track: track)
+                    
+                    let fadeDuration = CMTimeMakeWithSeconds(5, 600);
+                    let fadeOutStartTime = CMTimeMakeWithSeconds(Double(duration)/10000 - 5, 600);
+                    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
+                    
+                    inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+                    inputParams.setVolumeRampFromStartVolume(0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+                    
+                    let audioMix = AVMutableAudioMix()
+                    audioMix.inputParameters = [inputParams]
+                    item.audioMix = audioMix
+                }
+                NSNotificationCenter.defaultCenter().addObserver(
+                    self,
+                    selector: #selector(self.didEndPlay),
+                    name: AVPlayerItemDidPlayToEndTimeNotification,
+                    object: item
+                )
+                
+                _player.insertItem(item, afterItem: nil)
+                if _player.status == .ReadyToPlay {
+                    play()
+                }
+            }
+        }
+    }
+    
+    private func updatePlaylistQueue() {
+        
+        if _player.items().count < 3 && (_playlists.reduce(0) { $0 + $1.0.count }) != 0 {
+            let (playlist, index, _) = _playlists[_playlists.startIndex]
             
             let paginator = playlist as? PaginatorTypeInternal
             print(paginator, playlist)
@@ -129,22 +187,26 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
                     return
                 }
             }
-            print("play", playlist.count)
+            print("play", playlist.count, index)
             
             if playlist.count > index {
+                print("will play ", playlist[index].trackName)
+                let track = playlist[index]
+                _playingQueue.append(track)
                 let preview = Preview(track: playlist[index])
                 _playlists[_playlists.startIndex].1 += 1
                 fetch(preview)
-            } else if let paginator = paginator where paginator.hasNoPaginatedContents {
-                _playlists = _playlists.dropFirst()
-                updateQueue()
-                return
             } else {
                 
+                if let paginator = paginator where !paginator.hasNoPaginatedContents {
+                    return
+                }
                 _playlists = _playlists.dropFirst()
-                updateQueue()
+                updatePlaylistQueue()
+                print("drop playlist ", playlist)
             }
         }
+        updateQueue()
     }
     
     private func fetch(preview: Preview) {
@@ -152,31 +214,7 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
             .subscribe(
                 onNext: { [weak self] url, duration in
                     guard let `self` = self else { return }
-                    
-                    let item = AVPlayerItem(asset: AVAsset(URL: url))
-                    item.trackId = preview.id
-                    if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
-                        let inputParams = AVMutableAudioMixInputParameters(track: track)
-                        
-                        let fadeDuration = CMTimeMakeWithSeconds(5, 600);
-                        let fadeOutStartTime = CMTimeMakeWithSeconds(Double(duration)/10000 - 5, 600);
-                        let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
-                        
-                        inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
-                        inputParams.setVolumeRampFromStartVolume(0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
-                        
-                        let audioMix = AVMutableAudioMix()
-                        audioMix.inputParameters = [inputParams]
-                        item.audioMix = audioMix
-                    }
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: #selector(self.didEndPlay),
-                        name: AVPlayerItemDidPlayToEndTimeNotification,
-                        object: item
-                    )
-                    
-                    self._player.insertItem(item, afterItem: nil)
+                    self.updateQueue()
                 },
                 onError: { [weak self] error in
                     print(error)
@@ -186,36 +224,28 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
             .addDisposableTo(_disposeBag)
     }
     
+    func add(track track: Track) {
+        
+        print(track.trackName)
+        
+        _addPlaylist(OneTrackPlaylist(track: track))
+    }
+    
     func addPlaylist<Playlist: PlaylistTypeInternal>(playlist: Playlist) {
         
-        let playlist = AnyPlaylist(playlist: playlist)
-        let disposeBag = DisposeBag()
-        _playlists.append((playlist, 0, disposeBag))
-        updateQueue()
-        playlist.changes
-            .subscribeNext { [weak self, weak playlist = playlist] changes in
-                guard let `self` = self, playlist = playlist else { return }
-                
-                switch changes {
-                case .Initial:
-                    break
-                case .Update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
-                    if self._playlists.first?.0 === playlist {
-                        self.updateQueue()
-                    }
-                default:
-                    break
-                }
-            }
-            .addDisposableTo(disposeBag)
+        _addPlaylist(AnyPlaylist(playlist: playlist))
     }
     
     func addPlaylist<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal>>(playlist: Playlist) {
         
-        let playlist = AnyPaginatedPlaylist(playlist: playlist)
+        _addPlaylist(AnyPaginatedPlaylist(playlist: playlist))
+    }
+    
+    func _addPlaylist(playlist: PlaylistType) {
+        
         let disposeBag = DisposeBag()
         _playlists.append((playlist, 0, disposeBag))
-        updateQueue()
+        updatePlaylistQueue()
         playlist.changes
             .subscribeNext { [weak self, weak playlist = playlist] changes in
                 guard let `self` = self, playlist = playlist else { return }
@@ -226,7 +256,7 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
                 case .Update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
                     print(insertions)
                     if self._playlists.first?.0 === playlist {
-                        self.updateQueue()
+                        self.updatePlaylistQueue()
                     }
                 default:
                     break

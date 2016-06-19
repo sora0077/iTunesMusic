@@ -49,6 +49,7 @@ protocol PlaylistTypeInternal: PlaylistType {
     func track(atIndex index: Int) -> Track
 }
 
+
 //extension PlaylistTypeInternal where Self: CollectionType {
 //    
 //    var startIndex: Int { return objects.startIndex }

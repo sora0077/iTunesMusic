@@ -81,6 +81,7 @@ class PlayingTrackViewController: UIViewController {
             self.timeLabel.text = String(format: "%.2f", time)
             self.timeLabel.sizeToFit()
             self.timeLabel.frame.origin.x = self.view.frame.width - self.timeLabel.frame.width
+            self.timeLabel.frame.size.height = self.view.frame.height
         }
         
         view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.2)
@@ -91,12 +92,13 @@ class PlayingTrackViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         titleLabel.frame = view.bounds
-        
+        titleLabel.frame.origin.x = 16
     }
 }
 
 
-class HistoryViewController: UIViewController, UITableViewDataSource {
+
+class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let history = History.instance
     
@@ -107,6 +109,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource {
         
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
+        tableView.delegate = self
         tableView.dataSource = self
         
         view.addSubview(tableView)
@@ -136,6 +139,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        
         tableView.frame = view.bounds
     }
 
@@ -153,12 +157,41 @@ class HistoryViewController: UIViewController, UITableViewDataSource {
         
         return cell
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let (track, _) = history.record(atIndex: indexPath.row)
+        
+//        print(track)
+        
+        player.add(track: track)
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
 }
 
 let search = Search(term: "ジョーカー・ゲーム DOUBLE")
 
-search.addInto(player: player)
-history.addInto(player: player)
+search.changes.subscribeNext { changes in
+    switch changes {
+    case .Initial:
+        for t in search {
+//            player.add(track: t)
+        }
+    case let .Update(_, insertions, _):
+        if !insertions.isEmpty {
+            
+            let track = search[0]
+            print("searched ", track.trackName)
+            player.add(track: track)
+        }
+    }
+}
+
+search.fetch()
+
+//search.addInto(player: player)
+//history.addInto(player: player)
 //
 
 XCPlaygroundPage.currentPage.liveView = RootViewController()

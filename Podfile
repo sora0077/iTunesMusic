@@ -10,7 +10,7 @@ target 'iTunesMusic' do
   pod 'RxSwift'
   pod 'QueryKit'
   pod 'Timepiece'
-  pod 'PINCache'
+  # pod 'PINCache'
 end
 
 target 'iTunesMusicTests' do
