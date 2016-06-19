@@ -49,10 +49,6 @@ public final class History: PlaylistType {
         return (objects[index].track, objects[index].createAt)
     }
     
-    public func addInto(player player: Player) {
-        (player as! PlayerTypeInternal).addPlaylist(self)
-    }
-    
     public static let instance = History()
     
     static func add(track: Track, realm: Realm) {

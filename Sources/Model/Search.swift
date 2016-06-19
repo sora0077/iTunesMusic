@@ -79,10 +79,6 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
         }
     }
     
-    public func addInto(player player: Player) {
-        (player as! PlayerTypeInternal).addPlaylist(self)
-    }
-    
     public func fetch() {
         
         print("fetch")

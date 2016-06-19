@@ -40,13 +40,11 @@ private class OneTrackPlaylist: PlaylistType {
         objects = [track]
     }
     
-    func addInto(player player: Player) { fatalError() }
-    
     subscript (index: Int) -> Track { return objects[index] }
 }
 
 
-final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
+final class PlayerImpl: NSObject, Player {
     
     private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
     
@@ -228,20 +226,21 @@ final class PlayerImpl: NSObject, Player, PlayerTypeInternal {
         
         print(track.trackName)
         
-        _addPlaylist(OneTrackPlaylist(track: track))
+        add(playlist: OneTrackPlaylist(track: track))
     }
     
-    func addPlaylist<Playlist: PlaylistTypeInternal>(playlist: Playlist) {
-        
-        _addPlaylist(AnyPlaylist(playlist: playlist))
+    func add(playlist playlist: PlaylistType) {
+        switch playlist {
+        case let playlist as History:
+            _add(playlist: AnyPlaylist(playlist: playlist))
+        case let playlist as Search:
+            _add(playlist: AnyPaginatedPlaylist(playlist: playlist))
+        default:
+            _add(playlist: playlist)
+        }
     }
     
-    func addPlaylist<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal>>(playlist: Playlist) {
-        
-        _addPlaylist(AnyPaginatedPlaylist(playlist: playlist))
-    }
-    
-    func _addPlaylist(playlist: PlaylistType) {
+    private func _add(playlist playlist: PlaylistType) {
         
         let disposeBag = DisposeBag()
         _playlists.append((playlist, 0, disposeBag))

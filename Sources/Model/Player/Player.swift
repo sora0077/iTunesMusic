@@ -24,13 +24,8 @@ public protocol Player {
     func pause()
 
     func add(track track: Track)
-}
-
-protocol PlayerTypeInternal {
     
-    func addPlaylist<Playlist: PlaylistTypeInternal>(playlist: Playlist)
-    
-    func addPlaylist<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal>>(playlist: Playlist)
+    func add(playlist playlist: PlaylistType)
 }
 
 public let player: Player = PlayerImpl()

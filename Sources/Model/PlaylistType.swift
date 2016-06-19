@@ -35,8 +35,6 @@ public protocol PlaylistType: class {
     var count: Int { get }
     var isEmpty: Bool { get }
     
-    func addInto(player player: Player)
-    
     subscript (index: Int) -> Track { get }
 }
 

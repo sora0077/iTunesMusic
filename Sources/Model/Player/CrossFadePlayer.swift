@@ -26,7 +26,7 @@ private extension AVPlayerItem {
     }
 }
 
-final class CrossFadePlayer: NSObject, PlayerTypeInternal {
+final class CrossFadePlayer: NSObject {
     
     private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
     
