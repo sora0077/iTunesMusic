@@ -31,9 +31,7 @@ class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, Playli
         base = _AnyPlaylist(playlist: playlist)
     }
     
-    func addInto(player player: Player) {
-        fatalError()
-    }
+    func _any() -> PlaylistType { return base._any() }
 }
 
 class AnyPaginatedPlaylist<RealmElement: RealmSwift.Object>: AnyPlaylist<RealmElement>, PaginatorTypeInternal {
@@ -56,20 +54,14 @@ extension AnyPlaylist {
     var startIndex: Int { return base.startIndex }
     
     var endIndex: Int { return base.endIndex }
-    
-//    subscript (index: Int) -> RealmElement { return base[index] }
 }
 
 
 private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, CollectionType {
     
-//    typealias Index = List<Element>.Index
-    
     private var objects: AnyRealmCollection<RealmElement> { fatalError() }
     
     private var changes: Observable<CollectionChange> { fatalError() }
-    
-//    private var paginated: Bool { fatalError() }
     
     private var requestState: Observable<RequestState> { fatalError() }
     
@@ -82,7 +74,7 @@ private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInt
     
     private func refresh(force force: Bool) { fatalError() }
     
-    private func addInto(player player: Player) { fatalError() }
+    private func _any() -> PlaylistType { fatalError() }
 }
 
 extension _AnyPlaylistBase {
@@ -126,6 +118,8 @@ private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Pla
     private override func refresh(force force: Bool) {
         (base as! PaginatorTypeInternal).refresh(force: force)
     }
+    
+    private override func _any() -> PlaylistType { return base._any() }
 }
 
 

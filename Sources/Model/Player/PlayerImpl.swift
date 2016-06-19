@@ -240,15 +240,8 @@ final class PlayerImpl: NSObject, Player {
     }
     
     func add(playlist playlist: PlaylistType) {
-        switch playlist {
-        case let playlist as History:
-            _add(playlist: AnyPlaylist(playlist: playlist))
-        case let playlist as Search:
-            print("search playlist added")
-            _add(playlist: AnyPaginatedPlaylist(playlist: playlist))
-        default:
-            _add(playlist: playlist)
-        }
+        
+        _add(playlist: playlist._any())
     }
     
     private func _add(playlist playlist: PlaylistType) {

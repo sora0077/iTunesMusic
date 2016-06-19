@@ -148,6 +148,8 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
 extension Search: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].objects) }
+    
+    public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }
 
 extension Search: CollectionType {
