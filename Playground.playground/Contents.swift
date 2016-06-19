@@ -118,9 +118,9 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
             guard let `self` = self else { return }
             
             switch changes {
-            case .Initial:
+            case .initial:
                 self.tableView.reloadData()
-            case let .Update(deletions: deletions, insertions: insertions, modifications: modifications):
+            case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
                 self.tableView.beginUpdates()
                 
                 func indexPaths(values: [Int]) -> [NSIndexPath] {
@@ -174,16 +174,16 @@ let search = Search(term: "ジョーカー・ゲーム DOUBLE")
 
 search.changes.subscribeNext { changes in
     switch changes {
-    case .Initial:
+    case .initial:
         for t in search {
 //            player.add(track: t)
         }
-    case let .Update(_, insertions, _):
+    case let .update(_, insertions, _):
         if !insertions.isEmpty {
             
             let track = search[0]
             print("searched ", track.trackName)
-            player.add(track: track)
+            player.add(track: track, afterPlaylist: true)
         }
     }
 }

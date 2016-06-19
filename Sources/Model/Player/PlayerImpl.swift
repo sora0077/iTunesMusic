@@ -26,23 +26,20 @@ private extension AVPlayerItem {
     }
 }
 
-
 private class OneTrackPlaylist: PlaylistType {
     
-    let changes: Observable<CollectionChange> = asObservable(Variable(.Initial))
+    private var changes: Observable<CollectionChange> = asObservable(Variable(.initial))
     
-    let count: Int = 1
-    let isEmpty: Bool = false
+    private var count: Int { return objects.count }
     
-    let objects: [Track]
-    
-    init(track: Track) {
-        objects = [track]
-    }
+    private var isEmpty: Bool { return objects.isEmpty }
     
     subscript (index: Int) -> Track { return objects[index] }
+    
+    private let objects: [Track]
+    
+    init(track: Track) { objects = [track] }
 }
-
 
 final class PlayerImpl: NSObject, Player {
     
@@ -157,7 +154,7 @@ final class PlayerImpl: NSObject, Player {
                 }
                 NSNotificationCenter.defaultCenter().addObserver(
                     self,
-                    selector: #selector(self.didEndPlay),
+                    selector: #selector(didEndPlay),
                     name: AVPlayerItemDidPlayToEndTimeNotification,
                     object: item
                 )
@@ -166,6 +163,8 @@ final class PlayerImpl: NSObject, Player {
                 if _player.status == .ReadyToPlay {
                     play()
                 }
+            } else {
+                fetch(Preview(track: track))
             }
         }
     }
@@ -191,9 +190,8 @@ final class PlayerImpl: NSObject, Player {
                 print("will play ", playlist[index].trackName)
                 let track = playlist[index]
                 _playingQueue.append(track)
-                let preview = Preview(track: playlist[index])
                 _playlists[_playlists.startIndex].1 += 1
-                fetch(preview)
+                updateQueue()
             } else {
                 
                 if let paginator = paginator where !paginator.hasNoPaginatedContents {
@@ -208,6 +206,7 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func fetch(preview: Preview) {
+        let id = preview.id
         preview.fetch()
             .subscribe(
                 onNext: { [weak self] url, duration in
@@ -215,18 +214,32 @@ final class PlayerImpl: NSObject, Player {
                     self.updateQueue()
                 },
                 onError: { [weak self] error in
-                    print(error)
-                    self?.pause()
+                    guard let `self` = self else { return }
+                    self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
+                    self.updatePlaylistQueue()
                 }
             )
             .addDisposableTo(_disposeBag)
     }
     
+    
     func add(track track: Track) {
+        add(track: track, afterPlaylist: false)
+    }
+    
+    func add(track track: Track, afterPlaylist: Bool) {
         
         print(track.trackName)
         
-        add(playlist: OneTrackPlaylist(track: track))
+        if afterPlaylist {
+            
+            
+            add(playlist: OneTrackPlaylist(track: track))
+        } else {
+            
+            _playingQueue.append(track)
+            updateQueue()
+        }
     }
     
     func add(playlist playlist: PlaylistType) {
@@ -250,9 +263,9 @@ final class PlayerImpl: NSObject, Player {
                 guard let `self` = self, playlist = playlist else { return }
                 
                 switch changes {
-                case .Initial:
+                case .initial:
                     break
-                case .Update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
+                case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
                     print(insertions)
                     if self._playlists.first?.0 === playlist {
                         self.updatePlaylistQueue()

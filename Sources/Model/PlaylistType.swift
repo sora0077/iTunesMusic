@@ -12,16 +12,16 @@ import RxSwift
 
 
 public enum CollectionChange {
-    case Initial
-    case Update(deletions: [Int], insertions: [Int], modifications: [Int])
+    case initial
+    case update(deletions: [Int], insertions: [Int], modifications: [Int])
     
     init<T>(_ change: RealmCollectionChange<T>) {
         
         switch change {
         case .Initial:
-            self = .Initial
+            self = .initial
         case let .Update(_, deletions: deletions, insertions: insertions, modifications: modifications):
-            self = .Update(deletions: deletions, insertions: insertions, modifications: modifications)
+            self = .update(deletions: deletions, insertions: insertions, modifications: modifications)
         case let .Error(error):
             fatalError("\(error)")
         }

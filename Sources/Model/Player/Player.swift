@@ -22,8 +22,10 @@ public protocol Player {
     func play()
     
     func pause()
-
+    
     func add(track track: Track)
+    
+    func add(track track: Track, afterPlaylist: Bool)
     
     func add(playlist playlist: PlaylistType)
 }
