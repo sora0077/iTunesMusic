@@ -27,6 +27,11 @@
 		D9542EFF1D15189A0073C8EE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFD1D15189A0073C8EE /* Player.swift */; };
 		D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542F001D1518B90073C8EE /* PlayerImpl.swift */; };
 		D9FD12E61D16D3CD0010E81D /* LocalSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */; };
+		D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */; };
+		D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E91D182F930010E81D /* ListGenres.swift */; };
+		D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12EB1D1831D50010E81D /* Genres.swift */; };
+		D9FD12EE1D18324F0010E81D /* GenresCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12ED1D18324F0010E81D /* GenresCache.swift */; };
+		D9FD12F01D1C2C610010E81D /* Genre.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12EF1D1C2C610010E81D /* Genre.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +71,11 @@
 		D9542EFD1D15189A0073C8EE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		D9542F001D1518B90073C8EE /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 		D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearch.swift; sourceTree = "<group>"; };
+		D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LookupWithIds.swift; sourceTree = "<group>"; };
+		D9FD12E91D182F930010E81D /* ListGenres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListGenres.swift; sourceTree = "<group>"; };
+		D9FD12EB1D1831D50010E81D /* Genres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
+		D9FD12ED1D18324F0010E81D /* GenresCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresCache.swift; sourceTree = "<group>"; };
+		D9FD12EF1D1C2C610010E81D /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,7 +160,6 @@
 			children = (
 				D91B42961D07071400AAAD58 /* API */,
 				D91B429C1D08625200AAAD58 /* Model */,
-				D9542EFA1D1518580073C8EE /* New Group */,
 				D91B42911D04C46C00AAAD58 /* Cache */,
 				D91B428E1D044AD200AAAD58 /* Entity */,
 				D91B42991D070FA600AAAD58 /* iTunesMusic.swift */,
@@ -163,6 +172,7 @@
 			children = (
 				D91B428F1D044AE600AAAD58 /* Track.swift */,
 				D9542EF41D12DB370073C8EE /* HistoryRecord.swift */,
+				D9FD12EF1D1C2C610010E81D /* Genre.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -172,6 +182,7 @@
 			children = (
 				D91B42941D05BBDB00AAAD58 /* SearchCache.swift */,
 				D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */,
+				D9FD12ED1D18324F0010E81D /* GenresCache.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -180,7 +191,9 @@
 			isa = PBXGroup;
 			children = (
 				D91B42971D07085300AAAD58 /* SearchWithKeyword.swift */,
+				D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */,
 				D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */,
+				D9FD12E91D182F930010E81D /* ListGenres.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -195,15 +208,9 @@
 				D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */,
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
 				D91B42A71D0EFBF700AAAD58 /* History.swift */,
+				D9FD12EB1D1831D50010E81D /* Genres.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		D9542EFA1D1518580073C8EE /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "New Group";
 			sourceTree = "<group>";
 		};
 		D9542EFB1D1518730073C8EE /* Player */ = {
@@ -359,14 +366,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9FD12EE1D18324F0010E81D /* GenresCache.swift in Sources */,
 				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
 				D9542EFF1D15189A0073C8EE /* Player.swift in Sources */,
+				D9FD12F01D1C2C610010E81D /* Genre.swift in Sources */,
 				D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */,
 				D91B42981D07085300AAAD58 /* SearchWithKeyword.swift in Sources */,
 				D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */,
+				D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */,
+				D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */,
+				D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
 				D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */,

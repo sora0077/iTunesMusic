@@ -182,13 +182,25 @@ let search = Search(term: "ジョーカー・ゲーム DOUBLE")
 
 //search.fetch()
 
-let localSearch = LocalSearch(term: "DOUBLE")
-localSearch.changes.subscribeNext { changes in
-    print("local search result ", changes)
-}
+//let localSearch = LocalSearch(term: "DOUBLE")
+//localSearch.changes.subscribeNext { changes in
+//    print("local search result ", changes)
+//}
 
-player.add(playlist: search)
-player.add(playlist: history)
+//player.add(playlist: search)
+//player.add(playlist: history)
+
+Genres.instance.changes.subscribeNext { changes in
+    print(changes)
+
+    for g in Genres.instance {
+        print(g.name)
+    }
+}
+Genres.instance.fetch()
+
+Genres.instance.fetch()
+
 
 
 XCPlaygroundPage.currentPage.liveView = RootViewController()
