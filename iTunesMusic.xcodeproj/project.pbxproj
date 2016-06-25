@@ -21,6 +21,9 @@
 		D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A31D0CFA2700AAAD58 /* Preview.swift */; };
 		D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A71D0EFBF700AAAD58 /* History.swift */; };
 		D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */; };
+		D929E4481D1C44C70045C316 /* Rss.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4471D1C44C70045C316 /* Rss.swift */; };
+		D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4491D1C44E50045C316 /* GetRss.swift */; };
+		D929E44C1D1E51060045C316 /* RssFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E44B1D1E51060045C316 /* RssFeed.swift */; };
 		D9542EF51D12DB370073C8EE /* HistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* HistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
 		D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */; };
@@ -65,6 +68,9 @@
 		D91B42A31D0CFA2700AAAD58 /* Preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		D91B42A71D0EFBF700AAAD58 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCache.swift; sourceTree = "<group>"; };
+		D929E4471D1C44C70045C316 /* Rss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rss.swift; sourceTree = "<group>"; };
+		D929E4491D1C44E50045C316 /* GetRss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetRss.swift; sourceTree = "<group>"; };
+		D929E44B1D1E51060045C316 /* RssFeed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssFeed.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* HistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 		D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
@@ -173,6 +179,7 @@
 				D91B428F1D044AE600AAAD58 /* Track.swift */,
 				D9542EF41D12DB370073C8EE /* HistoryRecord.swift */,
 				D9FD12EF1D1C2C610010E81D /* Genre.swift */,
+				D929E44B1D1E51060045C316 /* RssFeed.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -194,6 +201,7 @@
 				D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */,
 				D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */,
 				D9FD12E91D182F930010E81D /* ListGenres.swift */,
+				D929E4491D1C44E50045C316 /* GetRss.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -209,6 +217,7 @@
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
 				D91B42A71D0EFBF700AAAD58 /* History.swift */,
 				D9FD12EB1D1831D50010E81D /* Genres.swift */,
+				D929E4471D1C44C70045C316 /* Rss.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -370,6 +379,8 @@
 				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
+				D929E44C1D1E51060045C316 /* RssFeed.swift in Sources */,
+				D929E4481D1C44C70045C316 /* Rss.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
 				D9542EFF1D15189A0073C8EE /* Player.swift in Sources */,
 				D9FD12F01D1C2C610010E81D /* Genre.swift in Sources */,
@@ -379,6 +390,7 @@
 				D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */,
 				D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */,
 				D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */,
+				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
 				D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */,

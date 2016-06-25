@@ -32,13 +32,13 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
     var name: String { return term }
     
     var hasNoPaginatedContents: Bool {
-        return [.Done, .Error].contains(_requestState.value)
+        return [.done, .error].contains(_requestState.value)
     }
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
-    private let _requestState = Variable<RequestState>(.None)
+    private let _requestState = Variable<RequestState>(.none)
     public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
     
     private let _refreshing = Variable<Bool>(false)
@@ -94,12 +94,12 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
     
     private func request(refreshing refreshing: Bool = false) {
         
-        if [.Requesting, .Done].contains(_requestState.value) {
+        if [.requesting, .done].contains(_requestState.value) {
             return
         }
         
         _refreshing.value = refreshing
-        _requestState.value = .Requesting
+        _requestState.value = .requesting
         
         let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
         
@@ -134,11 +134,11 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
                     cache.offset += results.objects.count
                 }
                 print("search result cached")
-                self._requestState.value = results.objects.count != search.limit ? .Done : .None
+                self._requestState.value = results.objects.count != search.limit ? .done : .none
                 print(self._requestState.value)
             case .Failure(let error):
                 print(error)
-                self._requestState.value = .Error
+                self._requestState.value = .error
             }
         }
     }

@@ -179,28 +179,31 @@ let search = Search(term: "ジョーカー・ゲーム DOUBLE")
 //        }
 //    }
 //}
-
+//
 //search.fetch()
-
+//
 //let localSearch = LocalSearch(term: "DOUBLE")
 //localSearch.changes.subscribeNext { changes in
 //    print("local search result ", changes)
 //}
-
+//
 //player.add(playlist: search)
 //player.add(playlist: history)
 
-Genres.instance.changes.subscribeNext { changes in
+var strong: [Any] = []
+let genres = Genres()
+genres.changes.subscribeNext { changes in
     print(changes)
 
-    for g in Genres.instance {
-        print(g.name)
+    if !genres.isEmpty {
+        let rss = Rss(genre: genres[0])
+        rss.fetch()
+        strong.append(rss)
+    }
+    for g in genres {
+        print(g.name, g.rssUrls.topSongs)
     }
 }
-Genres.instance.fetch()
-
-Genres.instance.fetch()
-
-
+genres.fetch()
 
 XCPlaygroundPage.currentPage.liveView = RootViewController()

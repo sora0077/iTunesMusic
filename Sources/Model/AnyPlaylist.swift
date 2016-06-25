@@ -13,7 +13,7 @@ import RxSwift
 
 
 public enum RequestState: Int {
-    case None, Requesting, Error, Done
+    case none, requesting, error, done
 }
 
 class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {

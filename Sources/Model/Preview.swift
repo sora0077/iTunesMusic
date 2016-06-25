@@ -68,7 +68,7 @@ final class Preview {
 //            }
 //    }
     
-    func fetch() -> Observable<(NSURL, Int)> {
+    func fetch() -> Observable<(NSURL, duration: Int)> {
         let id = self.id
         let url = self.url
         

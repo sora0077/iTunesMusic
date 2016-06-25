@@ -16,6 +16,14 @@ protocol iTunesRequestType: RequestType {
     
 }
 
+extension iTunesRequestType {
+    
+    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
+        print(URLRequest)
+        return URLRequest
+    }
+}
+
 extension iTunesRequestType where Response: Decodable {
     
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
@@ -60,3 +68,44 @@ func asReplayObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.
 }
 
 extension Variable: ObservableConvertibleType {}
+
+
+
+public protocol Fetchable {
+    
+    var requestState: Observable<RequestState> { get }
+    
+    func fetch()
+    
+    func refresh(force force: Bool)
+}
+
+protocol FetchableInternal: Fetchable {
+    
+    var _requestState: Variable<RequestState> { get }
+    
+    //    var createDate: NSDate { get }
+    
+    func request(refreshing refreshing: Bool)
+}
+
+extension Fetchable {
+    
+    public func fetch() {
+        _request(refreshing: false)
+    }
+    
+    public func refresh(force force: Bool) {
+        _request(refreshing: true)
+    }
+    
+    private func _request(refreshing refreshing: Bool) {
+        let s = self as! FetchableInternal
+        if [.done, .requesting].contains(s._requestState.value) {
+            return
+        }
+        
+        s.request(refreshing: refreshing)
+    }
+}
+

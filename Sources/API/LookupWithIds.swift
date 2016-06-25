@@ -19,11 +19,8 @@ struct LookupResultPage {
 extension LookupResultPage: Decodable {
     
     static func decode(e: Extractor) throws -> LookupResultPage {
-        
         var obj = LookupResultPage()
-        
         obj.objects = try e.array("results")
-        
         return obj
     }
 }
@@ -45,17 +42,11 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
     
     var country = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as! String
     
-    var offset: Int
-    
-    var limit: Int = 5
-    
     var queryParameters: [String : AnyObject]? {
         return [
             "id": ids.map(String.init).joinWithSeparator(","),
             "lang": lang,
-            "country": country,
-            "offset": offset,
-            "limit": limit
+            "country": country
         ]
     }
     
@@ -67,13 +58,11 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
 
 extension LookupWithIds {
     
-    init(ids: [Int], offset: Int = 0) {
+    init(ids: [Int]) {
         self.ids = ids
-        self.offset = offset
     }
     
-    init(id: Int, offset: Int = 0) {
+    init(id: Int) {
         self.ids = [id]
-        self.offset = offset
     }
 }

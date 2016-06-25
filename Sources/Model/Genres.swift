@@ -11,6 +11,8 @@ import RxSwift
 import RealmSwift
 import APIKit
 
+private var _requestState = Variable<RequestState>(.none)
+
 
 public final class Genres {
     
@@ -35,10 +37,12 @@ public final class Genres {
         }
     }
     
-    public var isEmpty: Bool { return caches.isEmpty ? true : cache.list.isEmpty }
+    public var isEmpty: Bool { return caches.isEmpty || cache.list.isEmpty }
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    
+    public private(set) lazy var requestState: Observable<RequestState> = asObservable(_requestState)
     
     private var token: NotificationToken?
     private var objectsToken: NotificationToken?
@@ -47,7 +51,7 @@ public final class Genres {
         return caches[0]
     }
     
-    private init() {
+    public init() {
         
         let realm = try! Realm()
         caches = realm.objects(_GenresCache).filter("key = %@", "default").sorted("createAt", ascending: false)
@@ -70,7 +74,6 @@ public final class Genres {
             
             switch changes {
             case .Initial(let results):
-                print(results)
                 updateObserver(results)
             case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
                 if !insertions.isEmpty {
@@ -82,11 +85,9 @@ public final class Genres {
         }
     }
     
-    public static let instance = Genres()
-    
     public func fetch() {
         
-        if !isEmpty {
+        if [.requesting, .done].contains(_requestState.value) {
             return
         }
         
@@ -109,8 +110,10 @@ public final class Genres {
                         }
                         realm.add(defaults)
                     }
+                    _requestState.value = .done
                 case .Failure(let error):
                     print(error)
+                    _requestState.value = .error
                 }
             }
         }
