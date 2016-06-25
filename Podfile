@@ -3,16 +3,25 @@ platform :ios, '9.3'
 # Uncomment this line if you're using Swift
 use_frameworks!
 
+def core
+    pod 'APIKit'
+    pod 'Himotoki'
+    pod 'RealmSwift'
+    pod 'RxSwift'
+    pod 'QueryKit'
+    pod 'Timepiece'
+
+end
+
 target 'iTunesMusic' do
-  pod 'APIKit'
-  pod 'Himotoki'
-  pod 'RealmSwift'
-  pod 'RxSwift'
-  pod 'QueryKit'
-  pod 'Timepiece'
+  core()
   # pod 'PINCache'
 end
 
 target 'iTunesMusicTests' do
 
+end
+
+target 'Demo' do
+  core()
 end
