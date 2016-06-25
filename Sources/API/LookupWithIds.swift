@@ -49,11 +49,6 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
             "country": country
         ]
     }
-    
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        print(URLRequest)
-        return URLRequest
-    }
 }
 
 extension LookupWithIds {

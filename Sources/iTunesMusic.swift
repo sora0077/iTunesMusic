@@ -19,7 +19,7 @@ protocol iTunesRequestType: RequestType {
 extension iTunesRequestType {
     
     func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        print(URLRequest)
+        print(self, URLRequest)
         return URLRequest
     }
 }
@@ -84,7 +84,9 @@ protocol FetchableInternal: Fetchable {
     
     var _requestState: Variable<RequestState> { get }
     
-    //    var createDate: NSDate { get }
+    var needRefresh: Bool { get }
+    
+    var hasNoPaginatedContents: Bool { get }
     
     func request(refreshing refreshing: Bool)
 }
@@ -96,7 +98,10 @@ extension Fetchable {
     }
     
     public func refresh(force force: Bool) {
-        _request(refreshing: true)
+        let s = self as! FetchableInternal
+        if force || s.needRefresh {
+            _request(refreshing: true)
+        }
     }
     
     private func _request(refreshing refreshing: Bool) {
@@ -105,7 +110,16 @@ extension Fetchable {
             return
         }
         
+        s._requestState.value = .requesting
+        
         s.request(refreshing: refreshing)
+    }
+}
+
+extension FetchableInternal {
+    
+    var hasNoPaginatedContents: Bool {
+        return [.done, .error].contains(_requestState.value)
     }
 }
 

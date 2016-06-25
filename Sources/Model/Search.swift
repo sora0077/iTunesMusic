@@ -27,23 +27,21 @@ private func getOrCreateCache(term term: String, realm: Realm) -> SearchCache {
 }
 
 
-public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
+public final class Search: PlaylistType, Fetchable, FetchableInternal {
     
     var name: String { return term }
-    
-    var hasNoPaginatedContents: Bool {
-        return [.done, .error].contains(_requestState.value)
-    }
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
-    private let _requestState = Variable<RequestState>(.none)
+    let _requestState = Variable<RequestState>(.none)
     public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
     
     private let _refreshing = Variable<Bool>(false)
     
-    
+    var needRefresh: Bool {
+        return NSDate() - getOrCreateCache(term: term, realm: try! Realm()).refreshAt > 60.minutes
+    }
 
     private let term: String
     private let caches: Results<SearchCache>
@@ -79,27 +77,9 @@ public final class Search: PlaylistType, PaginatorTypeInternal, PaginatorType {
         }
     }
     
-    public func fetch() {
-        
-        print("fetch")
-        request()
-    }
-    
-    public func refresh(force force: Bool) {
-        
-        if force || NSDate() - getOrCreateCache(term: term, realm: try! Realm()).refreshAt > 60.minutes {
-            request(refreshing: true)
-        }
-    }
-    
-    private func request(refreshing refreshing: Bool = false) {
-        
-        if [.requesting, .done].contains(_requestState.value) {
-            return
-        }
+    func request(refreshing refreshing: Bool = false) {
         
         _refreshing.value = refreshing
-        _requestState.value = .requesting
         
         let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
         

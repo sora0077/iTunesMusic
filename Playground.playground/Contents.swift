@@ -198,7 +198,27 @@ genres.changes.subscribeNext { changes in
     if !genres.isEmpty {
         let rss = Rss(genre: genres[0])
         rss.fetch()
-        strong.append(rss)
+        player.add(playlist: rss)
+        
+        rss.changes.subscribeNext { changes in
+            switch changes {
+            case .initial:
+                
+                for (idx, t) in rss.enumerate() {
+                    print(idx, t.trackName)
+                }
+            case let .update(deletions, insertions, modifications):
+                for i in deletions {
+                    print("delete ", i, rss[i].trackName)
+                }
+                for i in insertions {
+                    print("insert ", i, rss[i].trackName)
+                }
+                for i in modifications {
+                    print("modify ", i, rss[i].trackName)
+                }
+            }
+        }
     }
     for g in genres {
         print(g.name, g.rssUrls.topSongs)

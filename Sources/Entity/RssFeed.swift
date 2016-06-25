@@ -21,6 +21,8 @@ class _RssFeed: RealmSwift.Object {
         }
     }
     
+    dynamic var refreshAt = NSDate()
+    
     let items = List<_RssItem>()
     
     let tracks = List<_Track>()

@@ -34,17 +34,19 @@ class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, Playli
     func _any() -> PlaylistType { return base._any() }
 }
 
-class AnyPaginatedPlaylist<RealmElement: RealmSwift.Object>: AnyPlaylist<RealmElement>, PaginatorTypeInternal {
+class AnyPaginatedPlaylist<RealmElement: RealmSwift.Object>: AnyPlaylist<RealmElement>, Fetchable, FetchableInternal {
     
     var requestState: Observable<RequestState> { return base.requestState }
     
-    func fetch() { base.fetch() }
+    var _requestState: Variable<RequestState> { return base._requestState }
     
-    func refresh(force force: Bool) { base.refresh(force: force) }
+    var needRefresh: Bool { return base.needRefresh }
+    
+    func request(refreshing refreshing: Bool) { base.request(refreshing: refreshing) }
     
     var hasNoPaginatedContents: Bool { return base.hasNoPaginatedContents }
     
-    override init<Playlist: protocol<PlaylistTypeInternal, PaginatorTypeInternal> where Playlist.RealmElement == RealmElement>(playlist: Playlist) {
+    override init<Playlist: protocol<PlaylistTypeInternal, FetchableInternal> where Playlist.RealmElement == RealmElement>(playlist: Playlist) {
         super.init(playlist: playlist)
     }
 }
@@ -65,14 +67,16 @@ private class _AnyPlaylistBase<RealmElement: RealmSwift.Object>: PlaylistTypeInt
     
     private var requestState: Observable<RequestState> { fatalError() }
     
+    private var _requestState: Variable<RequestState> { fatalError() }
+    
+    private var needRefresh: Bool { fatalError() }
+    
     var hasNoPaginatedContents: Bool { fatalError() }
     
     subscript (index: Int) -> Track { fatalError() }
     
     
-    private func fetch() { fatalError() }
-    
-    private func refresh(force force: Bool) { fatalError() }
+    private func request(refreshing refreshing: Bool) { fatalError() }
     
     private func _any() -> PlaylistType { fatalError() }
 }
@@ -107,32 +111,17 @@ private class _AnyPlaylist<Playlist: PlaylistTypeInternal>: _AnyPlaylistBase<Pla
         super.init()
     }
     
-    private override var requestState: Observable<RequestState> { return (base as! PaginatorTypeInternal).requestState }
+    private override var requestState: Observable<RequestState> { return (base as! Fetchable).requestState }
+    
+    private override var _requestState: Variable<RequestState> { return (base as! FetchableInternal)._requestState }
+    
+    private override var needRefresh: Bool { return (base as! FetchableInternal).needRefresh }
 
-    private override var hasNoPaginatedContents: Bool { return (base as! PaginatorTypeInternal).hasNoPaginatedContents }
+    private override var hasNoPaginatedContents: Bool { return (base as! FetchableInternal).hasNoPaginatedContents }
     
-    private override func fetch() {
-        (base as! PaginatorTypeInternal).fetch()
-    }
-    
-    private override func refresh(force force: Bool) {
-        (base as! PaginatorTypeInternal).refresh(force: force)
+    private override func request(refreshing refreshing: Bool) {
+        (base as! FetchableInternal).request(refreshing: refreshing)
     }
     
     private override func _any() -> PlaylistType { return base._any() }
-}
-
-
-public protocol PaginatorType {
-    
-    var requestState: Observable<RequestState> { get }
-    
-    func fetch()
-    
-    func refresh(force force: Bool)
-}
-
-protocol PaginatorTypeInternal: PaginatorType {
-    
-    var hasNoPaginatedContents: Bool { get }
 }

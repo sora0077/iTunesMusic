@@ -47,7 +47,7 @@ final class PlayerImpl: NSObject, Player {
     
     private var _playingQueue: ArraySlice<Track> = []
     
-    private var _previewQueue: ArraySlice<Preview> = []
+    private var _previewQueue: [Int: Preview] = [:]
     
     private let _player = AVQueuePlayer()
     
@@ -58,7 +58,6 @@ final class PlayerImpl: NSObject, Player {
     
     private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
     private let _currentTime = Variable<Float64>(0)
-    
     
     override init() {
         super.init()
@@ -174,7 +173,7 @@ final class PlayerImpl: NSObject, Player {
         if _player.items().count < 3 && !_playlists.isEmpty {
             let (playlist, index, _) = _playlists[_playlists.startIndex]
             
-            let paginator = playlist as? PaginatorTypeInternal
+            let paginator = playlist as? FetchableInternal
             print(paginator, playlist)
             
             if playlist.count - index < 3 {
@@ -206,15 +205,21 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func fetch(preview: Preview) {
+        if _previewQueue[preview.id] != nil {
+            return
+        }
         let id = preview.id
+        _previewQueue[id] = preview
         preview.fetch()
             .subscribe(
                 onNext: { [weak self] url, duration in
                     guard let `self` = self else { return }
+                    self._previewQueue[id] = nil
                     self.updateQueue()
                 },
                 onError: { [weak self] error in
                     guard let `self` = self else { return }
+                    self._previewQueue[id] = nil
                     self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
                     self.updatePlaylistQueue()
                 }

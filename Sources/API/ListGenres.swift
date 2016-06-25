@@ -28,11 +28,6 @@ struct ListGenres<Response: Decodable>: iTunesRequestType {
         ]
     }
     
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        print(URLRequest)
-        return URLRequest
-    }
-    
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
         let root = (object as! [String: AnyObject]).values.first as! [String: AnyObject]
         return try! Response.decodeValue(root)

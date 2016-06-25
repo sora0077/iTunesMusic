@@ -72,11 +72,6 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
         ]
     }
     
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        print(URLRequest)
-        return URLRequest
-    }
-    
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
         
         var obj: Response = try decodeValue(object)
