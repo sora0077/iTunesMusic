@@ -43,6 +43,8 @@ private class OneTrackPlaylist: PlaylistType {
 
 final class PlayerImpl: NSObject, Player {
     
+    var playlists: [PlaylistType] { return _playlists.map { $0.0 } }
+    
     private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
     
     private var _playingQueue: ArraySlice<Track> = []
@@ -61,10 +63,9 @@ final class PlayerImpl: NSObject, Player {
     
     override init() {
         super.init()
-        
-//        #if TARGET_OS_SIMULATOR
+        #if !TARGET_OS_IPHONE
             _player.volume = 0.06
-//        #endif
+        #endif
         _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
         _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
         

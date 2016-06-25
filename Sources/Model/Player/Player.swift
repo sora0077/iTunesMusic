@@ -19,6 +19,8 @@ public protocol Player {
     
     var currentTime: Observable<Float64> { get }
     
+    var playlists: [PlaylistType] { get }
+    
     func play()
     
     func pause()

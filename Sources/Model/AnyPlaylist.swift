@@ -11,11 +11,6 @@ import RealmSwift
 import RxSwift
 
 
-
-public enum RequestState: Int {
-    case none, requesting, error, done
-}
-
 class AnyPlaylist<RealmElement: RealmSwift.Object>: PlaylistTypeInternal, PlaylistType, CollectionType {
     
     var objects: AnyRealmCollection<RealmElement> { return AnyRealmCollection(base.objects) }

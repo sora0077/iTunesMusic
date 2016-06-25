@@ -70,6 +70,9 @@ func asReplayObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.
 extension Variable: ObservableConvertibleType {}
 
 
+public enum RequestState: Int {
+    case none, requesting, error, done
+}
 
 public protocol Fetchable {
     
