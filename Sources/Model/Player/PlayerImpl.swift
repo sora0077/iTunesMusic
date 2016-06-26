@@ -270,8 +270,6 @@ final class PlayerImpl: NSObject, Player {
                     guard let `self` = self, playlist = playlist else { return }
                     
                     switch changes {
-                    case .initial:
-                        break
                     case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
                         print(insertions)
                         if self._playlists.first?.0 === playlist {

@@ -1,5 +1,5 @@
 //
-//  RssFeed.swift
+//  RssCache.swift
 //  iTunesMusic
 //
 //  Created by 林達也 on 2016/06/25.
@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 
 
-class _RssFeed: RealmSwift.Object {
+class _RssCache: RealmSwift.Object {
     
     dynamic var _genreId: Int = 0
     
@@ -39,7 +39,7 @@ class _RssItem: RealmSwift.Object {
     
 }
 
-extension _RssFeed: Decodable {
+extension _RssCache: Decodable {
     
     static func decode(e: Extractor) throws -> Self {
         let obj = self.init()

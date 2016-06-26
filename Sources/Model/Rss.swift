@@ -21,11 +21,11 @@ private extension Array {
 }
 
 
-private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssFeed {
-    if let cache = realm.objectForPrimaryKey(_RssFeed.self, key: genreId) {
+private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssCache {
+    if let cache = realm.objectForPrimaryKey(_RssCache.self, key: genreId) {
         return cache
     } else {
-        let cache = _RssFeed()
+        let cache = _RssCache()
         try! realm.write {
             cache._genreId = genreId
             realm.add(cache)
@@ -49,7 +49,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
     private let id: Int
     private let url: NSURL
     
-    private let caches: Results<_RssFeed>
+    private let caches: Results<_RssCache>
     private var token: NotificationToken!
     private var objectsToken: NotificationToken!
     
@@ -63,11 +63,11 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         let feed = getOrCreateCache(genreId: id, realm: realm)
         trackIds = feed.items.map { $0.id }
         
-        caches = realm.objects(_RssFeed).filter("_genreId = \(id)")
+        caches = realm.objects(_RssCache).filter("_genreId = \(id)")
         token = caches.addNotificationBlock { [weak self] changes in
             guard let `self` = self else { return }
             
-            func updateObserver(results: Results<_RssFeed>) {
+            func updateObserver(results: Results<_RssCache>) {
                 self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
                     self?._changes.onNext(CollectionChange(changes))
                 }
@@ -142,7 +142,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         
         let session = Session.sharedSession
         
-        session.sendRequest(GetRss<_RssFeed>(url: url, limit: 200)) { [weak self] result in
+        session.sendRequest(GetRss<_RssCache>(url: url, limit: 200)) { [weak self] result in
             guard let `self` = self else { return }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
