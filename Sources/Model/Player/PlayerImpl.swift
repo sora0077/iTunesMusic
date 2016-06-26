@@ -175,39 +175,42 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func updatePlaylistQueue() {
+        defer {
+            updateQueue()
+        }
+        if !(_player.items().count < 3 && !_playlists.isEmpty) {
+            return
+        }
         
-        if _player.items().count < 3 && !_playlists.isEmpty {
-            let (playlist, index, _) = _playlists[_playlists.startIndex]
+        let (playlist, index, _) = _playlists[_playlists.startIndex]
+        
+        let paginator = playlist as? FetchableInternal
+        print(paginator, playlist)
+        
+        if playlist.count - index < 3 {
+            paginator?.fetch()
             
-            let paginator = playlist as? FetchableInternal
-            print(paginator, playlist)
-            
-            if playlist.count - index < 3 {
-                paginator?.fetch()
-                
-                if playlist.isEmpty {
-                    return
-                }
-            }
-            print("play", playlist.count, index)
-            
-            if playlist.count > index {
-                print("will play ", playlist[index].trackName)
-                let track = playlist[index]
-                _playingQueue.append(track)
-                _playlists[_playlists.startIndex].1 += 1
-                updateQueue()
-            } else {
-                
-                if let paginator = paginator where !paginator.hasNoPaginatedContents {
-                    return
-                }
-                _playlists = _playlists.dropFirst()
-                updatePlaylistQueue()
-                print("drop playlist ", playlist)
+            if playlist.isEmpty {
+                return
             }
         }
-        updateQueue()
+        print("play", playlist.count, index)
+        
+        if playlist.count > index {
+            print("will play ", playlist[index].trackName)
+            let track = playlist[index]
+            _playingQueue.append(track)
+            _playlists[_playlists.startIndex].1 += 1
+            updateQueue()
+        } else {
+            
+            if let paginator = paginator where !paginator.hasNoPaginatedContents {
+                return
+            }
+            _playlists = _playlists.dropFirst()
+            updatePlaylistQueue()
+            print("drop playlist ", playlist)
+        }
     }
     
     private func fetch(preview: Preview) {
