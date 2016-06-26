@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9A0B3F61D2B3B43B8EF3659E /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C9E2A1ACB5199EA49BF3E0 /* Pods_Demo.framework */; };
-		B6F4750F4055DA842770F2B2 /* Pods_iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8EAAFD30FFD7035B0683510 /* Pods_iTunesMusic.framework */; };
+		4703842E4F1378FA629288A2 /* Pods_iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F68CC0B1639812C2EDE6155F /* Pods_iTunesMusic.framework */; };
+		9440D4716F451C3207D843DE /* Pods_iTunesMusicTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */; };
+		A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */; };
 		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
 		D91B42771D043D5A00AAAD58 /* iTunesMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = D91B42761D043D5A00AAAD58 /* iTunesMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; };
@@ -88,12 +89,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0577185D1BF00CAB925C86BF /* Pods-iTunesMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.release.xcconfig"; sourceTree = "<group>"; };
-		75C9E2A1ACB5199EA49BF3E0 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7619CE36DF732E3115A9728B /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
-		9B5CC4E472D33843297E7960 /* Pods-iTunesMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.debug.xcconfig"; sourceTree = "<group>"; };
-		B053F27C9996AB1ACE457E75 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
-		C8EAAFD30FFD7035B0683510 /* Pods_iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CAA9A9DE6C10246BD66D1D0 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
+		2E85804C5E9A336EE280E413 /* Pods-iTunesMusicTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusicTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusicTests/Pods-iTunesMusicTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5BD60EA30BEF7759D9D29089 /* Pods-iTunesMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.debug.xcconfig"; sourceTree = "<group>"; };
+		5E700C4F8EC0905A7134AA03 /* Pods-iTunesMusicTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusicTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusicTests/Pods-iTunesMusicTests.release.xcconfig"; sourceTree = "<group>"; };
+		7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Demo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iTunesMusicTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89ACBB0D5C48DFCB978B58A3 /* Pods-iTunesMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.release.xcconfig"; sourceTree = "<group>"; };
+		A709B3BCB922227D2DC3C6BB /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91B42761D043D5A00AAAD58 /* iTunesMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesMusic.h; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 		D9FD12EB1D1831D50010E81D /* Genres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
 		D9FD12ED1D18324F0010E81D /* GenresCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresCache.swift; sourceTree = "<group>"; };
 		D9FD12EF1D1C2C610010E81D /* Genre.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genre.swift; sourceTree = "<group>"; };
+		F68CC0B1639812C2EDE6155F /* Pods_iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6F4750F4055DA842770F2B2 /* Pods_iTunesMusic.framework in Frameworks */,
+				4703842E4F1378FA629288A2 /* Pods_iTunesMusic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */,
+				9440D4716F451C3207D843DE /* Pods_iTunesMusicTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,7 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
-				9A0B3F61D2B3B43B8EF3659E /* Pods_Demo.framework in Frameworks */,
+				A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,22 +181,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		01EBFC9C39380579C978C8B9 /* Frameworks */ = {
+		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C8EAAFD30FFD7035B0683510 /* Pods_iTunesMusic.framework */,
-				75C9E2A1ACB5199EA49BF3E0 /* Pods_Demo.framework */,
+				7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */,
+				F68CC0B1639812C2EDE6155F /* Pods_iTunesMusic.framework */,
+				73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		A91249C29CAE4F26CFD15A6D /* Pods */ = {
+		A9E27FE1CEC2C798CA303771 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9B5CC4E472D33843297E7960 /* Pods-iTunesMusic.debug.xcconfig */,
-				0577185D1BF00CAB925C86BF /* Pods-iTunesMusic.release.xcconfig */,
-				7619CE36DF732E3115A9728B /* Pods-Demo.debug.xcconfig */,
-				B053F27C9996AB1ACE457E75 /* Pods-Demo.release.xcconfig */,
+				A709B3BCB922227D2DC3C6BB /* Pods-Demo.debug.xcconfig */,
+				0CAA9A9DE6C10246BD66D1D0 /* Pods-Demo.release.xcconfig */,
+				5BD60EA30BEF7759D9D29089 /* Pods-iTunesMusic.debug.xcconfig */,
+				89ACBB0D5C48DFCB978B58A3 /* Pods-iTunesMusic.release.xcconfig */,
+				2E85804C5E9A336EE280E413 /* Pods-iTunesMusicTests.debug.xcconfig */,
+				5E700C4F8EC0905A7134AA03 /* Pods-iTunesMusicTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -206,8 +214,8 @@
 				D929E4521D1EE9500045C316 /* Demo */,
 				D929E4671D1EE9510045C316 /* DemoTests */,
 				D91B42741D043D5A00AAAD58 /* Products */,
-				A91249C29CAE4F26CFD15A6D /* Pods */,
-				01EBFC9C39380579C978C8B9 /* Frameworks */,
+				A9E27FE1CEC2C798CA303771 /* Pods */,
+				636759DDAED094E189FCD6B0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -362,12 +370,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D91B42871D043D5B00AAAD58 /* Build configuration list for PBXNativeTarget "iTunesMusic" */;
 			buildPhases = (
-				C54E46BB550A9BBB068AF287 /* Check Pods Manifest.lock */,
+				DD815CD66D820F000E9BA354 /* [CP] Check Pods Manifest.lock */,
 				D91B426E1D043D5A00AAAD58 /* Sources */,
 				D91B426F1D043D5A00AAAD58 /* Frameworks */,
 				D91B42701D043D5A00AAAD58 /* Headers */,
 				D91B42711D043D5A00AAAD58 /* Resources */,
-				CEED801B4260547F07F0D251 /* Copy Pods Resources */,
+				2057F625EE727D2746552A83 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -382,9 +390,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D91B428A1D043D5B00AAAD58 /* Build configuration list for PBXNativeTarget "iTunesMusicTests" */;
 			buildPhases = (
+				869962969FC6CCEB54F5A605 /* [CP] Check Pods Manifest.lock */,
 				D91B42791D043D5B00AAAD58 /* Sources */,
 				D91B427A1D043D5B00AAAD58 /* Frameworks */,
 				D91B427B1D043D5B00AAAD58 /* Resources */,
+				C018292CD6FF660FBB913748 /* [CP] Embed Pods Frameworks */,
+				EA7987E5B3D124EA4B1E3432 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -400,13 +411,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D929E46B1D1EE9510045C316 /* Build configuration list for PBXNativeTarget "Demo" */;
 			buildPhases = (
-				B38ECA892529D0B8FEC6D0C3 /* Check Pods Manifest.lock */,
+				89B8F3FD7E297326EA651FED /* [CP] Check Pods Manifest.lock */,
 				D929E44D1D1EE9500045C316 /* Sources */,
 				D929E44E1D1EE9500045C316 /* Frameworks */,
 				D929E44F1D1EE9500045C316 /* Resources */,
 				D929E4751D1EE9600045C316 /* Embed Frameworks */,
-				0E80505F965D0D6DA63B2C35 /* Embed Pods Frameworks */,
-				B9491C6A3FDC87D028AC7DB5 /* Copy Pods Resources */,
+				D7B4ADD78D616B1D674CEC5F /* [CP] Embed Pods Frameworks */,
+				A0EC3F0B8A8D14BFE2689F0D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -522,29 +533,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0E80505F965D0D6DA63B2C35 /* Embed Pods Frameworks */ = {
+		2057F625EE727D2746552A83 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B38ECA892529D0B8FEC6D0C3 /* Check Pods Manifest.lock */ = {
+		869962969FC6CCEB54F5A605 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,14 +563,29 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		B9491C6A3FDC87D028AC7DB5 /* Copy Pods Resources */ = {
+		89B8F3FD7E297326EA651FED /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A0EC3F0B8A8D14BFE2689F0D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -567,14 +593,44 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C54E46BB550A9BBB068AF287 /* Check Pods Manifest.lock */ = {
+		C018292CD6FF660FBB913748 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iTunesMusicTests/Pods-iTunesMusicTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D7B4ADD78D616B1D674CEC5F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD815CD66D820F000E9BA354 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -582,19 +638,19 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		CEED801B4260547F07F0D251 /* Copy Pods Resources */ = {
+		EA7987E5B3D124EA4B1E3432 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-iTunesMusicTests/Pods-iTunesMusicTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -792,7 +848,7 @@
 		};
 		D91B42881D043D5B00AAAD58 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9B5CC4E472D33843297E7960 /* Pods-iTunesMusic.debug.xcconfig */;
+			baseConfigurationReference = 5BD60EA30BEF7759D9D29089 /* Pods-iTunesMusic.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -811,7 +867,7 @@
 		};
 		D91B42891D043D5B00AAAD58 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0577185D1BF00CAB925C86BF /* Pods-iTunesMusic.release.xcconfig */;
+			baseConfigurationReference = 89ACBB0D5C48DFCB978B58A3 /* Pods-iTunesMusic.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -829,6 +885,7 @@
 		};
 		D91B428B1D043D5B00AAAD58 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E85804C5E9A336EE280E413 /* Pods-iTunesMusicTests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = iTunesMusicTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -839,6 +896,7 @@
 		};
 		D91B428C1D043D5B00AAAD58 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5E700C4F8EC0905A7134AA03 /* Pods-iTunesMusicTests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = iTunesMusicTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -849,7 +907,7 @@
 		};
 		D929E46C1D1EE9510045C316 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7619CE36DF732E3115A9728B /* Pods-Demo.debug.xcconfig */;
+			baseConfigurationReference = A709B3BCB922227D2DC3C6BB /* Pods-Demo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -862,7 +920,7 @@
 		};
 		D929E46D1D1EE9510045C316 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B053F27C9996AB1ACE457E75 /* Pods-Demo.release.xcconfig */;
+			baseConfigurationReference = 0CAA9A9DE6C10246BD66D1D0 /* Pods-Demo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
