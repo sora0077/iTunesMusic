@@ -18,4 +18,5 @@ class _GenresCache: RealmSwift.Object {
     
     let list = List<_Genre>()
 
+    override class func primaryKey() -> String? { return "key" }
 }

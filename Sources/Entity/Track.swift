@@ -43,7 +43,7 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _collectionName: String = ""
     dynamic var _collectionCensoredName: String = ""
     dynamic var _collectionViewUrl: String = ""
-    dynamic var _collectionPrice: Float = 0
+    let _collectionPrice = RealmOptional<Float>()
     dynamic var _collectionExplicitness: String = ""
     
     
@@ -110,7 +110,7 @@ extension _Track: Decodable {
         obj._collectionName = try e.value("collectionName")
         obj._collectionCensoredName = try e.value("collectionCensoredName")
         obj._collectionViewUrl = try e.value("collectionViewUrl")
-        obj._collectionPrice = try e.value("collectionPrice")
+        obj._collectionPrice.value = try e.valueOptional("collectionPrice")
         obj._collectionExplicitness = try e.value("collectionExplicitness")
         
         obj._artistId = try e.value("artistId")

@@ -10,11 +10,26 @@ import Foundation
 import RxSwift
 import RealmSwift
 import APIKit
+import Timepiece
 
-private var _requestState = Variable<RequestState>(.none)
+
+private var __requestState = Variable<RequestState>(.none)
+
+private func getOrCreateCache(key key: String, realm: Realm) -> _GenresCache {
+    if let cache = realm.objectForPrimaryKey(_GenresCache.self, key: key) {
+        return cache
+    } else {
+        let cache = _GenresCache()
+        cache.key = key
+        try! realm.write {
+            realm.add(cache)
+        }
+        return cache
+    }
+}
 
 
-public final class Genres {
+public final class Genres: Fetchable, FetchableInternal {
     
     private enum InitialDefaultGenre: Int {
         
@@ -42,7 +57,10 @@ public final class Genres {
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
-    public private(set) lazy var requestState: Observable<RequestState> = asObservable(_requestState)
+    public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+    var _requestState: Variable<RequestState> { return __requestState }
+    
+    var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! Realm()).createAt > 30.days }
     
     private var token: NotificationToken?
     private var objectsToken: NotificationToken?
@@ -54,16 +72,9 @@ public final class Genres {
     public init() {
         
         let realm = try! Realm()
-        caches = realm.objects(_GenresCache).filter("key = %@", "default").sorted("createAt", ascending: false)
-        if caches.isEmpty {
-            try! realm.write {
-                let defaults = _GenresCache()
-                defaults.key = "default"
-                realm.add(defaults)
-            }
-        }
+        getOrCreateCache(key: "default", realm: realm)
+        caches = realm.objects(_GenresCache).filter("key == %@", "default").sorted("createAt", ascending: false)
         token = caches.addNotificationBlock { [weak self] changes in
-            
             guard let `self` = self else { return }
             
             func updateObserver(results: Results<_GenresCache>) {
@@ -85,9 +96,9 @@ public final class Genres {
         }
     }
     
-    public func fetch() {
+    func request(refreshing refreshing: Bool) {
         
-        if [.requesting, .done].contains(_requestState.value) {
+        if !refreshing && !caches[0].list.isEmpty {
             return
         }
         
@@ -103,17 +114,20 @@ public final class Genres {
                     try! realm.write {
                         realm.add(cache, update: true)
                         
-                        let defaults = _GenresCache()
-                        defaults.key = "default"
+                        let defaults = getOrCreateCache(key: "default", realm: realm)
+                        if refreshing {
+                            defaults.list.removeAll()
+                        }
+                        
                         for genre in InitialDefaultGenre.cases {
                             defaults.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
                         }
                         realm.add(defaults)
                     }
-                    _requestState.value = .done
+                    __requestState.value = .done
                 case .Failure(let error):
                     print(error)
-                    _requestState.value = .error
+                    __requestState.value = .error
                 }
             }
         }

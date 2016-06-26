@@ -8,6 +8,41 @@
 
 import UIKit
 import iTunesMusic
+import RxSwift
+import RxCocoa
+
+
+extension UITableView {
+    
+    func rx_itemUpdates(configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
+        return UIBindingObserver(UIElement: self) { tableView, changes in
+            switch changes {
+            case .initial:
+                tableView.reloadData()
+            case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
+                func indexPath(i: Int) -> NSIndexPath {
+                    let (row, section) = configure?(index: i) ?? (i, 0)
+                    return NSIndexPath(forRow: row, inSection: section)
+                }
+                tableView.performUpdates(
+                    deletions: deletions.map(indexPath),
+                    insertions: insertions.map(indexPath),
+                    modifications: modifications.map(indexPath)
+                )
+            }
+            }.asObserver()
+    }
+    
+    func performUpdates(deletions deletions: [NSIndexPath], insertions: [NSIndexPath], modifications: [NSIndexPath]) {
+        
+        beginUpdates()
+        deleteRowsAtIndexPaths(deletions, withRowAnimation: .Automatic)
+        insertRowsAtIndexPaths(insertions, withRowAnimation: .Automatic)
+        reloadRowsAtIndexPaths(modifications, withRowAnimation: .Automatic)
+        endUpdates()
+    }
+}
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -17,7 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        player.add(playlist: Search(term: "シャンランラン"))
         return true
     }
 
@@ -45,4 +79,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-

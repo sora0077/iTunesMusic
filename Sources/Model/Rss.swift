@@ -45,12 +45,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
     private var token: NotificationToken!
     private var objectsToken: NotificationToken!
     
-    private var trackIds: [Int] = [] {
-        didSet {
-            index = 0
-        }
-    }
-    private var index = 0
+    private var trackIds: [Int] = []
     
     public init(genre: Genre) {
         id = genre.id
@@ -92,7 +87,12 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         
         let session = Session.sharedSession
         let id = self.id
-        let ids = trackIds[index..<(index+10)]
+        
+        let realm = try! Realm()
+        let feed = getOrCreateCache(genreId: id, realm: realm)
+        
+        
+        let ids = trackIds[feed.fetched..<(feed.fetched+10)]
         var lookup = LookupWithIds<LookupResultPage>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
@@ -105,11 +105,13 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
                     realm.add(response.objects, update: true)
                     
                     var done = false
-                    if let feed = realm.objects(_RssFeed).filter("_genre._id == \(id)").first {
-                        feed.tracks.appendContentsOf(response.objects)
-                        self.index += 10
-                        done = feed.items.count == feed.tracks.count
+                    let feed = getOrCreateCache(genreId: id, realm: realm)
+                    if refreshing {
+                        feed.tracks.removeAll()
                     }
+                    feed.tracks.appendContentsOf(response.objects)
+                    feed.fetched += 10
+                    done = feed.items.count == feed.tracks.count
                     self._requestState.value = done ? .done : .none
                 }
             case .Failure(let error):

@@ -24,4 +24,6 @@ end
 
 target 'Demo' do
   core()
+  pod 'RxCocoa'
+  pod 'SnapKit'
 end
