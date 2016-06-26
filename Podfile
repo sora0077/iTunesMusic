@@ -26,4 +26,5 @@ target 'Demo' do
   core()
   pod 'RxCocoa'
   pod 'SnapKit'
+  pod 'SDWebImage'
 end
