@@ -454,6 +454,11 @@
 					};
 					D929E4501D1EE9500045C316 = {
 						CreatedOnToolsVersion = 7.3.1;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					D929E4631D1EE9510045C316 = {
 						CreatedOnToolsVersion = 7.3.1;

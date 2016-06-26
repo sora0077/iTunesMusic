@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 import iTunesMusic
 import RxSwift
 import RxCocoa
@@ -70,6 +71,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        let session = AVAudioSession.sharedInstance()
+        try! session.setCategory(AVAudioSessionCategoryPlayback)
+        try! session.setActive(true)
         return true
     }
 

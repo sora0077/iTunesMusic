@@ -63,8 +63,11 @@ final class PlayerImpl: NSObject, Player {
     
     override init() {
         super.init()
-        #if !TARGET_OS_IPHONE
-            _player.volume = 0.06
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+            _player.volume = 0.02
+            print("simulator")
+        #else
+            print("iphone")
         #endif
         _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
         _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
@@ -114,57 +117,59 @@ final class PlayerImpl: NSObject, Player {
         }
     }
     
-    func play() {
-        
-        _player.play()
-    }
+    func play() { _player.play() }
     
-    
-    func pause() {
-        
-        _player.pause()
-    }
+    func pause() { _player.pause() }
     
     private func updateQueue() {
         
-        if _player.items().count < 3 && !_playingQueue.isEmpty {
-            
-            let track = _playingQueue[_playingQueue.startIndex] as! _Track
+        print("caller updateQueue")
+        
+        if !(_player.items().count < 3 && !_playingQueue.isEmpty) {
+            return
+        }
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            print("run updateQueue")
+            let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
             if let string = track._longPreviewUrl, duration = track._longPreviewDuration.value, url = NSURL(string: string) {
                 
-                _playingQueue = _playingQueue.dropFirst()
+                self._playingQueue = self._playingQueue.dropFirst()
                 
-                print("now play ", track._trackName)
-                
+                print("add player queue ", track._trackName, NSThread.currentThread())
                 let item = AVPlayerItem(asset: AVAsset(URL: url))
                 item.trackId = track.trackId
-                if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
-                    let inputParams = AVMutableAudioMixInputParameters(track: track)
-                    
-                    let fadeDuration = CMTimeMakeWithSeconds(5, 600);
-                    let fadeOutStartTime = CMTimeMakeWithSeconds(Double(duration)/10000 - 5, 600);
-                    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
-                    
-                    inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
-                    inputParams.setVolumeRampFromStartVolume(0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
-                    
-                    let audioMix = AVMutableAudioMix()
-                    audioMix.inputParameters = [inputParams]
-                    item.audioMix = audioMix
-                }
-                NSNotificationCenter.defaultCenter().addObserver(
-                    self,
-                    selector: #selector(didEndPlay),
-                    name: AVPlayerItemDidPlayToEndTimeNotification,
-                    object: item
-                )
                 
-                _player.insertItem(item, afterItem: nil)
-                if _player.status == .ReadyToPlay {
-                    play()
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                    
+                    if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
+                        let inputParams = AVMutableAudioMixInputParameters(track: track)
+                        
+                        let fadeDuration = CMTimeMakeWithSeconds(5, 600);
+                        let fadeOutStartTime = CMTimeMakeWithSeconds(Double(duration)/10000 - 5, 600);
+                        let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
+                        
+                        inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+                        inputParams.setVolumeRampFromStartVolume(0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+                        
+                        let audioMix = AVMutableAudioMix()
+                        audioMix.inputParameters = [inputParams]
+                        item.audioMix = audioMix
+                    }
+                    NSNotificationCenter.defaultCenter().addObserver(
+                        self,
+                        selector: #selector(self.didEndPlay),
+                        name: AVPlayerItemDidPlayToEndTimeNotification,
+                        object: item
+                    )
+                    
+                    self._player.insertItem(item, afterItem: nil)
+                    if self._player.status == .ReadyToPlay {
+                        self.play()
+                    }
                 }
             } else {
-                fetch(Preview(track: track))
+                self.fetch(Preview(track: track))
             }
         }
     }
@@ -206,12 +211,14 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func fetch(preview: Preview) {
-        if _previewQueue[preview.id] != nil {
+        let id = preview.id
+        if _previewQueue[id] != nil {
             return
         }
-        let id = preview.id
         _previewQueue[id] = preview
+        
         preview.fetch()
+            .observeOn(MainScheduler.instance)
             .subscribe(
                 onNext: { [weak self] url, duration in
                     guard let `self` = self else { return }
@@ -234,9 +241,6 @@ final class PlayerImpl: NSObject, Player {
     }
     
     func add(track track: Track, afterPlaylist: Bool) {
-        
-        print(track.trackName)
-        
         if afterPlaylist {
             add(playlist: OneTrackPlaylist(track: track))
         } else {
@@ -251,6 +255,8 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func _add(playlist playlist: PlaylistType) {
+        
+        assert(NSThread.isMainThread())
         
         let disposeBag = DisposeBag()
         _playlists.append((playlist, 0, disposeBag))

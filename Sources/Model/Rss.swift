@@ -13,6 +13,14 @@ import RealmSwift
 import Timepiece
 
 
+private extension Array {
+    
+    subscript (safe range: Range<Index>) -> ArraySlice<Element> {
+        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
+    }
+}
+
+
 private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssFeed {
     if let cache = realm.objectForPrimaryKey(_RssFeed.self, key: genreId) {
         return cache
@@ -92,33 +100,39 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         let feed = getOrCreateCache(genreId: id, realm: realm)
         
         
-        let ids = trackIds[feed.fetched..<(feed.fetched+50)]
+        let ids = trackIds[safe: feed.fetched..<(feed.fetched+50)]
+        if ids.isEmpty {
+            _requestState.value = .done
+            return
+        }
         var lookup = LookupWithIds<LookupResultPage>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
         session.sendRequest(lookup) { [weak self] result in
             guard let `self` = self else { return }
-            switch result {
-            case .Success(let response):
-                let realm = try! Realm()
-                try! realm.write {
-                    realm.add(response.objects, update: true)
-                    
-                    var done = false
-                    let feed = getOrCreateCache(genreId: id, realm: realm)
-                    if refreshing {
-                        feed.tracks.removeAll()
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                
+                switch result {
+                case .Success(let response):
+                    let realm = try! Realm()
+                    try! realm.write {
+                        realm.add(response.objects, update: true)
+                        
+                        var done = false
+                        let feed = getOrCreateCache(genreId: id, realm: realm)
+                        if refreshing {
+                            feed.tracks.removeAll()
+                        }
+                        feed.tracks.appendContentsOf(response.objects)
+                        feed.fetched += 50
+                        done = feed.items.count == feed.tracks.count
+                        self._requestState.value = done ? .done : .none
                     }
-                    feed.tracks.appendContentsOf(response.objects)
-                    feed.fetched += 50
-                    done = feed.items.count == feed.tracks.count
-                    self._requestState.value = done ? .done : .none
+                case .Failure(let error):
+                    print(error)
+                    self._requestState.value = .error
                 }
-            case .Failure(let error):
-                print(error)
-                self._requestState.value = .error
             }
-            
         }
     }
     
@@ -130,21 +144,23 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         
         session.sendRequest(GetRss<_RssFeed>(url: url, limit: 200)) { [weak self] result in
             guard let `self` = self else { return }
-            switch result {
-            case .Success(let response):
-                let realm = try! Realm()
-                try! realm.write {
-                    let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
-                    response._genreId = genre?.id ?? 0
-                    response._genre = genre
-                    realm.add(response, update: true)
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                switch result {
+                case .Success(let response):
+                    let realm = try! Realm()
+                    try! realm.write {
+                        let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
+                        response._genreId = genre?.id ?? 0
+                        response._genre = genre
+                        realm.add(response, update: true)
+                    }
+                    self.trackIds = response.items.map { $0.id }
+                    self._requestState.value = .none
+                    self.request(refreshing: false)
+                case .Failure(let error):
+                    print(error)
+                    self._requestState.value = .error
                 }
-                self.trackIds = response.items.map { $0.id }
-                self._requestState.value = .none
-                self.request(refreshing: false)
-            case .Failure(let error):
-                print(error)
-                self._requestState.value = .error
             }
         }
     }

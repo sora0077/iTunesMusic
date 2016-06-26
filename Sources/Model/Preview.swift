@@ -12,7 +12,6 @@ import RealmSwift
 import RxSwift
 import AVKit
 import AVFoundation
-import PINCache
 
 
 final class Preview {
@@ -84,19 +83,21 @@ final class Preview {
         
         return Observable.create { [weak self] subscriber in
             let task = session.sendRequest(GetPreviewUrl(id: id,  url: url)) { result in
-                switch result {
-                case .Success(let (url, duration)):
-                    self?.duration = duration
-                    let realm = try! Realm()
-                    try! realm.write {
-                        guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
-                        track._longPreviewUrl = url.absoluteString
-                        track._longPreviewDuration.value = duration
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                    switch result {
+                    case .Success(let (url, duration)):
+                        self?.duration = duration
+                        let realm = try! Realm()
+                        try! realm.write {
+                            guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
+                            track._longPreviewUrl = url.absoluteString
+                            track._longPreviewDuration.value = duration
+                        }
+                        subscriber.onNext((url, duration))
+                        subscriber.onCompleted()
+                    case .Failure(let error):
+                        subscriber.onError(error)
                     }
-                    subscriber.onNext((url, duration))
-                    subscriber.onCompleted()
-                case .Failure(let error):
-                    subscriber.onError(error)
                 }
             }
             return AnonymousDisposable {
