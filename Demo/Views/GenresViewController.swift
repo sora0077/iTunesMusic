@@ -32,24 +32,7 @@ class GenresViewController: UIViewController {
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         genres.changes
-            .subscribeNext { [weak self] changes in
-                guard let `self` = self else { return }
-                switch changes {
-                case .initial:
-                    self.tableView.reloadData()
-                case let .update(deletions, insertions, modifications):
-                    self.tableView.beginUpdates()
-                    
-                    func indexPaths(indexes: [Int]) -> [NSIndexPath] {
-                        return indexes.map { NSIndexPath(forRow: $0, inSection: 0) }
-                    }
-                    self.tableView.deleteRowsAtIndexPaths(indexPaths(deletions), withRowAnimation: .Automatic)
-                    self.tableView.insertRowsAtIndexPaths(indexPaths(insertions), withRowAnimation: .Automatic)
-                    self.tableView.reloadRowsAtIndexPaths(indexPaths(modifications), withRowAnimation: .Automatic)
-                    
-                    self.tableView.endUpdates()
-                }
-            }
+            .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
         
         genres.fetch()

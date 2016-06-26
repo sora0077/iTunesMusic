@@ -50,6 +50,13 @@ class RssViewController: UIViewController {
         tableView.dataSource = self
         tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
         
+        tableView.rx_reachedBottom()
+            .filter { $0 }
+            .subscribeNext { [weak self] _ in
+                self?.rss.fetch()
+            }
+            .addDisposableTo(disposeBag)
+        
         rss.changes
             .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)

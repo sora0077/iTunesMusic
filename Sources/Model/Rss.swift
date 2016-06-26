@@ -92,7 +92,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         let feed = getOrCreateCache(genreId: id, realm: realm)
         
         
-        let ids = trackIds[feed.fetched..<(feed.fetched+10)]
+        let ids = trackIds[feed.fetched..<(feed.fetched+50)]
         var lookup = LookupWithIds<LookupResultPage>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
@@ -110,7 +110,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
                         feed.tracks.removeAll()
                     }
                     feed.tracks.appendContentsOf(response.objects)
-                    feed.fetched += 10
+                    feed.fetched += 50
                     done = feed.items.count == feed.tracks.count
                     self._requestState.value = done ? .done : .none
                 }

@@ -12,6 +12,24 @@ import RxSwift
 import RxCocoa
 
 
+extension UIScrollView {
+    
+    func rx_reachedBottom(offsetRatio offsetRatio: CGFloat = 0) -> Observable<Bool> {
+        return rx_contentOffset
+            .map { [weak self] contentOffset in
+                guard let scrollView = self else {
+                    return false
+                }
+                
+                let visibleHeight = scrollView.frame.height - scrollView.contentInset.top - scrollView.contentInset.bottom
+                let y = contentOffset.y + scrollView.contentInset.top
+                let threshold = max(0.0, scrollView.contentSize.height - visibleHeight - visibleHeight * offsetRatio)
+                return y > threshold
+        }
+    }
+}
+
+
 extension UITableView {
     
     func rx_itemUpdates(configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {

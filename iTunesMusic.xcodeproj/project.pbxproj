@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9A0B3F61D2B3B43B8EF3659E /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75C9E2A1ACB5199EA49BF3E0 /* Pods_Demo.framework */; };
 		B6F4750F4055DA842770F2B2 /* Pods_iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8EAAFD30FFD7035B0683510 /* Pods_iTunesMusic.framework */; };
+		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
 		D91B42771D043D5A00AAAD58 /* iTunesMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = D91B42761D043D5A00AAAD58 /* iTunesMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; };
 		D91B42831D043D5B00AAAD58 /* iTunesMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42821D043D5B00AAAD58 /* iTunesMusicTests.swift */; };
@@ -93,6 +94,7 @@
 		9B5CC4E472D33843297E7960 /* Pods-iTunesMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.debug.xcconfig"; sourceTree = "<group>"; };
 		B053F27C9996AB1ACE457E75 /* Pods-Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.release.xcconfig"; sourceTree = "<group>"; };
 		C8EAAFD30FFD7035B0683510 /* Pods_iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91B42761D043D5A00AAAD58 /* iTunesMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesMusic.h; sourceTree = "<group>"; };
 		D91B42781D043D5A00AAAD58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 			children = (
 				D929E4771D1F07630045C316 /* GenresViewController.swift */,
 				D929E4791D1F6EBF0045C316 /* RssViewController.swift */,
+				D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,
 				D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */,
 				D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */,
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,

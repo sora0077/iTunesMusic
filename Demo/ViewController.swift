@@ -19,7 +19,10 @@ class ViewController: UIViewController {
         super.viewDidAppear(animated)
         
         let vc = GenresViewController()
-        presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        let nav = UINavigationController(rootViewController: vc)
+        presentViewController(nav, animated: true, completion: nil)
+        
+        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(self.searchAction))
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,6 +30,12 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
+    @objc
+    private func searchAction() {
+        let vc = SearchViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        
+        presentedViewController?.presentViewController(nav, animated: true, completion: nil)
+    }
 }
 

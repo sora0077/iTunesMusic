@@ -58,7 +58,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
     
     var offset: Int
     
-    var limit: Int = 5
+    var limit: Int = 50
     
     var queryParameters: [String : AnyObject]? {
         return [
