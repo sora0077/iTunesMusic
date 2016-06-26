@@ -23,6 +23,8 @@ public protocol Track: EntityInterface {
     var trackName: String { get }
     
     var trackViewURL: NSURL { get }
+    
+    func artworkURL(size size: Int) -> NSURL
 }
 
 
@@ -82,6 +84,9 @@ class _Track: RealmSwift.Object, Track {
     override class func primaryKey() -> String? { return "_trackId" }
 }
 
+private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
+private let artworkCached = NSCache()
+
 extension _Track {
     
     var trackId: Int { return _trackId }
@@ -89,6 +94,23 @@ extension _Track {
     var trackName: String { return _trackName }
     
     var trackViewURL: NSURL { return NSURL(string: _trackViewUrl)! }
+    
+    func artworkURL(size size: Int) -> NSURL {
+        let base = _artworkUrl100
+        if let url = artworkCached.objectForKey(base) as? NSURL {
+            return url
+        }
+        
+        let replaced = artworkRegex.stringByReplacingMatchesInString(
+            base,
+            options: [],
+            range: NSMakeRange(0, base.utf16.count),
+            withTemplate: "\(size)x\(size)"
+        )
+        let url = NSURL(string: replaced)!
+        artworkCached.setObject(url, forKey: base)
+        return url
+    }
 }
 
 extension _Track: Decodable {

@@ -11,6 +11,19 @@ import AVFoundation
 import iTunesMusic
 import RxSwift
 import RxCocoa
+import SDWebImage
+
+
+func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: CollectionType, Playlist.Generator.Element == Track>(size size: Int) -> AnyObserver<Playlist> {
+    return AnyObserver { on in
+        if case .Next(let playlist) = on {
+            let urls = playlist.lazy.flatMap { $0.artworkURL(size: size) }
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                SDWebImagePrefetcher.sharedImagePrefetcher().prefetchURLs(urls)
+            }
+        }
+    }
+}
 
 
 extension UIScrollView {
