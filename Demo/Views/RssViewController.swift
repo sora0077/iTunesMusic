@@ -20,7 +20,7 @@ private class TableViewCell: UITableViewCell {
     let titleLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(artworkImageView)
         artworkImageView.snp_makeConstraints { make in
@@ -35,7 +35,7 @@ private class TableViewCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         titleLabel.snp_makeConstraints { make in
             make.left.equalTo(artworkImageView.snp_right).offset(8)
-            make.right.equalToSuperview().offset(8)
+            make.right.equalToSuperview().offset(-8)
             make.centerY.equalToSuperview()
         }
     }
@@ -60,6 +60,11 @@ class RssViewController: UIViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        tableView.delegate = nil
+        print(self, " deinit")
     }
     
     override func viewDidLoad() {
@@ -90,7 +95,7 @@ class RssViewController: UIViewController {
             .map { [weak self] _ in self?.rss }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: 60))
+            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
             .addDisposableTo(disposeBag)
         
         rss.fetch()
@@ -113,9 +118,18 @@ extension RssViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.titleLabel.text = track.trackName
         
-        cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: 120), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
+        let size = { Int($0 * UIScreen.mainScreen().scale) }
+        
+        let artworkURL = track.artworkURL(size: size(120))
+        cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
             guard let cell = wcell else { return }
-            cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: Int(120 * UIScreen.mainScreen().scale)), placeholderImage: image)
+            //                print("thumb ", url)
+            dispatch_async(dispatch_get_main_queue()) {
+                
+                cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image) { (image, error, type, url) in
+                    //                    print("large ", url)
+                }
+            }
         }
         return cell
     }

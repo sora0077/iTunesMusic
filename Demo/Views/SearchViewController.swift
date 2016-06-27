@@ -42,6 +42,7 @@ class SearchViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.keyboardDismissMode = .Interactive
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
         searhBar.delegate = self

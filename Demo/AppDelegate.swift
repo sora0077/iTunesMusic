@@ -80,14 +80,24 @@ extension UITableView {
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    private let disposeBag = DisposeBag()
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        SDWebImageManager.sharedManager().imageCache.clearDisk()
+        SDWebImageManager.sharedManager().imageCache.clearMemory()
+        
         let session = AVAudioSession.sharedInstance()
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
+
+        History.instance.groupby
+            .subscribeNext { tracks in print(tracks.map { ($0.trackName, $1) }) }
+            .addDisposableTo(disposeBag)
+        
         return true
     }
 

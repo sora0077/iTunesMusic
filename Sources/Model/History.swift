@@ -31,6 +31,22 @@ public final class History: PlaylistType {
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
+    public private(set) lazy var groupby: Observable<[(Track, count: Int)]> = self.changes.map { changes in
+        var group: [Int: Int] = [:]
+        var trackDict: [Int: Track] = [:]
+        for t in self {
+            group[t.trackId] = (group[t.trackId] ?? 0) + 1
+            trackDict[t.trackId] = t
+        }
+        let tracks = group.lazy
+            .filter { $1 > 2 }
+            .map { $0.0 }
+            .sort().reverse()
+            .map { trackDict[$0]! }
+        
+        return tracks.map { ($0, count: group[$0.trackId]!) }
+    }
+    
     private var objectsToken: NotificationToken?
     private let cache: HistoryCache
     

@@ -97,7 +97,8 @@ extension _Track {
     
     func artworkURL(size size: Int) -> NSURL {
         let base = _artworkUrl100
-        if let url = artworkCached.objectForKey(base) as? NSURL {
+        let key = "\(base)_____\(size)"
+        if let url = artworkCached.objectForKey(key) as? NSURL {
             return url
         }
         
@@ -108,7 +109,8 @@ extension _Track {
             withTemplate: "\(size)x\(size)"
         )
         let url = NSURL(string: replaced)!
-        artworkCached.setObject(url, forKey: base)
+//        print(url, key)
+        artworkCached.setObject(url, forKey: key)
         return url
     }
 }
