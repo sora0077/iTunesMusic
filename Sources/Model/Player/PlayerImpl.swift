@@ -132,11 +132,22 @@ final class PlayerImpl: NSObject, Player {
         dispatch_async(dispatch_get_main_queue()) {
             print("run updateQueue")
             let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
-            if let string = track._longPreviewUrl, duration = track._longPreviewDuration.value, url = NSURL(string: string) {
+            func getPreviewInfo() -> (NSURL, duration: Int)? {
+                guard let duration = track._longPreviewDuration.value else { return nil }
+                
+                if let path = track._longPreviewFileUrl where NSFileManager.defaultManager().fileExistsAtPath(path) {
+                    return (NSURL(fileURLWithPath: path), duration)
+                }
+                if let string = track._longPreviewUrl, url = NSURL(string: string) {
+                    return (url, duration)
+                }
+                return nil
+            }
+            if let (url, duration) = getPreviewInfo() {
                 
                 self._playingQueue = self._playingQueue.dropFirst()
                 
-                print("add player queue ", track._trackName, NSThread.currentThread())
+                print("add player queue ", track._trackName, url)
                 let item = AVPlayerItem(asset: AVAsset(URL: url))
                 item.trackId = track.trackId
                 
@@ -223,7 +234,7 @@ final class PlayerImpl: NSObject, Player {
         preview.fetch()
             .observeOn(MainScheduler.instance)
             .subscribe(
-                onNext: { [weak self] url, duration in
+                onNext: { [weak self] url in
                     guard let `self` = self else { return }
                     self._previewQueue[id] = nil
                     self.updateQueue()

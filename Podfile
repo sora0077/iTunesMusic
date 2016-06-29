@@ -10,6 +10,7 @@ def core
     pod 'RxSwift'
     pod 'QueryKit'
     pod 'Timepiece'
+    pod 'PINCache'
 
 end
 

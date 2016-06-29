@@ -12,71 +12,74 @@ import RealmSwift
 import RxSwift
 import AVKit
 import AVFoundation
+import PINCache
 
 
-final class Preview {
+public final class Preview {
     
     let id: Int
     let url: NSURL
     
     var duration: Int = 0
     
-    init(track: Track) {
+    public init(track: Track) {
         let track = track as! _Track
         id = track.trackId
         url = track.trackViewURL
     }
     
-//    func download() -> Observable<NSURL> {
-//        return fetch()
-//            .flatMap { url in
-//                Observable<(NSURL, NSURL?)>.create { subscriber in
-//                    PINCache.sharedCache().diskCache.fileURLForKey(url.absoluteString, block: { (cache, key, data, fileURL) in
-//                        
-//                        subscriber.onNext((url, fileURL))
-//                        subscriber.onCompleted()
-//                    })
-//                    return NopDisposable.instance
-//                }
-//            }
-//            .flatMap { url, fileURL -> Observable<NSURL> in
-//                if let fileURL = fileURL {
-//                    return Observable.just(fileURL)
-//                } else {
-//                    let session = NSURLSession.sharedSession()
-//                    return Observable.create { subscriber in
-//                        
-//                        let task = session.dataTaskWithRequest(NSURLRequest(URL: url), completionHandler: { (data, response, error) in
-//                            if let data = data {
-//                                PINCache.sharedCache().setObject(data, forKey: url.absoluteString)
-//                                PINCache.sharedCache().diskCache.fileURLForKey(url.absoluteString, block: { (cache, key, data, fileURL) in
-//                                    subscriber.onNext(fileURL!)
-//                                    subscriber.onCompleted()
-//                                    print(fileURL)
-//                                })
-//                            } else {
-//                                subscriber.onError(iTunesMusicError.NotFound)
-//                            }
-//                        })
-//                        task.resume()
-//                        return AnonymousDisposable {
-//                            task.cancel()
-//                        }
-//                    }
-//                }
-//            }
-//    }
+    public func download() -> Observable<(NSURL, duration: Int)> {
+        let id = self.id
+        return fetch()
+            .flatMap { url, duration -> Observable<(NSURL, duration: Int)> in
+                if url.fileURL {
+                    return Observable.just((url, duration))
+                }
+                return Observable.create { subscriber in
+                    let session = NSURLSession.sharedSession()
+                    let filename = url.lastPathComponent!
+                    
+                    let task = session.downloadTaskWithURL(url, completionHandler: { (url, response, error) in
+                        if let src = url {
+                            let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
+                            let to = NSURL(fileURLWithPath: path).URLByAppendingPathComponent(filename)
+                            _ = try? NSFileManager.defaultManager().moveItemAtURL(src, toURL: to)
+                            
+                            let realm = try! Realm()
+                            let track = realm.objectForPrimaryKey(_Track.self, key: id)!
+                            try! realm.write {
+                                track._longPreviewFileUrl = to.path
+                                track._longPreviewDuration.value = duration
+                            }
+                            subscriber.onNext((to, track._longPreviewDuration.value!))
+                            subscriber.onCompleted()
+                        } else {
+                            subscriber.onError(error!)
+                        }
+                    })
+                    task.resume()
+                    return AnonymousDisposable {
+                        task.cancel()
+                    }
+                }
+            }
+    }
     
     func fetch() -> Observable<(NSURL, duration: Int)> {
         let id = self.id
         let url = self.url
         
         let realm = try! Realm()
-        if
-            let track = realm.objectForPrimaryKey(_Track.self, key: id),
-            let string = track._longPreviewUrl, url = NSURL(string: string),
-            let duration = track._longPreviewDuration.value {
-            return Observable.just((url, duration))
+        if let track = realm.objectForPrimaryKey(_Track.self, key: id), duration = track._longPreviewDuration.value {
+            if let path = track._longPreviewFileUrl {
+                if NSFileManager.defaultManager().fileExistsAtPath(path) {
+                    print("file exists")
+                    return Observable.just((NSURL(fileURLWithPath: path), duration))
+                }
+            }
+            if let string = track._longPreviewUrl, url = NSURL(string: string) {
+                return Observable.just((url, duration))
+            }
         }
         
         let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))

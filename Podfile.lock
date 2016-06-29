@@ -2,6 +2,7 @@ PODS:
   - APIKit (2.0.3):
     - Result (~> 2.1.1)
   - Himotoki (2.1.0)
+  - PINCache (2.2.2)
   - QueryKit (0.12.1)
   - Realm (1.0.1):
     - Realm/Headers (= 1.0.1)
@@ -21,6 +22,7 @@ PODS:
 DEPENDENCIES:
   - APIKit
   - Himotoki
+  - PINCache
   - QueryKit
   - RealmSwift
   - RxCocoa
@@ -32,6 +34,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   APIKit: f42f0175c3a330b03405884d92bdf39f4793940a
   Himotoki: 59d8ab0cfed411c9d2109cfd365998094ee77d96
+  PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
   QueryKit: 6a8dbe9f33ffac00c424143695681a949b58518d
   Realm: 2e15e39d35b08abb529e212ed5d8af107b5236c8
   RealmSwift: d73ea2af08c3676dbdd5e4b669651a0f492162a4
@@ -42,6 +45,6 @@ SPEC CHECKSUMS:
   SnapKit: bbad04cb016c7cead63965f16b00c09318d271ee
   Timepiece: b5038887b91d6eb70653173f4270e06b3abeac41
 
-PODFILE CHECKSUM: 528772e0e0615d877f38d20ddee23858fe2be45d
+PODFILE CHECKSUM: e22725422fd6342be8f6a5a16a38fc978e09988c
 
 COCOAPODS: 1.0.1

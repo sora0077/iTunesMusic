@@ -61,6 +61,8 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _longPreviewUrl: String?
     let _longPreviewDuration: RealmOptional<Int> = RealmOptional()
     
+    dynamic var _longPreviewFileUrl: String?
+    
     dynamic var _discCount: Int = 0
     dynamic var _discNumber: Int = 0
     

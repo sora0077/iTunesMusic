@@ -95,7 +95,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         try! session.setActive(true)
 
         History.instance.groupby
-            .subscribeNext { tracks in print(tracks.map { ($0.trackName, $1) }) }
+            .flatMap { tracks in
+                tracks.isEmpty ? Observable.empty() : Preview(track: tracks[0].0).download()
+            }
+            .subscribeNext { url, duration in
+                print(url)
+            }
             .addDisposableTo(disposeBag)
         
         return true
