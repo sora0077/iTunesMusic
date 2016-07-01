@@ -86,6 +86,8 @@ class _Track: RealmSwift.Object, Track {
     
     
     override class func primaryKey() -> String? { return "_trackId" }
+    
+    let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 }
 
 private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])

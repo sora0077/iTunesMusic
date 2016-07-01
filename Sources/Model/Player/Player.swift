@@ -21,6 +21,8 @@ public protocol Player {
     
     var playlists: [PlaylistType] { get }
     
+    func install(middleware middleware: PlayerMiddleware)
+    
     func play()
     
     func pause()
@@ -33,3 +35,16 @@ public protocol Player {
 }
 
 public let player: Player = PlayerImpl()
+
+
+public protocol PlayerMiddleware {
+    
+    func didEndPlayTrack(trackId: Int)
+}
+
+extension PlayerMiddleware {
+    
+    public func didEndPlayTrack(trackId: Int) {
+        
+    }
+}

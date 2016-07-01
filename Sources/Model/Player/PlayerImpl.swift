@@ -61,6 +61,8 @@ final class PlayerImpl: NSObject, Player {
     private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
     private let _currentTime = Variable<Float64>(0)
     
+    private var _installs: [PlayerMiddleware] = []
+    
     override init() {
         super.init()
         #if (arch(i386) || arch(x86_64)) && os(iOS)
@@ -115,6 +117,10 @@ final class PlayerImpl: NSObject, Player {
         default:
             break
         }
+    }
+    
+    func install(middleware middleware: PlayerMiddleware) {
+        _installs.append(middleware)
     }
     
     func play() { _player.play() }
@@ -301,10 +307,7 @@ final class PlayerImpl: NSObject, Player {
     private func didEndPlay(notification: NSNotification) {
         
         if let item = notification.object as? AVPlayerItem, trackId = item.trackId {
-            let realm = try! Realm()
-            if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
-                History.add(track, realm: realm)
-            }
+            _installs.forEach { $0.didEndPlayTrack(trackId) }
         }
         if _player.items().count == 1 {
             pause()

@@ -94,7 +94,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
         
-        Downloader.instance.start()
+        player.install(middleware: History.instance)
+        player.install(middleware: Downloader.instance)
         
         return true
     }

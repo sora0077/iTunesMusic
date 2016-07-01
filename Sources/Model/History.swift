@@ -28,6 +28,8 @@ public final class History: PlaylistType {
     
     public let name = "履歴"
     
+    public static let instance = History()
+    
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
@@ -65,8 +67,6 @@ public final class History: PlaylistType {
         return (objects[index].track, objects[index].createAt)
     }
     
-    public static let instance = History()
-    
     static func add(track: Track, realm: Realm) {
         
         let cache = getOrCreateCache(realm: realm)
@@ -82,6 +82,16 @@ public final class History: PlaylistType {
         let cache = getOrCreateCache(realm: realm)
         try! realm.write {
             cache.objects.removeAll()
+        }
+    }
+}
+
+extension History: PlayerMiddleware {
+    
+    public func didEndPlayTrack(trackId: Int) {
+        let realm = try! Realm()
+        if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
+            History.add(track, realm: realm)
         }
     }
 }

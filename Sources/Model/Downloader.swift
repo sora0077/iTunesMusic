@@ -9,6 +9,7 @@
 
 import Foundation
 import RxSwift
+import RealmSwift
 
 
 public final class Downloader {
@@ -17,34 +18,26 @@ public final class Downloader {
     
     public static let instance = Downloader()
     
-    private var cached: Set<PreviewTrack> = []
-    
     private init() {}
+}
+
+extension Downloader: PlayerMiddleware {
     
-    public func start() {
-        
-        History.instance.groupby
-            .flatMap { [weak self] tracks in
-                Observable<PreviewTrack>.create { subscriber in
-                    tracks.forEach { track, _ in
-                        let preview = Preview.instance.queueing(track: track)
-                        if self?.cached.contains(preview) ?? false {
-                            return
-                        }
-                        print(track.trackName)
-                        self?.cached.insert(preview)
-                        subscriber.onNext(preview)
-                    }
-                    subscriber.onCompleted()
-                    return NopDisposable.instance
+    public func didEndPlayTrack(trackId: Int) {
+        let realm = try! Realm()
+        if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
+            if track.histories.count > 2 {
+                let preview = Preview.instance.queueing(track: track)
+                if preview.fileURL != nil {
+                    return
                 }
-            }
-            .flatMap { preview in
+                print("will cache in disk", track.trackName)
                 preview.download()
+                    .subscribeNext { url, _ in
+                        print("cache ", url)
+                    }
+                    .addDisposableTo(disposeBag)
             }
-            .subscribeNext { url, _ in
-                print("cache ", url)
-            }
-            .addDisposableTo(disposeBag)
+        }
     }
 }
