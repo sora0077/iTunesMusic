@@ -19,6 +19,8 @@ private class TableViewCell: UITableViewCell {
     
     let titleLabel = UILabel()
     
+    let cacheMarkLabel = UILabel()
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
         
@@ -37,6 +39,13 @@ private class TableViewCell: UITableViewCell {
             make.left.equalTo(artworkImageView.snp_right).offset(8)
             make.right.equalToSuperview().offset(-8)
             make.centerY.equalToSuperview()
+        }
+        
+        contentView.addSubview(cacheMarkLabel)
+        cacheMarkLabel.text = "☑"
+        cacheMarkLabel.snp_makeConstraints { make in
+            make.right.equalToSuperview().offset(-4)
+            make.bottom.equalToSuperview().offset(-4)
         }
     }
     
@@ -117,7 +126,7 @@ extension RssViewController: UITableViewDataSource {
         
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.titleLabel.text = track.trackName
-        
+        cell.cacheMarkLabel.hidden = !track.cached
         let size = { Int($0 * UIScreen.mainScreen().scale) }
         
         let artworkURL = track.artworkURL(size: size(120))

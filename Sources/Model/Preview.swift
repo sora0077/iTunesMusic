@@ -15,23 +15,53 @@ import AVFoundation
 import PINCache
 
 
-public final class Preview {
+final class Preview {
+    
+    private let cache = NSCache()
+    
+    static let instance = Preview()
+    
+    private init() {}
+
+    subscript (track track: Track) -> PreviewTrack? {
+        set {
+            cache.setObject(PreviewTrack(track: track), forKey: track.trackId)
+        }
+        get {
+            return cache.objectForKey(track.trackId) as? PreviewTrack
+        }
+    }
+    
+    func queueing(track track: Track) -> PreviewTrack {
+        if let previewTrack = self[track: track] {
+            return previewTrack
+        }
+        let previewTrack = PreviewTrack(track: track)
+        cache.setObject(previewTrack, forKey: track.trackId)
+        return previewTrack
+    }
+}
+
+
+final class PreviewTrack {
     
     let id: Int
     let url: NSURL
     
     var duration: Int = 0
     
-    public init(track: Track) {
+    var fileURL: NSURL?
+    
+    private init(track: Track) {
         let track = track as! _Track
         id = track.trackId
         url = track.trackViewURL
     }
-    
-    public func download() -> Observable<(NSURL, duration: Int)> {
+    func download() -> Observable<(NSURL, duration: Int)> {
         let id = self.id
+    
         return fetch()
-            .flatMap { url, duration -> Observable<(NSURL, duration: Int)> in
+            .flatMap { [weak self] url, duration -> Observable<(NSURL, duration: Int)> in
                 if url.fileURL {
                     return Observable.just((url, duration))
                 }
@@ -51,6 +81,7 @@ public final class Preview {
                                 track._longPreviewFileUrl = to.path
                                 track._longPreviewDuration.value = duration
                             }
+                            self?.fileURL = to
                             subscriber.onNext((to, track._longPreviewDuration.value!))
                             subscriber.onCompleted()
                         } else {
@@ -108,5 +139,13 @@ public final class Preview {
             }
         }
     }
+}
+
+extension PreviewTrack: Equatable, Hashable {
     
+    var hashValue: Int { return id }
+}
+
+func ==(lhs: PreviewTrack, rhs: PreviewTrack) -> Bool {
+    return lhs.id == rhs.id
 }

@@ -49,7 +49,7 @@ final class PlayerImpl: NSObject, Player {
     
     private var _playingQueue: ArraySlice<Track> = []
     
-    private var _previewQueue: [Int: Preview] = [:]
+    private var _previewQueue: [Int: PreviewTrack] = [:]
     
     private let _player = AVQueuePlayer()
     
@@ -180,7 +180,7 @@ final class PlayerImpl: NSObject, Player {
                     }
                 }
             } else {
-                self.fetch(Preview(track: track))
+                self.fetch(Preview.instance.queueing(track: track))
             }
         }
     }
@@ -224,7 +224,7 @@ final class PlayerImpl: NSObject, Player {
         }
     }
     
-    private func fetch(preview: Preview) {
+    private func fetch(preview: PreviewTrack) {
         let id = preview.id
         if _previewQueue[id] != nil {
             return

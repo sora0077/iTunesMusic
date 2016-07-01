@@ -24,6 +24,8 @@ public protocol Track: EntityInterface {
     
     var trackViewURL: NSURL { get }
     
+    var cached: Bool { get }
+    
     func artworkURL(size size: Int) -> NSURL
 }
 
@@ -96,6 +98,11 @@ extension _Track {
     var trackName: String { return _trackName }
     
     var trackViewURL: NSURL { return NSURL(string: _trackViewUrl)! }
+    
+    var cached: Bool {
+        guard let path = _longPreviewFileUrl else { return false }
+        return NSFileManager.defaultManager().fileExistsAtPath(path)
+    }
     
     func artworkURL(size size: Int) -> NSURL {
         let base = _artworkUrl100
