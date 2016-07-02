@@ -1,40 +1,33 @@
 //
-//  Rss.swift
+//  Album.swift
 //  iTunesMusic
 //
-//  Created by 林達也 on 2016/06/24.
+//  Created by 林達也 on 2016/07/02.
 //  Copyright © 2016年 jp.sora0077. All rights reserved.
 //
 
 import Foundation
-import APIKit
-import RxSwift
 import RealmSwift
+import RxSwift
 import Timepiece
+import APIKit
 
 
-extension Array {
-    
-    subscript (safe range: Range<Index>) -> ArraySlice<Element> {
-        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
+private func getOrCreateCache(collectionId collectionId: Int, realm: Realm) -> _AlbumCache {
+    if let cache = realm.objectForPrimaryKey(_AlbumCache.self, key: collectionId) {
+        return cache
     }
+    let cache = _AlbumCache()
+    cache.collectionId = collectionId
+    cache.collection = realm.objectForPrimaryKey(_Collection.self, key: collectionId)!
+    try! realm.write {
+        realm.add(cache)
+    }
+    return cache
 }
 
 
-private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssCache {
-    if let cache = realm.objectForPrimaryKey(_RssCache.self, key: genreId) {
-        return cache
-    } else {
-        let cache = _RssCache()
-        try! realm.write {
-            cache._genreId = genreId
-            realm.add(cache)
-        }
-        return cache
-    }
-}
-
-public final class Rss: PlaylistType, Fetchable, FetchableInternal {
+public final class Album: PlaylistType, Fetchable, FetchableInternal {
     
     private let _changes = PublishSubject<CollectionChange>()
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
@@ -43,32 +36,33 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
     private(set) var _requestState = Variable<RequestState>(.none)
     
     var needRefresh: Bool {
-        return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
+        return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! Realm()).refreshAt > 60.minutes
     }
     
-    private let id: Int
+    private var objectsToken: NotificationToken?
+    private var token: NotificationToken?
+    
+    private let collectionId: Int
     private let url: NSURL
     
-    private let caches: Results<_RssCache>
-    private var token: NotificationToken!
-    private var objectsToken: NotificationToken!
+    private let caches: Results<_AlbumCache>
     
     private var trackIds: [Int] = []
     
-    public init(genre: Genre) {
-        id = genre.id
-        url = genre.rssUrls.topSongs
-     
-        let realm = try! Realm()
-        let feed = getOrCreateCache(genreId: id, realm: realm)
-        trackIds = feed.items.map { $0.id }
+    public init(collection: Collection) {
         
-        caches = realm.objects(_RssCache).filter("_genreId = \(id)")
+        let collection = collection as! _Collection
+        self.collectionId = collection._collectionId
+        url = NSURL(string: collection._collectionViewUrl)!
+        let realm = try! Realm()
+        let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+        trackIds = cache.items.map { $0.trackId }
+        caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
         token = caches.addNotificationBlock { [weak self] changes in
             guard let `self` = self else { return }
             
-            func updateObserver(results: Results<_RssCache>) {
-                self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
+            func updateObserver(results: Results<_AlbumCache>) {
+                self.objectsToken = results[0].collection._tracks.addNotificationBlock { [weak self] changes in
                     self?._changes.onNext(CollectionChange(changes))
                 }
             }
@@ -83,24 +77,24 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
             case .Error(let error):
                 fatalError("\(error)")
             }
-            
         }
     }
     
     func request(refreshing refreshing: Bool) {
+        
         if trackIds.isEmpty || refreshing {
-            fetchFeed()
+            fetchIds()
             return
         }
         
         let session = Session.sharedSession
-        let id = self.id
+        let collectionId = self.collectionId
         
         let realm = try! Realm()
-        let feed = getOrCreateCache(genreId: id, realm: realm)
+        let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
         
         
-        let ids = trackIds[safe: feed.fetched..<(feed.fetched+50)]
+        let ids = trackIds[safe: cache.fetched..<(cache.fetched+50)]
         if ids.isEmpty {
             _requestState.value = .done
             return
@@ -111,21 +105,16 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         session.sendRequest(lookup) { [weak self] result in
             guard let `self` = self else { return }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                
+                print(result)
                 switch result {
                 case .Success(let response):
                     let realm = try! Realm()
                     try! realm.write {
                         realm.add(response.objects, update: true)
                         
-                        var done = false
-                        let feed = getOrCreateCache(genreId: id, realm: realm)
-                        if refreshing {
-                            feed.tracks.removeAll()
-                        }
-                        feed.tracks.appendContentsOf(response.objects)
-                        feed.fetched += 50
-                        done = feed.items.count == feed.tracks.count
+                        let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+                        cache.fetched += 50
+                        let done = cache.items.count == cache.collection._tracks.count
                         self._requestState.value = done ? .done : .none
                     }
                 case .Failure(let error):
@@ -136,25 +125,25 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         }
     }
     
-    private func fetchFeed() {
+    private func fetchIds() {
         
-        let id = self.id
+        let collectionId = self.collectionId
         
         let session = Session.sharedSession
-        
-        session.sendRequest(GetRss<_RssCache>(url: url, limit: 200)) { [weak self] result in
+        session.sendRequest(GetAlbum<_AlbumCache>(url: url)) { [weak self] result in
+            
             guard let `self` = self else { return }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
                 case .Success(let response):
                     let realm = try! Realm()
                     try! realm.write {
-                        let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
-                        response._genreId = genre?.id ?? 0
-                        response._genre = genre
+                        let collection = realm.objectForPrimaryKey(_Collection.self, key: collectionId)!
+                        response.collection = collection
+                        response.collectionId = collectionId
                         realm.add(response, update: true)
                     }
-                    self.trackIds = response.items.map { $0.id }
+                    self.trackIds = response.items.map { $0.trackId }
                     self._requestState.value = .none
                     self.request(refreshing: false)
                 case .Failure(let error):
@@ -166,14 +155,14 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
     }
 }
 
-extension Rss: PlaylistTypeInternal {
+extension Album: PlaylistTypeInternal {
     
-    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].tracks) }
+    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks) }
     
     public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }
 
-extension Rss: CollectionType {
+extension Album: CollectionType {
     
     public var count: Int { return objects.count }
     

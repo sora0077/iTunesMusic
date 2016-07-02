@@ -24,6 +24,8 @@ public protocol Track: EntityInterface {
     
     var trackViewURL: NSURL { get }
     
+    var collection: Collection { get }
+    
     var cached: Bool { get }
     
     func artworkURL(size size: Int) -> NSURL
@@ -87,11 +89,10 @@ class _Track: RealmSwift.Object, Track {
     
     override class func primaryKey() -> String? { return "_trackId" }
     
+    dynamic var _collection: _Collection?
+    
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 }
-
-private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
-private let artworkCached = NSCache()
 
 extension _Track {
     
@@ -101,28 +102,15 @@ extension _Track {
     
     var trackViewURL: NSURL { return NSURL(string: _trackViewUrl)! }
     
+    var collection: Collection { return _collection! }
+    
     var cached: Bool {
         guard let path = _longPreviewFileUrl else { return false }
         return NSFileManager.defaultManager().fileExistsAtPath(path)
     }
     
     func artworkURL(size size: Int) -> NSURL {
-        let base = _artworkUrl100
-        let key = "\(base)_____\(size)"
-        if let url = artworkCached.objectForKey(key) as? NSURL {
-            return url
-        }
-        
-        let replaced = artworkRegex.stringByReplacingMatchesInString(
-            base,
-            options: [],
-            range: NSMakeRange(0, base.utf16.count),
-            withTemplate: "\(size)x\(size)"
-        )
-        let url = NSURL(string: replaced)!
-//        print(url, key)
-        artworkCached.setObject(url, forKey: key)
-        return url
+        return collection.artworkURL(size: size)
     }
 }
 
@@ -172,6 +160,9 @@ extension _Track: Decodable {
         obj._releaseDate = try e.value("releaseDate")
         
         obj._isStreamable = try e.valueOptional("isStreamable") ?? false
+        
+        let collection: _Collection = try Himotoki.decodeValue(e.rawValue)
+        obj._collection = collection
         
         return obj
     }

@@ -1,16 +1,16 @@
 //
-//  RssViewController.swift
+//  AlbumDetailViewController.swift
 //  iTunesMusic
 //
-//  Created by 林達也 on 2016/06/26.
+//  Created by 林達也 on 2016/07/02.
 //  Copyright © 2016年 jp.sora0077. All rights reserved.
 //
 
 import UIKit
-import iTunesMusic
 import RxSwift
-import SDWebImage
 import SnapKit
+import SDWebImage
+import iTunesMusic
 
 
 private class TableViewCell: UITableViewCell {
@@ -54,15 +54,20 @@ private class TableViewCell: UITableViewCell {
 }
 
 
-class RssViewController: UIViewController {
+
+class AlbumDetailViewController: UIViewController {
     
-    private let rss: Rss
-    private let disposeBag = DisposeBag()
+    enum CellType {
+        case A
+    }
     
     private let tableView = UITableView()
     
-    init(genre: Genre) {
-        rss = Rss(genre: genre)
+    private let album: Album
+    private let disposeBag = DisposeBag()
+    
+    init(collection: Collection) {
+        album = Album(collection: collection)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -72,7 +77,6 @@ class RssViewController: UIViewController {
     
     deinit {
         tableView.delegate = nil
-        print(self, " deinit")
     }
     
     override func viewDidLoad() {
@@ -88,38 +92,40 @@ class RssViewController: UIViewController {
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
         
+        
         tableView.rx_reachedBottom()
             .filter { $0 }
             .subscribeNext { [weak self] _ in
-                self?.rss.fetch()
+                self?.album.fetch()
             }
             .addDisposableTo(disposeBag)
         
-        rss.changes
+        album.changes
             .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
         
-        rss.changes
-            .map { [weak self] _ in self?.rss }
+        album.changes
+            .map { [weak self] _ in self?.album }
             .filter { $0 != nil }
             .map { $0! }
             .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
             .addDisposableTo(disposeBag)
         
-        rss.fetch()
+        album.fetch()
     }
+
 }
 
-extension RssViewController: UITableViewDataSource {
+extension AlbumDetailViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rss.count
+        return album.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
-        let track = rss[indexPath.row]
+        let track = album[indexPath.row]
         
         print(track)
         
@@ -139,13 +145,12 @@ extension RssViewController: UITableViewDataSource {
     }
 }
 
-extension RssViewController: UITableViewDelegate {
+extension AlbumDetailViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-//        player.add(track: rss[indexPath.row])
-        let vc = AlbumDetailViewController(collection: rss[indexPath.row].collection)
-        navigationController?.pushViewController(vc, animated: true)
+        player.add(track: album[indexPath.row])
     }
 }
+

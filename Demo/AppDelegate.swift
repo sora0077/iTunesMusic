@@ -8,7 +8,8 @@
 
 import UIKit
 import AVFoundation
-import iTunesMusic
+@testable import iTunesMusic
+import APIKit
 import RxSwift
 import RxCocoa
 import SDWebImage
@@ -96,6 +97,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         player.install(middleware: History.instance)
         player.install(middleware: Downloader.instance)
+        
+        let s = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
+        
+        let request = GetAlbum<GetAlbumResponse>(url: NSURL(string: "https://itunes.apple.com/jp/album/pretenders-eo1/id1115074636?i=1115074966&uo=4")!)
+        s.sendRequest(request) { result in
+            print(result)
+        }
+
         
         return true
     }
