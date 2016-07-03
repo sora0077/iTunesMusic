@@ -84,7 +84,7 @@ extension History: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_HistoryRecord> { return AnyRealmCollection(cache.objects) }
     
-    public func _any() -> PlaylistType { return AnyPlaylist(playlist: self) }
+    public func _any() -> PlaylistType { return self }
 }
 
 

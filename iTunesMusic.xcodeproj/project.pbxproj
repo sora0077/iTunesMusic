@@ -48,6 +48,7 @@
 		D9AAE0741D27A79800FF29C3 /* GetAlbum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE0721D27A74300FF29C3 /* GetAlbum.swift */; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
 		D9EA0B511D27FE2A001C3F2F /* AlbumCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */; };
+		D9EA0B531D28AD0A001C3F2F /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B521D28AD0A001C3F2F /* Artist.swift */; };
 		D9FD12E61D16D3CD0010E81D /* LocalSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */; };
 		D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */; };
 		D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E91D182F930010E81D /* ListGenres.swift */; };
@@ -147,6 +148,7 @@
 		D9AAE0721D27A74300FF29C3 /* GetAlbum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetAlbum.swift; sourceTree = "<group>"; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCache.swift; sourceTree = "<group>"; };
+		D9EA0B521D28AD0A001C3F2F /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
 		D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalSearch.swift; sourceTree = "<group>"; };
 		D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LookupWithIds.swift; sourceTree = "<group>"; };
 		D9FD12E91D182F930010E81D /* ListGenres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListGenres.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				D91B428F1D044AE600AAAD58 /* Track.swift */,
 				D9542EF41D12DB370073C8EE /* HistoryRecord.swift */,
 				D9FD12EF1D1C2C610010E81D /* Genre.swift */,
+				D9EA0B521D28AD0A001C3F2F /* Artist.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */,
 				D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */,
 				D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */,
+				D9EA0B531D28AD0A001C3F2F /* Artist.swift in Sources */,
 				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,

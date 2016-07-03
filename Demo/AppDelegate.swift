@@ -70,7 +70,7 @@ extension UITableView {
         
         beginUpdates()
         deleteRowsAtIndexPaths(deletions, withRowAnimation: .Automatic)
-        insertRowsAtIndexPaths(insertions, withRowAnimation: .Automatic)
+        insertRowsAtIndexPaths(insertions, withRowAnimation: .Top)
         reloadRowsAtIndexPaths(modifications, withRowAnimation: .Automatic)
         endUpdates()
     }

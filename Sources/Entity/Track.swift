@@ -44,31 +44,16 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _trackNumber: Int = 0
     dynamic var _trackTimeMillis: Int = 0
     
-    
-    dynamic var _collectionId: Int = 0
-    dynamic var _collectionName: String = ""
-    dynamic var _collectionCensoredName: String = ""
-    dynamic var _collectionViewUrl: String = ""
-    let _collectionPrice = RealmOptional<Float>()
-    dynamic var _collectionExplicitness: String = ""
-    
-    
     dynamic var _artistId: Int = 0
     dynamic var _artistName: String = ""
     dynamic var _artistViewUrl: String = ""
     
     dynamic var _previewUrl: String = ""
-    dynamic var _artworkUrl30: String = ""
-    dynamic var _artworkUrl60: String = ""
-    dynamic var _artworkUrl100: String = ""
     
     dynamic var _longPreviewUrl: String?
     let _longPreviewDuration: RealmOptional<Int> = RealmOptional()
     
     dynamic var _longPreviewFileUrl: String?
-    
-    dynamic var _discCount: Int = 0
-    dynamic var _discNumber: Int = 0
     
     dynamic var _country: String = ""
     dynamic var _currency: String = ""
@@ -90,6 +75,8 @@ class _Track: RealmSwift.Object, Track {
     override class func primaryKey() -> String? { return "_trackId" }
     
     dynamic var _collection: _Collection?
+    
+    dynamic var _artist: _Artist?
     
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 }
@@ -129,24 +116,11 @@ extension _Track: Decodable {
         obj._trackNumber = try e.value("trackNumber")
         obj._trackTimeMillis = try e.value("trackTimeMillis")
         
-        obj._collectionId = try e.value("collectionId")
-        obj._collectionName = try e.value("collectionName")
-        obj._collectionCensoredName = try e.value("collectionCensoredName")
-        obj._collectionViewUrl = try e.value("collectionViewUrl")
-        obj._collectionPrice.value = try e.valueOptional("collectionPrice")
-        obj._collectionExplicitness = try e.value("collectionExplicitness")
-        
         obj._artistId = try e.value("artistId")
         obj._artistName = try e.value("artistName")
         obj._artistViewUrl = try e.value("artistViewUrl")
         
         obj._previewUrl = try e.value("previewUrl")
-        obj._artworkUrl30 = try e.value("artworkUrl30")
-        obj._artworkUrl60 = try e.value("artworkUrl60")
-        obj._artworkUrl100 = try e.value("artworkUrl100")
-        
-        obj._discCount = try e.value("discCount")
-        obj._discNumber = try e.value("discNumber")
         
         obj._country = try e.value("country")
         obj._currency = try e.value("currency")
@@ -163,6 +137,9 @@ extension _Track: Decodable {
         
         let collection: _Collection = try Himotoki.decodeValue(e.rawValue)
         obj._collection = collection
+        
+        let artist: _Artist = try Himotoki.decodeValue(e.rawValue)
+        obj._artist = artist
         
         return obj
     }

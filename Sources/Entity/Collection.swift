@@ -48,7 +48,6 @@ extension _Collection: CollectionType {
     
     subscript (index: Int) -> Track {
         return _tracks.sorted([
-            SortDescriptor(property: "_trackCount"),
             SortDescriptor(property: "_trackNumber")
         ])[index]
     }

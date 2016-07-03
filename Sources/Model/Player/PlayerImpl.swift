@@ -271,12 +271,16 @@ final class PlayerImpl: NSObject, Player {
     
     func add(playlist playlist: PlaylistType) {
         
-        _add(playlist: playlist._any())
+        _add(playlist: playlist)
     }
     
     private func _add(playlist playlist: PlaylistType) {
         
         assert(NSThread.isMainThread())
+        
+        if _player.status == .ReadyToPlay && _player.rate != 0 {
+            play()
+        }
         
         let disposeBag = DisposeBag()
         _playlists.append((playlist, 0, disposeBag))
