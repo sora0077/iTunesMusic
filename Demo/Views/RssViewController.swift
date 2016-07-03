@@ -121,8 +121,6 @@ extension RssViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
         let track = rss[indexPath.row]
         
-        print(track)
-        
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.titleLabel.text = track.trackName
         cell.cacheMarkLabel.hidden = !track.cached

@@ -62,7 +62,7 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
             guard let `self` = self else { return }
             
             func updateObserver(results: Results<_AlbumCache>) {
-                self.objectsToken = results[0].collection._tracks.addNotificationBlock { [weak self] changes in
+                self.objectsToken = results[0].collection._tracks.sorted("_trackNumber").addNotificationBlock { [weak self] changes in
                     self?._changes.onNext(CollectionChange(changes))
                 }
             }
@@ -157,7 +157,7 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
 
 extension Album: PlaylistTypeInternal {
     
-    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks) }
+    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks.sorted("_trackNumber")) }
     
     public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }

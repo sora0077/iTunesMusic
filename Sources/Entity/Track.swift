@@ -71,14 +71,14 @@ class _Track: RealmSwift.Object, Track {
     
     dynamic var _createAt: NSDate = NSDate()
     
-    
-    override class func primaryKey() -> String? { return "_trackId" }
-    
     dynamic var _collection: _Collection?
     
     dynamic var _artist: _Artist?
     
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
+    
+    
+    override class func primaryKey() -> String? { return "_trackId" }
 }
 
 extension _Track {
