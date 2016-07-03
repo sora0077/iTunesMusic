@@ -1,5 +1,5 @@
 //
-//  GetAlbum.swift
+//  GetAlbumTracks.swift
 //  iTunesMusic
 //
 //  Created by 林達也 on 2016/07/02.
@@ -27,7 +27,7 @@ extension GetAlbumResponse: Decodable {
 }
 
 
-struct GetAlbum<R: Decodable>: iTunesRequestType {
+struct GetAlbumTracks<R: Decodable>: iTunesRequestType {
     
     typealias Response = R
     

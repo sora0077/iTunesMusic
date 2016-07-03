@@ -130,7 +130,7 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
         let collectionId = self.collectionId
         
         let session = Session.sharedSession
-        session.sendRequest(GetAlbum<_AlbumCache>(url: url)) { [weak self] result in
+        session.sendRequest(GetAlbumTracks<_AlbumCache>(url: url)) { [weak self] result in
             
             guard let `self` = self else { return }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
