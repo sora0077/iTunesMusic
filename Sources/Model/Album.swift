@@ -43,20 +43,16 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
     private var token: NotificationToken?
     
     private let collectionId: Int
-    private let url: NSURL
     
     private let caches: Results<_AlbumCache>
-    
-    private var trackIds: [Int] = []
     
     public init(collection: Collection) {
         
         let collection = collection as! _Collection
         self.collectionId = collection._collectionId
-        url = NSURL(string: collection._collectionViewUrl)!
+        
         let realm = try! Realm()
         let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-        trackIds = cache.items.map { $0.trackId }
         caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
         token = caches.addNotificationBlock { [weak self] changes in
             guard let `self` = self else { return }
@@ -82,24 +78,15 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
     
     func request(refreshing refreshing: Bool) {
         
-        if trackIds.isEmpty || refreshing {
-            fetchIds()
+        let collectionId = self.collectionId
+        let cache = getOrCreateCache(collectionId: collectionId, realm: try! Realm())
+        if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
             return
         }
         
         let session = Session.sharedSession
-        let collectionId = self.collectionId
         
-        let realm = try! Realm()
-        let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-        
-        
-        let ids = trackIds[safe: cache.fetched..<(cache.fetched+50)]
-        if ids.isEmpty {
-            _requestState.value = .done
-            return
-        }
-        var lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
+        var lookup = LookupWithIds<LookupResponse>(id: collectionId)
         lookup.lang = "ja_JP"
         lookup.country = "JP"
         session.sendRequest(lookup) { [weak self] result in
@@ -112,7 +99,7 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
                     try! realm.write {
                         response.objects.forEach {
                             switch $0 {
-                            case .song(let obj):
+                            case .track(let obj):
                                 realm.add(obj, update: true)
                             case .collection(let obj):
                                 realm.add(obj, update: true)
@@ -122,39 +109,9 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
                         }
                         
                         let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-                        cache.fetched += 50
-                        let done = cache.items.count == cache.collection._tracks.count
+                        let done = cache.collection._trackCount == cache.collection._tracks.count
                         self._requestState.value = done ? .done : .none
                     }
-                case .Failure(let error):
-                    print(error)
-                    self._requestState.value = .error
-                }
-            }
-        }
-    }
-    
-    private func fetchIds() {
-        
-        let collectionId = self.collectionId
-        
-        let session = Session.sharedSession
-        session.sendRequest(GetAlbumTracks<_AlbumCache>(url: url)) { [weak self] result in
-            
-            guard let `self` = self else { return }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                switch result {
-                case .Success(let response):
-                    let realm = try! Realm()
-                    try! realm.write {
-                        let collection = realm.objectForPrimaryKey(_Collection.self, key: collectionId)!
-                        response.collection = collection
-                        response.collectionId = collectionId
-                        realm.add(response, update: true)
-                    }
-                    self.trackIds = response.items.map { $0.trackId }
-                    self._requestState.value = .none
-                    self.request(refreshing: false)
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error

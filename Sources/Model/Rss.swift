@@ -119,7 +119,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
                         var tracks: [_Track] = []
                         response.objects.forEach {
                             switch $0 {
-                            case .song(let obj):
+                            case .track(let obj):
                                 tracks.append(obj)
                                 realm.add(obj, update: true)
                             case .collection(let obj):

@@ -28,12 +28,10 @@ class _Collection: RealmSwift.Object, Collection {
     let _collectionPrice = RealmOptional<Float>()
     dynamic var _collectionExplicitness: String = ""
     
-    dynamic var _artworkUrl30: String = ""
     dynamic var _artworkUrl60: String = ""
     dynamic var _artworkUrl100: String = ""
     
-    dynamic var _discCount: Int = 0
-    dynamic var _discNumber: Int = 0
+    dynamic var _trackCount: Int = 0
     
     dynamic var _artist: _Artist?
     
@@ -67,14 +65,13 @@ extension _Collection: Decodable {
         obj._collectionPrice.value = try e.valueOptional("collectionPrice")
         obj._collectionExplicitness = try e.value("collectionExplicitness")
         
-        obj._artworkUrl30 = try e.value("artworkUrl30")
         obj._artworkUrl60 = try e.value("artworkUrl60")
         obj._artworkUrl100 = try e.value("artworkUrl100")
         
-        obj._discCount = try e.value("discCount")
-        obj._discNumber = try e.value("discNumber")
+        obj._trackCount = try e.value("trackCount")
         
-        obj._artist = try _Artist.collectionArtist(e)
+        let artist: _Artist = try _Artist.collectionArtist(e) ?? (try Himotoki.decodeValue(e.rawValue))
+        obj._artist = artist
         return obj
     }
 }

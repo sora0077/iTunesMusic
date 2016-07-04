@@ -18,7 +18,7 @@ struct LookupResponse {
     }
     
     enum Wrapper {
-        case song(_Track)
+        case track(_Track)
         case collection(_Collection)
         case artist(_Artist)
     }
@@ -35,7 +35,7 @@ extension LookupResponse: Decodable {
             guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
             switch wrapperType {
             case .track:
-                items.append(Wrapper.song(try Himotoki.decodeValue(item)))
+                items.append(Wrapper.track(try Himotoki.decodeValue(item)))
             case .collection:
                 items.append(Wrapper.collection(try Himotoki.decodeValue(item)))
             case .artist:
@@ -62,10 +62,13 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
     
     var country = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as! String
     
+    let limit = 500
+    
     var queryParameters: [String : AnyObject]? {
         return [
             "id": ids.map(String.init).joinWithSeparator(","),
             "entity": "song",
+            "limit": limit,
             "lang": lang,
             "country": country
         ]
