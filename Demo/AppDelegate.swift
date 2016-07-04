@@ -100,7 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player.install(middleware: History.instance)
         player.install(middleware: Downloader.instance)
         
-        print(Realm.Configuration.defaultConfiguration.fileURL)
+        print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
         
         
         return true

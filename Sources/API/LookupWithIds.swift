@@ -11,20 +11,40 @@ import APIKit
 import Himotoki
 
 
-struct LookupResultPage {
+struct LookupResponse {
     
-    var objects: [_Track] = []
+    private enum WrapperType: String {
+        case track, collection, artist
+    }
+    
+    enum Wrapper {
+        case song(_Track)
+        case collection(_Collection)
+        case artist(_Artist)
+    }
+    
+    var objects: [Wrapper] = []
 }
 
-extension LookupResultPage: Decodable {
+extension LookupResponse: Decodable {
     
-    static func decode(e: Extractor) throws -> LookupResultPage {
-        var obj = LookupResultPage()
-        obj.objects = try e.array("results")
-        return obj
+    static func decode(e: Extractor) throws -> LookupResponse {
+        let results = e.rawValue["results"] as! [[String: AnyObject]]
+        var items: [Wrapper] = []
+        for item in results {
+            guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
+            switch wrapperType {
+            case .track:
+                items.append(Wrapper.song(try Himotoki.decodeValue(item)))
+            case .collection:
+                items.append(Wrapper.collection(try Himotoki.decodeValue(item)))
+            case .artist:
+                items.append(Wrapper.artist(try Himotoki.decodeValue(item)))
+            }
+        }
+        return LookupResponse(objects: items)
     }
 }
-
 
 struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
     
@@ -45,6 +65,7 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
     var queryParameters: [String : AnyObject]? {
         return [
             "id": ids.map(String.init).joinWithSeparator(","),
+            "entity": "song",
             "lang": lang,
             "country": country
         ]

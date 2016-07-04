@@ -99,7 +99,7 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
             _requestState.value = .done
             return
         }
-        var lookup = LookupWithIds<LookupResultPage>(ids: Array(ids))
+        var lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
         session.sendRequest(lookup) { [weak self] result in
@@ -110,7 +110,16 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
                 case .Success(let response):
                     let realm = try! Realm()
                     try! realm.write {
-                        realm.add(response.objects, update: true)
+                        response.objects.forEach {
+                            switch $0 {
+                            case .song(let obj):
+                                realm.add(obj, update: true)
+                            case .collection(let obj):
+                                realm.add(obj, update: true)
+                            case .artist(let obj):
+                                realm.add(obj, update: true)
+                            }
+                        }
                         
                         let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
                         cache.fetched += 50

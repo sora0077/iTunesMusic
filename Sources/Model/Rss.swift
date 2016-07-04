@@ -105,7 +105,7 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
             _requestState.value = .done
             return
         }
-        var lookup = LookupWithIds<LookupResultPage>(ids: Array(ids))
+        var lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
         session.sendRequest(lookup) { [weak self] result in
@@ -116,14 +116,25 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
                 case .Success(let response):
                     let realm = try! Realm()
                     try! realm.write {
-                        realm.add(response.objects, update: true)
+                        var tracks: [_Track] = []
+                        response.objects.forEach {
+                            switch $0 {
+                            case .song(let obj):
+                                tracks.append(obj)
+                                realm.add(obj, update: true)
+                            case .collection(let obj):
+                                realm.add(obj, update: true)
+                            case .artist(let obj):
+                                realm.add(obj, update: true)
+                            }
+                        }
                         
                         var done = false
                         let feed = getOrCreateCache(genreId: id, realm: realm)
                         if refreshing {
                             feed.tracks.removeAll()
                         }
-                        feed.tracks.appendContentsOf(response.objects)
+                        feed.tracks.appendContentsOf(tracks)
                         feed.fetched += 50
                         done = feed.items.count == feed.tracks.count
                         self._requestState.value = done ? .done : .none
