@@ -35,4 +35,19 @@ extension _Artist: Decodable {
         obj._artistViewUrl = try e.value("artistViewUrl")
         return obj
     }
+    
+    static func collectionArtist(e: Extractor) throws -> Self? {
+        
+        do {
+            let obj = self.init()
+            
+            obj._artistId = try e.value("collectionArtistId")
+            obj._artistName = try e.value("collectionArtistName")
+            obj._artistViewUrl = try e.value("collectionArtistViewUrl")
+            return obj
+        }
+        catch DecodeError.MissingKeyPath {
+            return nil
+        }
+    }
 }

@@ -35,6 +35,8 @@ class _Collection: RealmSwift.Object, Collection {
     dynamic var _discCount: Int = 0
     dynamic var _discNumber: Int = 0
     
+    dynamic var _artist: _Artist?
+    
     let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
     
     override class func primaryKey() -> String? { return "_collectionId" }
@@ -71,6 +73,8 @@ extension _Collection: Decodable {
         
         obj._discCount = try e.value("discCount")
         obj._discNumber = try e.value("discNumber")
+        
+        obj._artist = try _Artist.collectionArtist(e)
         return obj
     }
 }

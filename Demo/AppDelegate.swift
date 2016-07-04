@@ -13,6 +13,7 @@ import APIKit
 import RxSwift
 import RxCocoa
 import SDWebImage
+import RealmSwift
 
 
 func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: CollectionType, Playlist.Generator.Element == Track>(size size: Int) -> AnyObserver<Playlist> {
@@ -84,6 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private let disposeBag = DisposeBag()
 
+    private var artist: ArtistModel!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -97,6 +99,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         player.install(middleware: History.instance)
         player.install(middleware: Downloader.instance)
+        
+        print(Realm.Configuration.defaultConfiguration.fileURL)
+        
         
         return true
     }

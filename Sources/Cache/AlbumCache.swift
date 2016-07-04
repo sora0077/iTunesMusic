@@ -52,7 +52,7 @@ extension _AlbumCache: Decodable {
             item.trackId = trackId
             return item
         }
-        
+        print(e)
         let items = e.rawValue["items"] as! [[String: AnyObject]]
         
         let obj = self.init()
