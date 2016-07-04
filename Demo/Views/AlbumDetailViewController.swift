@@ -127,8 +127,6 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
         let track = album[indexPath.row]
         
-        print(track)
-        
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.titleLabel.text = track.trackName
         cell.cacheMarkLabel.hidden = !track.cached
@@ -149,6 +147,8 @@ extension AlbumDetailViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        print(album[indexPath.row])
         
         player.add(track: album[indexPath.row])
     }
