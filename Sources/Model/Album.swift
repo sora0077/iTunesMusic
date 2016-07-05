@@ -81,8 +81,8 @@ extension Model {
 }
 
 extension Model.Album {
-
-    func request(refreshing refreshing: Bool) {
+    
+    func request(refreshing refreshing: Bool, force: Bool) {
         
         let collectionId = self.collectionId
         let cache = getOrCreateCache(collectionId: collectionId, realm: try! Realm())

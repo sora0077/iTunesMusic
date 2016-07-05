@@ -82,7 +82,7 @@ extension Model {
 
 extension Model.Artist {
     
-    func request(refreshing refreshing: Bool) {
+    func request(refreshing refreshing: Bool, force: Bool) {
         
         let artistId = self.artistId
         let cache = getOrCreateCache(artistId: artistId, realm: try! Realm())

@@ -84,7 +84,7 @@ extension Model {
 
 extension Model.Search {
     
-    func request(refreshing refreshing: Bool = false) {
+    func request(refreshing refreshing: Bool, force: Bool) {
         
         _refreshing.value = refreshing
         

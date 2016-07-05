@@ -100,8 +100,8 @@ extension Model {
 }
 
 extension Model.Genres {
-
-    func request(refreshing refreshing: Bool) {
+    
+    func request(refreshing refreshing: Bool, force: Bool) {
         
         if !refreshing && !caches[0].list.isEmpty {
             return

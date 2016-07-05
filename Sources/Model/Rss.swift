@@ -37,6 +37,9 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
+            let cache = getOrCreateCache(genreId: id, realm: try! Realm())
+            let refreshAt = cache.refreshAt
+            print("rss fetched ", refreshAt, NSDate() - refreshAt)
             return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
         }
         
@@ -86,8 +89,8 @@ extension Model {
 
 extension Model.Rss {
     
-    func request(refreshing refreshing: Bool) {
-        if trackIds.isEmpty || refreshing {
+    func request(refreshing refreshing: Bool, force: Bool) {
+        if trackIds.isEmpty || (refreshing && needRefresh) {
             fetchFeed()
             return
         }
@@ -130,12 +133,9 @@ extension Model.Rss {
                         
                         var done = false
                         let cache = getOrCreateCache(genreId: id, realm: realm)
-                        if refreshing {
-                            cache.tracks.removeAll()
-                            cache.refreshAt = NSDate()
-                        }
                         cache.tracks.appendContentsOf(tracks)
                         cache.fetched += 50
+                        realm.add(cache, update: true)
                         done = cache.items.count == cache.tracks.count
                         self._requestState.value = done ? .done : .none
                     }
@@ -163,11 +163,13 @@ extension Model.Rss {
                         let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
                         response._genreId = genre?.id ?? 0
                         response._genre = genre
+                        response.tracks.removeAll()
+                        response.refreshAt = NSDate()
                         realm.add(response, update: true)
                     }
                     self.trackIds = response.items.map { $0.id }
                     self._requestState.value = .none
-                    self.request(refreshing: false)
+                    self.request(refreshing: false, force: false)
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error
