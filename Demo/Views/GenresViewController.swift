@@ -35,7 +35,7 @@ class GenresViewController: UIViewController {
             .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
         
-        genres.fetch()
+        genres.refresh()
     }
     
     override func viewDidAppear(animated: Bool) {

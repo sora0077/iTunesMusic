@@ -105,7 +105,25 @@ class RssViewController: UIViewController {
             .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
             .addDisposableTo(disposeBag)
         
-        rss.fetch()
+        rss.requestState
+            .subscribeNext { [weak self] state in
+                func title() -> String {
+                    switch state {
+                    case .none:
+                        return ""
+                    case .done:
+                        return "done"
+                    case .requesting:
+                        return "通信中"
+                    case .error:
+                        return "エラー"
+                    }
+                }
+                self?.title = title()
+            }
+            .addDisposableTo(disposeBag)
+        
+        rss.refresh()
     }
 }
 

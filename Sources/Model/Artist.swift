@@ -115,6 +115,9 @@ extension Model.Artist {
                         
                         let cache = getOrCreateCache(artistId: artistId, realm: realm)
                         cache.fetched = true
+                        if refreshing {
+                            cache.refreshAt = NSDate()
+                        }
                         self._requestState.value = .done
                     }
                 case .Failure(let error):

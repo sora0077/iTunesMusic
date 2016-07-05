@@ -109,7 +109,7 @@ class AlbumDetailViewController: UIViewController {
             .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
             .addDisposableTo(disposeBag)
         
-        album.fetch()
+        album.refresh()
         
     }
 

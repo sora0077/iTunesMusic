@@ -89,8 +89,6 @@ extension _Collection: Decodable {
         
         obj._releaseDate = try releaseDateTransformer.apply(e.value("releaseDate"))
         
-        print(obj._releaseDate)
-        
         let artist: _Artist = try _Artist.collectionArtist(e) ?? Himotoki.decodeValue(e.rawValue)
         obj._artist = artist
         return obj

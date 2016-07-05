@@ -129,13 +129,14 @@ extension Model.Rss {
                         }
                         
                         var done = false
-                        let feed = getOrCreateCache(genreId: id, realm: realm)
+                        let cache = getOrCreateCache(genreId: id, realm: realm)
                         if refreshing {
-                            feed.tracks.removeAll()
+                            cache.tracks.removeAll()
+                            cache.refreshAt = NSDate()
                         }
-                        feed.tracks.appendContentsOf(tracks)
-                        feed.fetched += 50
-                        done = feed.items.count == feed.tracks.count
+                        cache.tracks.appendContentsOf(tracks)
+                        cache.fetched += 50
+                        done = cache.items.count == cache.tracks.count
                         self._requestState.value = done ? .done : .none
                     }
                 case .Failure(let error):

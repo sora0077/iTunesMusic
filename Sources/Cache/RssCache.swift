@@ -21,7 +21,7 @@ class _RssCache: RealmSwift.Object {
         }
     }
     
-    dynamic var refreshAt = NSDate()
+    dynamic var refreshAt = NSDate.distantPast()
     
     dynamic var fetched: Int = 0
     

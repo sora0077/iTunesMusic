@@ -61,7 +61,7 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         var _requestState: Variable<RequestState> { return __requestState }
         
-        var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! Realm()).createAt > 30.days }
+        var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! Realm()).refreshAt > 30.days }
         
         private var token: NotificationToken?
         private var objectsToken: NotificationToken?
@@ -119,15 +119,16 @@ extension Model.Genres {
                     try! realm.write {
                         realm.add(cache, update: true)
                         
-                        let defaults = getOrCreateCache(key: "default", realm: realm)
+                        let cache = getOrCreateCache(key: "default", realm: realm)
                         if refreshing {
-                            defaults.list.removeAll()
+                            cache.list.removeAll()
+                            cache.refreshAt = NSDate()
                         }
                         
                         for genre in InitialDefaultGenre.cases {
-                            defaults.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
+                            cache.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
                         }
-                        realm.add(defaults)
+                        realm.add(cache)
                     }
                     __requestState.value = .done
                 case .Failure(let error):

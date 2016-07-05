@@ -114,6 +114,9 @@ extension Model.Album {
                         }
                         
                         let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+                        if refreshing {
+                            cache.refreshAt = NSDate()
+                        }
                         let done = cache.collection._trackCount == cache.collection._tracks.count
                         self._requestState.value = done ? .done : .none
                     }

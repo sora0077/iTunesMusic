@@ -43,6 +43,8 @@ public protocol Fetchable {
     
     func fetch()
     
+    func refresh()
+    
     func refresh(force force: Bool)
 }
 
@@ -61,6 +63,10 @@ extension Fetchable {
     
     public func fetch() {
         _request(refreshing: false)
+    }
+    
+    public func refresh() {
+        refresh(force: false)
     }
     
     public func refresh(force force: Bool) {

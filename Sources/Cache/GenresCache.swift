@@ -14,7 +14,9 @@ class _GenresCache: RealmSwift.Object {
     
     dynamic var key: String = ""
     
-    dynamic var createAt: NSDate = NSDate()
+    dynamic var createAt = NSDate()
+    
+    dynamic var refreshAt = NSDate.distantPast()
     
     let list = List<_Genre>()
 
