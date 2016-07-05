@@ -19,11 +19,6 @@ public protocol PlaylistType: class {
     var isEmpty: Bool { get }
     
     subscript (index: Int) -> Track { get }
-    
-    /**
-     Do not use
-     */
-    func _any() -> PlaylistType
 }
 
 extension PlaylistType {

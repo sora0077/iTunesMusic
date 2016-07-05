@@ -12,18 +12,16 @@ import RxSwift
 import RealmSwift
 
 
-public final class Downloader {
+final class Downloader {
     
     private let disposeBag = DisposeBag()
     
-    public static let instance = Downloader()
-    
-    private init() {}
+    init() {}
 }
 
 extension Downloader: PlayerMiddleware {
     
-    public func didEndPlayTrack(trackId: Int) {
+    func didEndPlayTrack(trackId: Int) {
         let realm = try! Realm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
             if track.histories.count > 2 {

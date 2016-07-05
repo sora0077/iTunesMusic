@@ -34,8 +34,6 @@ public protocol Player {
     func add(playlist playlist: PlaylistType)
 }
 
-public let player: Player = PlayerImpl()
-
 
 public protocol PlayerMiddleware {
     

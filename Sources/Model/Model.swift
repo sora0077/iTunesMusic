@@ -8,19 +8,10 @@
 
 import Foundation
 import RealmSwift
+import RxSwift
 
 
-extension Array {
-    
-    subscript (safe range: Range<Index>) -> ArraySlice<Element> {
-        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
-    }
-}
-
-
-public struct Model {
-    
-}
+public struct Model {}
 
 
 public enum CollectionChange {
@@ -37,5 +28,63 @@ public enum CollectionChange {
         case let .Error(error):
             fatalError("\(error)")
         }
+    }
+}
+
+
+public enum RequestState: Int {
+    case none, requesting, error, done
+}
+
+
+public protocol Fetchable {
+    
+    var requestState: Observable<RequestState> { get }
+    
+    func fetch()
+    
+    func refresh(force force: Bool)
+}
+
+protocol FetchableInternal: Fetchable {
+    
+    var _requestState: Variable<RequestState> { get }
+    
+    var needRefresh: Bool { get }
+    
+    var hasNoPaginatedContents: Bool { get }
+    
+    func request(refreshing refreshing: Bool)
+}
+
+extension Fetchable {
+    
+    public func fetch() {
+        _request(refreshing: false)
+    }
+    
+    public func refresh(force force: Bool) {
+        let s = self as! FetchableInternal
+        if force || s.needRefresh {
+            _request(refreshing: true)
+        }
+    }
+    
+    private func _request(refreshing refreshing: Bool) {
+        let s = self as! FetchableInternal
+        if [.done, .requesting].contains(s._requestState.value) {
+            return
+        }
+        
+        s._requestState.value = .requesting
+        
+        s.request(refreshing: refreshing)
+    }
+}
+
+extension FetchableInternal {
+    
+    var hasNoPaginatedContents: Bool {
+        return [.done, .error].contains(_requestState.value)
     }
 }
