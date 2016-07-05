@@ -92,7 +92,6 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
         session.sendRequest(lookup) { [weak self] result in
             guard let `self` = self else { return }
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                print(result)
                 switch result {
                 case .Success(let response):
                     let realm = try! Realm()

@@ -42,7 +42,6 @@ struct GetPreviewUrl: iTunesRequestType {
         let items = object["items"] as! [[String: AnyObject]]
         for item in items {
             let id = item["item-id"] as! Int
-//            print(item)
             if self.id == id {
                 let previewUrl = item["store-offers"]!["PLUS"]!!["preview-url"] as! String
                 let duration = item["store-offers"]!["PLUS"]!!["preview-duration"] as! Int

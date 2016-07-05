@@ -85,7 +85,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private let disposeBag = DisposeBag()
 
-    private var artist: ArtistModel!
+    private var artist: Model.Artist!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -101,7 +101,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player.install(middleware: Downloader.instance)
         
         print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
-        
         
         return true
     }

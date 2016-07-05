@@ -19,7 +19,9 @@ final class _Artist: RealmSwift.Object, Artist {
     
     dynamic var _artistId: Int = 0
     dynamic var _artistName: String = ""
-    dynamic var _artistViewUrl: String = ""
+    dynamic var _artistLinkUrl: String = ""
+    
+    let _collections = LinkingObjects(fromType: _Collection.self, property: "_artist")
 
     override class func primaryKey() -> String? { return "_artistId" }
 }
@@ -32,7 +34,7 @@ extension _Artist: Decodable {
         
         obj._artistId = try e.value("artistId")
         obj._artistName = try e.value("artistName")
-        obj._artistViewUrl = try e.value("artistViewUrl")
+        obj._artistLinkUrl = try e.valueOptional("artistViewUrl") ?? e.value("artistLinkUrl")
         return obj
     }
     
@@ -43,7 +45,7 @@ extension _Artist: Decodable {
             
             obj._artistId = try e.value("collectionArtistId")
             obj._artistName = try e.value("collectionArtistName")
-            obj._artistViewUrl = try e.value("collectionArtistViewUrl")
+            obj._artistLinkUrl = try e.value("collectionArtistViewUrl")
             return obj
         }
         catch DecodeError.MissingKeyPath {

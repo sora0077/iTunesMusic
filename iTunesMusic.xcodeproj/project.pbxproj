@@ -11,6 +11,7 @@
 		9440D4716F451C3207D843DE /* Pods_iTunesMusicTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */; };
 		A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */; };
 		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
+		D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */; };
 		D91B42771D043D5A00AAAD58 /* iTunesMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = D91B42761D043D5A00AAAD58 /* iTunesMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; };
 		D91B42831D043D5B00AAAD58 /* iTunesMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42821D043D5B00AAAD58 /* iTunesMusicTests.swift */; };
@@ -107,6 +108,7 @@
 		89ACBB0D5C48DFCB978B58A3 /* Pods-iTunesMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesMusic.release.xcconfig"; path = "Pods/Target Support Files/Pods-iTunesMusic/Pods-iTunesMusic.release.xcconfig"; sourceTree = "<group>"; };
 		A709B3BCB922227D2DC3C6BB /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCache.swift; sourceTree = "<group>"; };
 		D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91B42761D043D5A00AAAD58 /* iTunesMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesMusic.h; sourceTree = "<group>"; };
 		D91B42781D043D5A00AAAD58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				D9FD12ED1D18324F0010E81D /* GenresCache.swift */,
 				D98D56691D20270C007B09DB /* RssCache.swift */,
 				D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */,
+				D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -700,6 +703,7 @@
 				D98D566A1D20270C007B09DB /* RssCache.swift in Sources */,
 				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
+				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
 				D9EA0B571D295090001C3F2F /* GetArtistAlbums.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D929E4481D1C44C70045C316 /* Rss.swift in Sources */,

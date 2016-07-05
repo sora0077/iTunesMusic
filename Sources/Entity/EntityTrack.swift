@@ -26,6 +26,8 @@ public protocol Track: EntityInterface {
     
     var collection: Collection { get }
     
+    var artist: Artist { get }
+    
     var cached: Bool { get }
     
     func artworkURL(size size: Int) -> NSURL
@@ -90,6 +92,8 @@ extension _Track {
     var trackViewURL: NSURL { return NSURL(string: _trackViewUrl)! }
     
     var collection: Collection { return _collection! }
+    
+    var artist: Artist { return _artist! }
     
     var cached: Bool {
         guard let path = _longPreviewFileUrl else { return false }
