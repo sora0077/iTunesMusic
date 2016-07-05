@@ -23,7 +23,7 @@ struct LookupResponse {
         case artist(_Artist)
     }
     
-    var objects: [Wrapper] = []
+    let objects: [Wrapper]
 }
 
 extension LookupResponse: Decodable {

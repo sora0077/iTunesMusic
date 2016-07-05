@@ -70,7 +70,7 @@ extension _Collection: Decodable {
         
         obj._trackCount = try e.value("trackCount")
         
-        let artist: _Artist = try _Artist.collectionArtist(e) ?? (try Himotoki.decodeValue(e.rawValue))
+        let artist: _Artist = try _Artist.collectionArtist(e) ?? Himotoki.decodeValue(e.rawValue)
         obj._artist = artist
         return obj
     }

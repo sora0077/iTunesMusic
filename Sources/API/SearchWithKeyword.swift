@@ -16,22 +16,40 @@ protocol SearchWithKeywordResponseType {
     var term: String { get set }
 }
 
-struct SearchResultPage: SearchWithKeywordResponseType {
+struct SearchResponse: SearchWithKeywordResponseType {
+    
+    private enum WrapperType: String {
+        case track, collection, artist
+    }
+    
+    enum Wrapper {
+        case track(_Track)
+        case collection(_Collection)
+        case artist(_Artist)
+    }
     
     var term: String = ""
     
-    var objects: [_Track] = []
+    let objects: [Wrapper]
 }
 
-extension SearchResultPage: Decodable {
+extension SearchResponse: Decodable {
     
-    static func decode(e: Extractor) throws -> SearchResultPage {
-        
-        var obj = SearchResultPage()
-        
-        obj.objects = try e.array("results")
-        
-        return obj
+    static func decode(e: Extractor) throws -> SearchResponse {
+        let results = e.rawValue["results"] as! [[String: AnyObject]]
+        var items: [Wrapper] = []
+        for item in results {
+            guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
+            switch wrapperType {
+            case .track:
+                items.append(Wrapper.track(try Himotoki.decodeValue(item)))
+            case .collection:
+                items.append(Wrapper.collection(try Himotoki.decodeValue(item)))
+            case .artist:
+                items.append(Wrapper.artist(try Himotoki.decodeValue(item)))
+            }
+        }
+        return SearchResponse(term: "", objects: items)
     }
 }
 

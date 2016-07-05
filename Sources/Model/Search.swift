@@ -83,7 +83,7 @@ public final class Search: PlaylistType, Fetchable, FetchableInternal {
         
         let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
         
-        var search: SearchWithKeyword<SearchResultPage>
+        var search: SearchWithKeyword<SearchResponse>
         if refreshing {
             search = SearchWithKeyword(term: term)
         } else {
@@ -100,21 +100,32 @@ public final class Search: PlaylistType, Fetchable, FetchableInternal {
                     tick()
                 }
                 switch result {
-                case .Success(let results):
+                case .Success(let response):
                     let realm = try! Realm()
                     let cache = getOrCreateCache(term: self.term, realm: realm)
                     try! realm.write {
-                        realm.add(results.objects, update: true)
+                        var tracks: [_Track] = []
+                        response.objects.forEach {
+                            switch $0 {
+                            case .track(let obj):
+                                tracks.append(obj)
+                                realm.add(obj, update: true)
+                            case .collection(let obj):
+                                realm.add(obj, update: true)
+                            case .artist(let obj):
+                                realm.add(obj, update: true)
+                            }
+                        }
                         if refreshing {
                             cache.objects.removeAll()
                             cache.refreshAt = NSDate()
                         }
-                        cache.objects.appendContentsOf(results.objects)
+                        cache.objects.appendContentsOf(tracks)
                         cache.updateAt = NSDate()
-                        cache.offset += results.objects.count
+                        cache.offset += response.objects.count
                     }
                     print("search result cached")
-                    self._requestState.value = results.objects.count != search.limit ? .done : .none
+                    self._requestState.value = response.objects.count != search.limit ? .done : .none
                     print(self._requestState.value)
                 case .Failure(let error):
                     print(error)
