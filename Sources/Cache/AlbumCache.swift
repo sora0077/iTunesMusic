@@ -8,7 +8,6 @@
 
 import Foundation
 import RealmSwift
-import Himotoki
 
 
 final class _AlbumCache: RealmSwift.Object {
@@ -21,10 +20,6 @@ final class _AlbumCache: RealmSwift.Object {
     
     dynamic var createAt = NSDate()
     
-    dynamic var fetched: Int = 0
-    
-    let items = List<_AlbumItem>()
-    
     override class func primaryKey() -> String? { return "collectionId" }
 
     override class func ignoredProperties() -> [String] { return ["collection"] }
@@ -36,30 +31,6 @@ final class _AlbumCache: RealmSwift.Object {
         get {
             return _collection!
         }
-    }
-}
-
-final class _AlbumItem: RealmSwift.Object {
-    
-    dynamic var trackId: Int = 0
-}
-
-extension _AlbumCache: Decodable {
-    
-    static func decode(e: Extractor) throws -> Self {
-        func albumItem(trackId: Int) -> _AlbumItem {
-            let item = _AlbumItem()
-            item.trackId = trackId
-            return item
-        }
-        let items = e.rawValue["items"] as! [[String: AnyObject]]
-        
-        let obj = self.init()
-        obj.items.appendContentsOf(items
-            .map { $0["item-id"] as! Int }
-            .map(albumItem)
-        )
-        return obj
     }
 }
 

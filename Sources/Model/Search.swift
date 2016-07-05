@@ -13,11 +13,11 @@ import APIKit
 import Timepiece
 
 
-private func getOrCreateCache(term term: String, realm: Realm) -> SearchCache {
-    if let cache = realm.objectForPrimaryKey(SearchCache.self, key: term) {
+private func getOrCreateCache(term term: String, realm: Realm) -> _SearchCache {
+    if let cache = realm.objectForPrimaryKey(_SearchCache.self, key: term) {
         return cache
     } else {
-        let cache = SearchCache()
+        let cache = _SearchCache()
         try! realm.write {
             cache.term = term
             realm.add(cache)
@@ -44,7 +44,7 @@ public final class Search: PlaylistType, Fetchable, FetchableInternal {
     }
 
     private let term: String
-    private let caches: Results<SearchCache>
+    private let caches: Results<_SearchCache>
     private var token: NotificationToken!
     private var objectsToken: NotificationToken?
     
@@ -53,11 +53,11 @@ public final class Search: PlaylistType, Fetchable, FetchableInternal {
         
         let realm = try! Realm()
         getOrCreateCache(term: term, realm: realm)
-        caches = realm.objects(SearchCache).filter("term = %@", term)
+        caches = realm.objects(_SearchCache).filter("term = %@", term)
         token = caches.addNotificationBlock { [weak self] changes in
             guard let `self` = self else { return }
             
-            func updateObserver(results: Results<SearchCache>) {
+            func updateObserver(results: Results<_SearchCache>) {
                 self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
                     self?._changes.onNext(CollectionChange(changes))
                 }

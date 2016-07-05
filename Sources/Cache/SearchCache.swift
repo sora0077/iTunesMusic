@@ -12,7 +12,7 @@ import RxSwift
 import Himotoki
 
 
-class SearchCache: RealmSwift.Object, SearchWithKeywordResponseType {
+class _SearchCache: RealmSwift.Object, SearchWithKeywordResponseType {
     
     let objects = List<_Track>()
     

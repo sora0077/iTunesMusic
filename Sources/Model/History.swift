@@ -11,11 +11,11 @@ import RealmSwift
 import RxSwift
 
 
-private func getOrCreateCache(realm realm: Realm) -> HistoryCache {
-    if let cache = realm.objects(HistoryCache.self).first {
+private func getOrCreateCache(realm realm: Realm) -> _HistoryCache {
+    if let cache = realm.objects(_HistoryCache.self).first {
         return cache
     } else {
-        let cache = HistoryCache()
+        let cache = _HistoryCache()
         try! realm.write {
             realm.add(cache)
         }
@@ -34,7 +34,7 @@ public final class History: PlaylistType {
     public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
     
     private var objectsToken: NotificationToken?
-    private let cache: HistoryCache
+    private let cache: _HistoryCache
     
     private init() {
         
