@@ -56,13 +56,13 @@ private class TableViewCell: UITableViewCell {
 
 class RssViewController: UIViewController {
     
-    private let rss: Rss
+    private let rss: Model.Rss
     private let disposeBag = DisposeBag()
     
     private let tableView = UITableView()
     
     init(genre: Genre) {
-        rss = Rss(genre: genre)
+        rss = Model.Rss(genre: genre)
         super.init(nibName: nil, bundle: nil)
     }
     

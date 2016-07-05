@@ -23,30 +23,36 @@ private func getOrCreateCache(realm realm: Realm) -> _HistoryCache {
     }
 }
 
-
-public final class History: PlaylistType {
+extension Model {
     
-    public let name = "履歴"
-    
-    public static let instance = History()
-    
-    private let _changes = PublishSubject<CollectionChange>()
-    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-    
-    private var objectsToken: NotificationToken?
-    private let cache: _HistoryCache
-    
-    private init() {
+    public final class History: PlaylistType {
         
-        let realm = try! Realm()
-        cache = getOrCreateCache(realm: realm)
-        objectsToken = cache.objects.addNotificationBlock { [weak self] changes in
-            guard let `self` = self else { return }
+        public let name = "履歴"
+        
+        public static let instance = History()
+        
+        private let _changes = PublishSubject<CollectionChange>()
+        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+        
+        private var objectsToken: NotificationToken?
+        private let cache: _HistoryCache
+        
+        private init() {
             
-            self._changes.onNext(CollectionChange(changes))
+            let realm = try! Realm()
+            cache = getOrCreateCache(realm: realm)
+            objectsToken = cache.objects.addNotificationBlock { [weak self] changes in
+                guard let `self` = self else { return }
+                
+                self._changes.onNext(CollectionChange(changes))
+            }
         }
+        
     }
-    
+}
+
+extension Model.History {
+
     public func record(atIndex index: Int) -> (Track, NSDate) {
         return (objects[index].track, objects[index].createAt)
     }
@@ -70,17 +76,17 @@ public final class History: PlaylistType {
     }
 }
 
-extension History: PlayerMiddleware {
+extension Model.History: PlayerMiddleware {
     
     public func didEndPlayTrack(trackId: Int) {
         let realm = try! Realm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
-            History.add(track, realm: realm)
+            Model.History.add(track, realm: realm)
         }
     }
 }
 
-extension History: PlaylistTypeInternal {
+extension Model.History: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_HistoryRecord> { return AnyRealmCollection(cache.objects) }
     
@@ -88,7 +94,7 @@ extension History: PlaylistTypeInternal {
 }
 
 
-extension History: CollectionType {
+extension Model.History: CollectionType {
     
     public var count: Int { return objects.count }
     

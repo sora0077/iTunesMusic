@@ -97,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
         
-        player.install(middleware: History.instance)
+        player.install(middleware: Model.History.instance)
         player.install(middleware: Downloader.instance)
         
         print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")

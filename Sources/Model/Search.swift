@@ -26,56 +26,63 @@ private func getOrCreateCache(term term: String, realm: Realm) -> _SearchCache {
     }
 }
 
-
-public final class Search: PlaylistType, Fetchable, FetchableInternal {
+extension Model {
     
-    var name: String { return term }
-    
-    private let _changes = PublishSubject<CollectionChange>()
-    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-    
-    let _requestState = Variable<RequestState>(.none)
-    public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
-    
-    private let _refreshing = Variable<Bool>(false)
-    
-    var needRefresh: Bool {
-        return NSDate() - getOrCreateCache(term: term, realm: try! Realm()).refreshAt > 60.minutes
-    }
-
-    private let term: String
-    private let caches: Results<_SearchCache>
-    private var token: NotificationToken!
-    private var objectsToken: NotificationToken?
-    
-    public init(term: String) {
-        self.term = term
+    public final class Search: PlaylistType, Fetchable, FetchableInternal {
         
-        let realm = try! Realm()
-        getOrCreateCache(term: term, realm: realm)
-        caches = realm.objects(_SearchCache).filter("term = %@", term)
-        token = caches.addNotificationBlock { [weak self] changes in
-            guard let `self` = self else { return }
-            
-            func updateObserver(results: Results<_SearchCache>) {
-                self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
-                    self?._changes.onNext(CollectionChange(changes))
-                }
-            }
-            
-            switch changes {
-            case .Initial(let results):
-                updateObserver(results)
-            case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
-                if !insertions.isEmpty {
-                    updateObserver(results)
-                }
-            case .Error(let error):
-                fatalError("\(error)")
-            }
-            
+        var name: String { return term }
+        
+        private let _changes = PublishSubject<CollectionChange>()
+        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+        
+        let _requestState = Variable<RequestState>(.none)
+        public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
+        
+        private let _refreshing = Variable<Bool>(false)
+        
+        var needRefresh: Bool {
+            return NSDate() - getOrCreateCache(term: term, realm: try! Realm()).refreshAt > 60.minutes
         }
+        
+        private let term: String
+        private let caches: Results<_SearchCache>
+        private var token: NotificationToken!
+        private var objectsToken: NotificationToken?
+        
+        public init(term: String) {
+            self.term = term
+            
+            let realm = try! Realm()
+            getOrCreateCache(term: term, realm: realm)
+            caches = realm.objects(_SearchCache).filter("term = %@", term)
+            token = caches.addNotificationBlock { [weak self] changes in
+                guard let `self` = self else { return }
+                
+                func updateObserver(results: Results<_SearchCache>) {
+                    self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
+                        self?._changes.onNext(CollectionChange(changes))
+                    }
+                }
+                
+                switch changes {
+                case .Initial(let results):
+                    updateObserver(results)
+                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                    if !insertions.isEmpty {
+                        updateObserver(results)
+                    }
+                case .Error(let error):
+                    fatalError("\(error)")
+                }
+                
+            }
+        }
+        
     }
+}
+
+
+extension Model.Search {
     
     func request(refreshing refreshing: Bool = false) {
         
@@ -137,12 +144,12 @@ public final class Search: PlaylistType, Fetchable, FetchableInternal {
 }
 
 
-extension Search: PlaylistTypeInternal {
+extension Model.Search: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].objects) }
 }
 
-extension Search: CollectionType {
+extension Model.Search: CollectionType {
     
     public var count: Int { return objects.count }
     

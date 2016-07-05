@@ -13,7 +13,7 @@ import RxSwift
 
 class SearchViewController: UIViewController {
     
-    private var search: Search? {
+    private var search: Model.Search? {
         didSet {
             
             guard let search = search else { return }
@@ -105,7 +105,7 @@ extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         
         if let text = searchBar.text where !text.isEmpty {
-            search = Search(term: text)
+            search = Model.Search(term: text)
         }
     }
 }

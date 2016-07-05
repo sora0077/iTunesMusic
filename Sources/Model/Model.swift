@@ -9,6 +9,15 @@
 import Foundation
 import RealmSwift
 
+
+extension Array {
+    
+    subscript (safe range: Range<Index>) -> ArraySlice<Element> {
+        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
+    }
+}
+
+
 public struct Model {
     
 }

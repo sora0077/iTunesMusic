@@ -14,7 +14,7 @@ import SnapKit
 
 class GenresViewController: UIViewController {
 
-    private let genres = Genres()
+    private let genres = Model.Genres()
     private let disposeBag = DisposeBag()
     
     private let tableView = UITableView()

@@ -13,14 +13,6 @@ import RealmSwift
 import Timepiece
 
 
-extension Array {
-    
-    subscript (safe range: Range<Index>) -> ArraySlice<Element> {
-        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
-    }
-}
-
-
 private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssCache {
     if let cache = realm.objectForPrimaryKey(_RssCache.self, key: genreId) {
         return cache
@@ -34,58 +26,65 @@ private func getOrCreateCache(genreId genreId: Int, realm: Realm) -> _RssCache {
     }
 }
 
-public final class Rss: PlaylistType, Fetchable, FetchableInternal {
+extension Model {
     
-    private let _changes = PublishSubject<CollectionChange>()
-    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-    
-    public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-    private(set) var _requestState = Variable<RequestState>(.none)
-    
-    var needRefresh: Bool {
-        return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
-    }
-    
-    private let id: Int
-    private let url: NSURL
-    
-    private let caches: Results<_RssCache>
-    private var token: NotificationToken!
-    private var objectsToken: NotificationToken!
-    
-    private var trackIds: [Int] = []
-    
-    public init(genre: Genre) {
-        id = genre.id
-        url = genre.rssUrls.topSongs
-     
-        let realm = try! Realm()
-        let feed = getOrCreateCache(genreId: id, realm: realm)
-        trackIds = feed.items.map { $0.id }
+    public final class Rss: PlaylistType, Fetchable, FetchableInternal {
         
-        caches = realm.objects(_RssCache).filter("_genreId = \(id)")
-        token = caches.addNotificationBlock { [weak self] changes in
-            guard let `self` = self else { return }
+        private let _changes = PublishSubject<CollectionChange>()
+        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+        
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        private(set) var _requestState = Variable<RequestState>(.none)
+        
+        var needRefresh: Bool {
+            return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
+        }
+        
+        private let id: Int
+        private let url: NSURL
+        
+        private let caches: Results<_RssCache>
+        private var token: NotificationToken!
+        private var objectsToken: NotificationToken!
+        
+        private var trackIds: [Int] = []
+        
+        public init(genre: Genre) {
+            id = genre.id
+            url = genre.rssUrls.topSongs
             
-            func updateObserver(results: Results<_RssCache>) {
-                self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
-                    self?._changes.onNext(CollectionChange(changes))
+            let realm = try! Realm()
+            let feed = getOrCreateCache(genreId: id, realm: realm)
+            trackIds = feed.items.map { $0.id }
+            
+            caches = realm.objects(_RssCache).filter("_genreId = \(id)")
+            token = caches.addNotificationBlock { [weak self] changes in
+                guard let `self` = self else { return }
+                
+                func updateObserver(results: Results<_RssCache>) {
+                    self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
+                        self?._changes.onNext(CollectionChange(changes))
+                    }
                 }
-            }
-            
-            switch changes {
-            case .Initial(let results):
-                updateObserver(results)
-            case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
-                if !insertions.isEmpty {
+                
+                switch changes {
+                case .Initial(let results):
                     updateObserver(results)
+                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                    if !insertions.isEmpty {
+                        updateObserver(results)
+                    }
+                case .Error(let error):
+                    fatalError("\(error)")
                 }
-            case .Error(let error):
-                fatalError("\(error)")
+                
             }
-            
         }
     }
+}
+
+
+extension Model.Rss {
     
     func request(refreshing refreshing: Bool) {
         if trackIds.isEmpty || refreshing {
@@ -177,12 +176,12 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
     }
 }
 
-extension Rss: PlaylistTypeInternal {
+extension Model.Rss: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].tracks) }
 }
 
-extension Rss: CollectionType {
+extension Model.Rss: CollectionType {
     
     public var count: Int { return objects.count }
     
