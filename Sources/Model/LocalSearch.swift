@@ -41,8 +41,6 @@ public final class LocalSearch: PlaylistType {
 extension LocalSearch: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(results) }
-    
-    public func _any() -> PlaylistType { return AnyPlaylist(playlist: self) }
 }
 
 extension LocalSearch: CollectionType {

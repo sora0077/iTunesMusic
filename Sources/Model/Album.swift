@@ -129,8 +129,6 @@ extension Model.Album {
 extension Model.Album: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks.sorted("_trackNumber")) }
-    
-    public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }
 
 extension Model.Album: CollectionType {

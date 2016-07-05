@@ -23,7 +23,6 @@
 		D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42941D05BBDB00AAAD58 /* SearchCache.swift */; };
 		D91B42981D07085300AAAD58 /* SearchWithKeyword.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42971D07085300AAAD58 /* SearchWithKeyword.swift */; };
 		D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42991D070FA600AAAD58 /* iTunesMusic.swift */; };
-		D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */; };
 		D91B42A01D08640800AAAD58 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B429F1D08640800AAAD58 /* Search.swift */; };
 		D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */; };
 		D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A31D0CFA2700AAAD58 /* Preview.swift */; };
@@ -125,7 +124,6 @@
 		D91B42971D07085300AAAD58 /* SearchWithKeyword.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchWithKeyword.swift; sourceTree = "<group>"; };
 		D91B42991D070FA600AAAD58 /* iTunesMusic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iTunesMusic.swift; sourceTree = "<group>"; };
 		D91B429B1D07139800AAAD58 /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; };
-		D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyPlaylist.swift; sourceTree = "<group>"; };
 		D91B429F1D08640800AAAD58 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetPreviewUrl.swift; sourceTree = "<group>"; };
 		D91B42A31D0CFA2700AAAD58 /* Preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
@@ -337,7 +335,6 @@
 			children = (
 				D9165FE71D2C040C00B701E3 /* Model.swift */,
 				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
-				D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
 				D9FD12E51D16D3CD0010E81D /* LocalSearch.swift */,
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
@@ -704,7 +701,6 @@
 				D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */,
 				D9FD12EE1D18324F0010E81D /* GenresCache.swift in Sources */,
 				D98D566A1D20270C007B09DB /* RssCache.swift in Sources */,
-				D91B429E1D0862DA00AAAD58 /* AnyPlaylist.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
 				D9EA0B571D295090001C3F2F /* GetArtistAlbums.swift in Sources */,

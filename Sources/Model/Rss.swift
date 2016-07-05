@@ -180,8 +180,6 @@ public final class Rss: PlaylistType, Fetchable, FetchableInternal {
 extension Rss: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].tracks) }
-    
-    public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }
 
 extension Rss: CollectionType {
