@@ -9,7 +9,12 @@
 import Foundation
 import RealmSwift
 import Himotoki
+import Timepiece
 
+private let releaseDateTransformer = Transformer<String, NSDate> { string in
+    //  2016-06-29T07:00:00Z
+    return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")!
+}
 
 public protocol Collection {
 
@@ -32,6 +37,13 @@ class _Collection: RealmSwift.Object, Collection {
     dynamic var _artworkUrl100: String = ""
     
     dynamic var _trackCount: Int = 0
+    
+    dynamic var _country: String = ""
+    dynamic var _currency: String = ""
+    
+    dynamic var _copyright: String?
+    
+    dynamic var _releaseDate = NSDate()
     
     dynamic var _artist: _Artist?
     
@@ -69,6 +81,15 @@ extension _Collection: Decodable {
         obj._artworkUrl100 = try e.value("artworkUrl100")
         
         obj._trackCount = try e.value("trackCount")
+        
+        obj._country = try e.value("country")
+        obj._currency = try e.value("currency")
+        
+        obj._copyright = try e.valueOptional("copyright")
+        
+        obj._releaseDate = try releaseDateTransformer.apply(e.value("releaseDate"))
+        
+        print(obj._releaseDate)
         
         let artist: _Artist = try _Artist.collectionArtist(e) ?? Himotoki.decodeValue(e.rawValue)
         obj._artist = artist

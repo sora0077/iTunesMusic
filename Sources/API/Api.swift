@@ -25,7 +25,12 @@ extension iTunesRequestType {
 extension iTunesRequestType where Response: Decodable {
     
     func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
-        return try decodeValue(object)
+        do {
+            return try decodeValue(object)
+        } catch {
+            print(object)
+            throw error
+        }
     }
 }
 
