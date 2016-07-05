@@ -12,6 +12,9 @@
 		A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */; };
 		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
 		D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */; };
+		D9165FE41D2C03C300B701E3 /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */; };
+		D9165FE51D2C03C300B701E3 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE21D2C03C300B701E3 /* Player.swift */; };
+		D9165FE61D2C03C300B701E3 /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */; };
 		D91B42771D043D5A00AAAD58 /* iTunesMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = D91B42761D043D5A00AAAD58 /* iTunesMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; };
 		D91B42831D043D5B00AAAD58 /* iTunesMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42821D043D5B00AAAD58 /* iTunesMusicTests.swift */; };
@@ -39,9 +42,6 @@
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
-		D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */; };
-		D9542EFF1D15189A0073C8EE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EFD1D15189A0073C8EE /* Player.swift */; };
-		D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542F001D1518B90073C8EE /* PlayerImpl.swift */; };
 		D98D566A1D20270C007B09DB /* RssCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98D56691D20270C007B09DB /* RssCache.swift */; };
 		D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */; };
 		D9AAE06D1D27622600FF29C3 /* AlbumDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */; };
@@ -109,6 +109,9 @@
 		A709B3BCB922227D2DC3C6BB /* Pods-Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Demo/Pods-Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCache.swift; sourceTree = "<group>"; };
+		D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
+		D9165FE21D2C03C300B701E3 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 		D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91B42761D043D5A00AAAD58 /* iTunesMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesMusic.h; sourceTree = "<group>"; };
 		D91B42781D043D5A00AAAD58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,9 +145,6 @@
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
-		D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
-		D9542EFD1D15189A0073C8EE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		D9542F001D1518B90073C8EE /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 		D98D56691D20270C007B09DB /* RssCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssCache.swift; sourceTree = "<group>"; };
 		D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumDetailViewController.swift; sourceTree = "<group>"; };
@@ -224,6 +224,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		D9165FE01D2C03C300B701E3 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */,
+				D9165FE21D2C03C300B701E3 /* Player.swift */,
+				D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */,
+			);
+			path = Player;
+			sourceTree = "<group>";
+		};
 		D91B42691D043D5A00AAAD58 = {
 			isa = PBXGroup;
 			children = (
@@ -273,6 +283,7 @@
 			children = (
 				D91B42961D07071400AAAD58 /* API */,
 				D91B429C1D08625200AAAD58 /* Model */,
+				D9165FE01D2C03C300B701E3 /* Player */,
 				D91B42911D04C46C00AAAD58 /* Cache */,
 				D91B428E1D044AD200AAAD58 /* Entity */,
 				D91B42991D070FA600AAAD58 /* iTunesMusic.swift */,
@@ -322,7 +333,6 @@
 		D91B429C1D08625200AAAD58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				D9542EFB1D1518730073C8EE /* Player */,
 				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
 				D91B429D1D0862DA00AAAD58 /* AnyPlaylist.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
@@ -371,16 +381,6 @@
 				D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		D9542EFB1D1518730073C8EE /* Player */ = {
-			isa = PBXGroup;
-			children = (
-				D9542EFD1D15189A0073C8EE /* Player.swift */,
-				D9542F001D1518B90073C8EE /* PlayerImpl.swift */,
-				D9542EFC1D15189A0073C8EE /* CrossFadePlayer.swift */,
-			);
-			path = Player;
 			sourceTree = "<group>";
 		};
 		D9AAE06E1D27624500FF29C3 /* TableViewCells */ = {
@@ -705,10 +705,10 @@
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
 				D9EA0B571D295090001C3F2F /* GetArtistAlbums.swift in Sources */,
+				D9165FE61D2C03C300B701E3 /* PlayerImpl.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D929E4481D1C44C70045C316 /* Rss.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
-				D9542EFF1D15189A0073C8EE /* Player.swift in Sources */,
 				D9FD12F01D1C2C610010E81D /* EntityGenre.swift in Sources */,
 				D9EA0B511D27FE2A001C3F2F /* AlbumCache.swift in Sources */,
 				D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */,
@@ -719,14 +719,14 @@
 				D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */,
 				D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */,
 				D9EA0B531D28AD0A001C3F2F /* EntityArtist.swift in Sources */,
+				D9165FE51D2C03C300B701E3 /* Player.swift in Sources */,
 				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,
 				D9AAE0741D27A79800FF29C3 /* GetAlbumTracks.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
-				D9542F011D1518B90073C8EE /* PlayerImpl.swift in Sources */,
-				D9542EFE1D15189A0073C8EE /* CrossFadePlayer.swift in Sources */,
 				D91B42901D044AE600AAAD58 /* EntityTrack.swift in Sources */,
+				D9165FE41D2C03C300B701E3 /* CrossFadePlayer.swift in Sources */,
 				D9FD12E61D16D3CD0010E81D /* LocalSearch.swift in Sources */,
 				D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */,
 				D9EA0B591D2AAD74001C3F2F /* Artist.swift in Sources */,
