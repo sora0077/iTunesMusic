@@ -71,7 +71,6 @@ class RssViewController: UIViewController {
     }
     
     deinit {
-        tableView.delegate = nil
         print(self, " deinit")
     }
     

@@ -77,10 +77,6 @@ class AlbumDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        tableView.delegate = nil
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

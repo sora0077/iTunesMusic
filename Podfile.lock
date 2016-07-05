@@ -1,7 +1,7 @@
 PODS:
-  - APIKit (2.0.3):
+  - APIKit (2.0.4):
     - Result (~> 2.1.1)
-  - Himotoki (2.1.0)
+  - Himotoki (2.1.1)
   - PINCache (2.2.2)
   - QueryKit (0.12.1)
   - Realm (1.0.1):
@@ -9,10 +9,10 @@ PODS:
   - Realm/Headers (1.0.1)
   - RealmSwift (1.0.1):
     - Realm (= 1.0.1)
-  - Result (2.1.1)
-  - RxCocoa (2.5.0):
+  - Result (2.1.2)
+  - RxCocoa (2.6.0):
     - RxSwift (~> 2.5)
-  - RxSwift (2.5.0)
+  - RxSwift (2.6.0)
   - SDWebImage (3.8.1):
     - SDWebImage/Core (= 3.8.1)
   - SDWebImage/Core (3.8.1)
@@ -32,15 +32,15 @@ DEPENDENCIES:
   - Timepiece
 
 SPEC CHECKSUMS:
-  APIKit: f42f0175c3a330b03405884d92bdf39f4793940a
-  Himotoki: 59d8ab0cfed411c9d2109cfd365998094ee77d96
+  APIKit: 08089ab5da33faece57dfecc4bfe787a731e218b
+  Himotoki: 0e539e721830384e128b0c0c94cbd9693ca30761
   PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
   QueryKit: 6a8dbe9f33ffac00c424143695681a949b58518d
   Realm: 2e15e39d35b08abb529e212ed5d8af107b5236c8
   RealmSwift: d73ea2af08c3676dbdd5e4b669651a0f492162a4
-  Result: 822c879f145943320cc80a9a8372378e3d699fe4
-  RxCocoa: e1b1562e57a554d0fb2aabf9d71b637f177257c7
-  RxSwift: 402b41a50e922a0368fc14cb3bc9f4427920e8ae
+  Result: 6e722d4a66b1408680dbfcdf51c0b1c4b706316a
+  RxCocoa: 89ab00d5753502520227940e3a0e0a0413683c6b
+  RxSwift: 77f3a0b15324baa7a1c9bfa9f199648a82424e26
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   SnapKit: bbad04cb016c7cead63965f16b00c09318d271ee
   Timepiece: b5038887b91d6eb70653173f4270e06b3abeac41
