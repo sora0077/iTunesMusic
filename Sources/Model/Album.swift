@@ -27,55 +27,61 @@ private func getOrCreateCache(collectionId collectionId: Int, realm: Realm) -> _
 }
 
 
-public final class Album: PlaylistType, Fetchable, FetchableInternal {
+extension Model {
     
-    private let _changes = PublishSubject<CollectionChange>()
-    public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-    
-    public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-    private(set) var _requestState = Variable<RequestState>(.none)
-    
-    var needRefresh: Bool {
-        return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! Realm()).refreshAt > 60.minutes
-    }
-    
-    private var objectsToken: NotificationToken?
-    private var token: NotificationToken?
-    
-    private let collectionId: Int
-    
-    private let caches: Results<_AlbumCache>
-    
-    public init(collection: Collection) {
+    public final class Album: PlaylistType, Fetchable, FetchableInternal {
         
-        let collection = collection as! _Collection
-        self.collectionId = collection._collectionId
+        private let _changes = PublishSubject<CollectionChange>()
+        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         
-        let realm = try! Realm()
-        let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-        caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
-        token = caches.addNotificationBlock { [weak self] changes in
-            guard let `self` = self else { return }
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        private(set) var _requestState = Variable<RequestState>(.none)
+        
+        var needRefresh: Bool {
+            return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! Realm()).refreshAt > 60.minutes
+        }
+        
+        private var objectsToken: NotificationToken?
+        private var token: NotificationToken?
+        
+        private let collectionId: Int
+        
+        private let caches: Results<_AlbumCache>
+        
+        public init(collection: Collection) {
             
-            func updateObserver(results: Results<_AlbumCache>) {
-                self.objectsToken = results[0].collection._tracks.sorted("_trackNumber").addNotificationBlock { [weak self] changes in
-                    self?._changes.onNext(CollectionChange(changes))
+            let collection = collection as! _Collection
+            self.collectionId = collection._collectionId
+            
+            let realm = try! Realm()
+            let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+            caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
+            token = caches.addNotificationBlock { [weak self] changes in
+                guard let `self` = self else { return }
+                
+                func updateObserver(results: Results<_AlbumCache>) {
+                    self.objectsToken = results[0].collection._tracks.sorted("_trackNumber").addNotificationBlock { [weak self] changes in
+                        self?._changes.onNext(CollectionChange(changes))
+                    }
                 }
-            }
-            
-            switch changes {
-            case .Initial(let results):
-                updateObserver(results)
-            case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
-                if !insertions.isEmpty {
+                
+                switch changes {
+                case .Initial(let results):
                     updateObserver(results)
+                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                    if !insertions.isEmpty {
+                        updateObserver(results)
+                    }
+                case .Error(let error):
+                    fatalError("\(error)")
                 }
-            case .Error(let error):
-                fatalError("\(error)")
             }
         }
     }
-    
+}
+
+extension Model.Album {
+
     func request(refreshing refreshing: Bool) {
         
         let collectionId = self.collectionId
@@ -120,14 +126,14 @@ public final class Album: PlaylistType, Fetchable, FetchableInternal {
     }
 }
 
-extension Album: PlaylistTypeInternal {
+extension Model.Album: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks.sorted("_trackNumber")) }
     
     public func _any() -> PlaylistType { return AnyPaginatedPlaylist(playlist: self) }
 }
 
-extension Album: CollectionType {
+extension Model.Album: CollectionType {
     
     public var count: Int { return objects.count }
     

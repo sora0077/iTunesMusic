@@ -14,10 +14,6 @@ import Timepiece
 import Himotoki
 
 
-public struct Model {
-    
-}
-
 private func getOrCreateCache(artistId artistId: Int, realm: Realm) -> _ArtistCache {
     if let cache = realm.objectForPrimaryKey(_ArtistCache.self, key: artistId) {
         return cache

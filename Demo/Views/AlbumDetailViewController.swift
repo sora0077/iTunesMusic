@@ -63,13 +63,13 @@ class AlbumDetailViewController: UIViewController {
     
     private let tableView = UITableView()
     
-    private let album: Album
+    private let album: Model.Album
     private let disposeBag = DisposeBag()
     
     var artist: Model.Artist!
     
     init(collection: Collection) {
-        album = Album(collection: collection)
+        album = Model.Album(collection: collection)
         super.init(nibName: nil, bundle: nil)
     }
     
