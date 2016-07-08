@@ -147,14 +147,14 @@ extension AlbumDetailViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        print(album[indexPath.row])
-        artist = Model.Artist(artist: album[indexPath.row].artist)
-        artist.fetch()
-        artist.changes.subscribeNext { changes in
-            for album in self.artist {
-                print(album)
-            }
-        }.addDisposableTo(disposeBag)
+//        print(album[indexPath.row])
+//        artist = Model.Artist(artist: album[indexPath.row].artist)
+//        artist.fetch()
+//        artist.changes.subscribeNext { changes in
+//            for album in self.artist {
+//                print(album)
+//            }
+//        }.addDisposableTo(disposeBag)
         
         player.add(track: album[indexPath.row])
     }

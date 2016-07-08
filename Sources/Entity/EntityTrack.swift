@@ -48,16 +48,10 @@ class _Track: RealmSwift.Object, Track {
     
     dynamic var _previewUrl: String = ""
     
-    dynamic var _longPreviewUrl: String?
-    let _longPreviewDuration: RealmOptional<Int> = RealmOptional()
-    
-    dynamic var _longPreviewFileUrl: String?
-    
     dynamic var _country: String = ""
     dynamic var _currency: String = ""
     
     dynamic var _primaryGenreName: String = ""
-    
     
     dynamic var _kind: String = ""
     
@@ -75,6 +69,28 @@ class _Track: RealmSwift.Object, Track {
     
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
     
+    private let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
+    private var __metadata: _TrackMetadata?
+    
+    dynamic var _metadataUpdated: Int = 0
+    
+    var hasMetadata: Bool {
+        return !_metadata.isEmpty
+    }
+    
+    var metadata: _TrackMetadata {
+        if let data = _metadata.first {
+            return data
+        }
+        if let data = __metadata {
+            return data
+        }
+        let data = _TrackMetadata()
+        data._track = self
+        data._trackId = _trackId
+        __metadata = data
+        return data
+    }
     
     override class func primaryKey() -> String? { return "_trackId" }
 }
@@ -92,8 +108,8 @@ extension _Track {
     var artist: Artist { return _artist! }
     
     var cached: Bool {
-        guard let path = _longPreviewFileUrl else { return false }
-        return NSFileManager.defaultManager().fileExistsAtPath(path)
+        if _metadata.isEmpty { return false }
+        return metadata.fileURL != nil
     }
     
     func artworkURL(size size: Int) -> NSURL {

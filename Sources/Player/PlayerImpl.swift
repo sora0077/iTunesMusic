@@ -139,12 +139,15 @@ final class PlayerImpl: NSObject, Player {
             print("run updateQueue")
             let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
             func getPreviewInfo() -> (NSURL, duration: Int)? {
-                guard let duration = track._longPreviewDuration.value else { return nil }
+                if !track.hasMetadata { return nil }
+                guard let duration = track.metadata.duration else { return nil }
                 
-                if let path = track._longPreviewFileUrl where NSFileManager.defaultManager().fileExistsAtPath(path) {
-                    return (NSURL(fileURLWithPath: path), duration)
+                if let fileURL = track.metadata.fileURL {
+                    print("load from file ", track.trackName)
+                    return (fileURL, duration)
                 }
-                if let string = track._longPreviewUrl, url = NSURL(string: string) {
+                if let url = track.metadata.previewURL {
+                    print("load from network ", track.trackName)
                     return (url, duration)
                 }
                 return nil

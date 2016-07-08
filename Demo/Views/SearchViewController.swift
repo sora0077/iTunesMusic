@@ -17,6 +17,7 @@ class SearchViewController: UIViewController {
         didSet {
             
             guard let search = search else { return }
+            searchDisposeBag = DisposeBag()
             search.changes
                 .subscribe(tableView.rx_itemUpdates())
                 .addDisposableTo(searchDisposeBag)

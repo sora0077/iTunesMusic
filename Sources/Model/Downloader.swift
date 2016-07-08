@@ -16,23 +16,26 @@ final class Downloader {
     
     private let disposeBag = DisposeBag()
     
-    init() {}
+    private var downloaded: Set<Int> = []
 }
 
 extension Downloader: PlayerMiddleware {
     
     func didEndPlayTrack(trackId: Int) {
+        if downloaded.contains(trackId) { return }
         let realm = try! Realm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
             if track.histories.count > 2 {
                 let preview = Preview.instance.queueing(track: track)
                 if preview.fileURL != nil {
+                    downloaded.insert(trackId)
                     return
                 }
                 print("will cache in disk", track.trackName)
                 preview.download()
-                    .subscribeNext { url, _ in
+                    .subscribeNext { [weak self] url, _ in
                         print("cache ", url)
+                        self?.downloaded.insert(trackId)
                     }
                     .addDisposableTo(disposeBag)
             }

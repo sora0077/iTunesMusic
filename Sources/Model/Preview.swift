@@ -78,11 +78,13 @@ final class PreviewTrack {
                             let realm = try! Realm()
                             let track = realm.objectForPrimaryKey(_Track.self, key: id)!
                             try! realm.write {
-                                track._longPreviewFileUrl = to.path
-                                track._longPreviewDuration.value = duration
+                                track.metadata.updateCache(filename: filename)
+                                track.metadata.duration = duration
+                                track._metadataUpdated += 1
+                                realm.add(track.metadata, update: true)
                             }
                             self?.fileURL = to
-                            subscriber.onNext((to, track._longPreviewDuration.value!))
+                            subscriber.onNext((to, duration))
                             subscriber.onCompleted()
                         } else {
                             subscriber.onError(error!)
@@ -101,15 +103,14 @@ final class PreviewTrack {
         let url = self.url
         
         let realm = try! Realm()
-        if let track = realm.objectForPrimaryKey(_Track.self, key: id), duration = track._longPreviewDuration.value {
-            if let path = track._longPreviewFileUrl {
-                if NSFileManager.defaultManager().fileExistsAtPath(path) {
-                    print("file exists")
-                    return Observable.just((NSURL(fileURLWithPath: path), duration))
+        if let track = realm.objectForPrimaryKey(_Track.self, key: id) where track.hasMetadata {
+            if let duration = track.metadata.duration {
+                if let fileURL = track.metadata.fileURL {
+                    return Observable.just((fileURL, duration))
                 }
-            }
-            if let string = track._longPreviewUrl, url = NSURL(string: string) {
-                return Observable.just((url, duration))
+                if let url = track.metadata.previewURL {
+                    return Observable.just((url, duration))
+                }
             }
         }
         
@@ -124,8 +125,10 @@ final class PreviewTrack {
                         let realm = try! Realm()
                         try! realm.write {
                             guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
-                            track._longPreviewUrl = url.absoluteString
-                            track._longPreviewDuration.value = duration
+                            track.metadata.updatePreviewURL(url)
+                            track.metadata.duration = duration
+                            track._metadataUpdated += 1
+                            realm.add(track.metadata, update: true)
                         }
                         subscriber.onNext((url, duration))
                         subscriber.onCompleted()

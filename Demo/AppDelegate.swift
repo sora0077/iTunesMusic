@@ -97,6 +97,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
         
+        print(NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0])
+        
         launch()
         
         print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
