@@ -60,7 +60,10 @@ extension Model {
                 guard let `self` = self else { return }
                 
                 func updateObserver(results: Results<_AlbumCache>) {
-                    self.objectsToken = results[0].collection._tracks.sorted("_trackNumber").addNotificationBlock { [weak self] changes in
+                    self.objectsToken = results[0].collection._tracks.sorted([
+                        SortDescriptor(property: "_discNumber", ascending: true),
+                        SortDescriptor(property: "_trackNumber", ascending: true)
+                    ]).addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -109,7 +112,7 @@ extension Model.Album {
                 case .Success(let response):
                     let realm = try! Realm()
                     try! realm.write {
-                        response.objects.forEach {
+                        response.objects.reverse().forEach {
                             switch $0 {
                             case .track(let obj):
                                 realm.add(obj, update: true)
@@ -124,7 +127,8 @@ extension Model.Album {
                         if refreshing {
                             cache.refreshAt = NSDate()
                         }
-                        let done = cache.collection._trackCount == cache.collection._tracks.count
+                        let done = cache.collection._trackCount <= cache.collection._tracks.count
+                        print(cache.collection._trackCount, cache.collection._tracks.count)
                         self._requestState.value = done ? .done : .none
                     }
                 case .Failure(let error):
@@ -138,7 +142,12 @@ extension Model.Album {
 
 extension Model.Album: PlaylistTypeInternal {
     
-    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].collection._tracks.sorted("_trackNumber")) }
+    var objects: AnyRealmCollection<_Track> {
+        return AnyRealmCollection(caches[0].collection._tracks.sorted([
+            SortDescriptor(property: "_discNumber", ascending: true),
+            SortDescriptor(property: "_trackNumber", ascending: true)
+        ]))
+    }
 }
 
 extension Model.Album: CollectionType {

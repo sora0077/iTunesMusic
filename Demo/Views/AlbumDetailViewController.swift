@@ -153,6 +153,8 @@ class AlbumDetailViewController: UIViewController {
             bar.shadowImage = originalNavigationBarSettings.shadowImage
         }
     }
+    
+    var showBlur: Bool = false
 }
 
 extension AlbumDetailViewController: UIScrollViewDelegate {
@@ -160,9 +162,16 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
-//        headerView.snp_updateConstraints { make in
-//            make.height.equalTo(-offset).priority(750)
-//        }
+        if offset > 100 && !showBlur {
+            let blur = UIBlurEffect(style: .Light)
+            let effect = UIVisualEffectView(effect: blur)
+            effect.frame = headerView.artworkImageView.bounds
+            headerView.artworkImageView.addSubview(effect)
+            showBlur = true
+        } else if offset < 100 && showBlur {
+            headerView.artworkImageView.subviews.forEach { $0.removeFromSuperview() }
+            showBlur = false
+        }
     }
 }
 
@@ -195,6 +204,8 @@ extension AlbumDetailViewController: UITableViewDelegate {
 //                print(album)
 //            }
 //        }.addDisposableTo(disposeBag)
+        
+        print(album[indexPath.row].collection)
         
         player.add(track: album[indexPath.row])
     }

@@ -46,6 +46,9 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _trackNumber: Int = 0
     dynamic var _trackTimeMillis: Int = 0
     
+    dynamic var _discCount: Int = 0
+    dynamic var _discNumber: Int = 0
+    
     dynamic var _previewUrl: String = ""
     
     dynamic var _country: String = ""
@@ -131,6 +134,9 @@ extension _Track: Decodable {
         obj._trackCount = try e.value("trackCount")
         obj._trackNumber = try e.value("trackNumber")
         obj._trackTimeMillis = try e.value("trackTimeMillis")
+        
+        obj._discCount = try e.value("discCount")
+        obj._discNumber = try e.value("discNumber")
         
         obj._previewUrl = try e.value("previewUrl")
         
