@@ -13,53 +13,53 @@ import SDWebImage
 import iTunesMusic
 
 
-private class TableViewCell: UITableViewCell {
+private final class HeaderView: UIView {
     
     let artworkImageView = UIImageView()
     
-    let titleLabel = UILabel()
+    let subheaderView = UIView()
     
-    let cacheMarkLabel = UILabel()
+    weak var parentController: UIViewController?
     
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
+    init(parentController: UIViewController) {
+        self.parentController = parentController
+        super.init(frame: CGRectZero)
         
-        contentView.addSubview(artworkImageView)
-        artworkImageView.snp_makeConstraints { make in
-            make.top.left.equalTo(self.contentView)
-            make.bottom.equalTo(self.contentView).priority(UILayoutPriorityDefaultHigh)
-            make.width.equalTo(120)
-            make.height.equalTo(120)
-        }
+        artworkImageView.clipsToBounds = true
+        artworkImageView.contentMode = .ScaleAspectFill
         
-        contentView.addSubview(titleLabel)
-        titleLabel.numberOfLines = 0
-        titleLabel.snp_makeConstraints { make in
-            make.left.equalTo(artworkImageView.snp_right).offset(8)
-            make.right.equalToSuperview().offset(-40)
-            make.centerY.equalToSuperview()
-        }
-        
-        contentView.addSubview(cacheMarkLabel)
-        cacheMarkLabel.text = "☑"
-        cacheMarkLabel.snp_makeConstraints { make in
-            make.right.equalToSuperview().offset(-4)
-            make.bottom.equalToSuperview().offset(-4)
-        }
+        addSubview(subheaderView)
+        addSubview(artworkImageView)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func setup() {
+        artworkImageView.snp_makeConstraints { make in
+            make.height.greaterThanOrEqualTo(64)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview().offset(0).priority(750)
+//            if let parentController = parentController {
+//                
+//            }
+            make.top.equalTo(parentController!.view.snp_top)
+        }
+        subheaderView.snp_makeConstraints { make in
+            make.top.equalToSuperview().offset(64)
+            make.height.equalTo(0)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+        }
+    }
 }
-
 
 
 class AlbumDetailViewController: UIViewController {
     
-    enum CellType {
-        case A
-    }
+    private lazy var headerView: HeaderView = HeaderView(parentController: self)
     
     private let tableView = UITableView()
     
@@ -77,18 +77,50 @@ class AlbumDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private var originalNavigationBarSettings: (backgroundImage: UIImage?, shadowImage: UIImage?) = (nil, nil)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(tableView)
+        tableView.tableHeaderView = headerView
+        
+        if let bar = navigationController?.navigationBar {
+            originalNavigationBarSettings.backgroundImage = bar.backgroundImageForBarMetrics(.Default)
+            originalNavigationBarSettings.shadowImage = bar.shadowImage
+        }
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        automaticallyAdjustsScrollViewInsets = false
+        
         tableView.snp_makeConstraints { make in
             make.edges.equalToSuperview()
         }
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        headerView.setup()
+        
+        headerView.snp_makeConstraints { make in
+//            make.top.equalTo(view.snp_top)
+            make.top.equalToSuperview()
+            make.width.equalTo(tableView.snp_width)
+            make.height.equalTo(164)
+//            make.height.equalTo(100).priority(750)
+//            make.height.greaterThanOrEqualTo(navigationController?.navigationBar.frame.height ?? 0)
+        }
+        let size = { Int($0 * UIScreen.mainScreen().scale) }
+        let artworkURL = album.collection.artworkURL(size: size(view.frame.width))
+        headerView.artworkImageView.sd_setImageWithURL(album.collection.artworkURL(size: size(view.frame.width/2)), placeholderImage: nil) { [weak wview=headerView] (image, error, type, url) in
+            guard let view = wview else { return }
+            dispatch_async(dispatch_get_main_queue()) {
+                view.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
+            }
+        }
+        
         
         
         tableView.rx_reachedBottom()
@@ -113,6 +145,25 @@ class AlbumDetailViewController: UIViewController {
         
     }
 
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if let bar = navigationController?.navigationBar {
+            bar.setBackgroundImage(originalNavigationBarSettings.backgroundImage, forBarMetrics: .Default)
+            bar.shadowImage = originalNavigationBarSettings.shadowImage
+        }
+    }
+}
+
+extension AlbumDetailViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        let offset = scrollView.contentOffset.y
+//        headerView.snp_updateConstraints { make in
+//            make.height.equalTo(-offset).priority(750)
+//        }
+    }
 }
 
 extension AlbumDetailViewController: UITableViewDataSource {
@@ -122,22 +173,11 @@ extension AlbumDetailViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
         let track = album[indexPath.row]
         
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
-        cell.titleLabel.text = track.trackName
-        cell.cacheMarkLabel.hidden = !track.cached
-        let size = { Int($0 * UIScreen.mainScreen().scale) }
-        
-        let artworkURL = track.artworkURL(size: size(120))
-        cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
-            guard let cell = wcell else { return }
-            dispatch_async(dispatch_get_main_queue()) {
-                cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
-            }
-        }
+        cell.textLabel?.text = track.trackName
         return cell
     }
 }
@@ -146,7 +186,7 @@ extension AlbumDetailViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
+      
 //        print(album[indexPath.row])
 //        artist = Model.Artist(artist: album[indexPath.row].artist)
 //        artist.fetch()

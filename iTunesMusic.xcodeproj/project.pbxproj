@@ -300,10 +300,10 @@
 				D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */,
 				D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */,
 				D91B428F1D044AE600AAAD58 /* EntityTrack.swift */,
+				D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */,
 				D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */,
 				D9FD12EF1D1C2C610010E81D /* EntityGenre.swift */,
 				D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */,
-				D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";

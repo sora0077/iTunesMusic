@@ -82,6 +82,13 @@ extension Model {
 
 extension Model.Album {
     
+    public var collection: Collection {
+        return caches[0].collection
+    }
+}
+
+extension Model.Album {
+    
     func request(refreshing refreshing: Bool, force: Bool) {
         
         let collectionId = self.collectionId
