@@ -15,7 +15,7 @@ import iTunesMusic
 
 private final class HeaderView: UIView {
     
-    let artworkImageView = UIImageView()
+    let artworkImageView = EasyBlurImageView()
     
     let subheaderView = UIView()
     
@@ -53,6 +53,13 @@ private final class HeaderView: UIView {
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
+    }
+}
+
+extension UINavigationController {
+    
+    public override func childViewControllerForStatusBarStyle() -> UIViewController? {
+        return visibleViewController
     }
 }
 
@@ -113,8 +120,9 @@ class AlbumDetailViewController: UIViewController {
 //            make.height.greaterThanOrEqualTo(navigationController?.navigationBar.frame.height ?? 0)
         }
         let size = { Int($0 * UIScreen.mainScreen().scale) }
+        let thumbnailURL = album.collection.artworkURL(size: size(view.frame.width/2))
         let artworkURL = album.collection.artworkURL(size: size(view.frame.width))
-        headerView.artworkImageView.sd_setImageWithURL(album.collection.artworkURL(size: size(view.frame.width/2)), placeholderImage: nil) { [weak wview=headerView] (image, error, type, url) in
+        headerView.artworkImageView.sd_setImageWithURL(thumbnailURL, placeholderImage: nil) { [weak wview=headerView] (image, error, type, url) in
             guard let view = wview else { return }
             dispatch_async(dispatch_get_main_queue()) {
                 view.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
@@ -154,6 +162,10 @@ class AlbumDetailViewController: UIViewController {
         }
     }
     
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
+    
     var showBlur: Bool = false
 }
 
@@ -163,14 +175,17 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
         
         let offset = scrollView.contentOffset.y
         if offset > 100 && !showBlur {
-            let blur = UIBlurEffect(style: .Light)
-            let effect = UIVisualEffectView(effect: blur)
-            effect.frame = headerView.artworkImageView.bounds
-            headerView.artworkImageView.addSubview(effect)
             showBlur = true
         } else if offset < 100 && showBlur {
-            headerView.artworkImageView.subviews.forEach { $0.removeFromSuperview() }
             showBlur = false
+        }
+        
+        if 0 < offset && offset < 100 {
+            let radius = Float(round(offset / 10))
+            if headerView.artworkImageView.blurRadius != radius {
+                print(radius)
+                headerView.artworkImageView.blurRadius = radius
+            }
         }
     }
 }

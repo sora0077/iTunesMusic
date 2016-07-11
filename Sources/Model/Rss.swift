@@ -43,6 +43,8 @@ extension Model {
             return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
         }
         
+        private var fetched: Int = 0
+        
         private let id: Int
         private let url: NSURL
         
@@ -58,6 +60,7 @@ extension Model {
             
             let realm = try! Realm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
+            fetched = feed.fetched
             trackIds = feed.items.map { $0.id }
             
             caches = realm.objects(_RssCache).filter("_genreId = \(id)")
@@ -98,11 +101,7 @@ extension Model.Rss {
         let session = Session.sharedSession
         let id = self.id
         
-        let realm = try! Realm()
-        let feed = getOrCreateCache(genreId: id, realm: realm)
-        
-        
-        let ids = trackIds[safe: feed.fetched..<(feed.fetched+50)]
+        let ids = trackIds[safe: fetched..<(fetched+50)]
         if ids.isEmpty {
             _requestState.value = .done
             return
@@ -135,6 +134,7 @@ extension Model.Rss {
                         let cache = getOrCreateCache(genreId: id, realm: realm)
                         cache.tracks.appendContentsOf(tracks)
                         cache.fetched += 50
+                        self.fetched = cache.fetched
                         realm.add(cache, update: true)
                         done = cache.items.count == cache.tracks.count
                         self._requestState.value = done ? .done : .none
@@ -168,6 +168,7 @@ extension Model.Rss {
                         realm.add(response, update: true)
                     }
                     self.trackIds = response.items.map { $0.id }
+                    self.fetched = response.fetched
                     self._requestState.value = .none
                     self.request(refreshing: false, force: false)
                 case .Failure(let error):
