@@ -101,6 +101,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         launch()
         
+        window?.tintColor = UIColor.whiteColor()
+        
         print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
         
         return true

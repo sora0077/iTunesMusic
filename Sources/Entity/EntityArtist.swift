@@ -13,6 +13,9 @@ import Himotoki
 
 public protocol Artist {
     
+    var id: Int { get }
+    
+    var name: String { get }
 }
 
 final class _Artist: RealmSwift.Object, Artist {
@@ -24,6 +27,13 @@ final class _Artist: RealmSwift.Object, Artist {
     let _collections = LinkingObjects(fromType: _Collection.self, property: "_artist")
 
     override class func primaryKey() -> String? { return "_artistId" }
+}
+
+extension _Artist {
+    
+    var id: Int { return _artistId }
+    
+    var name: String { return _artistName }
 }
 
 extension _Artist: Decodable {

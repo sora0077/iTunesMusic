@@ -19,6 +19,8 @@ private final class HeaderView: UIView {
     
     let subheaderView = UIView()
     
+    let artistButton = UIButton(type: .System)
+    
     weak var parentController: UIViewController?
     
     init(parentController: UIViewController) {
@@ -30,6 +32,7 @@ private final class HeaderView: UIView {
         
         addSubview(subheaderView)
         addSubview(artworkImageView)
+        addSubview(artistButton)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -52,6 +55,11 @@ private final class HeaderView: UIView {
             make.height.equalTo(0)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
+        }
+        
+        artistButton.snp_makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-8)
+            make.right.equalToSuperview().offset(-8)
         }
     }
 }
@@ -89,15 +97,13 @@ class AlbumDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.tableHeaderView = headerView
-        
         if let bar = navigationController?.navigationBar {
             originalNavigationBarSettings.backgroundImage = bar.backgroundImageForBarMetrics(.Default)
             originalNavigationBarSettings.shadowImage = bar.shadowImage
         }
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
-        navigationController?.navigationBar.shadowImage = UIImage()
+        
+        view.addSubview(tableView)
+        tableView.tableHeaderView = headerView
         automaticallyAdjustsScrollViewInsets = false
         
         tableView.snp_makeConstraints { make in
@@ -115,7 +121,7 @@ class AlbumDetailViewController: UIViewController {
 //            make.top.equalTo(view.snp_top)
             make.top.equalToSuperview()
             make.width.equalTo(tableView.snp_width)
-            make.height.equalTo(164)
+            make.height.equalTo(264)
 //            make.height.equalTo(100).priority(750)
 //            make.height.greaterThanOrEqualTo(navigationController?.navigationBar.frame.height ?? 0)
         }
@@ -129,7 +135,15 @@ class AlbumDetailViewController: UIViewController {
             }
         }
         
-        
+        title = album.collection.name
+        headerView.artistButton.setTitle(album.collection.artist.name, forState: .Normal)
+        headerView.artistButton.rx_tap
+            .subscribeNext { [weak self] _ in
+                guard let `self` = self else { return }
+                let vc = ArtistDetailViewController(artist: self.album.collection.artist)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            .addDisposableTo(disposeBag)
         
         tableView.rx_reachedBottom()
             .filter { $0 }
@@ -152,21 +166,34 @@ class AlbumDetailViewController: UIViewController {
         album.refresh()
         
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let bar = navigationController?.navigationBar {
+            
+            bar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+            bar.shadowImage = UIImage()
+            bar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+            bar.setTitleVerticalPositionAdjustment(60, forBarMetrics: .Default)
+            bar.clipsToBounds = true
+        }
+        
+    }
+    
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
         if let bar = navigationController?.navigationBar {
             bar.setBackgroundImage(originalNavigationBarSettings.backgroundImage, forBarMetrics: .Default)
             bar.shadowImage = originalNavigationBarSettings.shadowImage
+            bar.clipsToBounds = false
         }
     }
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
     }
-    
-    var showBlur: Bool = false
 }
 
 extension AlbumDetailViewController: UIScrollViewDelegate {
@@ -174,18 +201,31 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
         let offset = scrollView.contentOffset.y
-        if offset > 100 && !showBlur {
-            showBlur = true
-        } else if offset < 100 && showBlur {
-            showBlur = false
-        }
         
-        if 0 < offset && offset < 100 {
+        if offset < 0 {
+            if headerView.artworkImageView.blurRadius != 0 {
+                headerView.artworkImageView.blurRadius = 0
+            }
+        }
+        if 0 < offset && offset < 200 {
             let radius = Float(round(offset / 10))
             if headerView.artworkImageView.blurRadius != radius {
                 print(radius)
                 headerView.artworkImageView.blurRadius = radius
             }
+        }
+        if 200 < offset {
+            if headerView.artworkImageView.blurRadius != 20 {
+                headerView.artworkImageView.blurRadius = 20
+            }
+            navigationController?.navigationBar.setTitleVerticalPositionAdjustment(244 - offset, forBarMetrics: .Default)
+            if 244 < offset {
+                
+                navigationController?.navigationBar.setTitleVerticalPositionAdjustment(0, forBarMetrics: .Default)
+            }
+        } else {
+            navigationController?.navigationBar.setTitleVerticalPositionAdjustment(60, forBarMetrics: .Default)
+            
         }
     }
 }
@@ -219,8 +259,6 @@ extension AlbumDetailViewController: UITableViewDelegate {
 //                print(album)
 //            }
 //        }.addDisposableTo(disposeBag)
-        
-        print(album[indexPath.row].collection)
         
         player.add(track: album[indexPath.row])
     }

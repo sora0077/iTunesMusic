@@ -41,12 +41,14 @@ final class EasyBlurImageView: UIImageView {
     ])
 
     private func createBluredImages() {
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+        #else
         
         guard let image = self.image.flatMap(CIImage.init) else { return }
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
-            for i in 0...10 {
+            for i in 0...20 {
                 let clampFilter = CIFilter(name: "CIAffineClamp")!
                 let blurFilter = CIFilter(name: "CIGaussianBlur")!
                 
@@ -56,16 +58,20 @@ final class EasyBlurImageView: UIImageView {
                 let cgImage = self.context.createCGImage(blurFilter.outputImage!, fromRect: image.extent)
                 self.imageCache[i] = UIImage(CGImage: cgImage)
             }
-            print(self.imageCache)
             dispatch_async(dispatch_get_main_queue()) {
                 self.setBlurImage()
             }
         }
+        #endif
     }
     
     private func setBlurImage() {
         supressDidSet = true
-        image = imageCache[convertRadiusKey(blurRadius)]
+        #if (arch(i386) || arch(x86_64)) && os(iOS)
+            
+        #else
+            image = imageCache[convertRadiusKey(blurRadius)]
+        #endif
         supressDidSet = false
     }
 }

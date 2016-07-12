@@ -17,6 +17,12 @@ private let releaseDateTransformer = Transformer<String, NSDate> { string in
 }
 
 public protocol Collection {
+    
+    var id: Int { get }
+    
+    var name: String { get }
+    
+    var artist: Artist { get }
 
     subscript (index: Int) -> Track { get }
     
@@ -100,6 +106,12 @@ private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", 
 private let artworkCached = NSCache()
 
 extension _Collection {
+    
+    var id: Int { return _collectionId } 
+    
+    var name: String { return _collectionName }
+    
+    var artist: Artist { return _artist! }
     
     func artworkURL(size size: Int) -> NSURL {
         let base = _artworkUrl100
