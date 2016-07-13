@@ -38,7 +38,7 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
-            return NSDate() - getOrCreateCache(artistId: artistId, realm: try! Realm()).refreshAt > 60.minutes
+            return NSDate() - getOrCreateCache(artistId: artistId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private var objectsToken: NotificationToken?
@@ -53,7 +53,7 @@ extension Model {
             let artist = artist as! _Artist
             self.artistId = artist._artistId
             
-            let realm = try! Realm()
+            let realm = try! iTunesRealm()
             let cache = getOrCreateCache(artistId: artistId, realm: realm)
             caches = realm.objects(_ArtistCache).filter("artistId = \(artistId)")
             token = caches.addNotificationBlock { [weak self] changes in
@@ -85,7 +85,7 @@ extension Model.Artist {
     func request(refreshing refreshing: Bool, force: Bool) {
         
         let artistId = self.artistId
-        let cache = getOrCreateCache(artistId: artistId, realm: try! Realm())
+        let cache = getOrCreateCache(artistId: artistId, realm: try! iTunesRealm())
         if !refreshing && cache.fetched {
             return
         }
@@ -100,7 +100,7 @@ extension Model.Artist {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
                 case .Success(let response):
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     try! realm.write {
                         response.objects.forEach {
                             switch $0 {

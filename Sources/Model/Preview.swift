@@ -75,7 +75,7 @@ final class PreviewTrack {
                             let to = NSURL(fileURLWithPath: path).URLByAppendingPathComponent(filename)
                             _ = try? NSFileManager.defaultManager().moveItemAtURL(src, toURL: to)
                             
-                            let realm = try! Realm()
+                            let realm = try! iTunesRealm()
                             let track = realm.objectForPrimaryKey(_Track.self, key: id)!
                             try! realm.write {
                                 track.metadata.updateCache(filename: filename)
@@ -102,7 +102,7 @@ final class PreviewTrack {
         let id = self.id
         let url = self.url
         
-        let realm = try! Realm()
+        let realm = try! iTunesRealm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: id) where track.hasMetadata {
             if let duration = track.metadata.duration {
                 if let fileURL = track.metadata.fileURL {
@@ -122,7 +122,7 @@ final class PreviewTrack {
                     switch result {
                     case .Success(let (url, duration)):
                         self?.duration = duration
-                        let realm = try! Realm()
+                        let realm = try! iTunesRealm()
                         try! realm.write {
                             guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
                             track.metadata.updatePreviewURL(url)

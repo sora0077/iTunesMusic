@@ -61,7 +61,7 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         var _requestState: Variable<RequestState> { return __requestState }
         
-        var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! Realm()).refreshAt > 30.days }
+        var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! iTunesRealm()).refreshAt > 30.days }
         
         private var token: NotificationToken?
         private var objectsToken: NotificationToken?
@@ -72,7 +72,7 @@ extension Model {
         
         public init() {
             
-            let realm = try! Realm()
+            let realm = try! iTunesRealm()
             getOrCreateCache(key: "default", realm: realm)
             caches = realm.objects(_GenresCache).filter("key == %@", "default").sorted("createAt", ascending: false)
             token = caches.addNotificationBlock { [weak self] changes in
@@ -115,7 +115,7 @@ extension Model.Genres {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
                 case .Success(let cache):
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     try! realm.write {
                         realm.add(cache, update: true)
                         

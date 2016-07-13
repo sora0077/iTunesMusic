@@ -8,7 +8,7 @@
 
 import UIKit
 import AVFoundation
-@testable import iTunesMusic
+import iTunesMusic
 import APIKit
 import RxSwift
 import RxCocoa
@@ -103,7 +103,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window?.tintColor = UIColor.whiteColor()
         
-        print(Realm.Configuration.defaultConfiguration.fileURL?.absoluteString ?? "")
+        print((try! iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
+        print((try! iTunesRealm()).schema.objectSchema.map { $0.className })
         
         return true
     }

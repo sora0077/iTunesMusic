@@ -37,10 +37,10 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
-            let cache = getOrCreateCache(genreId: id, realm: try! Realm())
+            let cache = getOrCreateCache(genreId: id, realm: try! iTunesRealm())
             let refreshAt = cache.refreshAt
             print("rss fetched ", refreshAt, NSDate() - refreshAt)
-            return NSDate() - getOrCreateCache(genreId: id, realm: try! Realm()).refreshAt > 60.minutes
+            return NSDate() - getOrCreateCache(genreId: id, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private var fetched: Int = 0
@@ -58,7 +58,7 @@ extension Model {
             id = genre.id
             url = genre.rssUrls.topSongs
             
-            let realm = try! Realm()
+            let realm = try! iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
             fetched = feed.fetched
             trackIds = feed.items.map { $0.id }
@@ -115,7 +115,7 @@ extension Model.Rss {
                 
                 switch result {
                 case .Success(let response):
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     try! realm.write {
                         var tracks: [_Track] = []
                         response.objects.forEach {
@@ -158,7 +158,7 @@ extension Model.Rss {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
                 case .Success(let response):
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     try! realm.write {
                         let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
                         response._genreId = genre?.id ?? 0

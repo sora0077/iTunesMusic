@@ -38,7 +38,7 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
-            return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! Realm()).refreshAt > 60.minutes
+            return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private var objectsToken: NotificationToken?
@@ -53,7 +53,7 @@ extension Model {
             let collection = collection as! _Collection
             self.collectionId = collection._collectionId
             
-            let realm = try! Realm()
+            let realm = try! iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
             token = caches.addNotificationBlock { [weak self] changes in
@@ -95,7 +95,7 @@ extension Model.Album {
     func request(refreshing refreshing: Bool, force: Bool) {
         
         let collectionId = self.collectionId
-        let cache = getOrCreateCache(collectionId: collectionId, realm: try! Realm())
+        let cache = getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm())
         if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
             return
         }
@@ -110,7 +110,7 @@ extension Model.Album {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                 switch result {
                 case .Success(let response):
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     try! realm.write {
                         response.objects.reverse().forEach {
                             switch $0 {

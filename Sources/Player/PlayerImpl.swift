@@ -101,7 +101,7 @@ final class PlayerImpl: NSObject, Player {
         case "currentItem":
             if let item = _player.currentItem {
                 dispatch_async(dispatch_get_main_queue()) {
-                    let realm = try! Realm()
+                    let realm = try! iTunesRealm()
                     let track = realm.objectForPrimaryKey(_Track.self, key: item.trackId!)!
                     self._nowPlayingTrack.value = track
                     

@@ -23,7 +23,7 @@ extension Downloader: PlayerMiddleware {
     
     func didEndPlayTrack(trackId: Int) {
         if downloaded.contains(trackId) { return }
-        let realm = try! Realm()
+        let realm = try! iTunesRealm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
             if track.histories.count > 2 {
                 let preview = Preview.instance.queueing(track: track)
