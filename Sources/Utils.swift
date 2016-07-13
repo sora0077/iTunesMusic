@@ -18,7 +18,7 @@ func tick() {
 
 
 func asObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.E> {
-    return input.asObservable().observeOn(MainScheduler.instance)
+    return input.asObservable().observeOn(MainScheduler.instance).shareReplay(1)
 }
 
 func asReplayObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.E> {

@@ -127,9 +127,8 @@ extension Model.Album {
                         if refreshing {
                             cache.refreshAt = NSDate()
                         }
-                        let done = cache.collection._trackCount <= cache.collection._tracks.count
                         print(cache.collection._trackCount, cache.collection._tracks.count)
-                        self._requestState.value = done ? .done : .none
+                        self._requestState.value = .done
                     }
                 case .Failure(let error):
                     print(error)
