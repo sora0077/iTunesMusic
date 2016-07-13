@@ -251,7 +251,7 @@ extension AlbumDetailViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
       
-//        print(album[indexPath.row])
+        print(album[indexPath.row])
 //        artist = Model.Artist(artist: album[indexPath.row].artist)
 //        artist.fetch()
 //        artist.changes.subscribeNext { changes in

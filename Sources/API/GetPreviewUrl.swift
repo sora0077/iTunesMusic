@@ -41,14 +41,33 @@ struct GetPreviewUrl: iTunesRequestType {
         
         let items = object["items"] as! [[String: AnyObject]]
         for item in items {
-            let id = item["item-id"] as! Int
+            guard let id = item["item-id"] as? Int else { continue }
             if self.id == id {
-                let previewUrl = item["store-offers"]!["PLUS"]!!["preview-url"] as! String
-                let duration = item["store-offers"]!["PLUS"]!!["preview-duration"] as! Int
-                guard let url = NSURL(string: previewUrl) else { throw iTunesMusicError.NotFound }
-                return (url, duration)
+                return try getPreviewURL(item)
             }
         }
         throw iTunesMusicError.NotFound
     }
+}
+
+
+private func getPreviewURL(item: [String: AnyObject]) throws -> (NSURL, Int) {
+    
+    if let offers = item["store-offers"] as? [String: AnyObject] {
+        let preview: String
+        let duration: Int
+        if offers["PLUS"] != nil {
+            preview = offers["PLUS"]!["preview-url"] as! String
+            duration = offers["PLUS"]!["preview-duration"] as! Int
+        } else {
+            preview = offers["HQPRE"]!["preview-url"] as! String
+            duration = offers["HQPRE"]!["preview-duration"] as! Int
+        }
+        if let url = NSURL(string: preview) {
+            return (url, duration)
+        }
+    }
+    
+    
+    throw iTunesMusicError.NotFound
 }

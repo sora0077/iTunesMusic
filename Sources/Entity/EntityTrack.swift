@@ -40,7 +40,7 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _trackName: String = ""
     dynamic var _trackCensoredName: String = ""
     dynamic var _trackViewUrl: String = ""
-    dynamic var _trackPrice: Float = 0
+    let _trackPrice = RealmOptional<Float>()
     dynamic var _trackExplicitness: String = ""
     dynamic var _trackCount: Int = 0
     dynamic var _trackNumber: Int = 0
@@ -129,7 +129,7 @@ extension _Track: Decodable {
         obj._trackName = try e.value("trackName")
         obj._trackCensoredName = try e.value("trackCensoredName")
         obj._trackViewUrl = try e.value("trackViewUrl")
-        obj._trackPrice = try e.value("trackPrice")
+        obj._trackPrice.value = try e.valueOptional("trackPrice")
         obj._trackExplicitness = try e.value("trackExplicitness")
         obj._trackCount = try e.value("trackCount")
         obj._trackNumber = try e.value("trackNumber")
