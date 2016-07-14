@@ -14,6 +14,7 @@ import RxSwift
 import RxCocoa
 import SDWebImage
 import RealmSwift
+import MediaPlayer
 
 
 func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: CollectionType, Playlist.Generator.Element == Track>(size size: Int) -> AnyObserver<Playlist> {
@@ -97,9 +98,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
         
+        application.beginReceivingRemoteControlEvents()
+        
         print(NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0])
         
         launch()
+        
+        player.install(middleware: ControlCenter())
         
         window?.tintColor = UIColor.whiteColor()
         

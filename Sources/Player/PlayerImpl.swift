@@ -106,6 +106,7 @@ final class PlayerImpl: NSObject, Player {
                     self._nowPlayingTrack.value = track
                     
                 }
+                _installs.forEach { $0.willStartPlayTrack(item.trackId!) }
             }
             
             print("queue state ", _player.items().count, _playlists.count, _playlists.map { $0.0.count })
@@ -121,6 +122,7 @@ final class PlayerImpl: NSObject, Player {
     
     func install(middleware middleware: PlayerMiddleware) {
         _installs.append(middleware)
+        _installs.forEach { $0.middlewareInstalled(self) }
     }
     
     func play() { _player.play() }
@@ -142,15 +144,15 @@ final class PlayerImpl: NSObject, Player {
                 self._playingQueue = self._playingQueue.dropFirst()
                 return self.updateQueue()
             }
-            func getPreviewInfo() -> (NSURL, duration: Int)? {
+            func getPreviewInfo() -> (NSURL, duration: Double)? {
                 if !track.hasMetadata { return nil }
                 guard let duration = track.metadata.duration else { return nil }
                 
-                if let fileURL = track.metadata.fileURL {
+                if let fileURL = track._metadata.fileURL {
                     print("load from file ", track.trackName)
                     return (fileURL, duration)
                 }
-                if let url = track.metadata.previewURL {
+                if let url = track._metadata.previewURL {
                     print("load from network ", track.trackName)
                     return (url, duration)
                 }
@@ -170,7 +172,7 @@ final class PlayerImpl: NSObject, Player {
                         let inputParams = AVMutableAudioMixInputParameters(track: track)
                         
                         let fadeDuration = CMTimeMakeWithSeconds(5, 600);
-                        let fadeOutStartTime = CMTimeMakeWithSeconds(Double(duration)/10000 - 5, 600);
+                        let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600);
                         let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
                         
                         inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))

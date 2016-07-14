@@ -48,7 +48,7 @@ final class PreviewTrack {
     let id: Int
     let url: NSURL
     
-    var duration: Int = 0
+    var duration: Double = 0
     
     var fileURL: NSURL?
     
@@ -57,11 +57,11 @@ final class PreviewTrack {
         id = track.trackId
         url = track.trackViewURL
     }
-    func download() -> Observable<(NSURL, duration: Int)> {
+    func download() -> Observable<(NSURL, duration: Double)> {
         let id = self.id
     
         return fetch()
-            .flatMap { [weak self] url, duration -> Observable<(NSURL, duration: Int)> in
+            .flatMap { [weak self] url, duration -> Observable<(NSURL, duration: Double)> in
                 if url.fileURL {
                     return Observable.just((url, duration))
                 }
@@ -78,10 +78,10 @@ final class PreviewTrack {
                             let realm = try! iTunesRealm()
                             let track = realm.objectForPrimaryKey(_Track.self, key: id)!
                             try! realm.write {
-                                track.metadata.updateCache(filename: filename)
-                                track.metadata.duration = duration
+                                track._metadata.updateCache(filename: filename)
+                                track._metadata.duration = duration
                                 track._metadataUpdated += 1
-                                realm.add(track.metadata, update: true)
+                                realm.add(track._metadata, update: true)
                             }
                             self?.fileURL = to
                             subscriber.onNext((to, duration))
@@ -98,17 +98,17 @@ final class PreviewTrack {
             }
     }
     
-    func fetch() -> Observable<(NSURL, duration: Int)> {
+    func fetch() -> Observable<(NSURL, duration: Double)> {
         let id = self.id
         let url = self.url
         
         let realm = try! iTunesRealm()
         if let track = realm.objectForPrimaryKey(_Track.self, key: id) where track.hasMetadata {
             if let duration = track.metadata.duration {
-                if let fileURL = track.metadata.fileURL {
+                if let fileURL = track._metadata.fileURL {
                     return Observable.just((fileURL, duration))
                 }
-                if let url = track.metadata.previewURL {
+                if let url = track._metadata.previewURL {
                     return Observable.just((url, duration))
                 }
             }
@@ -121,14 +121,15 @@ final class PreviewTrack {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                     switch result {
                     case .Success(let (url, duration)):
+                        let duration = Double(duration) / 10000
                         self?.duration = duration
                         let realm = try! iTunesRealm()
                         try! realm.write {
                             guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
-                            track.metadata.updatePreviewURL(url)
-                            track.metadata.duration = duration
+                            track._metadata.updatePreviewURL(url)
+                            track._metadata.duration = duration
                             track._metadataUpdated += 1
-                            realm.add(track.metadata, update: true)
+                            realm.add(track._metadata, update: true)
                         }
                         subscriber.onNext((url, duration))
                         subscriber.onCompleted()

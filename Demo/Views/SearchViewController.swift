@@ -94,9 +94,10 @@ extension SearchViewController: UITableViewDelegate {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        if let search = search {
-            player.add(track: search[indexPath.row])
-        }
+        guard let search = search else { return }
+        
+        let vc = AlbumDetailViewController(collection: search[indexPath.row].collection)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
 }

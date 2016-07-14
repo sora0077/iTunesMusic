@@ -13,7 +13,7 @@ import RxSwift
 import RealmSwift
 
 
-public protocol Player {
+public protocol Player: class {
  
     var nowPlaying: Observable<Track?> { get }
     
@@ -37,12 +37,18 @@ public protocol Player {
 
 public protocol PlayerMiddleware {
     
+    func middlewareInstalled(player: Player)
+    
+    func willStartPlayTrack(trackId: Int)
+    
     func didEndPlayTrack(trackId: Int)
 }
 
 extension PlayerMiddleware {
     
-    public func didEndPlayTrack(trackId: Int) {
-        
-    }
+    public func middlewareInstalled(player: Player) {}
+    
+    public func willStartPlayTrack(trackId: Int) {}
+    
+    public func didEndPlayTrack(trackId: Int) {}
 }

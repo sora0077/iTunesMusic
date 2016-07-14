@@ -32,6 +32,8 @@ public protocol Track: EntityInterface {
     
     var canPreview: Bool { get }
     
+    var metadata: TrackMetadata { get }
+    
     func artworkURL(size size: Int) -> NSURL
 }
 
@@ -74,26 +76,26 @@ class _Track: RealmSwift.Object, Track {
     
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
     
-    private let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
-    private var __metadata: _TrackMetadata?
+    private let __metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
+    private var ___metadata: _TrackMetadata?
     
     dynamic var _metadataUpdated: Int = 0
     
     var hasMetadata: Bool {
-        return !_metadata.isEmpty
+        return !__metadata.isEmpty
     }
     
-    var metadata: _TrackMetadata {
-        if let data = _metadata.first {
+    var _metadata: _TrackMetadata {
+        if let data = __metadata.first {
             return data
         }
-        if let data = __metadata {
+        if let data = ___metadata {
             return data
         }
         let data = _TrackMetadata()
         data._track = self
         data._trackId = _trackId
-        __metadata = data
+        ___metadata = data
         return data
     }
     
@@ -113,13 +115,15 @@ extension _Track {
     var artist: Artist { return _artist! }
     
     var cached: Bool {
-        if _metadata.isEmpty { return false }
-        return metadata.fileURL != nil
+        if __metadata.isEmpty { return false }
+        return _metadata.fileURL != nil
     }
     
     var canPreview: Bool {
         return _previewUrl != nil
     }
+    
+    var metadata: TrackMetadata { return _metadata }
     
     func artworkURL(size size: Int) -> NSURL {
         return collection.artworkURL(size: size)

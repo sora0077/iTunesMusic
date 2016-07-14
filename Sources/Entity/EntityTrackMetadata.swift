@@ -10,7 +10,13 @@ import Foundation
 import RealmSwift
 
 
-final class _TrackMetadata: RealmSwift.Object {
+public protocol TrackMetadata {
+    
+    var duration: Double? { get }
+}
+
+
+final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     
     dynamic var _trackId: Int = 0
     
@@ -20,7 +26,7 @@ final class _TrackMetadata: RealmSwift.Object {
     
     private dynamic var _longPreviewFileUrl: String?
     
-    private let _longPreviewDuration: RealmOptional<Int> = RealmOptional()
+    private let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
     
     dynamic var _createAt: NSDate = NSDate()
     
@@ -44,12 +50,14 @@ extension _TrackMetadata {
         return nil
     }
     
-    var duration: Int? {
+    var duration: Double? {
         set {
             _longPreviewDuration.value = newValue
         }
         get {
             return _longPreviewDuration.value
+//            guard let duration =  else { return nil }
+//            return duration / 10000
         }
     }
     
