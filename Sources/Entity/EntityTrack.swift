@@ -30,6 +30,8 @@ public protocol Track: EntityInterface {
     
     var cached: Bool { get }
     
+    var canPreview: Bool { get }
+    
     func artworkURL(size size: Int) -> NSURL
 }
 
@@ -49,7 +51,7 @@ class _Track: RealmSwift.Object, Track {
     dynamic var _discCount: Int = 0
     dynamic var _discNumber: Int = 0
     
-    dynamic var _previewUrl: String = ""
+    dynamic var _previewUrl: String?
     
     dynamic var _country: String = ""
     dynamic var _currency: String = ""
@@ -115,6 +117,10 @@ extension _Track {
         return metadata.fileURL != nil
     }
     
+    var canPreview: Bool {
+        return _previewUrl != nil
+    }
+    
     func artworkURL(size size: Int) -> NSURL {
         return collection.artworkURL(size: size)
     }
@@ -138,7 +144,7 @@ extension _Track: Decodable {
         obj._discCount = try e.value("discCount")
         obj._discNumber = try e.value("discNumber")
         
-        obj._previewUrl = try e.value("previewUrl")
+        obj._previewUrl = try e.valueOptional("previewUrl")
         
         obj._country = try e.value("country")
         obj._currency = try e.value("currency")

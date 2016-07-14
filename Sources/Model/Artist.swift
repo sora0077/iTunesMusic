@@ -120,6 +120,7 @@ extension Model.Artist {
                         }
                         self._requestState.value = .done
                     }
+                    tick()
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error

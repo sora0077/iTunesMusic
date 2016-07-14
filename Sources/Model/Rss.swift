@@ -139,6 +139,7 @@ extension Model.Rss {
                         done = cache.items.count == cache.tracks.count
                         self._requestState.value = done ? .done : .none
                     }
+                    tick()
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error
@@ -171,6 +172,7 @@ extension Model.Rss {
                     self.fetched = response.fetched
                     self._requestState.value = .none
                     self.request(refreshing: false, force: false)
+                    tick()
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error

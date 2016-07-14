@@ -242,6 +242,13 @@ extension AlbumDetailViewController: UITableViewDataSource {
         
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.textLabel?.text = track.trackName
+        if track.canPreview {
+            cell.textLabel?.textColor = UIColor.blackColor()
+            cell.selectionStyle = .Default
+        } else {
+            cell.textLabel?.textColor = UIColor.lightGrayColor()
+            cell.selectionStyle = .None
+        }
         return cell
     }
 }
@@ -250,8 +257,11 @@ extension AlbumDetailViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let track = album[indexPath.row]
+        guard track.canPreview else { return }
       
-        print(album[indexPath.row])
+        print(track)
 //        artist = Model.Artist(artist: album[indexPath.row].artist)
 //        artist.fetch()
 //        artist.changes.subscribeNext { changes in
@@ -260,7 +270,7 @@ extension AlbumDetailViewController: UITableViewDelegate {
 //            }
 //        }.addDisposableTo(disposeBag)
         
-        player.add(track: album[indexPath.row])
+        player.add(track: track)
     }
 }
 

@@ -138,6 +138,10 @@ final class PlayerImpl: NSObject, Player {
         dispatch_async(dispatch_get_main_queue()) {
             print("run updateQueue")
             let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
+            if !track.canPreview {
+                self._playingQueue = self._playingQueue.dropFirst()
+                return self.updateQueue()
+            }
             func getPreviewInfo() -> (NSURL, duration: Int)? {
                 if !track.hasMetadata { return nil }
                 guard let duration = track.metadata.duration else { return nil }

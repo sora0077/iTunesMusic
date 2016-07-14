@@ -130,6 +130,7 @@ extension Model.Album {
                         print(cache.collection._trackCount, cache.collection._tracks.count)
                         self._requestState.value = .done
                     }
+                    tick()
                 case .Failure(let error):
                     print(error)
                     self._requestState.value = .error
