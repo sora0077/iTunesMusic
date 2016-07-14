@@ -63,6 +63,8 @@ final class PlayerImpl: NSObject, Player {
     
     private var _installs: [PlayerMiddleware] = []
     
+    var playing: Bool { return _player.rate != 0 }
+    
     override init() {
         super.init()
         #if (arch(i386) || arch(x86_64)) && os(iOS)
@@ -99,14 +101,18 @@ final class PlayerImpl: NSObject, Player {
                 _player.play()
             }
         case "currentItem":
-            if let item = _player.currentItem {
-                dispatch_async(dispatch_get_main_queue()) {
-                    let realm = try! iTunesRealm()
-                    let track = realm.objectForPrimaryKey(_Track.self, key: item.trackId!)!
-                    self._nowPlayingTrack.value = track
-                    
+            dispatch_async(dispatch_get_main_queue()) {
+                let realm = try! iTunesRealm()
+                var track: Track?
+                if let trackId = self._player.currentItem?.trackId {
+                    track = realm.objectForPrimaryKey(_Track.self, key: trackId)
                 }
-                _installs.forEach { $0.willStartPlayTrack(item.trackId!) }
+                self._nowPlayingTrack.value = track
+            }
+            if let trackId = _player.currentItem?.trackId {
+                _installs.forEach { $0.willStartPlayTrack(trackId) }
+            } else {
+                _installs.forEach { $0.didEndPlay() }
             }
             
             print("queue state ", _player.items().count, _playlists.count, _playlists.map { $0.0.count })
@@ -125,9 +131,14 @@ final class PlayerImpl: NSObject, Player {
         _installs.forEach { $0.middlewareInstalled(self) }
     }
     
-    func play() { _player.play() }
+    func play() {
+        print(_player.rate)
+        _player.play()
+    }
     
     func pause() { _player.pause() }
+    
+    func nextTrack() { _player.advanceToNextItem() }
     
     private func updateQueue() {
         

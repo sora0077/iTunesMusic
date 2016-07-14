@@ -19,6 +19,8 @@ public protocol Player: class {
     
     var currentTime: Observable<Float64> { get }
     
+    var playing: Bool { get }
+    
     var playlists: [PlaylistType] { get }
     
     func install(middleware middleware: PlayerMiddleware)
@@ -26,6 +28,8 @@ public protocol Player: class {
     func play()
     
     func pause()
+    
+    func nextTrack()
     
     func add(track track: Track)
     
@@ -42,6 +46,8 @@ public protocol PlayerMiddleware {
     func willStartPlayTrack(trackId: Int)
     
     func didEndPlayTrack(trackId: Int)
+    
+    func didEndPlay()
 }
 
 extension PlayerMiddleware {
@@ -51,4 +57,6 @@ extension PlayerMiddleware {
     public func willStartPlayTrack(trackId: Int) {}
     
     public func didEndPlayTrack(trackId: Int) {}
+
+    public func didEndPlay() {}
 }

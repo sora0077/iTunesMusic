@@ -25,6 +25,8 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         self.player = player
         
         let commandCenter = MPRemoteCommandCenter.sharedCommandCenter()
+        commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(self.togglePlayPause))
+        commandCenter.togglePlayPauseCommand.enabled = true
         commandCenter.playCommand.addTarget(self, action: #selector(self.play))
         commandCenter.playCommand.enabled = true
         commandCenter.pauseCommand.addTarget(self, action: #selector(self.pause))
@@ -40,10 +42,23 @@ final class ControlCenter: NSObject, PlayerMiddleware {
                 self?.currentTrackId = track?.trackId
             }
             .addDisposableTo(disposeBag)
+        
+        player.currentTime
+            .map(Int.init)
+            .distinctUntilChanged()
+            .subscribeNext { time in
+                if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+                    info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
+                    MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+                }
+            }
+            .addDisposableTo(disposeBag)
     }
     
     func willStartPlayTrack(trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
+        
+        print(#function)
         
         if currentTrackId == nil { currentTrackId = trackId }
         
@@ -69,17 +84,38 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         })
     }
     
+    func didEndPlay() {
+        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
+    }
+    
+    @objc
+    private func togglePlayPause() {
+        guard let player = player else { return }
+        if player.playing {
+            pause()
+        } else {
+            play()
+        }
+    }
     @objc
     private func play() {
         player?.play()
+        if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+            info[MPNowPlayingInfoPropertyPlaybackRate] = 1
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+        }
     }
     @objc
     private func pause() {
         player?.pause()
+        if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+            info[MPNowPlayingInfoPropertyPlaybackRate] = 0
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+        }
     }
     @objc
     private func nextTrackCommand() {
-//        player.
+        player?.nextTrack()
         
     }
 //    @objc
