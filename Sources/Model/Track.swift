@@ -25,12 +25,30 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
         
-        var needRefresh: Bool {
-            return track == nil
-        }
+        private var token: NotificationToken!
+        
+        private(set) var needRefresh: Bool = true
         
         public init(trackId: Int) {
             self.trackId = trackId
+            
+            let realm = try! iTunesRealm()
+            token = realm.objects(_Track).filter("_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
+                switch changes {
+                case let .Initial(results):
+                    self?.needRefresh = results.isEmpty
+                    if !results.isEmpty {
+                        self?._requestState.value = .done
+                    }
+                case let .Update(results, deletions: _, insertions: _, modifications: _):
+                    self?.needRefresh = results.isEmpty
+                    if !results.isEmpty {
+                        self?._requestState.value = .done
+                    }
+                case .Error(let error):
+                    fatalError("\(error)")
+                }
+            }
         }
     }
 }

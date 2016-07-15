@@ -108,11 +108,12 @@ final class PlayerImpl: NSObject, Player {
                     track = realm.objectForPrimaryKey(_Track.self, key: trackId)
                 }
                 self._nowPlayingTrack.value = track
-            }
-            if let trackId = _player.currentItem?.trackId {
-                _installs.forEach { $0.willStartPlayTrack(trackId) }
-            } else {
-                _installs.forEach { $0.didEndPlay() }
+                
+                if let trackId = self._player.currentItem?.trackId {
+                    self._installs.forEach { $0.willStartPlayTrack(trackId) }
+                } else {
+                    self._installs.forEach { $0.didEndPlay() }
+                }
             }
             
             print("queue state ", _player.items().count, _playlists.count, _playlists.map { $0.0.count })
@@ -128,7 +129,7 @@ final class PlayerImpl: NSObject, Player {
     
     func install(middleware middleware: PlayerMiddleware) {
         _installs.append(middleware)
-        _installs.forEach { $0.middlewareInstalled(self) }
+        middleware.middlewareInstalled(self)
     }
     
     func play() {
