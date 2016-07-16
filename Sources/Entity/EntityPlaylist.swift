@@ -10,7 +10,13 @@ import Foundation
 import RealmSwift
 
 
-final class MyPlaylist: RealmSwift.Object {
+public protocol MyPlaylist {
+    
+    var title: String { get }
+}
+
+
+final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
 
     dynamic var id = NSUUID().UUIDString
     
@@ -18,9 +24,8 @@ final class MyPlaylist: RealmSwift.Object {
     
     let tracks = List<_Track>()
     
-    dynamic var createAt = NSDate()
+    private(set) dynamic var createAt = NSDate()
     
     dynamic var updateAt = NSDate()
 
 }
-

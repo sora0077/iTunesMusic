@@ -64,6 +64,27 @@ private final class HeaderView: UIView {
     }
 }
 
+private class TableViewCell: UITableViewCell {
+    
+    let button = UIButton(type: .System)
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        contentView.addSubview(button)
+        button.snp_makeConstraints { make in
+            make.rightMargin.equalToSuperview().offset(-8)
+            make.centerY.equalToSuperview()
+        }
+        button.tintColor = UIColor.blackColor()
+        button.setTitle("Add", forState: .Normal)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 extension UINavigationController {
     
     public override func childViewControllerForStatusBarStyle() -> UIViewController? {
@@ -111,19 +132,16 @@ class AlbumDetailViewController: UIViewController {
         }
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
         
         headerView.setup()
         
         headerView.snp_makeConstraints { make in
-//            make.top.equalTo(view.snp_top)
             make.top.equalToSuperview()
             make.width.equalTo(tableView.snp_width)
             make.height.equalTo(264)
-//            make.height.equalTo(100).priority(750)
-//            make.height.greaterThanOrEqualTo(navigationController?.navigationBar.frame.height ?? 0)
         }
         let size = { Int($0 * UIScreen.mainScreen().scale) }
         let thumbnailURL = album.collection.artworkURL(size: size(view.frame.width/2))
@@ -230,6 +248,22 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
     }
 }
 
+private extension AlbumDetailViewController {
+    
+    @objc
+    func addPlaylist(sender: UIButton, event: UIEvent) {
+        guard
+            let point = event.allTouches()?.first?.locationInView(tableView),
+            indexPath = tableView.indexPathForRowAtPoint(point)
+        else { return }
+        
+        let track = album[indexPath.row]
+        
+        let playlist = Model.MyPlaylist(playlist: Model.MyPlaylists()[0])
+        playlist.add(track: track)
+    }
+}
+
 extension AlbumDetailViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -237,7 +271,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
         let track = album[indexPath.row]
         
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
@@ -249,6 +283,9 @@ extension AlbumDetailViewController: UITableViewDataSource {
             cell.textLabel?.textColor = UIColor.lightGrayColor()
             cell.selectionStyle = .None
         }
+        cell.button.removeTarget(nil, action: nil, forControlEvents: [])
+        cell.button.addTarget(self, action: #selector(self.addPlaylist(_:event:)), forControlEvents: .TouchUpInside)
+        
         return cell
     }
 }

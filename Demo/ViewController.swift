@@ -18,11 +18,19 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        let vc = GenresViewController()
-        let nav = UINavigationController(rootViewController: vc)
-        presentViewController(nav, animated: true, completion: nil)
+        let tab = UITabBarController()
+        tab.viewControllers = [
+            UINavigationController(rootViewController: GenresViewController()),
+            UINavigationController(rootViewController: PlaylistViewController())
+        ]
         
-        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Search, target: self, action: #selector(self.searchAction))
+        presentViewController(tab, animated: true, completion: nil)
+        
+        tab.viewControllers![0].navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .Search,
+            target: self,
+            action: #selector(self.searchAction)
+        )
     }
 
     override func didReceiveMemoryWarning() {

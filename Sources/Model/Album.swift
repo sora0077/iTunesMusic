@@ -60,12 +60,15 @@ extension Model {
                 guard let `self` = self else { return }
                 
                 func updateObserver(results: Results<_AlbumCache>) {
-                    self.objectsToken = results[0].collection._tracks.sorted([
-                        SortDescriptor(property: "_discNumber", ascending: true),
-                        SortDescriptor(property: "_trackNumber", ascending: true)
-                    ]).addNotificationBlock { [weak self] changes in
-                        self?._changes.onNext(CollectionChange(changes))
-                    }
+                    self.objectsToken = results[0].collection
+                        ._tracks
+                        .sorted([
+                            SortDescriptor(property: "_discNumber", ascending: true),
+                            SortDescriptor(property: "_trackNumber", ascending: true)
+                        ])
+                        .addNotificationBlock { [weak self] changes in
+                            self?._changes.onNext(CollectionChange(changes))
+                        }
                 }
                 
                 switch changes {
