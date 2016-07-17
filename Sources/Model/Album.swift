@@ -93,6 +93,16 @@ extension Model.Album {
     }
 }
 
+extension Model.Album: CustomStringConvertible {
+    
+    public var description: String {
+        if NSThread.isMainThread() {
+            return "\(Mirror(reflecting: self))) \(collection.name)"
+        }
+        return "\(Mirror(reflecting: self)))"
+    }
+}
+
 extension Model.Album {
     
     func request(refreshing refreshing: Bool, force: Bool) {
@@ -100,6 +110,7 @@ extension Model.Album {
         let collectionId = self.collectionId
         let cache = getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm())
         if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
+            _requestState.value = .done
             return
         }
         

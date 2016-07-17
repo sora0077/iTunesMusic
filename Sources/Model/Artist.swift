@@ -87,6 +87,7 @@ extension Model.Artist {
         let artistId = self.artistId
         let cache = getOrCreateCache(artistId: artistId, realm: try! iTunesRealm())
         if !refreshing && cache.fetched {
+            _requestState.value = .done
             return
         }
         

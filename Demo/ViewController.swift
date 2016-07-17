@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         
         presentViewController(tab, animated: true, completion: nil)
         
-        tab.viewControllers![0].navigationItem.rightBarButtonItem = UIBarButtonItem(
+        tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .Search,
             target: self,
             action: #selector(self.searchAction)

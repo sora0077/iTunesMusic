@@ -104,6 +104,7 @@ extension Model.Genres {
     func request(refreshing refreshing: Bool, force: Bool) {
         
         if !refreshing && !caches[0].list.isEmpty {
+            _requestState.value = .done
             return
         }
         

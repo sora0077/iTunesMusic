@@ -132,9 +132,10 @@ class AlbumDetailViewController: UIViewController {
         }
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.contentInset.bottom = tabBarController?.tabBar.frame.height ?? 0
+        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
         
         headerView.setup()
         
@@ -155,34 +156,10 @@ class AlbumDetailViewController: UIViewController {
         
         title = album.collection.name
         headerView.artistButton.setTitle(album.collection.artist.name, forState: .Normal)
-        headerView.artistButton.rx_tap
-            .subscribeNext { [weak self] _ in
-                guard let `self` = self else { return }
-                let vc = ArtistDetailViewController(artist: self.album.collection.artist)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-            .addDisposableTo(disposeBag)
         
-        tableView.rx_reachedBottom()
-            .filter { $0 }
-            .subscribeNext { [weak self] _ in
-                self?.album.fetch()
-            }
-            .addDisposableTo(disposeBag)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: #selector(self.playAll))
         
-        album.changes
-            .subscribe(tableView.rx_itemUpdates())
-            .addDisposableTo(disposeBag)
-        
-        album.changes
-            .map { [weak self] _ in self?.album }
-            .filter { $0 != nil }
-            .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
-            .addDisposableTo(disposeBag)
-        
-        album.refresh()
-        
+        observe()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -211,6 +188,43 @@ class AlbumDetailViewController: UIViewController {
     
     override func preferredStatusBarStyle() -> UIStatusBarStyle {
         return .LightContent
+    }
+    
+    @objc
+    private func playAll() {
+        print(NSThread.isMainThread())
+        player.add(playlist: album)
+    }
+    
+    private func observe() {
+        
+        headerView.artistButton.rx_tap
+            .subscribeNext { [weak self] _ in
+                guard let `self` = self else { return }
+                let vc = ArtistDetailViewController(artist: self.album.collection.artist)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            .addDisposableTo(disposeBag)
+        
+        tableView.rx_reachedBottom()
+            .filter { $0 }
+            .subscribeNext { [weak self] _ in
+                self?.album.fetch()
+            }
+            .addDisposableTo(disposeBag)
+        
+        album.changes
+            .subscribe(tableView.rx_itemUpdates())
+            .addDisposableTo(disposeBag)
+        
+        album.changes
+            .map { [weak self] _ in self?.album }
+            .filter { $0 != nil }
+            .map { $0! }
+            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
+            .addDisposableTo(disposeBag)
+        
+        album.refresh()
     }
 }
 

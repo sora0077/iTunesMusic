@@ -46,8 +46,10 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         player.currentTime
             .map(Int.init)
             .distinctUntilChanged()
-            .subscribeNext { time in
-                if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+            .subscribeNext { [weak self] time in
+                if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo
+                    where self?.currentTrackId == info["currentTrackId"] as? Int
+                {
                     info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
                     MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
                 }
@@ -58,7 +60,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     func willStartPlayTrack(trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
         
-        print(#function)
+        print(#function, trackId)
         
         if currentTrackId == nil { currentTrackId = trackId }
         
@@ -66,7 +68,8 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             MPMediaItemPropertyTitle: track.trackName,
             MPMediaItemPropertyArtist: track.artist.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
-            MPMediaItemPropertyPlaybackDuration: track.metadata.duration ?? 0
+            MPMediaItemPropertyPlaybackDuration: track.metadata.duration ?? 0,
+            "currentTrackId": trackId
         ]
         MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
         

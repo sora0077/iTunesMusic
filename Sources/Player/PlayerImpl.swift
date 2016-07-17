@@ -114,11 +114,9 @@ final class PlayerImpl: NSObject, Player {
                 } else {
                     self._installs.forEach { $0.didEndPlay() }
                 }
+                self.updatePlaylistQueue()
             }
             
-            print("queue state ", _player.items().count, _playlists.count, _playlists.map { $0.0.count })
-            print("currentItem ", _player.currentItem)
-            updatePlaylistQueue()
             if _player.currentItem == nil {
                 pause()
             }
@@ -144,10 +142,9 @@ final class PlayerImpl: NSObject, Player {
     private func updateQueue() {
         
         print("caller updateQueue")
+        if _playingQueue.isEmpty { return }
         
-        if !(_player.items().count < 3 && !_playingQueue.isEmpty) {
-            return
-        }
+        if _player.items().count > 2 { return }
         
         dispatch_async(dispatch_get_main_queue()) {
             print("run updateQueue")
@@ -213,14 +210,11 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func updatePlaylistQueue() {
-        defer {
-            updateQueue()
-        }
-        if !(_player.items().count < 3 && !_playlists.isEmpty) {
-            return
-        }
+        if _playlists.isEmpty { return }
+        if _player.items().count > 2 { return }
         
         let (playlist, index, _) = _playlists[_playlists.startIndex]
+        assert(NSThread.isMainThread())
         
         let paginator = playlist as? FetchableInternal
         print(paginator, playlist)
@@ -241,7 +235,7 @@ final class PlayerImpl: NSObject, Player {
             _playlists[_playlists.startIndex].1 += 1
             updateQueue()
         } else {
-            
+            print(playlist)
             if let paginator = paginator where !paginator.hasNoPaginatedContents {
                 return
             }
@@ -259,18 +253,22 @@ final class PlayerImpl: NSObject, Player {
         _previewQueue[id] = preview
         
         preview.fetch()
-            .observeOn(MainScheduler.instance)
             .subscribe(
                 onNext: { [weak self] url in
                     guard let `self` = self else { return }
-                    self._previewQueue[id] = nil
-                    self.updateQueue()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        assert(NSThread.isMainThread())
+                        self._previewQueue[id] = nil
+                        self.updateQueue()
+                    }
                 },
                 onError: { [weak self] error in
                     guard let `self` = self else { return }
-                    self._previewQueue[id] = nil
-                    self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
-                    self.updatePlaylistQueue()
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self._previewQueue[id] = nil
+                        self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
+                        self.updatePlaylistQueue()
+                    }
                 }
             )
             .addDisposableTo(_disposeBag)
@@ -311,6 +309,7 @@ final class PlayerImpl: NSObject, Player {
                 onNext: { [weak self, weak playlist = playlist] changes in
                     guard let `self` = self, playlist = playlist else { return }
                     
+                    assert(NSThread.isMainThread())
                     switch changes {
                     case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
                         print(insertions)
@@ -330,6 +329,7 @@ final class PlayerImpl: NSObject, Player {
     
     @objc
     private func didEndPlay(notification: NSNotification) {
+        assert(NSThread.isMainThread())
         
         if let item = notification.object as? AVPlayerItem, trackId = item.trackId {
             _installs.forEach { $0.didEndPlayTrack(trackId) }
