@@ -28,8 +28,6 @@ public protocol Track: EntityInterface {
     
     var artist: Artist { get }
     
-    var cached: Bool { get }
-    
     var canPreview: Bool { get }
     
     var metadata: TrackMetadata { get }
@@ -113,11 +111,6 @@ extension _Track {
     var collection: Collection { return _collection! }
     
     var artist: Artist { return _artist! }
-    
-    var cached: Bool {
-        if __metadata.isEmpty { return false }
-        return _metadata.fileURL != nil
-    }
     
     var canPreview: Bool {
         return _previewUrl != nil

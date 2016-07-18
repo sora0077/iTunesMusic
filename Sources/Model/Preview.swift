@@ -48,10 +48,6 @@ final class PreviewTrack {
     let id: Int
     let url: NSURL
     
-    var duration: Double = 0
-    
-    var fileURL: NSURL?
-    
     private init(track: Track) {
         let track = track as! _Track
         id = track.trackId
@@ -61,7 +57,7 @@ final class PreviewTrack {
         let id = self.id
     
         return fetch()
-            .flatMap { [weak self] url, duration -> Observable<(NSURL, duration: Double)> in
+            .flatMap { url, duration -> Observable<(NSURL, duration: Double)> in
                 if url.fileURL {
                     return Observable.just((url, duration))
                 }
@@ -80,10 +76,8 @@ final class PreviewTrack {
                             try! realm.write {
                                 track._metadata.updateCache(filename: filename)
                                 track._metadata.duration = duration
-                                track._metadataUpdated += 1
                                 realm.add(track._metadata, update: true)
                             }
-                            self?.fileURL = to
                             subscriber.onNext((to, duration))
                             subscriber.onCompleted()
                         } else {
@@ -116,18 +110,16 @@ final class PreviewTrack {
         
         let session = Session.sharedSession
         
-        return Observable.create { [weak self] subscriber in
+        return Observable.create { subscriber in
             let task = session.sendRequest(GetPreviewUrl(id: id,  url: url), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .Success(let (url, duration)):
                     let duration = Double(duration) / 10000
-                    self?.duration = duration
                     let realm = try! iTunesRealm()
                     try! realm.write {
                         guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
                         track._metadata.updatePreviewURL(url)
                         track._metadata.duration = duration
-                        track._metadataUpdated += 1
                         realm.add(track._metadata, update: true)
                     }
                     subscriber.onNext((url, duration))

@@ -27,10 +27,6 @@ extension Downloader: PlayerMiddleware {
         if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
             if track.histories.count > 2 {
                 let preview = Preview.instance.queueing(track: track)
-                if preview.fileURL != nil {
-                    downloaded.insert(trackId)
-                    return
-                }
                 print("will cache in disk", track.trackName)
                 preview.download()
                     .subscribeNext { [weak self] url, _ in
