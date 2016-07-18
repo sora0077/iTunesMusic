@@ -63,30 +63,28 @@ extension Model.Track {
         var lookup = LookupWithIds<LookupResponse>(id: trackId)
         lookup.lang = "ja_JP"
         lookup.country = "JP"
-        session.sendRequest(lookup) { [weak self] result in
+        session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                switch result {
-                case .Success(let response):
-                    let realm = try! iTunesRealm()
-                    try! realm.write {
-                        response.objects.reverse().forEach {
-                            switch $0 {
-                            case .track(let obj):
-                                realm.add(obj, update: true)
-                            case .collection(let obj):
-                                realm.add(obj, update: true)
-                            case .artist(let obj):
-                                realm.add(obj, update: true)
-                            }
+            switch result {
+            case .Success(let response):
+                let realm = try! iTunesRealm()
+                try! realm.write {
+                    response.objects.reverse().forEach {
+                        switch $0 {
+                        case .track(let obj):
+                            realm.add(obj, update: true)
+                        case .collection(let obj):
+                            realm.add(obj, update: true)
+                        case .artist(let obj):
+                            realm.add(obj, update: true)
                         }
-                        self._requestState.value = .done
                     }
-                    tick()
-                case .Failure(let error):
-                    print(error)
-                    self._requestState.value = .error
+                    self._requestState.value = .done
                 }
+                tick()
+            case .Failure(let error):
+                print(error)
+                self._requestState.value = .error
             }
         }
     }

@@ -8,6 +8,10 @@
 
 import Foundation
 import RxSwift
+import APIKit
+
+
+let callbackQueue = CallbackQueue.DispatchQueue(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0))
 
 
 func tick() {
@@ -33,3 +37,4 @@ extension Array {
         return self[min(range.startIndex, count)..<min(range.endIndex, count)]
     }
 }
+

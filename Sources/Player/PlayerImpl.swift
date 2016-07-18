@@ -257,7 +257,6 @@ final class PlayerImpl: NSObject, Player {
                 onNext: { [weak self] url in
                     guard let `self` = self else { return }
                     dispatch_async(dispatch_get_main_queue()) {
-                        assert(NSThread.isMainThread())
                         self._previewQueue[id] = nil
                         self.updateQueue()
                     }

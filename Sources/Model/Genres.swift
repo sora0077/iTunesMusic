@@ -112,30 +112,28 @@ extension Model.Genres {
         
         var listGenres = ListGenres<_Genre>()
         listGenres.country = "jp"
-        session.sendRequest(listGenres) { result in
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                switch result {
-                case .Success(let cache):
-                    let realm = try! iTunesRealm()
-                    try! realm.write {
-                        realm.add(cache, update: true)
-                        
-                        let cache = getOrCreateCache(key: "default", realm: realm)
-                        if refreshing {
-                            cache.list.removeAll()
-                            cache.refreshAt = NSDate()
-                        }
-                        
-                        for genre in InitialDefaultGenre.cases {
-                            cache.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
-                        }
-                        realm.add(cache)
+        session.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
+            switch result {
+            case .Success(let cache):
+                let realm = try! iTunesRealm()
+                try! realm.write {
+                    realm.add(cache, update: true)
+                    
+                    let cache = getOrCreateCache(key: "default", realm: realm)
+                    if refreshing {
+                        cache.list.removeAll()
+                        cache.refreshAt = NSDate()
                     }
-                    __requestState.value = .done
-                case .Failure(let error):
-                    print(error)
-                    __requestState.value = .error
+                    
+                    for genre in InitialDefaultGenre.cases {
+                        cache.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
+                    }
+                    realm.add(cache)
                 }
+                __requestState.value = .done
+            case .Failure(let error):
+                print(error)
+                __requestState.value = .error
             }
         }
     }

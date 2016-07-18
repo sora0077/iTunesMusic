@@ -290,6 +290,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
         
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.textLabel?.text = track.trackName
+        cell.textLabel?.font = UIFont.systemFontOfSize(17, weight: UIFontWeightUltraLight)
         if track.canPreview {
             cell.textLabel?.textColor = UIColor.blackColor()
             cell.selectionStyle = .Default

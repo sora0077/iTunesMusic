@@ -114,28 +114,26 @@ final class PreviewTrack {
             }
         }
         
-        let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
+        let session = Session.sharedSession
         
         return Observable.create { [weak self] subscriber in
-            let task = session.sendRequest(GetPreviewUrl(id: id,  url: url)) { result in
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                    switch result {
-                    case .Success(let (url, duration)):
-                        let duration = Double(duration) / 10000
-                        self?.duration = duration
-                        let realm = try! iTunesRealm()
-                        try! realm.write {
-                            guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
-                            track._metadata.updatePreviewURL(url)
-                            track._metadata.duration = duration
-                            track._metadataUpdated += 1
-                            realm.add(track._metadata, update: true)
-                        }
-                        subscriber.onNext((url, duration))
-                        subscriber.onCompleted()
-                    case .Failure(let error):
-                        subscriber.onError(error)
+            let task = session.sendRequest(GetPreviewUrl(id: id,  url: url), callbackQueue: callbackQueue) { result in
+                switch result {
+                case .Success(let (url, duration)):
+                    let duration = Double(duration) / 10000
+                    self?.duration = duration
+                    let realm = try! iTunesRealm()
+                    try! realm.write {
+                        guard let track = realm.objectForPrimaryKey(_Track.self, key: id) else { return }
+                        track._metadata.updatePreviewURL(url)
+                        track._metadata.duration = duration
+                        track._metadataUpdated += 1
+                        realm.add(track._metadata, update: true)
                     }
+                    subscriber.onNext((url, duration))
+                    subscriber.onCompleted()
+                case .Failure(let error):
+                    subscriber.onError(error)
                 }
             }
             return AnonymousDisposable {

@@ -99,45 +99,43 @@ extension Model.Search {
         }
         search.lang = "ja_JP"
         search.country = "JP"
-        session.sendRequest(search) { [weak self] result in
+        session.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                defer {
-                    self._refreshing.value = false
-                    tick()
-                }
-                switch result {
-                case .Success(let response):
-                    let realm = try! iTunesRealm()
-                    let cache = getOrCreateCache(term: self.term, realm: realm)
-                    try! realm.write {
-                        var tracks: [_Track] = []
-                        response.objects.forEach {
-                            switch $0 {
-                            case .track(let obj):
-                                tracks.append(obj)
-                                realm.add(obj, update: true)
-                            case .collection(let obj):
-                                realm.add(obj, update: true)
-                            case .artist(let obj):
-                                realm.add(obj, update: true)
-                            }
+            defer {
+                self._refreshing.value = false
+                tick()
+            }
+            switch result {
+            case .Success(let response):
+                let realm = try! iTunesRealm()
+                let cache = getOrCreateCache(term: self.term, realm: realm)
+                try! realm.write {
+                    var tracks: [_Track] = []
+                    response.objects.forEach {
+                        switch $0 {
+                        case .track(let obj):
+                            tracks.append(obj)
+                            realm.add(obj, update: true)
+                        case .collection(let obj):
+                            realm.add(obj, update: true)
+                        case .artist(let obj):
+                            realm.add(obj, update: true)
                         }
-                        if refreshing {
-                            cache.objects.removeAll()
-                            cache.refreshAt = NSDate()
-                        }
-                        cache.objects.appendContentsOf(tracks)
-                        cache.updateAt = NSDate()
-                        cache.offset += response.objects.count
                     }
-                    print("search result cached")
-                    self._requestState.value = response.objects.count != search.limit ? .done : .none
-                    print(self._requestState.value)
-                case .Failure(let error):
-                    print(error)
-                    self._requestState.value = .error
+                    if refreshing {
+                        cache.objects.removeAll()
+                        cache.refreshAt = NSDate()
+                    }
+                    cache.objects.appendContentsOf(tracks)
+                    cache.updateAt = NSDate()
+                    cache.offset += response.objects.count
                 }
+                print("search result cached")
+                self._requestState.value = response.objects.count != search.limit ? .done : .none
+                print(self._requestState.value)
+            case .Failure(let error):
+                print(error)
+                self._requestState.value = .error
             }
         }
     }

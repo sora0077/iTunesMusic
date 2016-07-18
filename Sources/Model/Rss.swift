@@ -109,41 +109,39 @@ extension Model.Rss {
         var lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
         lookup.lang = "ja_JP"
         lookup.country = "JP"
-        session.sendRequest(lookup) { [weak self] result in
+        session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                
-                switch result {
-                case .Success(let response):
-                    let realm = try! iTunesRealm()
-                    try! realm.write {
-                        var tracks: [_Track] = []
-                        response.objects.forEach {
-                            switch $0 {
-                            case .track(let obj):
-                                tracks.append(obj)
-                                realm.add(obj, update: true)
-                            case .collection(let obj):
-                                realm.add(obj, update: true)
-                            case .artist(let obj):
-                                realm.add(obj, update: true)
-                            }
+            
+            switch result {
+            case .Success(let response):
+                let realm = try! iTunesRealm()
+                try! realm.write {
+                    var tracks: [_Track] = []
+                    response.objects.forEach {
+                        switch $0 {
+                        case .track(let obj):
+                            tracks.append(obj)
+                            realm.add(obj, update: true)
+                        case .collection(let obj):
+                            realm.add(obj, update: true)
+                        case .artist(let obj):
+                            realm.add(obj, update: true)
                         }
-                        
-                        var done = false
-                        let cache = getOrCreateCache(genreId: id, realm: realm)
-                        cache.tracks.appendContentsOf(tracks)
-                        cache.fetched += 50
-                        self.fetched = cache.fetched
-                        realm.add(cache, update: true)
-                        done = cache.items.count == cache.tracks.count
-                        self._requestState.value = done ? .done : .none
                     }
-                    tick()
-                case .Failure(let error):
-                    print(error)
-                    self._requestState.value = .error
+                    
+                    var done = false
+                    let cache = getOrCreateCache(genreId: id, realm: realm)
+                    cache.tracks.appendContentsOf(tracks)
+                    cache.fetched += 50
+                    self.fetched = cache.fetched
+                    realm.add(cache, update: true)
+                    done = cache.items.count == cache.tracks.count
+                    self._requestState.value = done ? .done : .none
                 }
+                tick()
+            case .Failure(let error):
+                print(error)
+                self._requestState.value = .error
             }
         }
     }
@@ -154,29 +152,27 @@ extension Model.Rss {
         
         let session = Session.sharedSession
         
-        session.sendRequest(GetRss<_RssCache>(url: url, limit: 200)) { [weak self] result in
+        session.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                switch result {
-                case .Success(let response):
-                    let realm = try! iTunesRealm()
-                    try! realm.write {
-                        let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
-                        response._genreId = genre?.id ?? 0
-                        response._genre = genre
-                        response.tracks.removeAll()
-                        response.refreshAt = NSDate()
-                        realm.add(response, update: true)
-                    }
-                    self.trackIds = response.items.map { $0.id }
-                    self.fetched = response.fetched
-                    self._requestState.value = .none
-                    self.request(refreshing: false, force: false)
-                    tick()
-                case .Failure(let error):
-                    print(error)
-                    self._requestState.value = .error
+            switch result {
+            case .Success(let response):
+                let realm = try! iTunesRealm()
+                try! realm.write {
+                    let genre = realm.objectForPrimaryKey(_Genre.self, key: id)
+                    response._genreId = genre?.id ?? 0
+                    response._genre = genre
+                    response.tracks.removeAll()
+                    response.refreshAt = NSDate()
+                    realm.add(response, update: true)
                 }
+                self.trackIds = response.items.map { $0.id }
+                self.fetched = response.fetched
+                self._requestState.value = .none
+                self.request(refreshing: false, force: false)
+                tick()
+            case .Failure(let error):
+                print(error)
+                self._requestState.value = .error
             }
         }
     }
