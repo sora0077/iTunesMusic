@@ -4,11 +4,11 @@ PODS:
   - Himotoki (2.1.1)
   - PINCache (2.2.2)
   - QueryKit (0.12.1)
-  - Realm (1.0.1):
-    - Realm/Headers (= 1.0.1)
-  - Realm/Headers (1.0.1)
-  - RealmSwift (1.0.1):
-    - Realm (= 1.0.1)
+  - Realm (1.0.2):
+    - Realm/Headers (= 1.0.2)
+  - Realm/Headers (1.0.2)
+  - RealmSwift (1.0.2):
+    - Realm (= 1.0.2)
   - Result (2.1.2)
   - RxCocoa (2.6.0):
     - RxSwift (~> 2.5)
@@ -36,8 +36,8 @@ SPEC CHECKSUMS:
   Himotoki: 0e539e721830384e128b0c0c94cbd9693ca30761
   PINCache: 078426d356ab95ef875e9e62e5c35a2ea3333c28
   QueryKit: 6a8dbe9f33ffac00c424143695681a949b58518d
-  Realm: 2e15e39d35b08abb529e212ed5d8af107b5236c8
-  RealmSwift: d73ea2af08c3676dbdd5e4b669651a0f492162a4
+  Realm: 9d5c46a4d7d27958530a8dfc58f63a99e5c2cba3
+  RealmSwift: 82f3ac5e24530143dddfde2033acc0d308f27d96
   Result: 6e722d4a66b1408680dbfcdf51c0b1c4b706316a
   RxCocoa: 89ab00d5753502520227940e3a0e0a0413683c6b
   RxSwift: 77f3a0b15324baa7a1c9bfa9f199648a82424e26
