@@ -21,11 +21,6 @@ public protocol PlaylistType: class {
     subscript (index: Int) -> Track { get }
 }
 
-extension PlaylistType {
-    
-    public func _any() -> PlaylistType { return self }
-}
-
 protocol PlaylistTypeInternal: PlaylistType {
     
     associatedtype RealmElement: Object

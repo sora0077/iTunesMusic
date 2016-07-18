@@ -45,16 +45,13 @@ private class TableViewCell: UITableViewCell {
 }
 
 
-class RssViewController: UIViewController {
+class RssViewController: GenericListViewController<Model.Rss> {
     
     private let rss: Model.Rss
-    private let disposeBag = DisposeBag()
-    
-    private let tableView = UITableView()
     
     init(genre: Genre) {
         rss = Model.Rss(genre: genre)
-        super.init(nibName: nil, bundle: nil)
+        super.init(list: rss)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -68,12 +65,6 @@ class RssViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -116,15 +107,8 @@ class RssViewController: UIViewController {
         
         rss.refresh()
     }
-}
-
-extension RssViewController: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rss.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
         let track = rss[indexPath.row]
@@ -142,9 +126,6 @@ extension RssViewController: UITableViewDataSource {
         }
         return cell
     }
-}
-
-extension RssViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

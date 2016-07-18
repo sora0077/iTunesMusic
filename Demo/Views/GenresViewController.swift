@@ -12,23 +12,17 @@ import RxSwift
 import SnapKit
 
 
-class GenresViewController: UIViewController {
+class GenresViewController: GenericListViewController<Model.Genres> {
 
     private let genres = Model.Genres()
-    private let disposeBag = DisposeBag()
     
-    private let tableView = UITableView()
-    
+    init() {
+        super.init(list: genres)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         genres.changes
@@ -46,30 +40,18 @@ class GenresViewController: UIViewController {
         }
     }
     
-}
-
-extension GenresViewController: UITableViewDataSource {
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return genres.count
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        
         let genre = genres[indexPath.row]
         cell.textLabel?.text = genre.name
         return cell
     }
-}
-
-extension GenresViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let genre = genres[indexPath.row]
         let vc = RssViewController(genre: genre)
-    
+        
         navigationController?.pushViewController(vc, animated: true)
     }
 }
