@@ -85,6 +85,7 @@ extension Model {
 extension Model.Search {
     
     func request(refreshing refreshing: Bool, force: Bool) {
+        if term.isEmpty { return }
         
         _refreshing.value = refreshing
         
@@ -111,7 +112,7 @@ extension Model.Search {
                 let cache = getOrCreateCache(term: self.term, realm: realm)
                 try! realm.write {
                     var tracks: [_Track] = []
-                    response.objects.forEach {
+                    response.objects.reverse().forEach {
                         switch $0 {
                         case .track(let obj):
                             tracks.append(obj)
@@ -126,7 +127,7 @@ extension Model.Search {
                         cache.objects.removeAll()
                         cache.refreshAt = NSDate()
                     }
-                    cache.objects.appendContentsOf(tracks)
+                    cache.objects.appendContentsOf(tracks.reverse())
                     cache.updateAt = NSDate()
                     cache.offset += response.objects.count
                 }

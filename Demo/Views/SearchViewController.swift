@@ -21,7 +21,7 @@ class SearchViewController: UIViewController {
             search.changes
                 .subscribe(tableView.rx_itemUpdates())
                 .addDisposableTo(searchDisposeBag)
-            search.fetch()
+            search.refresh()
         }
     }
     private let disposeBag = DisposeBag()
@@ -46,7 +46,6 @@ class SearchViewController: UIViewController {
         tableView.keyboardDismissMode = .Interactive
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
-        searhBar.delegate = self
 
         navigationItem.titleView = searhBar
         
@@ -55,6 +54,17 @@ class SearchViewController: UIViewController {
             .filter { $0 }
             .subscribeNext { [weak self] _ in
                 self?.search?.fetch()
+            }
+            .addDisposableTo(disposeBag)
+        
+        searhBar.rx_text
+            .debounce(0.3, scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
+            .doOnNext { str in
+                print(str)
+            }
+            .subscribeNext { [weak self] str in
+                self?.search = Model.Search(term: str)
             }
             .addDisposableTo(disposeBag)
     }
@@ -80,8 +90,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        if let search = search {
-            let track = search[indexPath.row]
+        if let track = search?[indexPath.row] {
             cell.textLabel?.text = track.trackName
         }
         return cell
@@ -100,14 +109,4 @@ extension SearchViewController: UITableViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-}
-
-extension SearchViewController: UISearchBarDelegate {
-    
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
-        
-        if let text = searchBar.text where !text.isEmpty {
-            search = Model.Search(term: text)
-        }
-    }
 }

@@ -65,7 +65,7 @@ extension UITableView {
                     modifications: modifications.map(indexPath)
                 )
             }
-            }.asObserver()
+        }.asObserver()
     }
     
     func performUpdates(deletions deletions: [NSIndexPath], insertions: [NSIndexPath], modifications: [NSIndexPath]) {
