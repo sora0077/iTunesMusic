@@ -16,11 +16,12 @@ class BaseViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     
-    var modules: [ViewModuleProtocol] = []
+    var modules: [UIView: ViewModuleProtocol] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        modules.forEach { $0.1.install() }
     }
 }
 
@@ -33,10 +34,11 @@ class GenresViewController: BaseViewController {
     init() {
         super.init(nibName: nil, bundle: nil)
         
-        modules.append(TableViewModule(
-            list: genres,
+        modules[tableView] = TableViewModule(
             view: tableView,
+            superview: { [unowned self] in self.view },
             controller: self,
+            list: genres,
             onGenerate: { (self, tableView, element, indexPath) in
                 let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
                 let genre = self.genres[indexPath.row]
@@ -49,7 +51,7 @@ class GenresViewController: BaseViewController {
                 
                 self.navigationController?.pushViewController(vc, animated: true)
             }
-        ))
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,8 +60,6 @@ class GenresViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        modules.forEach { $0.install(view) }
         
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         

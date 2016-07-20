@@ -12,7 +12,7 @@ import SnapKit
 
 
 protocol ViewModuleProtocol {
-    func install(superview: UIView)
+    func install()
 }
 
 
@@ -24,6 +24,8 @@ class TableViewModule<List: CollectionType, Controller: UIViewController where L
     
     private let tableView: UITableView
     
+    private let superview: () -> UIView
+    
     private let list: List
     
     private weak var viewController: Controller?
@@ -32,7 +34,14 @@ class TableViewModule<List: CollectionType, Controller: UIViewController where L
     
     private let selector: DidSelectRowAtIndexPath?
     
-    init(list: List, view: UITableView, controller: Controller, onGenerate: CellForRowAtIndexPath, onSelect: DidSelectRowAtIndexPath? = nil) {
+    init(view: UITableView,
+         superview: () -> UIView,
+         controller: Controller,
+         list: List,
+         onGenerate: CellForRowAtIndexPath,
+         onSelect: DidSelectRowAtIndexPath? = nil)
+    {
+        self.superview = superview
         self.list = list
         tableView = view
         viewController = controller
@@ -64,8 +73,8 @@ class TableViewModule<List: CollectionType, Controller: UIViewController where L
 
 extension TableViewModule {
     
-    func install(superview: UIView) {
-        superview.addSubview(tableView)
+    func install() {
+        superview().addSubview(tableView)
         tableView.snp_makeConstraints { make in
             make.edges.equalToSuperview()
         }

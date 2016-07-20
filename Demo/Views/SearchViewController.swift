@@ -11,12 +11,12 @@ import iTunesMusic
 import RxSwift
 
 
-class SearchViewController: UIViewController {
+class SearchViewController: BaseViewController {
     
-    private var search: Model.Search? {
+    private var search: Model.Search? = Model.Search(term: "") {
         didSet {
-            
             guard let search = search else { return }
+            updateTableModule()
             searchDisposeBag = DisposeBag()
             search.changes
                 .subscribe(tableView.rx_itemUpdates())
@@ -24,24 +24,27 @@ class SearchViewController: UIViewController {
             search.refresh()
         }
     }
-    private let disposeBag = DisposeBag()
     private var searchDisposeBag = DisposeBag()
     
     private let tableView = UITableView()
     private let searhBar = UISearchBar()
+    
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        
+        updateTableModule()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(self.closeAction))
         
-        view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        tableView.delegate = self
-        tableView.dataSource = self
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.keyboardDismissMode = .Interactive
 //        tableView.tableHeaderView = searhBar
@@ -75,38 +78,33 @@ class SearchViewController: UIViewController {
         searhBar.becomeFirstResponder()
     }
     
+    private func updateTableModule() {
+        
+        modules[tableView] = TableViewModule(
+            view: tableView,
+            superview: { [unowned self] in self.view },
+            controller: self,
+            list: search!,
+            onGenerate: { (self, tableView, element, indexPath) in
+                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+                if let track = self.search?[indexPath.row] {
+                    cell.textLabel?.text = track.trackName
+                }
+                return cell
+            },
+            onSelect: { (self, tableView, element, indexPath) in
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                
+                guard let search = self.search else { return }
+                
+                let vc = AlbumDetailViewController(collection: search[indexPath.row].collection)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        )
+    }
+    
     @objc
     private func closeAction() {
         dismissViewControllerAnimated(true, completion: nil)
     }
-}
-
-extension SearchViewController: UITableViewDataSource {
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return search?.count ?? 0
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        if let track = search?[indexPath.row] {
-            cell.textLabel?.text = track.trackName
-        }
-        return cell
-    }
-}
-
-extension SearchViewController: UITableViewDelegate {
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        guard let search = search else { return }
-        
-        let vc = AlbumDetailViewController(collection: search[indexPath.row].collection)
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
 }

@@ -45,13 +45,43 @@ private class TableViewCell: UITableViewCell {
 }
 
 
-class RssViewController: GenericListViewController<Model.Rss> {
+class RssViewController: BaseViewController {
     
     private let rss: Model.Rss
     
+    private let tableView = UITableView()
+    
     init(genre: Genre) {
         rss = Model.Rss(genre: genre)
-        super.init(list: rss)
+        super.init(nibName: nil, bundle: nil)
+        
+        modules[tableView] = TableViewModule(
+            view: tableView,
+            superview: { [unowned self] in self.view },
+            controller: self,
+            list: rss,
+            onGenerate: { (self, tableView, element, indexPath) in
+                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
+                let track = self.rss[indexPath.row]
+                
+                cell.detailTextLabel?.text = "\(indexPath.row + 1)"
+                cell.titleLabel.text = track.trackName
+                let size = { Int($0 * UIScreen.mainScreen().scale) }
+                
+                let artworkURL = track.artworkURL(size: size(120))
+                cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
+                    guard let cell = wcell else { return }
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
+                    }
+                }
+                return cell
+            },
+            onSelect: { (self, tableView, element, indexPath) in
+                let vc = AlbumDetailViewController(collection: self.rss[indexPath.row].collection)
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        )
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -106,32 +136,5 @@ class RssViewController: GenericListViewController<Model.Rss> {
             .addDisposableTo(disposeBag)
         
         rss.refresh()
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
-        let track = rss[indexPath.row]
-        
-        cell.detailTextLabel?.text = "\(indexPath.row + 1)"
-        cell.titleLabel.text = track.trackName
-        let size = { Int($0 * UIScreen.mainScreen().scale) }
-        
-        let artworkURL = track.artworkURL(size: size(120))
-        cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
-            guard let cell = wcell else { return }
-            dispatch_async(dispatch_get_main_queue()) {
-                cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
-            }
-        }
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-//        player.add(track: rss[indexPath.row])
-        let vc = AlbumDetailViewController(collection: rss[indexPath.row].collection)
-        navigationController?.pushViewController(vc, animated: true)
     }
 }

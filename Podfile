@@ -8,9 +8,7 @@ def core
     pod 'Himotoki'
     pod 'RealmSwift'
     pod 'RxSwift'
-    pod 'QueryKit'
     pod 'Timepiece'
-    pod 'PINCache'
 
 end
 
