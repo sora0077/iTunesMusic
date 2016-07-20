@@ -44,6 +44,7 @@
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
+		D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */; };
 		D95E4CFD1D33FBD800985C66 /* BlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4CFC1D33FBD800985C66 /* BlurImageView.swift */; };
 		D95E4CFF1D34011500985C66 /* EasyBlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4CFE1D34011500985C66 /* EasyBlurImageView.swift */; };
 		D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */; };
@@ -158,6 +159,7 @@
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
+		D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewModule.swift; sourceTree = "<group>"; };
 		D95E4CFC1D33FBD800985C66 /* BlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurImageView.swift; sourceTree = "<group>"; };
 		D95E4CFE1D34011500985C66 /* EasyBlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyBlurImageView.swift; sourceTree = "<group>"; };
 		D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistDetailViewController.swift; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 		D929E4521D1EE9500045C316 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				D9573C281D3E7ACC00783AA4 /* Module */,
 				D99164081D37CEA90091BF09 /* Middleware */,
 				D95E4CFB1D33FBC300985C66 /* CustomViews */,
 				D9AAE06E1D27624500FF29C3 /* TableViewCells */,
@@ -413,6 +416,14 @@
 				D9DCE3BB1D3CAF86001A1D50 /* GenericListViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		D9573C281D3E7ACC00783AA4 /* Module */ = {
+			isa = PBXGroup;
+			children = (
+				D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */,
+			);
+			path = Module;
 			sourceTree = "<group>";
 		};
 		D95E4CFB1D33FBC300985C66 /* CustomViews */ = {
@@ -804,6 +815,7 @@
 				D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */,
 				D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */,
 				D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */,
+				D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */,
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,
 				D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */,
 				D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */,

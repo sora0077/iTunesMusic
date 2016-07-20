@@ -12,16 +12,54 @@ import RxSwift
 import SnapKit
 
 
-class GenresViewController: GenericListViewController<Model.Genres> {
+class BaseViewController: UIViewController {
+    
+    let disposeBag = DisposeBag()
+    
+    var modules: [ViewModuleProtocol] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
+}
+
+class GenresViewController: BaseViewController {
 
     private let genres = Model.Genres()
     
+    private let tableView = UITableView()
+    
     init() {
-        super.init(list: genres)
+        super.init(nibName: nil, bundle: nil)
+        
+        modules.append(TableViewModule(
+            list: genres,
+            view: tableView,
+            controller: self,
+            onGenerate: { (self, tableView, element, indexPath) in
+                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+                let genre = self.genres[indexPath.row]
+                cell.textLabel?.text = genre.name
+                return cell
+            },
+            onSelect: { (self, tableView, element, indexPath) in
+                let genre = self.genres[indexPath.row]
+                let vc = RssViewController(genre: genre)
+                
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        ))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        modules.forEach { $0.install(view) }
         
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
@@ -38,20 +76,5 @@ class GenresViewController: GenericListViewController<Model.Genres> {
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        let genre = genres[indexPath.row]
-        cell.textLabel?.text = genre.name
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        let genre = genres[indexPath.row]
-        let vc = RssViewController(genre: genre)
-        
-        navigationController?.pushViewController(vc, animated: true)
     }
 }

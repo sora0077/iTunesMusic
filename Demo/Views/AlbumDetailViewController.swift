@@ -208,6 +208,7 @@ class AlbumDetailViewController: UIViewController {
         
         tableView.rx_reachedBottom()
             .filter { $0 }
+            .debounce(0.5, scheduler: MainScheduler.instance)
             .subscribeNext { [weak self] _ in
                 self?.album.fetch()
             }
@@ -268,7 +269,7 @@ private extension AlbumDetailViewController {
     func addPlaylist(sender: UIButton, event: UIEvent) {
         guard
             let point = event.allTouches()?.first?.locationInView(tableView),
-            indexPath = tableView.indexPathForRowAtPoint(point)
+            let indexPath = tableView.indexPathForRowAtPoint(point)
         else { return }
         
         let track = album[indexPath.row]
