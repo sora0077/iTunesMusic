@@ -4,13 +4,19 @@ platform :ios, '9.3'
 use_frameworks!
 
 def core
-    pod 'APIKit'
-    pod 'Himotoki'
-    pod 'RealmSwift'
-    pod 'RxSwift'
-    pod 'Timepiece'
+    # pod 'APIKit'
+    # pod 'Himotoki'
+    # pod 'RealmSwift'
+    # pod 'RxSwift'
+    # pod 'Timepiece'
 
 end
+
+
+
+
+
+
 
 target 'iTunesMusic' do
   core()
@@ -23,7 +29,7 @@ end
 
 target 'Demo' do
   core()
-  pod 'RxCocoa'
-  pod 'SnapKit'
+  # pod 'RxCocoa'
+  # pod 'SnapKit'
   pod 'SDWebImage'
 end

@@ -42,7 +42,7 @@ final class PlaylistDetailViewController: UIViewController {
         tableView.delegate = self
         
         playlist.changes
-            .subscribe(tableView.rx_itemUpdates())
+            .bindTo(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
     }
 }

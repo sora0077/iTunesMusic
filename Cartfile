@@ -1,0 +1,8 @@
+
+github "ishkawa/APIKit"
+github "ikesyo/Himotoki"
+github "naoty/Timepiece"
+github "ReactiveX/RxSwift"
+github "realm/realm-cocoa"
+
+github "SnapKit/SnapKit"

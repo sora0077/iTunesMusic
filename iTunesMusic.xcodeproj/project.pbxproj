@@ -42,6 +42,14 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
+		D92DAA511D40118200529520 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA501D40118200529520 /* APIKit.framework */; };
+		D92DAA531D40118A00529520 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA521D40118A00529520 /* Result.framework */; };
+		D92DAA551D40133000529520 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA541D40133000529520 /* Himotoki.framework */; };
+		D92DAA571D40141700529520 /* Timepiece.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA561D40141700529520 /* Timepiece.framework */; };
+		D92E93AA1D410F0000AC86EA /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93A91D410F0000AC86EA /* RxCocoa.framework */; };
+		D92E93AC1D41148F00AC86EA /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AB1D41148F00AC86EA /* Realm.framework */; };
+		D92E93AE1D41149400AC86EA /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AD1D41149400AC86EA /* RealmSwift.framework */; };
+		D92E93B01D411EFF00AC86EA /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AF1D411EFF00AC86EA /* SnapKit.framework */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
 		D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */; };
@@ -64,6 +72,7 @@
 		D9EA0B511D27FE2A001C3F2F /* AlbumCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */; };
 		D9EA0B531D28AD0A001C3F2F /* EntityArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */; };
 		D9EA0B591D2AAD74001C3F2F /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B581D2AAD74001C3F2F /* Artist.swift */; };
+		D9F46E5F1D410D480071DCCD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F46E5E1D410D480071DCCD /* RxSwift.framework */; };
 		D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */; };
 		D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E91D182F930010E81D /* ListGenres.swift */; };
 		D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12EB1D1831D50010E81D /* Genres.swift */; };
@@ -156,6 +165,14 @@
 		D929E46A1D1EE9510045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
+		D92DAA501D40118200529520 /* APIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = APIKit.framework; path = Carthage/Checkouts/APIKit/build/Debug/APIKit.framework; sourceTree = "<group>"; };
+		D92DAA521D40118A00529520 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = "Carthage/Checkouts/Result/build/Debug-iphoneos/Result.framework"; sourceTree = "<group>"; };
+		D92DAA541D40133000529520 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Himotoki.framework; path = "Carthage/Checkouts/Himotoki/build/Debug-iphoneos/Himotoki.framework"; sourceTree = "<group>"; };
+		D92DAA561D40141700529520 /* Timepiece.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Timepiece.framework; path = "Carthage/Checkouts/Timepiece/build/Debug-iphoneos/Timepiece.framework"; sourceTree = "<group>"; };
+		D92E93A91D410F0000AC86EA /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "../../../Library/Developer/Xcode/DerivedData/iTunesMusic-fkvnbwltbpvgxahiwlyfugiyjwiz/Build/Products/Debug-iphonesimulator/RxCocoa.framework"; sourceTree = "<group>"; };
+		D92E93AB1D41148F00AC86EA /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = "Carthage/Checkouts/realm-cocoa/build/Debug/Realm.framework"; sourceTree = "<group>"; };
+		D92E93AD1D41149400AC86EA /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = "Carthage/Checkouts/realm-cocoa/build/Debug/RealmSwift.framework"; sourceTree = "<group>"; };
+		D92E93AF1D411EFF00AC86EA /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = "Carthage/Checkouts/SnapKit/build/Debug-iphoneos/SnapKit.framework"; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 		D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewModule.swift; sourceTree = "<group>"; };
@@ -178,6 +195,8 @@
 		D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCache.swift; sourceTree = "<group>"; };
 		D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityArtist.swift; sourceTree = "<group>"; };
 		D9EA0B581D2AAD74001C3F2F /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		D9F46E5E1D410D480071DCCD /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "Carthage/Checkouts/RxSwift/build/Debug-iphoneos/RxSwift.framework"; sourceTree = "<group>"; };
+		D9F46E601D410DC50071DCCD /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "Carthage/Checkouts/RxSwift/build/Debug-iphoneos/RxCocoa.framework"; sourceTree = "<group>"; };
 		D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LookupWithIds.swift; sourceTree = "<group>"; };
 		D9FD12E91D182F930010E81D /* ListGenres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListGenres.swift; sourceTree = "<group>"; };
 		D9FD12EB1D1831D50010E81D /* Genres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
@@ -191,6 +210,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D92E93AE1D41149400AC86EA /* RealmSwift.framework in Frameworks */,
+				D92E93AC1D41148F00AC86EA /* Realm.framework in Frameworks */,
+				D9F46E5F1D410D480071DCCD /* RxSwift.framework in Frameworks */,
+				D92DAA571D40141700529520 /* Timepiece.framework in Frameworks */,
+				D92DAA551D40133000529520 /* Himotoki.framework in Frameworks */,
+				D92DAA531D40118A00529520 /* Result.framework in Frameworks */,
+				D92DAA511D40118200529520 /* APIKit.framework in Frameworks */,
 				4703842E4F1378FA629288A2 /* Pods_iTunesMusic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,6 +234,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D92E93B01D411EFF00AC86EA /* SnapKit.framework in Frameworks */,
+				D92E93AA1D410F0000AC86EA /* RxCocoa.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
 				A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */,
 			);
@@ -226,6 +254,16 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D92E93AF1D411EFF00AC86EA /* SnapKit.framework */,
+				D92E93AD1D41149400AC86EA /* RealmSwift.framework */,
+				D92E93AB1D41148F00AC86EA /* Realm.framework */,
+				D92E93A91D410F0000AC86EA /* RxCocoa.framework */,
+				D9F46E601D410DC50071DCCD /* RxCocoa.framework */,
+				D9F46E5E1D410D480071DCCD /* RxSwift.framework */,
+				D92DAA561D40141700529520 /* Timepiece.framework */,
+				D92DAA541D40133000529520 /* Himotoki.framework */,
+				D92DAA521D40118A00529520 /* Result.framework */,
+				D92DAA501D40118200529520 /* APIKit.framework */,
 				7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */,
 				F68CC0B1639812C2EDE6155F /* Pods_iTunesMusic.framework */,
 				73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */,
@@ -971,6 +1009,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = iTunesMusic/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -990,6 +1029,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = iTunesMusic/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1027,6 +1067,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.sora0077.Demo;
@@ -1040,6 +1081,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.sora0077.Demo;

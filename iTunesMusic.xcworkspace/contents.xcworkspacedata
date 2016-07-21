@@ -7,4 +7,25 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/APIKit/APIKit.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Result/Result.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Himotoki/Himotoki.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/Timepiece/Timepiece.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/RxSwift/Rx.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/realm-cocoa/Realm.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/SnapKit/SnapKit.xcodeproj">
+   </FileRef>
 </Workspace>
