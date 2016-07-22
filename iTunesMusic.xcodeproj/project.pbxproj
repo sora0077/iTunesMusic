@@ -42,14 +42,6 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
-		D92DAA511D40118200529520 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA501D40118200529520 /* APIKit.framework */; };
-		D92DAA531D40118A00529520 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA521D40118A00529520 /* Result.framework */; };
-		D92DAA551D40133000529520 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA541D40133000529520 /* Himotoki.framework */; };
-		D92DAA571D40141700529520 /* Timepiece.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92DAA561D40141700529520 /* Timepiece.framework */; };
-		D92E93AA1D410F0000AC86EA /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93A91D410F0000AC86EA /* RxCocoa.framework */; };
-		D92E93AC1D41148F00AC86EA /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AB1D41148F00AC86EA /* Realm.framework */; };
-		D92E93AE1D41149400AC86EA /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AD1D41149400AC86EA /* RealmSwift.framework */; };
-		D92E93B01D411EFF00AC86EA /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D92E93AF1D411EFF00AC86EA /* SnapKit.framework */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
 		D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */; };
@@ -68,11 +60,37 @@
 		D9AAE0711D276DFB00FF29C3 /* EntityCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */; };
 		D9C553EE1D2E943B007C486E /* EntityPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */; };
 		D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */; };
+		D9D1F3D31D422D39007E7058 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D21D422D39007E7058 /* APIKit.framework */; };
+		D9D1F3D51D422D41007E7058 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D41D422D41007E7058 /* Himotoki.framework */; };
+		D9D1F3D71D422D49007E7058 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D61D422D49007E7058 /* Realm.framework */; };
+		D9D1F3D91D422D4D007E7058 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D81D422D4D007E7058 /* RealmSwift.framework */; };
+		D9D1F3DB1D422D52007E7058 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DA1D422D52007E7058 /* Result.framework */; };
+		D9D1F3DD1D422D58007E7058 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DC1D422D58007E7058 /* RxSwift.framework */; };
+		D9D1F3DF1D422D63007E7058 /* Timepiece.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DE1D422D63007E7058 /* Timepiece.framework */; };
+		D9D1F3E11D422D6A007E7058 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E01D422D6A007E7058 /* SnapKit.framework */; };
+		D9D1F3E31D422D72007E7058 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E21D422D72007E7058 /* RxCocoa.framework */; };
+		D9D1F3E41D422D88007E7058 /* RxCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E21D422D72007E7058 /* RxCocoa.framework */; };
+		D9D1F3E51D422D88007E7058 /* RxCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E21D422D72007E7058 /* RxCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3E61D422D8F007E7058 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E01D422D6A007E7058 /* SnapKit.framework */; };
+		D9D1F3E71D422D8F007E7058 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3E01D422D6A007E7058 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3E81D422E1F007E7058 /* Timepiece.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DE1D422D63007E7058 /* Timepiece.framework */; };
+		D9D1F3E91D422E1F007E7058 /* Timepiece.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DE1D422D63007E7058 /* Timepiece.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3EA1D422E1F007E7058 /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DC1D422D58007E7058 /* RxSwift.framework */; };
+		D9D1F3EB1D422E1F007E7058 /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DC1D422D58007E7058 /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3EC1D422E1F007E7058 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DA1D422D52007E7058 /* Result.framework */; };
+		D9D1F3ED1D422E1F007E7058 /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3DA1D422D52007E7058 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3EE1D422E1F007E7058 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D81D422D4D007E7058 /* RealmSwift.framework */; };
+		D9D1F3EF1D422E1F007E7058 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D81D422D4D007E7058 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3F01D422E1F007E7058 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D61D422D49007E7058 /* Realm.framework */; };
+		D9D1F3F11D422E1F007E7058 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D61D422D49007E7058 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3F21D422E1F007E7058 /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D41D422D41007E7058 /* Himotoki.framework */; };
+		D9D1F3F31D422E1F007E7058 /* Himotoki.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D41D422D41007E7058 /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9D1F3F41D422E1F007E7058 /* APIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D21D422D39007E7058 /* APIKit.framework */; };
+		D9D1F3F51D422E1F007E7058 /* APIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9D1F3D21D422D39007E7058 /* APIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
 		D9EA0B511D27FE2A001C3F2F /* AlbumCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */; };
 		D9EA0B531D28AD0A001C3F2F /* EntityArtist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */; };
 		D9EA0B591D2AAD74001C3F2F /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B581D2AAD74001C3F2F /* Artist.swift */; };
-		D9F46E5F1D410D480071DCCD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9F46E5E1D410D480071DCCD /* RxSwift.framework */; };
 		D9FD12E81D16E9B60010E81D /* LookupWithIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */; };
 		D9FD12EA1D182F930010E81D /* ListGenres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12E91D182F930010E81D /* ListGenres.swift */; };
 		D9FD12EC1D1831D50010E81D /* Genres.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FD12EB1D1831D50010E81D /* Genres.swift */; };
@@ -111,7 +129,16 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D9D1F3EB1D422E1F007E7058 /* RxSwift.framework in Embed Frameworks */,
+				D9D1F3E91D422E1F007E7058 /* Timepiece.framework in Embed Frameworks */,
+				D9D1F3EF1D422E1F007E7058 /* RealmSwift.framework in Embed Frameworks */,
+				D9D1F3E71D422D8F007E7058 /* SnapKit.framework in Embed Frameworks */,
+				D9D1F3F11D422E1F007E7058 /* Realm.framework in Embed Frameworks */,
+				D9D1F3ED1D422E1F007E7058 /* Result.framework in Embed Frameworks */,
+				D9D1F3E51D422D88007E7058 /* RxCocoa.framework in Embed Frameworks */,
 				D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */,
+				D9D1F3F51D422E1F007E7058 /* APIKit.framework in Embed Frameworks */,
+				D9D1F3F31D422E1F007E7058 /* Himotoki.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -165,14 +192,6 @@
 		D929E46A1D1EE9510045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
-		D92DAA501D40118200529520 /* APIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = APIKit.framework; path = Carthage/Checkouts/APIKit/build/Debug/APIKit.framework; sourceTree = "<group>"; };
-		D92DAA521D40118A00529520 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = "Carthage/Checkouts/Result/build/Debug-iphoneos/Result.framework"; sourceTree = "<group>"; };
-		D92DAA541D40133000529520 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Himotoki.framework; path = "Carthage/Checkouts/Himotoki/build/Debug-iphoneos/Himotoki.framework"; sourceTree = "<group>"; };
-		D92DAA561D40141700529520 /* Timepiece.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Timepiece.framework; path = "Carthage/Checkouts/Timepiece/build/Debug-iphoneos/Timepiece.framework"; sourceTree = "<group>"; };
-		D92E93A91D410F0000AC86EA /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "../../../Library/Developer/Xcode/DerivedData/iTunesMusic-fkvnbwltbpvgxahiwlyfugiyjwiz/Build/Products/Debug-iphonesimulator/RxCocoa.framework"; sourceTree = "<group>"; };
-		D92E93AB1D41148F00AC86EA /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = "Carthage/Checkouts/realm-cocoa/build/Debug/Realm.framework"; sourceTree = "<group>"; };
-		D92E93AD1D41149400AC86EA /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RealmSwift.framework; path = "Carthage/Checkouts/realm-cocoa/build/Debug/RealmSwift.framework"; sourceTree = "<group>"; };
-		D92E93AF1D411EFF00AC86EA /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = "Carthage/Checkouts/SnapKit/build/Debug-iphoneos/SnapKit.framework"; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 		D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewModule.swift; sourceTree = "<group>"; };
@@ -191,12 +210,19 @@
 		D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityCollection.swift; sourceTree = "<group>"; };
 		D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityPlaylist.swift; sourceTree = "<group>"; };
 		D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityTrackMetadata.swift; sourceTree = "<group>"; };
+		D9D1F3D21D422D39007E7058 /* APIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = APIKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3D41D422D41007E7058 /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Himotoki.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3D61D422D49007E7058 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3D81D422D4D007E7058 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3DA1D422D52007E7058 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3DC1D422D58007E7058 /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3DE1D422D63007E7058 /* Timepiece.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Timepiece.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3E01D422D6A007E7058 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SnapKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9D1F3E21D422D72007E7058 /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumCache.swift; sourceTree = "<group>"; };
 		D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityArtist.swift; sourceTree = "<group>"; };
 		D9EA0B581D2AAD74001C3F2F /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
-		D9F46E5E1D410D480071DCCD /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = "Carthage/Checkouts/RxSwift/build/Debug-iphoneos/RxSwift.framework"; sourceTree = "<group>"; };
-		D9F46E601D410DC50071DCCD /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = "Carthage/Checkouts/RxSwift/build/Debug-iphoneos/RxCocoa.framework"; sourceTree = "<group>"; };
 		D9FD12E71D16E9B60010E81D /* LookupWithIds.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LookupWithIds.swift; sourceTree = "<group>"; };
 		D9FD12E91D182F930010E81D /* ListGenres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListGenres.swift; sourceTree = "<group>"; };
 		D9FD12EB1D1831D50010E81D /* Genres.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Genres.swift; sourceTree = "<group>"; };
@@ -210,13 +236,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D92E93AE1D41149400AC86EA /* RealmSwift.framework in Frameworks */,
-				D92E93AC1D41148F00AC86EA /* Realm.framework in Frameworks */,
-				D9F46E5F1D410D480071DCCD /* RxSwift.framework in Frameworks */,
-				D92DAA571D40141700529520 /* Timepiece.framework in Frameworks */,
-				D92DAA551D40133000529520 /* Himotoki.framework in Frameworks */,
-				D92DAA531D40118A00529520 /* Result.framework in Frameworks */,
-				D92DAA511D40118200529520 /* APIKit.framework in Frameworks */,
+				D9D1F3E31D422D72007E7058 /* RxCocoa.framework in Frameworks */,
+				D9D1F3E11D422D6A007E7058 /* SnapKit.framework in Frameworks */,
+				D9D1F3DF1D422D63007E7058 /* Timepiece.framework in Frameworks */,
+				D9D1F3DD1D422D58007E7058 /* RxSwift.framework in Frameworks */,
+				D9D1F3DB1D422D52007E7058 /* Result.framework in Frameworks */,
+				D9D1F3D91D422D4D007E7058 /* RealmSwift.framework in Frameworks */,
+				D9D1F3D71D422D49007E7058 /* Realm.framework in Frameworks */,
+				D9D1F3D51D422D41007E7058 /* Himotoki.framework in Frameworks */,
+				D9D1F3D31D422D39007E7058 /* APIKit.framework in Frameworks */,
 				4703842E4F1378FA629288A2 /* Pods_iTunesMusic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,10 +262,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D92E93B01D411EFF00AC86EA /* SnapKit.framework in Frameworks */,
-				D92E93AA1D410F0000AC86EA /* RxCocoa.framework in Frameworks */,
+				D9D1F3F01D422E1F007E7058 /* Realm.framework in Frameworks */,
+				D9D1F3E81D422E1F007E7058 /* Timepiece.framework in Frameworks */,
+				D9D1F3F21D422E1F007E7058 /* Himotoki.framework in Frameworks */,
+				D9D1F3F41D422E1F007E7058 /* APIKit.framework in Frameworks */,
+				D9D1F3EC1D422E1F007E7058 /* Result.framework in Frameworks */,
+				D9D1F3E41D422D88007E7058 /* RxCocoa.framework in Frameworks */,
+				D9D1F3EA1D422E1F007E7058 /* RxSwift.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
 				A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */,
+				D9D1F3EE1D422E1F007E7058 /* RealmSwift.framework in Frameworks */,
+				D9D1F3E61D422D8F007E7058 /* SnapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,16 +289,15 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D92E93AF1D411EFF00AC86EA /* SnapKit.framework */,
-				D92E93AD1D41149400AC86EA /* RealmSwift.framework */,
-				D92E93AB1D41148F00AC86EA /* Realm.framework */,
-				D92E93A91D410F0000AC86EA /* RxCocoa.framework */,
-				D9F46E601D410DC50071DCCD /* RxCocoa.framework */,
-				D9F46E5E1D410D480071DCCD /* RxSwift.framework */,
-				D92DAA561D40141700529520 /* Timepiece.framework */,
-				D92DAA541D40133000529520 /* Himotoki.framework */,
-				D92DAA521D40118A00529520 /* Result.framework */,
-				D92DAA501D40118200529520 /* APIKit.framework */,
+				D9D1F3E21D422D72007E7058 /* RxCocoa.framework */,
+				D9D1F3E01D422D6A007E7058 /* SnapKit.framework */,
+				D9D1F3DE1D422D63007E7058 /* Timepiece.framework */,
+				D9D1F3DC1D422D58007E7058 /* RxSwift.framework */,
+				D9D1F3DA1D422D52007E7058 /* Result.framework */,
+				D9D1F3D81D422D4D007E7058 /* RealmSwift.framework */,
+				D9D1F3D61D422D49007E7058 /* Realm.framework */,
+				D9D1F3D41D422D41007E7058 /* Himotoki.framework */,
+				D9D1F3D21D422D39007E7058 /* APIKit.framework */,
 				7284E2A9B4A75AC0E54D5D96 /* Pods_Demo.framework */,
 				F68CC0B1639812C2EDE6155F /* Pods_iTunesMusic.framework */,
 				73C70BA6595B76F28DE6BF39 /* Pods_iTunesMusicTests.framework */,
@@ -599,7 +633,10 @@
 					};
 					D929E4501D1EE9500045C316 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = B2TD54U4MA;
+						DevelopmentTeamName = "Tatsuya Hayashi";
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -950,7 +987,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -993,7 +1030,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1074,6 +1111,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1089,6 +1127,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

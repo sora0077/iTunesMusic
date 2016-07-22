@@ -20,9 +20,9 @@ import MediaPlayer
 func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collection, Playlist.Iterator.Element == Track>(size: Int) -> AnyObserver<Playlist> {
     return AnyObserver { on in
         if case .next(let playlist) = on {
-            let urls = playlist.lazy.flatMap { $0.artworkURL(size: size) }
+            let urls = playlist.flatMap { $0.artworkURL(size: size) }
             DispatchQueue.global(attributes: .qosBackground).async {
-                SDWebImagePrefetcher.shared().prefetchURLs(Array(urls))
+                SDWebImagePrefetcher.shared().prefetchURLs(urls)
             }
         }
     }
@@ -34,15 +34,13 @@ extension UIScrollView {
     func rx_reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
         return rx_contentOffset
             .map { [weak self] contentOffset in
-                guard let scrollView = self else {
-                    return false
-                }
+                guard let scrollView = self else { return false }
                 
                 let visibleHeight = scrollView.frame.height - scrollView.contentInset.top - scrollView.contentInset.bottom
                 let y = contentOffset.y + scrollView.contentInset.top
                 let threshold = max(0.0, scrollView.contentSize.height - visibleHeight - visibleHeight * offsetRatio)
                 return y > threshold
-        }
+            }
     }
 }
 

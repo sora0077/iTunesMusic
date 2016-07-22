@@ -79,7 +79,9 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             guard let image = image else { return }
             
             if self?.currentTrackId == trackId {
-                info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+                info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
+                    image
+                }
                 MPNowPlayingInfoCenter.default().nowPlayingInfo = info
                 
                 print(info)
