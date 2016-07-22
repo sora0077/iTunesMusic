@@ -43,10 +43,10 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(self.closeAction))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.closeAction))
         
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.keyboardDismissMode = .Interactive
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.keyboardDismissMode = .interactive
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
 
@@ -72,7 +72,7 @@ class SearchViewController: BaseViewController {
             .addDisposableTo(disposeBag)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         searhBar.becomeFirstResponder()
@@ -86,14 +86,14 @@ class SearchViewController: BaseViewController {
             controller: self,
             list: search!,
             onGenerate: { (self, tableView, element, indexPath) in
-                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                 if let track = self.search?[indexPath.row] {
                     cell.textLabel?.text = track.trackName
                 }
                 return cell
             },
             onSelect: { (self, tableView, element, indexPath) in
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                tableView.deselectRow(at: indexPath, animated: true)
                 
                 guard let search = self.search else { return }
                 
@@ -105,6 +105,6 @@ class SearchViewController: BaseViewController {
     
     @objc
     private func closeAction() {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

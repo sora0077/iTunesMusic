@@ -17,12 +17,12 @@ import RealmSwift
 import MediaPlayer
 
 
-func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: CollectionType, Playlist.Generator.Element == Track>(size size: Int) -> AnyObserver<Playlist> {
+func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collection, Playlist.Iterator.Element == Track>(size: Int) -> AnyObserver<Playlist> {
     return AnyObserver { on in
-        if case .Next(let playlist) = on {
+        if case .next(let playlist) = on {
             let urls = playlist.lazy.flatMap { $0.artworkURL(size: size) }
-            dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-                SDWebImagePrefetcher.sharedImagePrefetcher().prefetchURLs(urls)
+            DispatchQueue.global(attributes: .qosBackground).async {
+                SDWebImagePrefetcher.shared().prefetchURLs(Array(urls))
             }
         }
     }
@@ -31,7 +31,7 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: CollectionTyp
 
 extension UIScrollView {
     
-    func rx_reachedBottom(offsetRatio offsetRatio: CGFloat = 0) -> Observable<Bool> {
+    func rx_reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
         return rx_contentOffset
             .map { [weak self] contentOffset in
                 guard let scrollView = self else {
@@ -49,15 +49,15 @@ extension UIScrollView {
 
 extension UITableView {
     
-    func rx_itemUpdates(configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
+    func rx_itemUpdates(_ configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
         return UIBindingObserver(UIElement: self) { tableView, changes in
             switch changes {
             case .initial:
                 tableView.reloadData()
             case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
-                func indexPath(i: Int) -> NSIndexPath {
+                func indexPath(_ i: Int) -> IndexPath {
                     let (row, section) = configure?(index: i) ?? (i, 0)
-                    return NSIndexPath(forRow: row, inSection: section)
+                    return IndexPath(row: row, section: section)
                 }
                 tableView.performUpdates(
                     deletions: deletions.map(indexPath),
@@ -68,12 +68,12 @@ extension UITableView {
         }.asObserver()
     }
     
-    func performUpdates(deletions deletions: [NSIndexPath], insertions: [NSIndexPath], modifications: [NSIndexPath]) {
+    func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
         
         beginUpdates()
-        deleteRowsAtIndexPaths(deletions, withRowAnimation: .Automatic)
-        insertRowsAtIndexPaths(insertions, withRowAnimation: .Top)
-        reloadRowsAtIndexPaths(modifications, withRowAnimation: .Automatic)
+        deleteRows(at: deletions, with: .automatic)
+        insertRows(at: insertions, with: .top)
+        reloadRows(at: modifications, with: .automatic)
         endUpdates()
     }
 }
@@ -88,11 +88,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private var artist: Model.Artist!
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        SDWebImageManager.sharedManager().imageCache.clearDisk()
-        SDWebImageManager.sharedManager().imageCache.clearMemory()
+        SDWebImageManager.shared().imageCache.clearDisk()
+        SDWebImageManager.shared().imageCache.clearMemory()
         
         let session = AVAudioSession.sharedInstance()
         try! session.setCategory(AVAudioSessionCategoryPlayback)
@@ -100,13 +100,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         application.beginReceivingRemoteControlEvents()
         
-        print(NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0])
+        print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
         
         launch()
         
         player.install(middleware: ControlCenter())
         
-        window?.tintColor = UIColor.whiteColor()
+        window?.tintColor = UIColor.white()
         
         print((try! iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((try! iTunesRealm()).schema.objectSchema.map { $0.className })
@@ -114,25 +114,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 

@@ -16,15 +16,15 @@ protocol iTunesRequestType: RequestType {
 
 extension iTunesRequestType {
     
-    func interceptURLRequest(URLRequest: NSMutableURLRequest) throws -> NSMutableURLRequest {
-        print(self, URLRequest)
-        return URLRequest
+    func intercept(urlRequest: URLRequest) throws -> URLRequest {
+        print(self, urlRequest)
+        return urlRequest
     }
 }
 
 extension iTunesRequestType where Response: Decodable {
     
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
         do {
             return try decodeValue(object)
         } catch {
@@ -34,22 +34,22 @@ extension iTunesRequestType where Response: Decodable {
     }
 }
 
-public enum iTunesMusicError: ErrorType {
-    case NotFound
+public enum iTunesMusicError: ErrorProtocol {
+    case notFound
 }
 
 class PropertyListDataParser: DataParserType {
     
     let contentType: String?
     
-    let options: NSPropertyListReadOptions
+    let options: PropertyListSerialization.ReadOptions
     
-    init(options: NSPropertyListReadOptions, contentType: String? = "application/x-apple-plist") {
+    init(options: PropertyListSerialization.ReadOptions, contentType: String? = "application/x-apple-plist") {
         self.options = options
         self.contentType = contentType
     }
     
-    func parseData(data: NSData) throws -> AnyObject {
-        return try NSPropertyListSerialization.propertyListWithData(data, options: .Immutable, format: nil)
+    func parseData(_ data: Data) throws -> AnyObject {
+        return try PropertyListSerialization.propertyList(from: data, options: PropertyListSerialization.MutabilityOptions(), format: nil)
     }
 }

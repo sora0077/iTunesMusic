@@ -40,7 +40,7 @@ class GenresViewController: BaseViewController {
             controller: self,
             list: genres,
             onGenerate: { (self, tableView, element, indexPath) in
-                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
                 let genre = self.genres[indexPath.row]
                 cell.textLabel?.text = genre.name
                 return cell
@@ -61,7 +61,7 @@ class GenresViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         genres.changes
             .subscribe(tableView.rx_itemUpdates())
@@ -70,11 +70,11 @@ class GenresViewController: BaseViewController {
         genres.refresh()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }

@@ -19,10 +19,10 @@ private class TableViewCell: UITableViewCell {
     let titleLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(artworkImageView)
-        artworkImageView.snp_makeConstraints { make in
+        artworkImageView.snp.makeConstraints { make in
             make.top.left.equalTo(self.contentView)
             make.bottom.equalTo(self.contentView).priority(UILayoutPriorityDefaultHigh)
             make.width.equalTo(120)
@@ -31,10 +31,10 @@ private class TableViewCell: UITableViewCell {
         
         contentView.addSubview(titleLabel)
         titleLabel.numberOfLines = 0
-        titleLabel.snp_makeConstraints { make in
-            make.left.equalTo(artworkImageView.snp_right).offset(8)
-            make.right.equalToSuperview().offset(-40)
-            make.centerY.equalToSuperview()
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalTo(artworkImageView.snp.right).offset(8)
+            make.right.equalTo(contentView).offset(-40)
+            make.centerY.equalTo(contentView)
         }
     }
     
@@ -64,11 +64,11 @@ final class ArtistDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white()
         
         view.addSubview(tableView)
         
-        tableView.snp_makeConstraints { make in
+        tableView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
 
@@ -76,7 +76,7 @@ final class ArtistDetailViewController: UIViewController {
         tableView.dataSource = self
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: "Cell")
         
         artist.changes
             .bindTo(tableView.rx_itemUpdates())
@@ -85,11 +85,11 @@ final class ArtistDetailViewController: UIViewController {
         artist.refresh()
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }
@@ -97,23 +97,23 @@ final class ArtistDetailViewController: UIViewController {
 
 extension ArtistDetailViewController: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return artist.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
         
         let collection = artist[indexPath.row]
         cell.titleLabel.text = collection.name
-        let size = { Int($0 * UIScreen.mainScreen().scale) }
+        let size = { Int($0 * UIScreen.main().scale) }
         
         let thumbnailURL = collection.artworkURL(size: size(120))
         let artworkURL = collection.artworkURL(size: size(120))
-        cell.artworkImageView.sd_setImageWithURL(thumbnailURL, placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
+        cell.artworkImageView.sd_setImage(with: thumbnailURL, placeholderImage: nil, options: [], progress: nil) { [weak wcell=cell] (image, error, type, url) in
             guard let cell = wcell else { return }
-            dispatch_async(dispatch_get_main_queue()) {
-                cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
+            DispatchQueue.main.async {
+                cell.artworkImageView.sd_setImage(with: artworkURL, placeholderImage: image)
             }
         }
         return cell
@@ -123,7 +123,7 @@ extension ArtistDetailViewController: UITableViewDataSource {
 
 extension ArtistDetailViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = AlbumDetailViewController(collection: artist[indexPath.row])
         navigationController?.pushViewController(vc, animated: true)

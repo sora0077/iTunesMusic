@@ -38,7 +38,7 @@ extension _Artist {
 
 extension _Artist: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         
         let obj = self.init()
         
@@ -48,7 +48,7 @@ extension _Artist: Decodable {
         return obj
     }
     
-    static func collectionArtist(e: Extractor) throws -> Self? {
+    static func collectionArtist(_ e: Extractor) throws -> Self? {
         
         do {
             let obj = self.init()
@@ -57,8 +57,7 @@ extension _Artist: Decodable {
             obj._artistName = try e.value("collectionArtistName")
             obj._artistLinkUrl = try e.valueOptional("collectionArtistViewUrl")
             return obj
-        }
-        catch DecodeError.MissingKeyPath {
+        } catch DecodeError.missingKeyPath {
             return nil
         }
     }

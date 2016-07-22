@@ -22,7 +22,7 @@ public protocol Track: EntityInterface {
 
     var trackName: String { get }
     
-    var trackViewURL: NSURL { get }
+    var trackViewURL: URL { get }
     
     var collection: Collection { get }
     
@@ -32,7 +32,7 @@ public protocol Track: EntityInterface {
     
     var metadata: TrackMetadata { get }
     
-    func artworkURL(size size: Int) -> NSURL
+    func artworkURL(size: Int) -> URL
 }
 
 
@@ -66,7 +66,7 @@ class _Track: RealmSwift.Object, Track {
     
     dynamic var _isStreamable: Bool = false
     
-    dynamic var _createAt: NSDate = NSDate()
+    dynamic var _createAt: Date = Date()
     
     dynamic var _collection: _Collection?
     
@@ -106,7 +106,7 @@ extension _Track {
     
     var trackName: String { return _trackName }
     
-    var trackViewURL: NSURL { return NSURL(string: _trackViewUrl)! }
+    var trackViewURL: URL { return URL(string: _trackViewUrl)! }
     
     var collection: Collection { return _collection! }
     
@@ -118,14 +118,14 @@ extension _Track {
     
     var metadata: TrackMetadata { return _metadata }
     
-    func artworkURL(size size: Int) -> NSURL {
-        return collection.artworkURL(size: size)
+    func artworkURL(size: Int) -> URL {
+        return collection.artworkURL(size: size) as URL
     }
 }
 
 extension _Track: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         
         let obj = self.init()
         obj._trackId = try e.value("trackId")

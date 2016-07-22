@@ -11,8 +11,8 @@ import RealmSwift
 import RxSwift
 
 
-private func getOrCreateCache(realm realm: Realm) -> _HistoryCache {
-    if let cache = realm.objects(_HistoryCache.self).first {
+private func getOrCreateCache(realm: Realm) -> _HistoryCache {
+    if let cache = realm.allObjects(ofType: _HistoryCache.self).first {
         return cache
     } else {
         let cache = _HistoryCache()
@@ -53,11 +53,11 @@ extension Model {
 
 extension Model.History {
 
-    public func record(atIndex index: Int) -> (Track, NSDate) {
+    public func record(atIndex index: Int) -> (Track, Date) {
         return (objects[index].track, objects[index].createAt)
     }
     
-    static func add(track: Track, realm: Realm) {
+    static func add(_ track: Track, realm: Realm) {
         
         let cache = getOrCreateCache(realm: realm)
         try! realm.write {
@@ -71,16 +71,16 @@ extension Model.History {
         let realm = try! iTunesRealm()
         let cache = getOrCreateCache(realm: realm)
         try! realm.write {
-            cache.objects.removeAll()
+            cache.objects.removeAllObjects()
         }
     }
 }
 
 extension Model.History: PlayerMiddleware {
     
-    public func didEndPlayTrack(trackId: Int) {
+    public func didEndPlayTrack(_ trackId: Int) {
         let realm = try! iTunesRealm()
-        if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
+        if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             Model.History.add(track, realm: realm)
         }
     }
@@ -94,7 +94,7 @@ extension Model.History: PlaylistTypeInternal {
 }
 
 
-extension Model.History: CollectionType {
+extension Model.History: Swift.Collection {
     
     public var count: Int { return objects.count }
     
@@ -105,5 +105,9 @@ extension Model.History: CollectionType {
     public var endIndex: Int { return objects.endIndex }
     
     public subscript (index: Int) -> Track { return objects[index].track }
+    
+    public func index(after i: Int) -> Int {
+        return objects.index(after: i)
+    }
 }
 

@@ -15,8 +15,8 @@ import Timepiece
 
 private var __requestState = Variable<RequestState>(.none)
 
-private func getOrCreateCache(key key: String, realm: Realm) -> _GenresCache {
-    if let cache = realm.objectForPrimaryKey(_GenresCache.self, key: key) {
+private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
+    if let cache = realm.object(ofType: _GenresCache.self, forPrimaryKey: key) {
         return cache
     } else {
         let cache = _GenresCache()
@@ -61,7 +61,7 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         var _requestState: Variable<RequestState> { return __requestState }
         
-        var needRefresh: Bool { return NSDate() - getOrCreateCache(key: "default", realm: try! iTunesRealm()).refreshAt > 30.days }
+        var needRefresh: Bool { return Date() - getOrCreateCache(key: "default", realm: try! iTunesRealm()).refreshAt > 30.days }
         
         private var token: NotificationToken?
         private var objectsToken: NotificationToken?
@@ -73,12 +73,12 @@ extension Model {
         public init() {
             
             let realm = try! iTunesRealm()
-            getOrCreateCache(key: "default", realm: realm)
-            caches = realm.objects(_GenresCache).filter("key == %@", "default").sorted("createAt", ascending: false)
+            _ = getOrCreateCache(key: "default", realm: realm)
+            caches = realm.allObjects(ofType: _GenresCache.self).filter(using: "key == %@", "default").sorted(onProperty: "createAt", ascending: false)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
                 
-                func updateObserver(results: Results<_GenresCache>) {
+                func updateObserver(_ results: Results<_GenresCache>) {
                     self.objectsToken = results[0].list.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
@@ -101,37 +101,37 @@ extension Model {
 
 extension Model.Genres {
     
-    func request(refreshing refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool) {
         
         if !refreshing && !caches[0].list.isEmpty {
             _requestState.value = .done
             return
         }
         
-        let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
+        let session = Session(adapter: NSURLSessionAdapter(configuration: URLSessionConfiguration.default))
         
         var listGenres = ListGenres<_Genre>()
         listGenres.country = "jp"
         session.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
             switch result {
-            case .Success(let cache):
+            case .success(let cache):
                 let realm = try! iTunesRealm()
                 try! realm.write {
                     realm.add(cache, update: true)
                     
                     let cache = getOrCreateCache(key: "default", realm: realm)
                     if refreshing {
-                        cache.list.removeAll()
-                        cache.refreshAt = NSDate()
+                        cache.list.removeAllObjects()
+                        cache.refreshAt = Date()
                     }
                     
                     for genre in InitialDefaultGenre.cases {
-                        cache.list.append(realm.objectForPrimaryKey(_Genre.self, key: genre.rawValue)!)
+                        cache.list.append(realm.object(ofType: _Genre.self, forPrimaryKey: genre.rawValue)!)
                     }
                     realm.add(cache)
                 }
                 __requestState.value = .done
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 __requestState.value = .error
             }
@@ -139,7 +139,7 @@ extension Model.Genres {
     }
 }
 
-extension Model.Genres: CollectionType {
+extension Model.Genres: Swift.Collection {
     
     public var startIndex: Int { return isEmpty ? 0 : cache.list.startIndex }
     
@@ -147,5 +147,9 @@ extension Model.Genres: CollectionType {
     
     public subscript (index: Int) -> Genre {
         return cache.list[index]
+    }
+    
+    public func index(after i: Int) -> Int {
+        return cache.list.index(after: i)
     }
 }

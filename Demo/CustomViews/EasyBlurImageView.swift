@@ -9,7 +9,7 @@
 import UIKit
 
 
-private func convertRadiusKey(radius: Float) -> Int {
+private func convertRadiusKey(_ radius: Float) -> Int {
 //    return Int(round(Double(radius * 10)))
     return Int(round(radius))
 }

@@ -45,7 +45,7 @@ public protocol Fetchable {
     
     func refresh()
     
-    func refresh(force force: Bool)
+    func refresh(force: Bool)
 }
 
 protocol FetchableInternal: Fetchable {
@@ -56,7 +56,7 @@ protocol FetchableInternal: Fetchable {
     
     var hasNoPaginatedContents: Bool { get }
     
-    func request(refreshing refreshing: Bool, force: Bool)
+    func request(refreshing: Bool, force: Bool)
 }
 
 extension Fetchable {
@@ -69,14 +69,14 @@ extension Fetchable {
         refresh(force: false)
     }
     
-    public func refresh(force force: Bool) {
+    public func refresh(force: Bool) {
         let s = self as! FetchableInternal
         if force || s.needRefresh {
             _request(refreshing: true, force: force)
         }
     }
     
-    private func _request(refreshing refreshing: Bool, force: Bool) {
+    private func _request(refreshing: Bool, force: Bool) {
         let s = self as! FetchableInternal
         if [.done, .requesting].contains(s._requestState.value) {
             return

@@ -12,11 +12,11 @@ import APIKit
 
 struct GetPreviewUrl: iTunesRequestType {
     
-    typealias Response = (NSURL, Int)
+    typealias Response = (URL, Int)
     
     let id: Int
     
-    let baseURL: NSURL
+    let baseURL: URL
     
     var method: HTTPMethod { return .GET }
     
@@ -29,29 +29,29 @@ struct GetPreviewUrl: iTunesRequestType {
     }
     
     var dataParser: DataParserType {
-        return PropertyListDataParser(options: .Immutable)
+        return PropertyListDataParser(options: [])
     }
     
-    init(id: Int, url: NSURL) {
+    init(id: Int, url: URL) {
         self.id = id
         baseURL = url
     }
     
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
         
         let items = object["items"] as! [[String: AnyObject]]
         for item in items {
             guard let id = item["item-id"] as? Int else { continue }
             if self.id == id {
-                return try getPreviewURL(item)
+                return try getPreviewURL(item: item)
             }
         }
-        throw iTunesMusicError.NotFound
+        throw iTunesMusicError.notFound
     }
 }
 
 
-private func getPreviewURL(item: [String: AnyObject]) throws -> (NSURL, Int) {
+private func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
     
     if let offers = item["store-offers"] as? [String: AnyObject] {
         let preview: String
@@ -63,11 +63,11 @@ private func getPreviewURL(item: [String: AnyObject]) throws -> (NSURL, Int) {
             preview = offers["HQPRE"]!["preview-url"] as! String
             duration = offers["HQPRE"]!["preview-duration"] as! Int
         }
-        if let url = NSURL(string: preview) {
+        if let url = URL(string: preview) {
             return (url, duration)
         }
     }
     
     
-    throw iTunesMusicError.NotFound
+    throw iTunesMusicError.notFound
 }

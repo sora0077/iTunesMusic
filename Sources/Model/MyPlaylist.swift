@@ -11,8 +11,8 @@ import RealmSwift
 import RxSwift
 
 
-private func getOrCreateCache(realm realm: Realm) -> _MyPlaylistCache {
-    if let cache = realm.objects(_MyPlaylistCache).first {
+private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
+    if let cache = realm.allObjects(ofType: _MyPlaylistCache.self).first {
         return cache
     }
     let cache = _MyPlaylistCache()
@@ -48,7 +48,7 @@ extension Model {
     }
 }
 
-extension Model.MyPlaylists: CollectionType {
+extension Model.MyPlaylists: Swift.Collection {
     
     public var startIndex: Int { return cache.playlists.startIndex }
     
@@ -56,6 +56,10 @@ extension Model.MyPlaylists: CollectionType {
     
     public subscript (index: Int) -> iTunesMusic.MyPlaylist {
         return cache.playlists[index]
+    }
+    
+    public func index(after i: Int) -> Int {
+        return cache.playlists.index(after: i)
     }
 }
 
@@ -88,7 +92,7 @@ extension Model {
 
 extension Model.MyPlaylist {
     
-    public func add(track track: Track) {
+    public func add(track: Track) {
         let realm = try! iTunesRealm()
         try! realm.write {
             playlist.tracks.append(track as! _Track)
@@ -102,7 +106,7 @@ extension Model.MyPlaylist: PlaylistTypeInternal {
 }
 
 
-extension Model.MyPlaylist: CollectionType {
+extension Model.MyPlaylist: Swift.Collection {
     
     public var count: Int { return objects.count }
     
@@ -113,4 +117,8 @@ extension Model.MyPlaylist: CollectionType {
     public var endIndex: Int { return objects.endIndex }
     
     public subscript (index: Int) -> Track { return objects[index] }
+    
+    public func index(after i: Int) -> Int {
+        return objects.index(after: i)
+    }
 }

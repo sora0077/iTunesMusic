@@ -33,11 +33,11 @@ final class PlaylistDetailViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
         }
         
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -49,12 +49,12 @@ final class PlaylistDetailViewController: UIViewController {
 
 extension PlaylistDetailViewController: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlist.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let track = playlist[indexPath.row]
         cell.textLabel?.text = track.trackName
         return cell
@@ -63,8 +63,8 @@ extension PlaylistDetailViewController: UITableViewDataSource {
 
 extension PlaylistDetailViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         player.add(track: playlist[indexPath.row])
     }

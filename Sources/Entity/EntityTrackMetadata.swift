@@ -28,23 +28,23 @@ final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     
     private let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
     
-    dynamic var _createAt: NSDate = NSDate()
+    dynamic var _createAt: Date = Date()
     
     override class func primaryKey() -> String? { return "_trackId" }
 }
 
 extension _TrackMetadata {
     
-    var previewURL: NSURL? {
-        return _longPreviewUrl.flatMap(NSURL.init)
+    var previewURL: URL? {
+        return _longPreviewUrl.flatMap(URL.init)
     }
     
-    var fileURL: NSURL? {
+    var fileURL: URL? {
         guard let filename = _longPreviewFileUrl else { return nil }
         
-        let cachePath = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0]
-        let fileURL = NSURL(fileURLWithPath: cachePath).URLByAppendingPathComponent(filename)
-        if let path = fileURL.path where NSFileManager.defaultManager().fileExistsAtPath(path) {
+        let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        let fileURL = try! URL(fileURLWithPath: cachePath).appendingPathComponent(filename)
+        if let path = fileURL.path, FileManager.default.fileExists(atPath: path) {
             return fileURL
         }
         return nil
@@ -61,11 +61,11 @@ extension _TrackMetadata {
         }
     }
     
-    func updatePreviewURL(url: NSURL) {
+    func updatePreviewURL(_ url: URL) {
         _longPreviewUrl = url.absoluteString
     }
     
-    func updateCache(filename filename: String) {
+    func updateCache(filename: String) {
         _longPreviewFileUrl = filename
     }
 }

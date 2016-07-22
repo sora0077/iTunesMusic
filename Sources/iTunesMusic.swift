@@ -16,8 +16,8 @@ import RealmSwift
 public let player: Player = PlayerImpl()
 
 private let configuration: Realm.Configuration = {
-    let path = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)[0]
-    let fileURL = NSURL(fileURLWithPath: path).URLByAppendingPathComponent("itunes.realm")
+    let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+    let fileURL = NSURL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
     var config = Realm.Configuration(fileURL: fileURL)
     config.objectTypes = [
         _GenresCache.self,

@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 import Timepiece
 
-private let releaseDateTransformer = Transformer<String, NSDate> { string in
+private let releaseDateTransformer = Transformer<String, Date> { string in
     //  2016-06-29T07:00:00Z
     return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")!
 }
@@ -26,7 +26,7 @@ public protocol Collection {
 
     subscript (index: Int) -> Track { get }
     
-    func artworkURL(size size: Int) -> NSURL
+    func artworkURL(size: Int) -> URL
 }
 
 
@@ -49,7 +49,7 @@ class _Collection: RealmSwift.Object, Collection {
     
     dynamic var _copyright: String?
     
-    dynamic var _releaseDate = NSDate()
+    dynamic var _releaseDate = Date()
     
     dynamic var _artist: _Artist?
     
@@ -58,22 +58,26 @@ class _Collection: RealmSwift.Object, Collection {
     override class func primaryKey() -> String? { return "_collectionId" }
 }
 
-extension _Collection: CollectionType {
+extension _Collection: Swift.Collection {
     
     var startIndex: Int { return _tracks.startIndex }
     
     var endIndex: Int { return _tracks.endIndex }
     
     subscript (index: Int) -> Track {
-        return _tracks.sorted([
+        return _tracks.sorted(with: [
             SortDescriptor(property: "_trackNumber")
         ])[index]
+    }
+    
+    func index(after i: Int) -> Int {
+        return _tracks.index(after: i)
     }
 }
 
 extension _Collection: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         
         let obj = self.init()
         obj._collectionId = try e.value("collectionId")
@@ -102,8 +106,8 @@ extension _Collection: Decodable {
 }
 
 
-private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
-private let artworkCached = NSCache()
+private let artworkRegex = try! RegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
+private let artworkCached = Cache<NSString, NSURL>()
 
 extension _Collection {
     
@@ -113,20 +117,20 @@ extension _Collection {
     
     var artist: Artist { return _artist! }
     
-    func artworkURL(size size: Int) -> NSURL {
+    func artworkURL(size: Int) -> URL {
         let base = _artworkUrl100
         let key = "\(base)_____\(size)"
-        if let url = artworkCached.objectForKey(key) as? NSURL {
+        if let url = artworkCached.object(forKey: key) as? URL {
             return url
         }
         
-        let replaced = artworkRegex.stringByReplacingMatchesInString(
-            base,
+        let replaced = artworkRegex.stringByReplacingMatches(
+            in: base,
             options: [],
             range: NSMakeRange(0, base.utf16.count),
             withTemplate: "\(size)x\(size)"
         )
-        let url = NSURL(string: replaced)!
+        let url = URL(string: replaced)!
         artworkCached.setObject(url, forKey: key)
         return url
     }

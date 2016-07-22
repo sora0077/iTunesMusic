@@ -18,14 +18,14 @@ public protocol MyPlaylist {
 
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
 
-    dynamic var id = NSUUID().UUIDString
+    dynamic var id = UUID().uuidString
     
     dynamic var title = ""
     
     let tracks = List<_Track>()
     
-    private(set) dynamic var createAt = NSDate()
+    private(set) dynamic var createAt = Date()
     
-    dynamic var updateAt = NSDate()
+    dynamic var updateAt = Date()
 
 }

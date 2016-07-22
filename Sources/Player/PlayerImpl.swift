@@ -73,11 +73,11 @@ final class PlayerImpl: NSObject, Player {
         #else
             print("iphone")
         #endif
-        _player.addObserver(self, forKeyPath: "status", options: [.New, .Old], context: nil)
-        _player.addObserver(self, forKeyPath: "currentItem", options: [.New, .Old], context: nil)
+        _player.addObserver(self, forKeyPath: "status", options: [.new, .old], context: nil)
+        _player.addObserver(self, forKeyPath: "currentItem", options: [.new, .old], context: nil)
         
         //        _player.currentTime()
-        _player.addPeriodicTimeObserverForInterval(CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
+        _player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
             guard let `self` = self else { return }
             self._currentTime.value = CMTimeGetSeconds(time)
         }
@@ -88,24 +88,24 @@ final class PlayerImpl: NSObject, Player {
             _player.removeObserver(self, forKeyPath: $0)
         }
         
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: AnyObject?, change: [NSKeyValueChangeKey : AnyObject]?, context: UnsafeMutablePointer<Void>?) {
         
         guard let keyPath = keyPath else { return }
         
         switch keyPath {
         case "status":
-            if _player.status == .ReadyToPlay {
+            if _player.status == .readyToPlay {
                 _player.play()
             }
         case "currentItem":
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 let realm = try! iTunesRealm()
                 var track: Track?
                 if let trackId = self._player.currentItem?.trackId {
-                    track = realm.objectForPrimaryKey(_Track.self, key: trackId)
+                    track = realm.object(ofType: _Track.self, forPrimaryKey: trackId)
                 }
                 self._nowPlayingTrack.value = track
                 
@@ -125,7 +125,7 @@ final class PlayerImpl: NSObject, Player {
         }
     }
     
-    func install(middleware middleware: PlayerMiddleware) {
+    func install(middleware: PlayerMiddleware) {
         _installs.append(middleware)
         middleware.middlewareInstalled(self)
     }
@@ -146,24 +146,24 @@ final class PlayerImpl: NSObject, Player {
         
         if _player.items().count > 2 { return }
         
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async {
             print("run updateQueue")
             let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
             if !track.canPreview {
                 self._playingQueue = self._playingQueue.dropFirst()
                 return self.updateQueue()
             }
-            func getPreviewInfo() -> (NSURL, duration: Double)? {
+            func getPreviewInfo() -> (URL, duration: Double)? {
                 if !track.hasMetadata { return nil }
                 guard let duration = track.metadata.duration else { return nil }
                 
                 if let fileURL = track._metadata.fileURL {
                     print("load from file ", track.trackName)
-                    return (fileURL, duration)
+                    return (fileURL as URL, duration)
                 }
                 if let url = track._metadata.previewURL {
                     print("load from network ", track.trackName)
-                    return (url, duration)
+                    return (url as URL, duration)
                 }
                 return nil
             }
@@ -172,34 +172,34 @@ final class PlayerImpl: NSObject, Player {
                 self._playingQueue = self._playingQueue.dropFirst()
                 
                 print("add player queue ", track._trackName, url)
-                let item = AVPlayerItem(asset: AVAsset(URL: url))
+                let item = AVPlayerItem(asset: AVAsset(url: url))
                 item.trackId = track.trackId
                 
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosDefault).async {
                     
-                    if let track = item.asset.tracksWithMediaType(AVMediaTypeAudio).first {
+                    if let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first {
                         let inputParams = AVMutableAudioMixInputParameters(track: track)
                         
                         let fadeDuration = CMTimeMakeWithSeconds(5, 600);
                         let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600);
                         let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
                         
-                        inputParams.setVolumeRampFromStartVolume(1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
-                        inputParams.setVolumeRampFromStartVolume(0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+                        inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+                        inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
                         
                         let audioMix = AVMutableAudioMix()
                         audioMix.inputParameters = [inputParams]
                         item.audioMix = audioMix
                     }
-                    NSNotificationCenter.defaultCenter().addObserver(
+                    NotificationCenter.default.addObserver(
                         self,
                         selector: #selector(self.didEndPlay),
-                        name: AVPlayerItemDidPlayToEndTimeNotification,
+                        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
                         object: item
                     )
                     
-                    self._player.insertItem(item, afterItem: nil)
-                    if self._player.status == .ReadyToPlay {
+                    self._player.insert(item, after: nil)
+                    if self._player.status == .readyToPlay {
                         self.play()
                     }
                 }
@@ -214,7 +214,7 @@ final class PlayerImpl: NSObject, Player {
         if _player.items().count > 2 { return }
         
         let (playlist, index, _) = _playlists[_playlists.startIndex]
-        assert(NSThread.isMainThread())
+        assert(Thread.isMainThread)
         
         let paginator = playlist as? FetchableInternal
         print(paginator, playlist)
@@ -236,7 +236,7 @@ final class PlayerImpl: NSObject, Player {
             updateQueue()
         } else {
             print(playlist)
-            if let paginator = paginator where !paginator.hasNoPaginatedContents {
+            if let paginator = paginator, !paginator.hasNoPaginatedContents {
                 return
             }
             _playlists = _playlists.dropFirst()
@@ -245,7 +245,7 @@ final class PlayerImpl: NSObject, Player {
         }
     }
     
-    private func fetch(preview: PreviewTrack) {
+    private func fetch(_ preview: PreviewTrack) {
         let id = preview.id
         if _previewQueue[id] != nil {
             return
@@ -256,14 +256,14 @@ final class PlayerImpl: NSObject, Player {
             .subscribe(
                 onNext: { [weak self] url in
                     guard let `self` = self else { return }
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self._previewQueue[id] = nil
                         self.updateQueue()
                     }
                 },
                 onError: { [weak self] error in
                     guard let `self` = self else { return }
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         self._previewQueue[id] = nil
                         self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
                         self.updatePlaylistQueue()
@@ -274,11 +274,11 @@ final class PlayerImpl: NSObject, Player {
     }
     
     
-    func add(track track: Track) {
+    func add(track: Track) {
         add(track: track, afterPlaylist: false)
     }
     
-    func add(track track: Track, afterPlaylist: Bool) {
+    func add(track: Track, afterPlaylist: Bool) {
         if afterPlaylist {
             add(playlist: OneTrackPlaylist(track: track))
         } else {
@@ -287,16 +287,16 @@ final class PlayerImpl: NSObject, Player {
         }
     }
     
-    func add(playlist playlist: PlaylistType) {
+    func add(playlist: PlaylistType) {
         
         _add(playlist: playlist)
     }
     
-    private func _add(playlist playlist: PlaylistType) {
+    private func _add(playlist: PlaylistType) {
         
-        assert(NSThread.isMainThread())
+        assert(Thread.isMainThread)
         
-        if _player.status == .ReadyToPlay && _player.rate != 0 {
+        if _player.status == .readyToPlay && _player.rate != 0 {
             play()
         }
         
@@ -306,9 +306,9 @@ final class PlayerImpl: NSObject, Player {
         playlist.changes
             .subscribe(
                 onNext: { [weak self, weak playlist = playlist] changes in
-                    guard let `self` = self, playlist = playlist else { return }
+                    guard let `self` = self, let playlist = playlist else { return }
                     
-                    assert(NSThread.isMainThread())
+                    assert(Thread.isMainThread)
                     switch changes {
                     case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
                         print(insertions)
@@ -327,10 +327,10 @@ final class PlayerImpl: NSObject, Player {
     }
     
     @objc
-    private func didEndPlay(notification: NSNotification) {
-        assert(NSThread.isMainThread())
+    private func didEndPlay(_ notification: Foundation.Notification) {
+        assert(Thread.isMainThread)
         
-        if let item = notification.object as? AVPlayerItem, trackId = item.trackId {
+        if let item = notification.object as? AVPlayerItem, let trackId = item.trackId {
             _installs.forEach { $0.didEndPlayTrack(trackId) }
         }
         if _player.items().count == 1 {

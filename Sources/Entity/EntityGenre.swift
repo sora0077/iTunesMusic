@@ -13,7 +13,7 @@ import Himotoki
 
 let int = Transformer<String, Int> {
     guard let val = Int($0) else {
-        throw DecodeError.TypeMismatch(expected: "Int", actual: "String", keyPath: "")
+        throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
     }
     return val
 }
@@ -24,16 +24,16 @@ public protocol Genre {
     
     var id: Int { get }
     
-    var url: NSURL { get }
+    var url: URL { get }
     
     var rssUrls: RssUrls { get }
 }
 
 public protocol RssUrls {
     
-    var topAlbums: NSURL { get }
+    var topAlbums: URL { get }
     
-    var topSongs: NSURL { get }
+    var topSongs: URL { get }
 }
 
 class _Genre: RealmSwift.Object {
@@ -59,14 +59,14 @@ extension _Genre: Genre {
     
     var id: Int { return _id }
     
-    var url: NSURL { return NSURL(string: _url)! }
+    var url: URL { return URL(string: _url)! }
     
     var rssUrls: RssUrls { return _rssUrls! }
 }
 
 extension _Genre: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         let cache = self.init()
         cache._name = try e <| "name"
         cache._id = try int.apply(e <| "id")
@@ -74,7 +74,7 @@ extension _Genre: Decodable {
         cache._rssUrls = try e <|? "rssUrls"
         cache._chartUrls = try e <|? "chartUrls"
         if let subgenres: [String: _Genre] = try e <|-|? "subgenres" {
-            cache._subgenres.appendContentsOf(subgenres.values)
+            cache._subgenres.append(objectsIn: subgenres.values)
         }
         return cache
     }
@@ -89,14 +89,14 @@ class _RssUrls: RealmSwift.Object {
 
 extension _RssUrls: RssUrls {
     
-    var topAlbums: NSURL { return NSURL(string: _topAlbums)! }
+    var topAlbums: URL { return URL(string: _topAlbums)! }
     
-    var topSongs: NSURL { return NSURL(string: _topSongs)! }
+    var topSongs: URL { return URL(string: _topSongs)! }
 }
 
 extension _RssUrls: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         
         let cache = self.init()
         cache._topAlbums = try e <| "topAlbums"
@@ -116,7 +116,7 @@ class _ChartUrls: RealmSwift.Object {
 
 extension _ChartUrls: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         
         let cache = self.init()
         cache._albums = try e <| "albums"
