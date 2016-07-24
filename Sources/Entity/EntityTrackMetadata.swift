@@ -8,19 +8,24 @@
 
 import Foundation
 import RealmSwift
+import Realm
 
 
 public protocol TrackMetadata {
     
     var duration: Double? { get }
+    
+    var fileURL: URL? { get }
+    
+    var previewURL: URL? { get }
 }
 
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     
-    dynamic var _trackId: Int = 0
+    private dynamic var _trackId: Int = 0
     
-    dynamic var _track: _Track?
+    private dynamic var _track: _Track?
     
     private dynamic var _longPreviewUrl: String?
     
@@ -31,6 +36,26 @@ final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     dynamic var _createAt: Date = Date()
     
     override class func primaryKey() -> String? { return "_trackId" }
+    
+    init(track: _Track) {
+        super.init()
+        
+        _trackId = track.trackId
+        _track = track
+    }
+    
+    required init(realm: RLMRealm, schema: RLMObjectSchema) {
+        super.init(realm: realm, schema: schema)
+    }
+    
+    required init() {
+        super.init()
+    }
+    
+    required init(value: AnyObject, schema: RLMSchema) {
+        super.init(value: value, schema: schema)
+    }
+    
 }
 
 extension _TrackMetadata {
@@ -56,8 +81,6 @@ extension _TrackMetadata {
         }
         get {
             return _longPreviewDuration.value
-//            guard let duration =  else { return nil }
-//            return duration / 10000
         }
     }
     

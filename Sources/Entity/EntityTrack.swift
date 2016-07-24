@@ -30,7 +30,7 @@ public protocol Track: EntityInterface {
     
     var canPreview: Bool { get }
     
-    var metadata: TrackMetadata { get }
+    var metadata: TrackMetadata? { get }
     
     func artworkURL(size: Int) -> URL
 }
@@ -74,28 +74,9 @@ class _Track: RealmSwift.Object, Track {
     
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
     
-    private let __metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
-    private var ___metadata: _TrackMetadata?
+    private let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
     
     dynamic var _metadataUpdated: Int = 0
-    
-    var hasMetadata: Bool {
-        return !__metadata.isEmpty
-    }
-    
-    var _metadata: _TrackMetadata {
-        if let data = __metadata.first {
-            return data
-        }
-        if let data = ___metadata {
-            return data
-        }
-        let data = _TrackMetadata()
-        data._track = self
-        data._trackId = _trackId
-        ___metadata = data
-        return data
-    }
     
     override class func primaryKey() -> String? { return "_trackId" }
 }
@@ -116,7 +97,9 @@ extension _Track {
         return _previewUrl != nil
     }
     
-    var metadata: TrackMetadata { return _metadata }
+    var metadata: TrackMetadata? {
+        return _metadata.first
+    }
     
     func artworkURL(size: Int) -> URL {
         return collection.artworkURL(size: size) as URL

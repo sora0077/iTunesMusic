@@ -65,7 +65,10 @@ final class PlayerImpl: NSObject, Player {
     
     var playing: Bool { return _player.rate != 0 }
     
-    override init() {
+    private let previewer: Preview
+    
+    init(previewer: Preview) {
+        self.previewer = previewer
         super.init()
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             _player.volume = 0.02
@@ -146,66 +149,70 @@ final class PlayerImpl: NSObject, Player {
         
         if _player.items().count > 2 { return }
         
-        DispatchQueue.main.async {
-            print("run updateQueue")
-            let track = self._playingQueue[self._playingQueue.startIndex] as! _Track
-            if !track.canPreview {
-                self._playingQueue = self._playingQueue.dropFirst()
-                return self.updateQueue()
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.updateQueue()
             }
-            func getPreviewInfo() -> (URL, duration: Double)? {
-                if !track.hasMetadata { return nil }
-                guard let duration = track.metadata.duration else { return nil }
-                
-                if let fileURL = track._metadata.fileURL {
-                    print("load from file ", track.trackName)
-                    return (fileURL as URL, duration)
-                }
-                if let url = track._metadata.previewURL {
-                    print("load from network ", track.trackName)
-                    return (url as URL, duration)
-                }
-                return nil
+            return
+        }
+        
+        print("run updateQueue")
+        let track = _playingQueue[_playingQueue.startIndex] as! _Track
+        if !track.canPreview {
+            _playingQueue = _playingQueue.dropFirst()
+            return updateQueue()
+        }
+        func getPreviewInfo() -> (URL, duration: Double)? {
+            guard let duration = track.metadata?.duration else { return nil }
+            
+            if let fileURL = track.metadata?.fileURL {
+                print("load from file ", track.trackName)
+                return (fileURL, duration)
             }
-            if let (url, duration) = getPreviewInfo() {
+            if let url = track.metadata?.previewURL {
+                print("load from network ", track.trackName)
+                return (url, duration)
+            }
+            return nil
+        }
+        if let (url, duration) = getPreviewInfo() {
+            
+            _playingQueue = _playingQueue.dropFirst()
+            
+            print("add player queue ", track._trackName, url)
+            let item = AVPlayerItem(asset: AVAsset(url: url))
+            item.trackId = track.trackId
+            
+            DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosDefault).async {
                 
-                self._playingQueue = self._playingQueue.dropFirst()
-                
-                print("add player queue ", track._trackName, url)
-                let item = AVPlayerItem(asset: AVAsset(url: url))
-                item.trackId = track.trackId
-                
-                DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosDefault).async {
+                if let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first {
+                    let inputParams = AVMutableAudioMixInputParameters(track: track)
                     
-                    if let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first {
-                        let inputParams = AVMutableAudioMixInputParameters(track: track)
-                        
-                        let fadeDuration = CMTimeMakeWithSeconds(5, 600);
-                        let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600);
-                        let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
-                        
-                        inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
-                        inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
-                        
-                        let audioMix = AVMutableAudioMix()
-                        audioMix.inputParameters = [inputParams]
-                        item.audioMix = audioMix
-                    }
-                    NotificationCenter.default.addObserver(
-                        self,
-                        selector: #selector(self.didEndPlay),
-                        name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                        object: item
-                    )
+                    let fadeDuration = CMTimeMakeWithSeconds(5, 600);
+                    let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600);
+                    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600);
                     
-                    self._player.insert(item, after: nil)
-                    if self._player.status == .readyToPlay {
-                        self.play()
-                    }
+                    inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+                    inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+                    
+                    let audioMix = AVMutableAudioMix()
+                    audioMix.inputParameters = [inputParams]
+                    item.audioMix = audioMix
                 }
-            } else {
-                self.fetch(Preview.instance.queueing(track: track))
+                NotificationCenter.default.addObserver(
+                    self,
+                    selector: #selector(self.didEndPlay),
+                    name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                    object: item
+                )
+                
+                self._player.insert(item, after: nil)
+                if self._player.status == .readyToPlay {
+                    self.play()
+                }
             }
+        } else {
+            fetch(previewer.queueing(track: track))
         }
     }
     
@@ -213,8 +220,14 @@ final class PlayerImpl: NSObject, Player {
         if _playlists.isEmpty { return }
         if _player.items().count > 2 { return }
         
+        if !Thread.isMainThread {
+            DispatchQueue.main.async {
+                self.updatePlaylistQueue()
+            }
+            return
+        }
+        
         let (playlist, index, _) = _playlists[_playlists.startIndex]
-        assert(Thread.isMainThread)
         
         let paginator = playlist as? FetchableInternal
         print(paginator, playlist)

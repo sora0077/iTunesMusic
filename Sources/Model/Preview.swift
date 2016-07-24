@@ -18,9 +18,9 @@ final class Preview {
     
     private let cache = Cache<NSNumber, PreviewTrack>()
     
-    static let instance = Preview()
+    static let shared = Preview()
     
-    private init() {}
+    init() {}
 
     subscript (track track: Track) -> PreviewTrack? {
         set {
@@ -72,9 +72,10 @@ final class PreviewTrack {
                             let realm = try! iTunesRealm()
                             let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
                             try! realm.write {
-                                track._metadata.updateCache(filename: filename)
-                                track._metadata.duration = duration
-                                realm.add(track._metadata, update: true)
+                                let metadata = _TrackMetadata(track: track)
+                                metadata.updateCache(filename: filename)
+                                metadata.duration = duration
+                                realm.add(metadata, update: true)
                             }
                             subscriber.onNext((to, duration))
                             subscriber.onCompleted()
@@ -95,12 +96,12 @@ final class PreviewTrack {
         let url = self.url
         
         let realm = try! iTunesRealm()
-        if let track = realm.object(ofType: _Track.self, forPrimaryKey: id), track.hasMetadata {
-            if let duration = track.metadata.duration {
-                if let fileURL = track._metadata.fileURL {
+        if let track = realm.object(ofType: _Track.self, forPrimaryKey: id) {
+            if let duration = track.metadata?.duration {
+                if let fileURL = track.metadata?.fileURL {
                     return Observable.just((fileURL, duration))
                 }
-                if let url = track._metadata.previewURL {
+                if let url = track.metadata?.previewURL {
                     return Observable.just((url, duration))
                 }
             }
@@ -116,9 +117,10 @@ final class PreviewTrack {
                     let realm = try! iTunesRealm()
                     try! realm.write {
                         guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
-                        track._metadata.updatePreviewURL(url)
-                        track._metadata.duration = duration
-                        realm.add(track._metadata, update: true)
+                        let metadata = _TrackMetadata(track: track)
+                        metadata.updatePreviewURL(url)
+                        metadata.duration = duration
+                        realm.add(metadata, update: true)
                     }
                     subscriber.onNext((url, duration))
                     subscriber.onCompleted()

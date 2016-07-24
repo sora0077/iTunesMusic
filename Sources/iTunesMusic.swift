@@ -13,7 +13,7 @@ import RxSwift
 import RealmSwift
 
 
-public let player: Player = PlayerImpl()
+public let player: Player = PlayerImpl(previewer: Preview.shared)
 
 private let configuration: Realm.Configuration = {
     let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]

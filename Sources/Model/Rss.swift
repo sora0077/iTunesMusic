@@ -40,7 +40,7 @@ extension Model {
             let cache = getOrCreateCache(genreId: id, realm: try! iTunesRealm())
             let refreshAt = cache.refreshAt
             print("rss fetched ", refreshAt, Date() - refreshAt)
-            return Date() - getOrCreateCache(genreId: id, realm: try! iTunesRealm()).refreshAt > 60.minutes
+            return Date() - getOrCreateCache(genreId: id, realm: try! iTunesRealm()).refreshAt > 3.hours
         }
         
         private var fetched: Int = 0

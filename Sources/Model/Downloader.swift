@@ -26,7 +26,7 @@ extension Downloader: PlayerMiddleware {
         let realm = try! iTunesRealm()
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             if track.histories.count > 2 {
-                let preview = Preview.instance.queueing(track: track)
+                let preview = Preview.shared.queueing(track: track)
                 print("will cache in disk", track.trackName)
                 preview.download()
                     .subscribeNext { [weak self] url, _ in

@@ -78,7 +78,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             MPMediaItemPropertyTitle: track.trackName,
             MPMediaItemPropertyArtist: track.artist.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
-            MPMediaItemPropertyPlaybackDuration: track.metadata.duration ?? 0,
+            MPMediaItemPropertyPlaybackDuration: track.metadata?.duration ?? 0,
             "currentTrackId": trackId
         ]
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
