@@ -23,7 +23,7 @@ public protocol Player: class {
     
     var playlists: [PlaylistType] { get }
     
-    func install(middleware middleware: PlayerMiddleware)
+    func install(middleware: PlayerMiddleware)
     
     func play()
     
@@ -31,32 +31,32 @@ public protocol Player: class {
     
     func nextTrack()
     
-    func add(track track: Track)
+    func add(track: Track)
     
-    func add(track track: Track, afterPlaylist: Bool)
+    func add(track: Track, afterPlaylist: Bool)
     
-    func add(playlist playlist: PlaylistType)
+    func add(playlist: PlaylistType)
 }
 
 
 public protocol PlayerMiddleware {
     
-    func middlewareInstalled(player: Player)
+    func middlewareInstalled(_ player: Player)
     
-    func willStartPlayTrack(trackId: Int)
+    func willStartPlayTrack(_ trackId: Int)
     
-    func didEndPlayTrack(trackId: Int)
+    func didEndPlayTrack(_ trackId: Int)
     
     func didEndPlay()
 }
 
 extension PlayerMiddleware {
     
-    public func middlewareInstalled(player: Player) {}
+    public func middlewareInstalled(_ player: Player) {}
     
-    public func willStartPlayTrack(trackId: Int) {}
+    public func willStartPlayTrack(_ trackId: Int) {}
     
-    public func didEndPlayTrack(trackId: Int) {}
+    public func didEndPlayTrack(_ trackId: Int) {}
 
     public func didEndPlay() {}
 }

@@ -18,20 +18,20 @@ struct GetRss<R: Decodable>: iTunesRequestType {
     
     let method = HTTPMethod.GET
     
-    let baseURL: NSURL
+    let baseURL: URL
     
     let path: String
 }
 
 extension GetRss {
     
-    init(url: NSURL, limit: Int=200) {
-        let comps = NSURLComponents(URL: url, resolvingAgainstBaseURL: true)!
+    init(url: URL, limit: Int=200) {
+        var comps = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         comps.path = nil
-        baseURL = comps.URL!
+        baseURL = comps.url!
         
-        var paths = url.path!.componentsSeparatedByString("/")
-        paths.insert("limit=\(limit)", atIndex: paths.count - 1)
-        path = paths.joinWithSeparator("/")
+        var paths = url.path!.components(separatedBy: "/")
+        paths.insert("limit=\(limit)", at: paths.count - 1)
+        path = paths.joined(separator: "/")
     }
 }

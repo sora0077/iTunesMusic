@@ -32,12 +32,14 @@ final class PlaylistDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
+        navigationItem.rightBarButtonItem = editButtonItem()
+
+                view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
         }
         
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -45,26 +47,52 @@ final class PlaylistDetailViewController: UIViewController {
             .bindTo(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
     }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
+    }
 }
 
 extension PlaylistDetailViewController: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlist.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let track = playlist[indexPath.row]
         cell.textLabel?.text = track.trackName
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        playlist.remove(at: indexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        playlist.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        DispatchQueue.main.after(when: DispatchTime.now() + 0.2) {
+            tableView.reloadData()
+        }
     }
 }
 
 extension PlaylistDetailViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         player.add(track: playlist[indexPath.row])
     }

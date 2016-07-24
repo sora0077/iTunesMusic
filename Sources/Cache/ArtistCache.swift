@@ -17,9 +17,9 @@ final class _ArtistCache: RealmSwift.Object {
     
     private dynamic var _artist: _Artist?
     
-    dynamic var refreshAt = NSDate.distantPast()
+    dynamic var refreshAt = Date.distantPast
     
-    dynamic var createAt = NSDate()
+    dynamic var createAt = Date()
     
     dynamic var fetched = false
     

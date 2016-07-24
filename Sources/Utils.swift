@@ -11,21 +11,21 @@ import RxSwift
 import APIKit
 
 
-let callbackQueue = CallbackQueue.DispatchQueue(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0))
+let callbackQueue = CallbackQueue.dispatchQueue(DispatchQueue.global(attributes: .qosBackground))
 
 
 func tick() {
-    dispatch_async(dispatch_get_main_queue()) {
-        NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow: 0.1))
+    DispatchQueue.main.async {
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
     }
 }
 
 
-func asObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.E> {
+func asObservable<T: ObservableConvertibleType>(_ input: T) -> Observable<T.E> {
     return input.asObservable().observeOn(MainScheduler.instance).shareReplay(1)
 }
 
-func asReplayObservable<T: ObservableConvertibleType>(input: T) -> Observable<T.E> {
+func asReplayObservable<T: ObservableConvertibleType>(_ input: T) -> Observable<T.E> {
     return asObservable(input).shareReplay(1)
 }
 
@@ -34,7 +34,7 @@ extension Variable: ObservableConvertibleType {}
 extension Array {
     
     subscript (safe range: Range<Index>) -> ArraySlice<Element> {
-        return self[min(range.startIndex, count)..<min(range.endIndex, count)]
+        return self[Swift.min(range.lowerBound, count)..<Swift.min(range.upperBound, count)]
     }
 }
 

@@ -21,18 +21,21 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     
     private var currentTrackId: Int?
     
-    func middlewareInstalled(player: Player) {
+    func middlewareInstalled(_ player: Player) {
         self.player = player
         
-        let commandCenter = MPRemoteCommandCenter.sharedCommandCenter()
+        let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.togglePlayPauseCommand.addTarget(self, action: #selector(self.togglePlayPause))
-        commandCenter.togglePlayPauseCommand.enabled = true
+        commandCenter.togglePlayPauseCommand.isEnabled = true
         commandCenter.playCommand.addTarget(self, action: #selector(self.play))
-        commandCenter.playCommand.enabled = true
+        commandCenter.playCommand.isEnabled = true
         commandCenter.pauseCommand.addTarget(self, action: #selector(self.pause))
-        commandCenter.pauseCommand.enabled = true
+        commandCenter.pauseCommand.isEnabled = true
         commandCenter.nextTrackCommand.addTarget(self, action: #selector(self.nextTrackCommand))
-        commandCenter.nextTrackCommand.enabled = true
+        commandCenter.nextTrackCommand.isEnabled = true
+        
+        commandCenter.bookmarkCommand.addTarget(self, action: #selector(self.bookmark))
+        commandCenter.bookmarkCommand.isEnabled = true
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward")
 //        commandCenter.skipBackwardCommand.enabled = true
         
@@ -47,40 +50,54 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             .map(Int.init)
             .distinctUntilChanged()
             .subscribeNext { [weak self] time in
-                if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo
-                    where self?.currentTrackId == info["currentTrackId"] as? Int
+                if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo,
+                    self?.currentTrackId == info["currentTrackId"] as? Int
                 {
                     info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
-                    MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+                    MPNowPlayingInfoCenter.default().nowPlayingInfo = info
                 }
             }
             .addDisposableTo(disposeBag)
     }
     
-    func willStartPlayTrack(trackId: Int) {
+    func willStartPlayTrack(_ trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
         
         print(#function, trackId)
         
         if currentTrackId == nil { currentTrackId = trackId }
         
-        var info: [String: AnyObject] = [
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.bookmarkCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.playCommand.isEnabled = true
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.nextTrackCommand.isEnabled = true
+        
+        let info: [String: AnyObject] = [
             MPMediaItemPropertyTitle: track.trackName,
             MPMediaItemPropertyArtist: track.artist.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
             MPMediaItemPropertyPlaybackDuration: track.metadata.duration ?? 0,
             "currentTrackId": trackId
         ]
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         
-        let size = UIScreen.mainScreen().bounds.size
-        let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.mainScreen().scale))
-        SDWebImageManager.sharedManager().downloadImageWithURL(artworkURL, options: [], progress: nil, completed: { [weak self] (image, error, cacheType, flag, url) in
+        let size = UIScreen.main().bounds.size
+        let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main().scale))
+        SDWebImageManager.shared().downloadImage(with: artworkURL, options: [], progress: nil, completed: { (image, error, cacheType, flag, url) in
             guard let image = image else { return }
             
-            if self?.currentTrackId == trackId {
-                info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
-                MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+            if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo, let currentTrackId = info["currentTrackId"] as? Int, currentTrackId == trackId {
+                if #available(iOS 10.0, *) {
+                    info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
+                        print(#function, " ", size)
+                        return image
+                    }
+                } else {
+                    info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+                }
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = info
                 
                 print(info)
             }
@@ -88,7 +105,14 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
     
     func didEndPlay() {
-        MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.bookmarkCommand.isEnabled = false
+        commandCenter.togglePlayPauseCommand.isEnabled = false
+        commandCenter.playCommand.isEnabled = false
+        commandCenter.pauseCommand.isEnabled = false
+        commandCenter.nextTrackCommand.isEnabled = false
     }
     
     @objc
@@ -103,23 +127,32 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     @objc
     private func play() {
         player?.play()
-        if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+        if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
             info[MPNowPlayingInfoPropertyPlaybackRate] = 1
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         }
     }
     @objc
     private func pause() {
         player?.pause()
-        if var info = MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo {
+        if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
             info[MPNowPlayingInfoPropertyPlaybackRate] = 0
-            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
         }
     }
     @objc
     private func nextTrackCommand() {
         player?.nextTrack()
         
+    }
+    
+    @objc
+    private func bookmark() {
+        guard let trackId = currentTrackId else { return }
+        guard let track = Model.Track(trackId: trackId).track else { return }
+        
+        let playlist = Model.MyPlaylist(playlist: Model.MyPlaylists()[0])
+        playlist.append(track: track)
     }
 //    @objc
 //    private func skipBackward() {

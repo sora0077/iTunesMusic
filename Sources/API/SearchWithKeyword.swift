@@ -35,7 +35,7 @@ struct SearchResponse: SearchWithKeywordResponseType {
 
 extension SearchResponse: Decodable {
     
-    static func decode(e: Extractor) throws -> SearchResponse {
+    static func decode(_ e: Extractor) throws -> SearchResponse {
         let results = e.rawValue["results"] as! [[String: AnyObject]]
         var items: [Wrapper] = []
         for item in results {
@@ -60,7 +60,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
     
     let method = HTTPMethod.GET
     
-    let baseURL = NSURL(string: "https://itunes.apple.com")!
+    let baseURL = URL(string: "https://itunes.apple.com")!
     
     let path = "search"
     
@@ -70,9 +70,9 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
     
     var entity = "song"
     
-    var lang = NSLocale.currentLocale().objectForKey(NSLocaleIdentifier) as! String
+    var lang = Locale.current.object(forKey: Locale.Key.identifier) as! String
     
-    var country = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as! String
+    var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
     
     var offset: Int
     
@@ -90,7 +90,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
         ]
     }
     
-    func responseFromObject(object: AnyObject, URLResponse: NSHTTPURLResponse) throws -> Response {
+    func responseFromObject(_ object: AnyObject, URLResponse: HTTPURLResponse) throws -> Response {
         
         var obj: Response = try decodeValue(object)
         obj.term = term

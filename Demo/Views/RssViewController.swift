@@ -20,10 +20,10 @@ private class TableViewCell: UITableViewCell {
     let titleLabel = UILabel()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .Value1, reuseIdentifier: reuseIdentifier)
+        super.init(style: .value1, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(artworkImageView)
-        artworkImageView.snp_makeConstraints { make in
+        artworkImageView.snp.makeConstraints { make in
             make.top.left.equalTo(self.contentView)
             make.bottom.equalTo(self.contentView).priority(UILayoutPriorityDefaultHigh)
             make.width.equalTo(120)
@@ -32,10 +32,10 @@ private class TableViewCell: UITableViewCell {
         
         contentView.addSubview(titleLabel)
         titleLabel.numberOfLines = 0
-        titleLabel.snp_makeConstraints { make in
-            make.left.equalTo(artworkImageView.snp_right).offset(8)
-            make.right.equalToSuperview().offset(-40)
-            make.centerY.equalToSuperview()
+        titleLabel.snp.makeConstraints { make in
+            make.left.equalTo(artworkImageView.snp.right).offset(8)
+            make.right.equalTo(contentView).offset(-40)
+            make.centerY.equalTo(contentView)
         }
     }
     
@@ -61,18 +61,18 @@ class RssViewController: BaseViewController {
             controller: self,
             list: rss,
             onGenerate: { (self, tableView, element, indexPath) in
-                let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as! TableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
                 let track = self.rss[indexPath.row]
                 
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
                 cell.titleLabel.text = track.trackName
-                let size = { Int($0 * UIScreen.mainScreen().scale) }
+                let size = { Int($0 * UIScreen.main().scale) }
                 
                 let artworkURL = track.artworkURL(size: size(120))
-                cell.artworkImageView.sd_setImageWithURL(track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] (image, error, type, url) in
+                cell.artworkImageView.sd_setImage(with: track.artworkURL(size: size(60)), placeholderImage: nil, options: [], progress: nil) { [weak wcell=cell] (image, error, type, url) in
                     guard let cell = wcell else { return }
-                    dispatch_async(dispatch_get_main_queue()) {
-                        cell.artworkImageView.sd_setImageWithURL(artworkURL, placeholderImage: image)
+                    DispatchQueue.main.async {
+                        cell.artworkImageView.sd_setImage(with: artworkURL, placeholderImage: image)
                     }
                 }
                 return cell
@@ -95,7 +95,7 @@ class RssViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.registerClass(TableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(TableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
         
@@ -114,7 +114,7 @@ class RssViewController: BaseViewController {
             .map { [weak self] _ in self?.rss }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.mainScreen().scale)))
+            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main().scale)))
             .addDisposableTo(disposeBag)
         
         rss.requestState

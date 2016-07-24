@@ -16,11 +16,11 @@ protocol ViewModuleProtocol {
 }
 
 
-class TableViewModule<List: CollectionType, Controller: UIViewController where List.Index.Distance == Int, List.Index == Int>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate {
+class TableViewModule<List: Swift.Collection, Controller: UIViewController where List.Index == Int, List.IndexDistance == Int>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate {
     
-    typealias CellForRowAtIndexPath = (`self`: Controller, tableView: UITableView, element: List.Generator.Element, indexPath: NSIndexPath) -> UITableViewCell
+    typealias CellForRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> UITableViewCell
     
-    typealias DidSelectRowAtIndexPath = (`self`: Controller, tableView: UITableView, element: List.Generator.Element, indexPath: NSIndexPath) -> Void
+    typealias DidSelectRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> Void
     
     private let tableView: UITableView
     
@@ -54,29 +54,30 @@ class TableViewModule<List: CollectionType, Controller: UIViewController where L
     
     //MARK: - UITableViewDataSource
     @objc
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
     
     @objc
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return generator(self: viewController!, tableView: tableView, element: list[indexPath.row], indexPath: indexPath)
     }
     
     //MARK: - UITableViewDelegate
     @objc
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let vc = viewController else { return }
-        selector?(self: vc, tableView: tableView, element: list[indexPath.row], indexPath: indexPath)
+        selector?(self: vc, tableView: tableView, element: list[(indexPath as NSIndexPath).row], indexPath: indexPath)
     }
 }
 
 extension TableViewModule {
     
     func install() {
-        superview().addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
+        let superview = self.superview()
+        superview.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(superview)
         }
     }
 }

@@ -28,7 +28,7 @@ struct LookupResponse {
 
 extension LookupResponse: Decodable {
     
-    static func decode(e: Extractor) throws -> LookupResponse {
+    static func decode(_ e: Extractor) throws -> LookupResponse {
         let results = e.rawValue["results"] as! [[String: AnyObject]]
         var items: [Wrapper] = []
         for item in results {
@@ -52,21 +52,21 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
     
     let method = HTTPMethod.GET
     
-    let baseURL = NSURL(string: "https://itunes.apple.com")!
+    let baseURL = URL(string: "https://itunes.apple.com")!
     
     let path = "lookup"
     
     let ids: [Int]
     
-    var lang = NSLocale.currentLocale().objectForKey(NSLocaleIdentifier) as! String
+    var lang = Locale.current.object(forKey: Locale.Key.identifier) as! String
     
-    var country = NSLocale.currentLocale().objectForKey(NSLocaleCountryCode) as! String
+    var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
     
     let limit = 500
     
     var queryParameters: [String : AnyObject]? {
         return [
-            "id": ids.map(String.init).joinWithSeparator(","),
+            "id": ids.map(String.init).joined(separator: ","),
             "entity": "song",
             "limit": limit,
             "lang": lang,

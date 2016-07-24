@@ -21,10 +21,10 @@ final class Downloader {
 
 extension Downloader: PlayerMiddleware {
     
-    func didEndPlayTrack(trackId: Int) {
+    func didEndPlayTrack(_ trackId: Int) {
         if downloaded.contains(trackId) { return }
         let realm = try! iTunesRealm()
-        if let track = realm.objectForPrimaryKey(_Track.self, key: trackId) {
+        if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             if track.histories.count > 2 {
                 let preview = Preview.instance.queueing(track: track)
                 print("will cache in disk", track.trackName)

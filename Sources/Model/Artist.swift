@@ -14,13 +14,13 @@ import Timepiece
 import Himotoki
 
 
-private func getOrCreateCache(artistId artistId: Int, realm: Realm) -> _ArtistCache {
-    if let cache = realm.objectForPrimaryKey(_ArtistCache.self, key: artistId) {
+private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
+    if let cache = realm.object(ofType: _ArtistCache.self, forPrimaryKey: artistId) {
         return cache
     }
     let cache = _ArtistCache()
     cache.artistId = artistId
-    cache.artist = realm.objectForPrimaryKey(_Artist.self, key: artistId)!
+    cache.artist = realm.object(ofType: _Artist.self, forPrimaryKey: artistId)!
     try! realm.write {
         realm.add(cache)
     }
@@ -38,7 +38,7 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
-            return NSDate() - getOrCreateCache(artistId: artistId, realm: try! iTunesRealm()).refreshAt > 60.minutes
+            return Date() - getOrCreateCache(artistId: artistId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private var objectsToken: NotificationToken?
@@ -55,22 +55,22 @@ extension Model {
             
             let realm = try! iTunesRealm()
             let cache = getOrCreateCache(artistId: artistId, realm: realm)
-            caches = realm.objects(_ArtistCache).filter("artistId = \(artistId)")
+            caches = realm.allObjects(ofType: _ArtistCache.self).filter(using: "artistId = \(artistId)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
                 
-                func updateObserver(results: Results<_ArtistCache>) {
-                    self.objectsToken = results[0].artist._collections.sorted("_collectionId", ascending: false).addNotificationBlock { [weak self] changes in
+                func updateObserver(with results: Results<_ArtistCache>) {
+                    self.objectsToken = results[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false).addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
                 
                 switch changes {
                 case .Initial(let results):
-                    updateObserver(results)
+                    updateObserver(with: results)
                 case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
-                        updateObserver(results)
+                        updateObserver(with: results)
                     }
                 case .Error(let error):
                     fatalError("\(error)")
@@ -82,7 +82,7 @@ extension Model {
 
 extension Model.Artist {
     
-    func request(refreshing refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool) {
         
         let artistId = self.artistId
         let cache = getOrCreateCache(artistId: artistId, realm: try! iTunesRealm())
@@ -99,7 +99,7 @@ extension Model.Artist {
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
-            case .Success(let response):
+            case .success(let response):
                 let realm = try! iTunesRealm()
                 try! realm.write {
                     response.objects.forEach {
@@ -116,12 +116,12 @@ extension Model.Artist {
                     let cache = getOrCreateCache(artistId: artistId, realm: realm)
                     cache.fetched = true
                     if refreshing {
-                        cache.refreshAt = NSDate()
+                        cache.refreshAt = Date()
                     }
                     self._requestState.value = .done
                 }
                 tick()
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 self._requestState.value = .error
             }
@@ -131,14 +131,18 @@ extension Model.Artist {
 
 extension Model.Artist {
     
-    var objects: AnyRealmCollection<_Collection> { return AnyRealmCollection(caches[0].artist._collections.sorted("_collectionId", ascending: false)) }
+    var objects: AnyRealmCollection<_Collection> { return AnyRealmCollection(caches[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)) }
 }
 
-extension Model.Artist: CollectionType {
+extension Model.Artist: Swift.Collection {
     
     public var startIndex: Int { return objects.startIndex }
     
     public var endIndex: Int { return objects.endIndex }
     
     public subscript (index: Int) -> Collection { return objects[index] }
+    
+    public func index(after i: Int) -> Int {
+        return objects.index(after: i)
+    }
 }

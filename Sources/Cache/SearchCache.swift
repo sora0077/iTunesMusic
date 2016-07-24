@@ -16,11 +16,11 @@ class _SearchCache: RealmSwift.Object, SearchWithKeywordResponseType {
     
     let objects = List<_Track>()
     
-    dynamic var createAt = NSDate()
+    dynamic var createAt = Date()
     
-    dynamic var updateAt = NSDate()
+    dynamic var updateAt = Date()
     
-    dynamic var refreshAt = NSDate.distantPast()
+    dynamic var refreshAt = Date.distantPast
     
     dynamic var term: String = ""
     

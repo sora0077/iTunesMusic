@@ -9,7 +9,7 @@
 import UIKit
 
 
-private func convertRadiusKey(radius: Float) -> Int {
+private func convertRadiusKey(_ radius: Float) -> Int {
 //    return Int(round(Double(radius * 10)))
     return Int(round(radius))
 }
@@ -43,35 +43,50 @@ final class EasyBlurImageView: UIImageView {
     private func createBluredImages() {
         #if (arch(i386) || arch(x86_64)) && os(iOS)
         #else
-        
-        guard let image = self.image.flatMap(CIImage.init) else { return }
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
-            for i in 0...20 {
-                let clampFilter = CIFilter(name: "CIAffineClamp")!
-                let blurFilter = CIFilter(name: "CIGaussianBlur")!
+            guard let image = self.image.flatMap(CIImage.init) else { return }
+            
+            DispatchQueue.global(attributes: .qosBackground).async {
                 
-                blurFilter.setValue(i, forKey: "inputRadius")
-                clampFilter.setValue(image, forKey: kCIInputImageKey)
-                blurFilter.setValue(clampFilter.outputImage!, forKey: kCIInputImageKey)
-                let cgImage = self.context.createCGImage(blurFilter.outputImage!, fromRect: image.extent)
-                self.imageCache[i] = UIImage(CGImage: cgImage)
+                for i in 0...20 {
+                    let clampFilter = CIFilter(name: "CIAffineClamp")!
+                    let blurFilter = CIFilter(name: "CIGaussianBlur")!
+                    
+                    blurFilter.setValue(i, forKey: "inputRadius")
+                    clampFilter.setValue(image, forKey: kCIInputImageKey)
+                    blurFilter.setValue(clampFilter.outputImage!, forKey: kCIInputImageKey)
+                    let cgImage = self.context.createCGImage(blurFilter.outputImage!, from: image.extent)
+                    self.imageCache[i] = UIImage(cgImage: cgImage!)
+                }
+                DispatchQueue.main.async {
+                    self.setBlurImage()
+                }
             }
-            dispatch_async(dispatch_get_main_queue()) {
-                self.setBlurImage()
-            }
-        }
         #endif
     }
     
     private func setBlurImage() {
         supressDidSet = true
+        defer {
+            supressDidSet = false
+        }
+        
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             
         #else
-            image = imageCache[convertRadiusKey(blurRadius)]
+            let key = convertRadiusKey(blurRadius)
+            if let image = imageCache[key] {
+                self.image = image
+                return
+            }
+            let keys = imageCache.keys.lazy.filter { $0 < key }.sorted()
+            for key in keys {
+                if let image = imageCache[key] {
+                    self.image = image
+                    return
+                }
+            }
+            image = originalImage
         #endif
-        supressDidSet = false
     }
 }

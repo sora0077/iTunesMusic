@@ -16,9 +16,9 @@ final class _AlbumCache: RealmSwift.Object {
     
     private dynamic var _collection: _Collection?
     
-    dynamic var refreshAt = NSDate.distantPast()
+    dynamic var refreshAt = Date.distantPast
     
-    dynamic var createAt = NSDate()
+    dynamic var createAt = Date()
     
     override class func primaryKey() -> String? { return "collectionId" }
 

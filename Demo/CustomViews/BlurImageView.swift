@@ -33,37 +33,37 @@ final class BlurImageView: GLKView {
     private let ciContext: CIContext
     
     override init(frame: CGRect) {
-        let glContext = EAGLContext(API: .OpenGLES2)
+        let glContext = EAGLContext(api: .openGLES2)
         ciContext = CIContext(
-            EAGLContext: glContext,
+            eaglContext: glContext!,
             options: [
                 kCIContextWorkingColorSpace: NSNull()
             ]
         )
-        super.init(frame: frame, context: glContext)
+        super.init(frame: frame, context: glContext!)
         enableSetNeedsDisplay = true
     }
     
     required init?(coder aDecoder: NSCoder) {
-        let glContext = EAGLContext(API: .OpenGLES2)
+        let glContext = EAGLContext(api: .openGLES2)
         ciContext = CIContext(
-            EAGLContext: glContext,
+            eaglContext: glContext!,
             options: [
                 kCIContextWorkingColorSpace: NSNull()
             ]
         )
         super.init(coder: aDecoder)
-        context = glContext
+        context = glContext!
         enableSetNeedsDisplay = true
     }
     
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         if let inputCIImage = inputCIImage {
             clampFilter.setValue(inputCIImage, forKey: kCIInputImageKey)
             blurFilter.setValue(clampFilter.outputImage!, forKey: kCIInputImageKey)
             let rect = CGRect(x: 0, y: 0, width: drawableWidth, height: drawableHeight)
-            ciContext.drawImage(blurFilter.outputImage!, inRect: rect, fromRect: inputCIImage.extent)
+            ciContext.draw(blurFilter.outputImage!, in: rect, from: inputCIImage.extent)
         }
     }
 }

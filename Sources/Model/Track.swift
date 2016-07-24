@@ -19,7 +19,7 @@ extension Model {
         public let trackId: Int
         public var track: iTunesMusic.Track? {
             let realm = try! iTunesRealm()
-            return realm.objectForPrimaryKey(_Track.self, key: trackId)
+            return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
         
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
@@ -33,7 +33,7 @@ extension Model {
             self.trackId = trackId
             
             let realm = try! iTunesRealm()
-            token = realm.objects(_Track).filter("_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
+            token = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
                 switch changes {
                 case let .Initial(results):
                     self?.needRefresh = results.isEmpty
@@ -56,7 +56,7 @@ extension Model {
 extension Model.Track {
     
     
-    func request(refreshing refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool) {
         
         let session = Session.sharedSession
         
@@ -66,10 +66,10 @@ extension Model.Track {
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
-            case .Success(let response):
+            case .success(let response):
                 let realm = try! iTunesRealm()
                 try! realm.write {
-                    response.objects.reverse().forEach {
+                    response.objects.reversed().forEach {
                         switch $0 {
                         case .track(let obj):
                             realm.add(obj, update: true)
@@ -82,7 +82,7 @@ extension Model.Track {
                     self._requestState.value = .done
                 }
                 tick()
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 self._requestState.value = .error
             }

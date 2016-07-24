@@ -13,8 +13,8 @@ import APIKit
 import Timepiece
 
 
-private func getOrCreateCache(term term: String, realm: Realm) -> _SearchCache {
-    if let cache = realm.objectForPrimaryKey(_SearchCache.self, key: term) {
+private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
+    if let cache = realm.object(ofType: _SearchCache.self, forPrimaryKey: term) {
         return cache
     } else {
         let cache = _SearchCache()
@@ -41,7 +41,7 @@ extension Model {
         private let _refreshing = Variable<Bool>(false)
         
         var needRefresh: Bool {
-            return NSDate() - getOrCreateCache(term: term, realm: try! iTunesRealm()).refreshAt > 60.minutes
+            return Date() - getOrCreateCache(term: term, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private let term: String
@@ -53,12 +53,12 @@ extension Model {
             self.term = term
             
             let realm = try! iTunesRealm()
-            getOrCreateCache(term: term, realm: realm)
-            caches = realm.objects(_SearchCache).filter("term = %@", term)
+            _ = getOrCreateCache(term: term, realm: realm)
+            caches = realm.allObjects(ofType: _SearchCache.self).filter(using: "term = %@", term)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
                 
-                func updateObserver(results: Results<_SearchCache>) {
+                func updateObserver(with results: Results<_SearchCache>) {
                     self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
@@ -66,10 +66,10 @@ extension Model {
                 
                 switch changes {
                 case .Initial(let results):
-                    updateObserver(results)
+                    updateObserver(with: results)
                 case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
-                        updateObserver(results)
+                        updateObserver(with: results)
                     }
                 case .Error(let error):
                     fatalError("\(error)")
@@ -84,12 +84,12 @@ extension Model {
 
 extension Model.Search {
     
-    func request(refreshing refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool) {
         if term.isEmpty { return }
         
         _refreshing.value = refreshing
         
-        let session = Session(adapter: NSURLSessionAdapter(configuration: NSURLSessionConfiguration.defaultSessionConfiguration()))
+        let session = Session(adapter: NSURLSessionAdapter(configuration: URLSessionConfiguration.default))
         
         var search: SearchWithKeyword<SearchResponse>
         if refreshing {
@@ -107,12 +107,12 @@ extension Model.Search {
                 tick()
             }
             switch result {
-            case .Success(let response):
+            case .success(let response):
                 let realm = try! iTunesRealm()
                 let cache = getOrCreateCache(term: self.term, realm: realm)
                 try! realm.write {
                     var tracks: [_Track] = []
-                    response.objects.reverse().forEach {
+                    response.objects.reversed().forEach {
                         switch $0 {
                         case .track(let obj):
                             tracks.append(obj)
@@ -124,17 +124,17 @@ extension Model.Search {
                         }
                     }
                     if refreshing {
-                        cache.objects.removeAll()
-                        cache.refreshAt = NSDate()
+                        cache.objects.removeAllObjects()
+                        cache.refreshAt = Date()
                     }
-                    cache.objects.appendContentsOf(tracks.reverse())
-                    cache.updateAt = NSDate()
+                    cache.objects.append(objectsIn: tracks.reversed())
+                    cache.updateAt = Date()
                     cache.offset += response.objects.count
                 }
                 print("search result cached")
                 self._requestState.value = response.objects.count != search.limit ? .done : .none
                 print(self._requestState.value)
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 self._requestState.value = .error
             }
@@ -148,7 +148,7 @@ extension Model.Search: PlaylistTypeInternal {
     var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].objects) }
 }
 
-extension Model.Search: CollectionType {
+extension Model.Search: Swift.Collection {
     
     public var count: Int { return objects.count }
     
@@ -159,4 +159,8 @@ extension Model.Search: CollectionType {
     public var endIndex: Int { return objects.endIndex }
     
     public subscript (index: Int) -> Track { return objects[index] }
+    
+    public func index(after i: Int) -> Int {
+        return objects.index(after: i)
+    }
 }

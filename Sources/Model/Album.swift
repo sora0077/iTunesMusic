@@ -13,13 +13,13 @@ import Timepiece
 import APIKit
 
 
-private func getOrCreateCache(collectionId collectionId: Int, realm: Realm) -> _AlbumCache {
-    if let cache = realm.objectForPrimaryKey(_AlbumCache.self, key: collectionId) {
+private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
+    if let cache = realm.object(ofType: _AlbumCache.self, forPrimaryKey: collectionId) {
         return cache
     }
     let cache = _AlbumCache()
     cache.collectionId = collectionId
-    cache.collection = realm.objectForPrimaryKey(_Collection.self, key: collectionId)!
+    cache.collection = realm.object(ofType: _Collection.self, forPrimaryKey: collectionId)!
     try! realm.write {
         realm.add(cache)
     }
@@ -38,7 +38,7 @@ extension Model {
         private(set) var _requestState = Variable<RequestState>(.none)
         
         var needRefresh: Bool {
-            return NSDate() - getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm()).refreshAt > 60.minutes
+            return Date() - getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
         
         private var objectsToken: NotificationToken?
@@ -55,14 +55,14 @@ extension Model {
             
             let realm = try! iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-            caches = realm.objects(_AlbumCache).filter("collectionId = \(collectionId)")
+            caches = realm.allObjects(ofType: _AlbumCache.self).filter(using: "collectionId = \(collectionId)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
                 
-                func updateObserver(results: Results<_AlbumCache>) {
+                func updateObserver(with results: Results<_AlbumCache>) {
                     self.objectsToken = results[0].collection
                         ._tracks
-                        .sorted([
+                        .sorted(with: [
                             SortDescriptor(property: "_discNumber", ascending: true),
                             SortDescriptor(property: "_trackNumber", ascending: true)
                         ])
@@ -73,10 +73,10 @@ extension Model {
                 
                 switch changes {
                 case .Initial(let results):
-                    updateObserver(results)
+                    updateObserver(with: results)
                 case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
-                        updateObserver(results)
+                        updateObserver(with: results)
                     }
                 case .Error(let error):
                     fatalError("\(error)")
@@ -96,7 +96,7 @@ extension Model.Album {
 extension Model.Album: CustomStringConvertible {
     
     public var description: String {
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             return "\(Mirror(reflecting: self))) \(collection.name)"
         }
         return "\(Mirror(reflecting: self)))"
@@ -105,7 +105,7 @@ extension Model.Album: CustomStringConvertible {
 
 extension Model.Album {
     
-    func request(refreshing refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool) {
         
         let collectionId = self.collectionId
         let cache = getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm())
@@ -122,10 +122,10 @@ extension Model.Album {
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
-            case .Success(let response):
+            case .success(let response):
                 let realm = try! iTunesRealm()
                 try! realm.write {
-                    response.objects.reverse().forEach {
+                    response.objects.reversed().forEach {
                         switch $0 {
                         case .track(let obj):
                             realm.add(obj, update: true)
@@ -138,13 +138,13 @@ extension Model.Album {
                     
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
                     if refreshing {
-                        cache.refreshAt = NSDate()
+                        cache.refreshAt = Date()
                     }
                     print(cache.collection._trackCount, cache.collection._tracks.count)
                     self._requestState.value = .done
                 }
                 tick()
-            case .Failure(let error):
+            case .failure(let error):
                 print(error)
                 self._requestState.value = .error
             }
@@ -155,14 +155,14 @@ extension Model.Album {
 extension Model.Album: PlaylistTypeInternal {
     
     var objects: AnyRealmCollection<_Track> {
-        return AnyRealmCollection(caches[0].collection._tracks.sorted([
+        return AnyRealmCollection(caches[0].collection._tracks.sorted(with: [
             SortDescriptor(property: "_discNumber", ascending: true),
             SortDescriptor(property: "_trackNumber", ascending: true)
         ]))
     }
 }
 
-extension Model.Album: CollectionType {
+extension Model.Album: Swift.Collection {
     
     public var count: Int { return objects.count }
     
@@ -173,4 +173,8 @@ extension Model.Album: CollectionType {
     public var endIndex: Int { return objects.endIndex }
     
     public subscript (index: Int) -> Track { return objects[index] }
+    
+    public func index(after i: Int) -> Int {
+        return objects.index(after: i)
+    }
 }

@@ -23,37 +23,37 @@ final class PlaylistViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(tableView)
-        tableView.snp_makeConstraints { make in
-            make.edges.equalToSuperview()
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
         }
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         playlists.changes
             .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }
 
 extension PlaylistViewController: UITableViewDataSource {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let playlist = playlists[indexPath.row]
         
         cell.textLabel?.text = playlist.title
@@ -63,7 +63,7 @@ extension PlaylistViewController: UITableViewDataSource {
 
 extension PlaylistViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = PlaylistDetailViewController(playlist: playlists[indexPath.row])
         navigationController?.pushViewController(vc, animated: true)

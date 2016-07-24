@@ -15,7 +15,7 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         let tab = UITabBarController()
@@ -24,10 +24,10 @@ class ViewController: UIViewController {
             UINavigationController(rootViewController: PlaylistViewController())
         ]
         
-        presentViewController(tab, animated: true, completion: nil)
+        present(tab, animated: true, completion: nil)
         
         tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .Search,
+            barButtonSystemItem: .search,
             target: self,
             action: #selector(self.searchAction)
         )
@@ -43,7 +43,7 @@ class ViewController: UIViewController {
         let vc = SearchViewController()
         let nav = UINavigationController(rootViewController: vc)
         
-        presentedViewController?.presentViewController(nav, animated: true, completion: nil)
+        presentedViewController?.present(nav, animated: true, completion: nil)
     }
 }
 

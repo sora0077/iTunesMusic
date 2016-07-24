@@ -21,7 +21,7 @@ class _RssCache: RealmSwift.Object {
         }
     }
     
-    dynamic var refreshAt = NSDate.distantPast()
+    dynamic var refreshAt = Date.distantPast
     
     dynamic var fetched: Int = 0
     
@@ -41,7 +41,7 @@ class _RssItem: RealmSwift.Object {
 
 extension _RssCache: Decodable {
     
-    static func decode(e: Extractor) throws -> Self {
+    static func decode(_ e: Extractor) throws -> Self {
         let obj = self.init()
         let entry = e.rawValue["feed"]!!["entry"] as! [[String: AnyObject]]
         let items = entry
@@ -52,7 +52,7 @@ extension _RssCache: Decodable {
                 item.id = id
                 return item
             }
-        obj.items.appendContentsOf(items)
+        obj.items.append(objectsIn: items)
         return obj
     }
 }
