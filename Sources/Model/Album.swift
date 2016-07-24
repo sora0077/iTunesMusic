@@ -26,6 +26,11 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     return cache
 }
 
+private let sortConditions = [
+    SortDescriptor(property: "_discNumber", ascending: true),
+    SortDescriptor(property: "_trackNumber", ascending: true)
+]
+
 
 extension Model {
     
@@ -47,6 +52,7 @@ extension Model {
         private let collectionId: Int
         
         private let caches: Results<_AlbumCache>
+        private var tracks: Results<_Track>
         
         public init(collection: Collection) {
             
@@ -56,19 +62,18 @@ extension Model {
             let realm = try! iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.allObjects(ofType: _AlbumCache.self).filter(using: "collectionId = \(collectionId)")
+            tracks = caches[0].collection._tracks.sorted(with: sortConditions)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
                 
                 func updateObserver(with results: Results<_AlbumCache>) {
-                    self.objectsToken = results[0].collection
+                    let tracks = results[0].collection
                         ._tracks
-                        .sorted(with: [
-                            SortDescriptor(property: "_discNumber", ascending: true),
-                            SortDescriptor(property: "_trackNumber", ascending: true)
-                        ])
-                        .addNotificationBlock { [weak self] changes in
-                            self?._changes.onNext(CollectionChange(changes))
-                        }
+                        .sorted(with: sortConditions)
+                    self.objectsToken = tracks.addNotificationBlock { [weak self] changes in
+                        self?._changes.onNext(CollectionChange(changes))
+                    }
+                    self.tracks = tracks
                 }
                 
                 switch changes {
@@ -152,29 +157,19 @@ extension Model.Album {
     }
 }
 
-extension Model.Album: PlaylistTypeInternal {
-    
-    var objects: AnyRealmCollection<_Track> {
-        return AnyRealmCollection(caches[0].collection._tracks.sorted(with: [
-            SortDescriptor(property: "_discNumber", ascending: true),
-            SortDescriptor(property: "_trackNumber", ascending: true)
-        ]))
-    }
-}
-
 extension Model.Album: Swift.Collection {
     
-    public var count: Int { return objects.count }
+    public var count: Int { return tracks.count }
     
-    public var isEmpty: Bool { return objects.isEmpty }
+    public var isEmpty: Bool { return tracks.isEmpty }
     
-    public var startIndex: Int { return objects.startIndex }
+    public var startIndex: Int { return tracks.startIndex }
     
-    public var endIndex: Int { return objects.endIndex }
+    public var endIndex: Int { return tracks.endIndex }
     
-    public subscript (index: Int) -> Track { return objects[index] }
+    public subscript (index: Int) -> Track { return tracks[index] }
     
     public func index(after i: Int) -> Int {
-        return objects.index(after: i)
+        return tracks.index(after: i)
     }
 }

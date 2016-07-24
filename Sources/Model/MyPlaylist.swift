@@ -117,34 +117,23 @@ extension Model.MyPlaylist {
         let realm = try! iTunesRealm()
         try! realm.write {
             playlist.tracks.move(from: src, to: dst)
-//            let track = playlist.tracks[src]
-//            playlist.tracks.remove(objectAtIndex: src)
-//            var dst = dst
-//            if dst > src { dst -= 1 }
-//            playlist.tracks.insert(track, at: dst)
         }
     }
 }
 
-extension Model.MyPlaylist: PlaylistTypeInternal {
-    
-    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(playlist.tracks) }
-}
-
-
 extension Model.MyPlaylist: Swift.Collection {
     
-    public var count: Int { return objects.count }
+    public var count: Int { return playlist.tracks.count }
     
-    public var isEmpty: Bool { return objects.isEmpty }
+    public var isEmpty: Bool { return playlist.tracks.isEmpty }
     
-    public var startIndex: Int { return objects.startIndex }
+    public var startIndex: Int { return playlist.tracks.startIndex }
     
-    public var endIndex: Int { return objects.endIndex }
+    public var endIndex: Int { return playlist.tracks.endIndex }
     
-    public subscript (index: Int) -> Track { return objects[index] }
+    public subscript (index: Int) -> Track { return playlist.tracks[index] }
     
     public func index(after i: Int) -> Int {
-        return objects.index(after: i)
+        return playlist.tracks.index(after: i)
     }
 }

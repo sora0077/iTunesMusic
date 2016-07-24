@@ -18,6 +18,7 @@
 		D9165FE81D2C040C00B701E3 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE71D2C040C00B701E3 /* Model.swift */; };
 		D9165FED1D2C0AA300B701E3 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FEC1D2C0AA300B701E3 /* Api.swift */; };
 		D9165FEF1D2C0ADD00B701E3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FEE1D2C0ADD00B701E3 /* Utils.swift */; };
+		D9193C731D451214006763EC /* NewPlaylistEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9193C721D451214006763EC /* NewPlaylistEditorViewController.swift */; };
 		D91B42771D043D5A00AAAD58 /* iTunesMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = D91B42761D043D5A00AAAD58 /* iTunesMusic.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D91B427E1D043D5B00AAAD58 /* iTunesMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; };
 		D91B42831D043D5B00AAAD58 /* iTunesMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42821D043D5B00AAAD58 /* iTunesMusicTests.swift */; };
@@ -162,6 +163,7 @@
 		D9165FE71D2C040C00B701E3 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		D9165FEC1D2C0AA300B701E3 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		D9165FEE1D2C0ADD00B701E3 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		D9193C721D451214006763EC /* NewPlaylistEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPlaylistEditorViewController.swift; sourceTree = "<group>"; };
 		D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iTunesMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91B42761D043D5A00AAAD58 /* iTunesMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iTunesMusic.h; sourceTree = "<group>"; };
 		D91B42781D043D5A00AAAD58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */,
 				D96C957A1D3A17B9000116FD /* PlaylistViewController.swift */,
 				D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */,
+				D9193C721D451214006763EC /* NewPlaylistEditorViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -887,6 +890,7 @@
 			files = (
 				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,
 				D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */,
+				D9193C731D451214006763EC /* NewPlaylistEditorViewController.swift in Sources */,
 				D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */,
 				D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */,
 				D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */,

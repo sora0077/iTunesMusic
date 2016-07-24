@@ -29,7 +29,7 @@ extension Model {
         
         public let name = "履歴"
         
-        public static let instance = History()
+        public static let shared = History()
         
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
@@ -53,26 +53,8 @@ extension Model {
 
 extension Model.History {
 
-    public func record(atIndex index: Int) -> (Track, Date) {
-        return (objects[index].track, objects[index].createAt)
-    }
-    
-    static func add(_ track: Track, realm: Realm) {
-        
-        let cache = getOrCreateCache(realm: realm)
-        try! realm.write {
-            let record = _HistoryRecord(track: track)
-            cache.objects.append(record)
-        }
-    }
-    
-    static func clearAll() {
-        
-        let realm = try! iTunesRealm()
-        let cache = getOrCreateCache(realm: realm)
-        try! realm.write {
-            cache.objects.removeAllObjects()
-        }
+    public func record(at index: Int) -> (Track, Date) {
+        return (cache.objects[index].track, cache.objects[index].createAt)
     }
 }
 
@@ -80,34 +62,28 @@ extension Model.History: PlayerMiddleware {
     
     public func didEndPlayTrack(_ trackId: Int) {
         let realm = try! iTunesRealm()
+        let cache = getOrCreateCache(realm: realm)
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
-            Model.History.add(track, realm: realm)
+            let record = _HistoryRecord(track: track)
+            cache.objects.append(record)
         }
     }
 }
 
-extension Model.History: PlaylistTypeInternal {
-    
-    var objects: AnyRealmCollection<_HistoryRecord> { return AnyRealmCollection(cache.objects) }
-    
-    public func _any() -> PlaylistType { return self }
-}
-
-
 extension Model.History: Swift.Collection {
     
-    public var count: Int { return objects.count }
+    public var count: Int { return cache.objects.count }
     
-    public var isEmpty: Bool { return objects.isEmpty }
+    public var isEmpty: Bool { return cache.objects.isEmpty }
     
-    public var startIndex: Int { return objects.startIndex }
+    public var startIndex: Int { return cache.objects.startIndex }
     
-    public var endIndex: Int { return objects.endIndex }
+    public var endIndex: Int { return cache.objects.endIndex }
     
-    public subscript (index: Int) -> Track { return objects[index].track }
+    public subscript (index: Int) -> Track { return cache.objects[index].track }
     
     public func index(after i: Int) -> Int {
-        return objects.index(after: i)
+        return cache.objects.index(after: i)
     }
 }
 

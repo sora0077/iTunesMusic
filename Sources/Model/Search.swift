@@ -142,25 +142,23 @@ extension Model.Search {
     }
 }
 
-
-extension Model.Search: PlaylistTypeInternal {
-    
-    var objects: AnyRealmCollection<_Track> { return AnyRealmCollection(caches[0].objects) }
-}
-
 extension Model.Search: Swift.Collection {
     
-    public var count: Int { return objects.count }
+    var tracks: List<_Track> {
+        return caches[0].objects
+    }
     
-    public var isEmpty: Bool { return objects.isEmpty }
+    public var count: Int { return tracks.count }
     
-    public var startIndex: Int { return objects.startIndex }
+    public var isEmpty: Bool { return tracks.isEmpty }
     
-    public var endIndex: Int { return objects.endIndex }
+    public var startIndex: Int { return tracks.startIndex }
     
-    public subscript (index: Int) -> Track { return objects[index] }
+    public var endIndex: Int { return tracks.endIndex }
+    
+    public subscript (index: Int) -> Track { return tracks[index] }
     
     public func index(after i: Int) -> Int {
-        return objects.index(after: i)
+        return tracks.index(after: i)
     }
 }

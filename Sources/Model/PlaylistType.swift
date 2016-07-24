@@ -20,10 +20,3 @@ public protocol PlaylistType: class {
     
     subscript (index: Int) -> Track { get }
 }
-
-protocol PlaylistTypeInternal: PlaylistType {
-    
-    associatedtype RealmElement: Object
-    
-    var objects: AnyRealmCollection<RealmElement> { get }
-}

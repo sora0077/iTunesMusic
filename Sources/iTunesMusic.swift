@@ -44,7 +44,7 @@ private let configuration: Realm.Configuration = {
 
 public func launch() {
     
-    player.install(middleware: Model.History.instance)
+    player.install(middleware: Model.History.shared)
     player.install(middleware: Downloader())
 }
 
