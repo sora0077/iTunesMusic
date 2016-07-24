@@ -272,7 +272,7 @@ private extension AlbumDetailViewController {
         let track = album[indexPath.row]
         
         let playlist = Model.MyPlaylist(playlist: Model.MyPlaylists()[0])
-        playlist.add(track: track)
+        playlist.append(track: track)
     }
 }
 
@@ -286,7 +286,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
         let track = album[indexPath.row]
         
-        cell.detailTextLabel?.text = "\((indexPath as NSIndexPath).row + 1)"
+        cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.textLabel?.text = track.trackName
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
         if track.canPreview {

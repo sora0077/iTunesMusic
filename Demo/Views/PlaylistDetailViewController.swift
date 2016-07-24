@@ -32,7 +32,9 @@ final class PlaylistDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
+        navigationItem.rightBarButtonItem = editButtonItem()
+
+                view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
@@ -44,6 +46,11 @@ final class PlaylistDetailViewController: UIViewController {
         playlist.changes
             .bindTo(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
     }
 }
 
@@ -58,6 +65,27 @@ extension PlaylistDetailViewController: UITableViewDataSource {
         let track = playlist[indexPath.row]
         cell.textLabel?.text = track.trackName
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+        playlist.remove(at: indexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        playlist.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        DispatchQueue.main.after(when: DispatchTime.now() + 0.2) {
+            tableView.reloadData()
+        }
     }
 }
 

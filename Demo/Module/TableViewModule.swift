@@ -60,7 +60,7 @@ class TableViewModule<List: Swift.Collection, Controller: UIViewController where
     
     @objc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return generator(self: viewController!, tableView: tableView, element: list[(indexPath as NSIndexPath).row], indexPath: indexPath)
+        return generator(self: viewController!, tableView: tableView, element: list[indexPath.row], indexPath: indexPath)
     }
     
     //MARK: - UITableViewDelegate

@@ -92,10 +92,36 @@ extension Model {
 
 extension Model.MyPlaylist {
     
-    public func add(track: Track) {
+    public func insert(track: Track, at index: Int) {
+        let realm = try! iTunesRealm()
+        try! realm.write {
+            playlist.tracks.insert(track as! _Track, at: index)
+        }
+    }
+    
+    public func append(track: Track) {
         let realm = try! iTunesRealm()
         try! realm.write {
             playlist.tracks.append(track as! _Track)
+        }
+    }
+    
+    public func remove(at index: Int) {
+        let realm = try! iTunesRealm()
+        try! realm.write {
+            playlist.tracks.remove(objectAtIndex: index)
+        }
+    }
+    
+    public func move(from src: Int, to dst: Int) {
+        let realm = try! iTunesRealm()
+        try! realm.write {
+            playlist.tracks.move(from: src, to: dst)
+//            let track = playlist.tracks[src]
+//            playlist.tracks.remove(objectAtIndex: src)
+//            var dst = dst
+//            if dst > src { dst -= 1 }
+//            playlist.tracks.insert(track, at: dst)
         }
     }
 }

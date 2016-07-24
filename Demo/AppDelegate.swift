@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         player.install(middleware: ControlCenter())
         
-        window?.tintColor = UIColor.white()
+        window?.tintColor = UIColor.lightGray()
         
         print((try! iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((try! iTunesRealm()).schema.objectSchema.map { $0.className })
