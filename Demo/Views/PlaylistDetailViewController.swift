@@ -82,10 +82,8 @@ extension PlaylistDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
+        tableView.isMoving = true
         playlist.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
-        DispatchQueue.main.after(when: DispatchTime.now() + 0.2) {
-            tableView.reloadData()
-        }
     }
 }
 

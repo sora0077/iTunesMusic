@@ -45,7 +45,17 @@ extension UIScrollView {
 }
 
 
+private var UITableView_isMoving: UInt8 = 0
 extension UITableView {
+    
+    var isMoving: Bool {
+        set {
+            objc_setAssociatedObject(self, &UITableView_isMoving, newValue, .OBJC_ASSOCIATION_ASSIGN)
+        }
+        get {
+            return objc_getAssociatedObject(self, &UITableView_isMoving) as? Bool ?? false
+        }
+    }
     
     func rx_itemUpdates(_ configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
         return UIBindingObserver(UIElement: self) { tableView, changes in
@@ -69,9 +79,14 @@ extension UITableView {
     func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
         
         beginUpdates()
-        deleteRows(at: deletions, with: .automatic)
-        insertRows(at: insertions, with: .top)
-        reloadRows(at: modifications, with: .automatic)
+        if isMoving {
+            isMoving = false
+            reloadSections(IndexSet(0..<numberOfSections), with: .automatic)
+        } else {
+            deleteRows(at: deletions, with: .automatic)
+            insertRows(at: insertions, with: .top)
+            reloadRows(at: modifications, with: .automatic)
+        }
         endUpdates()
     }
 }
