@@ -146,7 +146,6 @@ final class PlayerImpl: NSObject, Player {
         
         print("caller updateQueue")
         if _playingQueue.isEmpty { return }
-        
         if _player.items().count > 2 { return }
         
         if !Thread.isMainThread {
@@ -217,7 +216,8 @@ final class PlayerImpl: NSObject, Player {
     }
     
     private func updatePlaylistQueue() {
-        if _playlists.isEmpty { return }
+        if _playlists.isEmpty { updateQueue(); return }
+        if _playingQueue.count > 2 { updateQueue(); return }
         if _player.items().count > 2 { return }
         
         if !Thread.isMainThread {
@@ -239,7 +239,7 @@ final class PlayerImpl: NSObject, Player {
                 return
             }
         }
-        print("play", playlist.count, index)
+        print("play", playlist.count, index, _playingQueue.count)
         
         if playlist.count > index {
             print("will play ", playlist[index].trackName)
