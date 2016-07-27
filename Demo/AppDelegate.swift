@@ -79,7 +79,7 @@ extension UITableView {
     func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
         
         beginUpdates()
-        if isMoving {
+        if isMoving && deletions.count == insertions.count && modifications.isEmpty {
             isMoving = false
             reloadSections(IndexSet(0..<numberOfSections), with: .automatic)
         } else {

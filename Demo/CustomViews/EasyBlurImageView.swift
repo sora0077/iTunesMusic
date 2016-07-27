@@ -40,6 +40,10 @@ final class EasyBlurImageView: UIImageView {
         kCIContextWorkingColorSpace: NSNull()
     ])
 
+    deinit {
+        print("deinit EasyBlurImageView")
+    }
+    
     private func createBluredImages() {
         #if (arch(i386) || arch(x86_64)) && os(iOS)
         #else
