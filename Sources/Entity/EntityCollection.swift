@@ -29,6 +29,13 @@ public protocol Collection {
     func artworkURL(size: Int) -> URL
 }
 
+extension Collection {
+
+    var impl: _Collection {
+        return self as! _Collection
+    }
+}
+
 
 class _Collection: RealmSwift.Object, Collection {
 
@@ -127,7 +134,7 @@ extension _Collection {
         let replaced = artworkRegex.stringByReplacingMatches(
             in: base,
             options: [],
-            range: NSMakeRange(0, base.utf16.count),
+            range: NSRange(location: 0, length: base.utf16.count),
             withTemplate: "\(size)x\(size)"
         )
         let url = URL(string: replaced)!

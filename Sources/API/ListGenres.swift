@@ -19,7 +19,7 @@ struct ListGenres<Response: Decodable>: iTunesRequestType {
 
     let path: String = "WebObjects/MZStoreServices.woa/ws/genres"
 
-    var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
+    var country = Locale.current.compatible.countryCode
 
     var queryParameters: [String : AnyObject]? {
         return [
@@ -30,6 +30,6 @@ struct ListGenres<Response: Decodable>: iTunesRequestType {
 
     func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
         let root = (object as! [String: AnyObject]).values.first as! [String: AnyObject]
-        return try! Response.decodeValue(root)
+        return try Response.decodeValue(root)
     }
 }

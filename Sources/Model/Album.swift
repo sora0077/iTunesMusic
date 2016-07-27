@@ -56,8 +56,8 @@ extension Model {
 
         public init(collection: Collection) {
 
-            let collection = collection as! _Collection
-            self.collectionId = collection._collectionId
+            let collection = collection.impl
+            self.collectionId = collection.id
 
             let realm = iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)

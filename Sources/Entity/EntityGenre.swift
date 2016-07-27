@@ -38,17 +38,17 @@ public protocol RssUrls {
 
 class _Genre: RealmSwift.Object {
 
-    dynamic var _name: String = ""
+    private(set) dynamic var _name: String = ""
 
-    dynamic var _id: Int = 0
+    private(set) dynamic var _id: Int = 0
 
-    dynamic var _url: String = ""
+    private(set) dynamic var _url: String = ""
 
-    dynamic var _rssUrls: _RssUrls?
+    private(set) dynamic var _rssUrls: _RssUrls?
 
-    dynamic var _chartUrls: _ChartUrls?
+    private(set) dynamic var _chartUrls: _ChartUrls?
 
-    let _subgenres = List<_Genre>()
+    private let _subgenres = List<_Genre>()
 
     override class func primaryKey() -> String? { return "_id" }
 }

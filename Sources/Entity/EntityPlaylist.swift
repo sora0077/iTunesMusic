@@ -15,6 +15,13 @@ public protocol MyPlaylist {
     var title: String { get }
 }
 
+extension MyPlaylist {
+
+    var impl: _MyPlaylist {
+        return self as! _MyPlaylist
+    }
+}
+
 
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
 

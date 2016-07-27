@@ -156,7 +156,7 @@ final class PlayerImpl: NSObject, Player {
         }
 
         print("run updateQueue")
-        let track = _playingQueue[_playingQueue.startIndex] as! _Track
+        let track = _playingQueue[_playingQueue.startIndex].impl
         if !track.canPreview {
             _playingQueue = _playingQueue.dropFirst()
             return updateQueue()

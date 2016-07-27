@@ -25,8 +25,7 @@ extension _HistoryRecord {
 
     convenience init(track: Track) {
         self.init()
-        let track = track as! _Track
-        _track = track
+        _track = track.impl
     }
 
 }

@@ -58,9 +58,9 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
 
     let ids: [Int]
 
-    var lang = Locale.current.object(forKey: Locale.Key.identifier) as! String
+    var lang = Locale.current.localeIdentifier
 
-    var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
+    var country = Locale.current.compatible.countryCode
 
     let limit = 500
 

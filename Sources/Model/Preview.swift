@@ -48,9 +48,8 @@ final class PreviewTrack {
     let url: URL
 
     private init(track: Track) {
-        let track = track as! _Track
         id = track.trackId
-        url = track.trackViewURL as URL
+        url = track.trackViewURL
     }
     func download() -> Observable<(URL, duration: Double)> {
         let id = self.id
@@ -140,6 +139,6 @@ extension PreviewTrack: Equatable, Hashable {
     var hashValue: Int { return id }
 }
 
-func ==(lhs: PreviewTrack, rhs: PreviewTrack) -> Bool {
+func == (lhs: PreviewTrack, rhs: PreviewTrack) -> Bool {
     return lhs.id == rhs.id
 }

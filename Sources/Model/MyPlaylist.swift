@@ -78,7 +78,7 @@ extension Model {
         private let playlist: _MyPlaylist
 
         public init(playlist: iTunesMusic.MyPlaylist) {
-            let playlist = playlist as! _MyPlaylist
+            let playlist = playlist.impl
             self.playlist = playlist
 
             token = playlist.tracks.addNotificationBlock { [weak self] changes in
@@ -95,14 +95,14 @@ extension Model.MyPlaylist {
     public func insert(track: Track, at index: Int) {
         let realm = iTunesRealm()
         try! realm.write {
-            playlist.tracks.insert(track as! _Track, at: index)
+            playlist.tracks.insert(track.impl, at: index)
         }
     }
 
     public func append(track: Track) {
         let realm = iTunesRealm()
         try! realm.write {
-            playlist.tracks.append(track as! _Track)
+            playlist.tracks.append(track.impl)
         }
     }
 

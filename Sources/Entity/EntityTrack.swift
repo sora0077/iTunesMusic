@@ -35,6 +35,13 @@ public protocol Track: EntityInterface {
     func artworkURL(size: Int) -> URL
 }
 
+extension Track {
+
+    var impl: _Track {
+        return self as! _Track
+    }
+}
+
 
 class _Track: RealmSwift.Object, Track {
 
