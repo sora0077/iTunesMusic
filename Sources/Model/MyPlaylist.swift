@@ -37,7 +37,7 @@ extension Model {
 
         public init() {
 
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)
             token = cache.playlists.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
@@ -93,28 +93,28 @@ extension Model {
 extension Model.MyPlaylist {
 
     public func insert(track: Track, at index: Int) {
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         try! realm.write {
             playlist.tracks.insert(track as! _Track, at: index)
         }
     }
 
     public func append(track: Track) {
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         try! realm.write {
             playlist.tracks.append(track as! _Track)
         }
     }
 
     public func remove(at index: Int) {
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         try! realm.write {
             playlist.tracks.remove(objectAtIndex: index)
         }
     }
 
     public func move(from src: Int, to dst: Int) {
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         try! realm.write {
             playlist.tracks.move(from: src, to: dst)
         }

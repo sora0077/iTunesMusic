@@ -35,7 +35,7 @@ extension UIScrollView {
         return rx_contentOffset
             .map { [weak self] contentOffset in
                 guard let scrollView = self else { return false }
-                
+
                 let visibleHeight = scrollView.frame.height - scrollView.contentInset.top - scrollView.contentInset.bottom
                 let y = contentOffset.y + scrollView.contentInset.top
                 let threshold = max(0.0, scrollView.contentSize.height - visibleHeight - visibleHeight * offsetRatio)
@@ -108,9 +108,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SDWebImageManager.shared().imageCache.clearMemory()
 
         let session = AVAudioSession.sharedInstance()
-        try! session.setCategory(AVAudioSessionCategoryPlayback)
-        try! session.setActive(true)
-
+        do {
+            try session.setCategory(AVAudioSessionCategoryPlayback)
+            try session.setActive(true)
+        } catch {
+            fatalError()
+        }
         application.beginReceivingRemoteControlEvents()
 
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
@@ -121,8 +124,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.tintColor = UIColor.lightGray()
 
-        print((try! iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
-        print((try! iTunesRealm()).schema.objectSchema.map { $0.className })
+        print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
+        print((iTunesRealm()).schema.objectSchema.map { $0.className })
 
         return true
     }

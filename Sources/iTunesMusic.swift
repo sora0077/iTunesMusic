@@ -48,6 +48,6 @@ public func launch() {
     player.install(middleware: Downloader())
 }
 
-public func iTunesRealm() throws -> Realm {
-    return try Realm(configuration: configuration)
+public func iTunesRealm() -> Realm {
+    return try! Realm(configuration: configuration)
 }

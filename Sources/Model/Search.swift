@@ -41,7 +41,7 @@ extension Model {
         private let _refreshing = Variable<Bool>(false)
 
         var needRefresh: Bool {
-            return Date() - getOrCreateCache(term: term, realm: try! iTunesRealm()).refreshAt > 60.minutes
+            return Date() - getOrCreateCache(term: term, realm: iTunesRealm()).refreshAt > 60.minutes
         }
 
         private let term: String
@@ -52,7 +52,7 @@ extension Model {
         public init(term: String) {
             self.term = term
 
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             _ = getOrCreateCache(term: term, realm: realm)
             caches = realm.allObjects(ofType: _SearchCache.self).filter(using: "term = %@", term)
             token = caches.addNotificationBlock { [weak self] changes in
@@ -95,7 +95,7 @@ extension Model.Search {
         if refreshing {
             search = SearchWithKeyword(term: term)
         } else {
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             search = SearchWithKeyword(term: term, offset: getOrCreateCache(term: term, realm: realm).offset)
         }
         search.lang = "ja_JP"
@@ -108,7 +108,7 @@ extension Model.Search {
             }
             switch result {
             case .success(let response):
-                let realm = try! iTunesRealm()
+                let realm = iTunesRealm()
                 let cache = getOrCreateCache(term: self.term, realm: realm)
                 try! realm.write {
                     var tracks: [_Track] = []

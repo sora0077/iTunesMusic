@@ -69,7 +69,7 @@ final class PreviewTrack {
                             let to = try! URL(fileURLWithPath: path).appendingPathComponent(filename)
                             _ = try? FileManager.default.moveItem(at: src, to: to)
 
-                            let realm = try! iTunesRealm()
+                            let realm = iTunesRealm()
                             let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
                             try! realm.write {
                                 let metadata = _TrackMetadata(track: track)
@@ -95,7 +95,7 @@ final class PreviewTrack {
         let id = self.id
         let url = self.url
 
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: id) {
             if let duration = track.metadata?.duration {
                 if let fileURL = track.metadata?.fileURL {
@@ -114,7 +114,7 @@ final class PreviewTrack {
                 switch result {
                 case .success(let (url, duration)):
                     let duration = Double(duration) / 10000
-                    let realm = try! iTunesRealm()
+                    let realm = iTunesRealm()
                     try! realm.write {
                         guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
                         let metadata = _TrackMetadata(track: track)

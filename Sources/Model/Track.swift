@@ -18,7 +18,7 @@ extension Model {
 
         public let trackId: Int
         public var track: iTunesMusic.Track? {
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
 
@@ -32,7 +32,7 @@ extension Model {
         public init(trackId: Int) {
             self.trackId = trackId
 
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             token = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
                 switch changes {
                 case let .Initial(results):
@@ -67,7 +67,7 @@ extension Model.Track {
             guard let `self` = self else { return }
             switch result {
             case .success(let response):
-                let realm = try! iTunesRealm()
+                let realm = iTunesRealm()
                 try! realm.write {
                     response.objects.reversed().forEach {
                         switch $0 {

@@ -39,11 +39,12 @@ struct GetPreviewUrl: iTunesRequestType {
 
     func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
 
-        let items = object["items"] as! [[String: AnyObject]]
-        for item in items {
-            guard let id = item["item-id"] as? Int else { continue }
-            if self.id == id {
-                return try getPreviewURL(item: item)
+        if let items = object["items"] as? [[String: AnyObject]] {
+            for item in items {
+                guard let id = item["item-id"] as? Int else { continue }
+                if self.id == id {
+                    return try getPreviewURL(item: item)
+                }
             }
         }
         throw iTunesMusicError.notFound

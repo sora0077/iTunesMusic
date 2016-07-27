@@ -39,7 +39,7 @@ extension Model {
 
         private init() {
 
-            let realm = try! iTunesRealm()
+            let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)
             objectsToken = cache.objects.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
@@ -61,7 +61,7 @@ extension Model.History {
 extension Model.History: PlayerMiddleware {
 
     public func didEndPlayTrack(_ trackId: Int) {
-        let realm = try! iTunesRealm()
+        let realm = iTunesRealm()
         let cache = getOrCreateCache(realm: realm)
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             try! realm.write {

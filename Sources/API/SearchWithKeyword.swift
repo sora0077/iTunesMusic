@@ -70,9 +70,9 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
 
     var entity = "song"
 
-    var lang = Locale.current.object(forKey: Locale.Key.identifier) as! String
+    var lang = Locale.current.localeIdentifier
 
-    var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
+    var country = Locale.current.compatible.countryCode
 
     var offset: Int
 
