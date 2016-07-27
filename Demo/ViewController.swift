@@ -14,18 +14,18 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         let tab = UITabBarController()
         tab.viewControllers = [
             UINavigationController(rootViewController: GenresViewController()),
             UINavigationController(rootViewController: PlaylistViewController())
         ]
-        
+
         present(tab, animated: true, completion: nil)
-        
+
         tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
             target: self,
@@ -42,8 +42,7 @@ class ViewController: UIViewController {
     private func searchAction() {
         let vc = SearchViewController()
         let nav = UINavigationController(rootViewController: vc)
-        
+
         presentedViewController?.present(nav, animated: true, completion: nil)
     }
 }
-

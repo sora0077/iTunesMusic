@@ -11,13 +11,13 @@ import RealmSwift
 
 
 class _GenresCache: RealmSwift.Object {
-    
+
     dynamic var key: String = ""
-    
+
     dynamic var createAt = Date()
-    
+
     dynamic var refreshAt = Date.distantPast
-    
+
     let list = List<_Genre>()
 
     override class func primaryKey() -> String? { return "key" }

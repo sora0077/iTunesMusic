@@ -11,19 +11,19 @@ import RealmSwift
 
 
 final class _AlbumCache: RealmSwift.Object {
-    
+
     dynamic var collectionId: Int = 0
-    
+
     private dynamic var _collection: _Collection?
-    
+
     dynamic var refreshAt = Date.distantPast
-    
+
     dynamic var createAt = Date()
-    
+
     override class func primaryKey() -> String? { return "collectionId" }
 
     override class func ignoredProperties() -> [String] { return ["collection"] }
-    
+
     var collection: _Collection {
         set {
             _collection = newValue
@@ -33,4 +33,3 @@ final class _AlbumCache: RealmSwift.Object {
         }
     }
 }
-

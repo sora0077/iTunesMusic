@@ -12,29 +12,29 @@ import Himotoki
 
 
 protocol SearchWithKeywordResponseType {
-    
+
     var term: String { get set }
 }
 
 struct SearchResponse: SearchWithKeywordResponseType {
-    
+
     private enum WrapperType: String {
         case track, collection, artist
     }
-    
+
     enum Wrapper {
         case track(_Track)
         case collection(_Collection)
         case artist(_Artist)
     }
-    
+
     var term: String = ""
-    
+
     let objects: [Wrapper]
 }
 
 extension SearchResponse: Decodable {
-    
+
     static func decode(_ e: Extractor) throws -> SearchResponse {
         let results = e.rawValue["results"] as! [[String: AnyObject]]
         var items: [Wrapper] = []
@@ -55,29 +55,29 @@ extension SearchResponse: Decodable {
 
 
 struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: Decodable>: iTunesRequestType {
-    
+
     typealias Response = Results
-    
+
     let method = HTTPMethod.GET
-    
+
     let baseURL = URL(string: "https://itunes.apple.com")!
-    
+
     let path = "search"
-    
+
     var term: String
-    
+
     var media = "music"
-    
+
     var entity = "song"
-    
+
     var lang = Locale.current.object(forKey: Locale.Key.identifier) as! String
-    
+
     var country = Locale.current.object(forKey: Locale.Key.countryCode) as! String
-    
+
     var offset: Int
-    
+
     var limit: Int = 50
-    
+
     var queryParameters: [String : AnyObject]? {
         return [
             "term": term,
@@ -89,9 +89,9 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
             "limit": limit
         ]
     }
-    
+
     func responseFromObject(_ object: AnyObject, URLResponse: HTTPURLResponse) throws -> Response {
-        
+
         var obj: Response = try decodeValue(object)
         obj.term = term
         return obj
@@ -99,7 +99,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
 }
 
 extension SearchWithKeyword {
-    
+
     init(term: String, offset: Int = 0) {
         self.term = term
         self.offset = offset

@@ -17,30 +17,29 @@ protocol ViewModuleProtocol {
 
 
 class TableViewModule<List: Swift.Collection, Controller: UIViewController where List.Index == Int, List.IndexDistance == Int>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate {
-    
+
     typealias CellForRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> UITableViewCell
-    
+
     typealias DidSelectRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> Void
-    
+
     private let tableView: UITableView
-    
+
     private let superview: () -> UIView
-    
+
     private let list: List
-    
+
     private weak var viewController: Controller?
-    
+
     private let generator: CellForRowAtIndexPath
-    
+
     private let selector: DidSelectRowAtIndexPath?
-    
+
     init(view: UITableView,
          superview: () -> UIView,
          controller: Controller,
          list: List,
          onGenerate: CellForRowAtIndexPath,
-         onSelect: DidSelectRowAtIndexPath? = nil)
-    {
+         onSelect: DidSelectRowAtIndexPath? = nil) {
         self.superview = superview
         self.list = list
         tableView = view
@@ -51,18 +50,18 @@ class TableViewModule<List: Swift.Collection, Controller: UIViewController where
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
+
     //MARK: - UITableViewDataSource
     @objc
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list.count
     }
-    
+
     @objc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return generator(self: viewController!, tableView: tableView, element: list[indexPath.row], indexPath: indexPath)
     }
-    
+
     //MARK: - UITableViewDelegate
     @objc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -72,7 +71,7 @@ class TableViewModule<List: Swift.Collection, Controller: UIViewController where
 }
 
 extension TableViewModule {
-    
+
     func install() {
         let superview = self.superview()
         superview.addSubview(tableView)

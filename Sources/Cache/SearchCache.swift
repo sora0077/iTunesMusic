@@ -13,18 +13,18 @@ import Himotoki
 
 
 class _SearchCache: RealmSwift.Object, SearchWithKeywordResponseType {
-    
+
     let objects = List<_Track>()
-    
+
     dynamic var createAt = Date()
-    
+
     dynamic var updateAt = Date()
-    
+
     dynamic var refreshAt = Date.distantPast
-    
+
     dynamic var term: String = ""
-    
+
     dynamic var offset: Int = 0
-    
+
     override class func primaryKey() -> String? { return "term" }
 }

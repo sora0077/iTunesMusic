@@ -11,6 +11,6 @@ import RealmSwift
 
 
 final class _MyPlaylistCache: RealmSwift.Object {
-    
+
     let playlists = List<_MyPlaylist>()
 }

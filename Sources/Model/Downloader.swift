@@ -13,14 +13,14 @@ import RealmSwift
 
 
 final class Downloader {
-    
+
     private let disposeBag = DisposeBag()
-    
+
     private var downloaded: Set<Int> = []
 }
 
 extension Downloader: PlayerMiddleware {
-    
+
     func didEndPlayTrack(_ trackId: Int) {
         if downloaded.contains(trackId) { return }
         let realm = try! iTunesRealm()

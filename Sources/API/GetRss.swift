@@ -13,23 +13,23 @@ import Himotoki
 
 
 struct GetRss<R: Decodable>: iTunesRequestType {
-    
+
     typealias Response = R
-    
+
     let method = HTTPMethod.GET
-    
+
     let baseURL: URL
-    
+
     let path: String
 }
 
 extension GetRss {
-    
+
     init(url: URL, limit: Int=200) {
         var comps = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         comps.path = nil
         baseURL = comps.url!
-        
+
         var paths = url.path!.components(separatedBy: "/")
         paths.insert("limit=\(limit)", at: paths.count - 1)
         path = paths.joined(separator: "/")

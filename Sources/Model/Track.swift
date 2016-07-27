@@ -13,25 +13,25 @@ import RealmSwift
 
 
 extension Model {
-    
+
     public final class Track: Fetchable, FetchableInternal {
-        
+
         public let trackId: Int
         public var track: iTunesMusic.Track? {
             let realm = try! iTunesRealm()
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
-        
+
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
-        
+
         private var token: NotificationToken!
-        
+
         private(set) var needRefresh: Bool = true
-        
+
         public init(trackId: Int) {
             self.trackId = trackId
-            
+
             let realm = try! iTunesRealm()
             token = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
                 switch changes {
@@ -54,12 +54,12 @@ extension Model {
 }
 
 extension Model.Track {
-    
-    
+
+
     func request(refreshing: Bool, force: Bool) {
-        
+
         let session = Session.sharedSession
-        
+
         var lookup = LookupWithIds<LookupResponse>(id: trackId)
         lookup.lang = "ja_JP"
         lookup.country = "JP"

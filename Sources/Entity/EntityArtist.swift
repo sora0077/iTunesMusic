@@ -12,47 +12,47 @@ import Himotoki
 
 
 public protocol Artist {
-    
+
     var id: Int { get }
-    
+
     var name: String { get }
 }
 
 final class _Artist: RealmSwift.Object, Artist {
-    
+
     dynamic var _artistId: Int = 0
     dynamic var _artistName: String = ""
     dynamic var _artistLinkUrl: String?
-    
+
     let _collections = LinkingObjects(fromType: _Collection.self, property: "_artist")
 
     override class func primaryKey() -> String? { return "_artistId" }
 }
 
 extension _Artist {
-    
+
     var id: Int { return _artistId }
-    
+
     var name: String { return _artistName }
 }
 
 extension _Artist: Decodable {
-    
+
     static func decode(_ e: Extractor) throws -> Self {
-        
+
         let obj = self.init()
-        
+
         obj._artistId = try e.value("artistId")
         obj._artistName = try e.value("artistName")
         obj._artistLinkUrl = try e.valueOptional("artistViewUrl") ?? e.valueOptional("artistLinkUrl")
         return obj
     }
-    
+
     static func collectionArtist(_ e: Extractor) throws -> Self? {
-        
+
         do {
             let obj = self.init()
-            
+
             obj._artistId = try e.value("collectionArtistId")
             obj._artistName = try e.value("collectionArtistName")
             obj._artistLinkUrl = try e.valueOptional("collectionArtistViewUrl")

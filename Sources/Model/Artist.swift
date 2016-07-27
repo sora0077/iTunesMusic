@@ -28,43 +28,43 @@ private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
 }
 
 extension Model {
-    
+
     public final class Artist: Fetchable, FetchableInternal {
-        
+
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        
+
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
-        
+
         var needRefresh: Bool {
             return Date() - getOrCreateCache(artistId: artistId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
-        
+
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
-        
+
         private let artistId: Int
-        
+
         private let caches: Results<_ArtistCache>
-        
+
         public init(artist: iTunesMusic.Artist) {
-            
+
             let artist = artist as! _Artist
             self.artistId = artist._artistId
-            
+
             let realm = try! iTunesRealm()
             let cache = getOrCreateCache(artistId: artistId, realm: realm)
             caches = realm.allObjects(ofType: _ArtistCache.self).filter(using: "artistId = \(artistId)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
-                
+
                 func updateObserver(with results: Results<_ArtistCache>) {
                     self.objectsToken = results[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false).addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
-                
+
                 switch changes {
                 case .Initial(let results):
                     updateObserver(with: results)
@@ -81,18 +81,18 @@ extension Model {
 }
 
 extension Model.Artist {
-    
+
     func request(refreshing: Bool, force: Bool) {
-        
+
         let artistId = self.artistId
         let cache = getOrCreateCache(artistId: artistId, realm: try! iTunesRealm())
         if !refreshing && cache.fetched {
             _requestState.value = .done
             return
         }
-        
+
         let session = Session.sharedSession
-        
+
         var lookup = LookupWithIds<LookupResponse>(id: artistId)
         lookup.lang = "ja_JP"
         lookup.country = "JP"
@@ -112,7 +112,7 @@ extension Model.Artist {
                             realm.add(obj, update: true)
                         }
                     }
-                    
+
                     let cache = getOrCreateCache(artistId: artistId, realm: realm)
                     cache.fetched = true
                     if refreshing {
@@ -130,18 +130,18 @@ extension Model.Artist {
 }
 
 extension Model.Artist {
-    
+
     var objects: AnyRealmCollection<_Collection> { return AnyRealmCollection(caches[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)) }
 }
 
 extension Model.Artist: Swift.Collection {
-    
+
     public var startIndex: Int { return objects.startIndex }
-    
+
     public var endIndex: Int { return objects.endIndex }
-    
+
     public subscript (index: Int) -> Collection { return objects[index] }
-    
+
     public func index(after i: Int) -> Int {
         return objects.index(after: i)
     }

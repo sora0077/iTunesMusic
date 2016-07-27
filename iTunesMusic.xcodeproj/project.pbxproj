@@ -541,6 +541,7 @@
 			buildConfigurationList = D91B42871D043D5B00AAAD58 /* Build configuration list for PBXNativeTarget "iTunesMusic" */;
 			buildPhases = (
 				DD815CD66D820F000E9BA354 /* [CP] Check Pods Manifest.lock */,
+				D96A93DB1D48DCD400B693D4 /* Run Swiftlint */,
 				D91B426E1D043D5A00AAAD58 /* Sources */,
 				D91B426F1D043D5A00AAAD58 /* Frameworks */,
 				D91B42701D043D5A00AAAD58 /* Headers */,
@@ -798,6 +799,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D96A93DB1D48DCD400B693D4 /* Run Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Swiftlint";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi";
 		};
 		DD815CD66D820F000E9BA354 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

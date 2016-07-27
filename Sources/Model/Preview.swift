@@ -15,11 +15,11 @@ import AVFoundation
 
 
 final class Preview {
-    
+
     private let cache = Cache<NSNumber, PreviewTrack>()
-    
+
     static let shared = Preview()
-    
+
     init() {}
 
     subscript (track track: Track) -> PreviewTrack? {
@@ -30,7 +30,7 @@ final class Preview {
             return cache.object(forKey: track.trackId)
         }
     }
-    
+
     func queueing(track: Track) -> PreviewTrack {
         if let previewTrack = self[track: track] {
             return previewTrack
@@ -43,10 +43,10 @@ final class Preview {
 
 
 final class PreviewTrack {
-    
+
     let id: Int
     let url: URL
-    
+
     private init(track: Track) {
         let track = track as! _Track
         id = track.trackId
@@ -54,7 +54,7 @@ final class PreviewTrack {
     }
     func download() -> Observable<(URL, duration: Double)> {
         let id = self.id
-    
+
         return fetch()
             .flatMap { url, duration -> Observable<(URL, duration: Double)> in
                 if url.isFileURL {
@@ -62,13 +62,13 @@ final class PreviewTrack {
                 }
                 return Observable.create { subscriber in
                     let filename = url.lastPathComponent!
-                    
+
                     let task = URLSession.shared.downloadTask(with: url, completionHandler: { (url, response, error) in
                         if let src = url {
                             let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
                             let to = try! URL(fileURLWithPath: path).appendingPathComponent(filename)
                             _ = try? FileManager.default.moveItem(at: src, to: to)
-                            
+
                             let realm = try! iTunesRealm()
                             let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
                             try! realm.write {
@@ -90,11 +90,11 @@ final class PreviewTrack {
                 }
             }
     }
-    
+
     func fetch() -> Observable<(URL, duration: Double)> {
         let id = self.id
         let url = self.url
-        
+
         let realm = try! iTunesRealm()
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: id) {
             if let duration = track.metadata?.duration {
@@ -106,11 +106,11 @@ final class PreviewTrack {
                 }
             }
         }
-        
+
         let session = Session.sharedSession
-        
+
         return Observable.create { subscriber in
-            let task = session.sendRequest(GetPreviewUrl(id: id,  url: url), callbackQueue: callbackQueue) { result in
+            let task = session.sendRequest(GetPreviewUrl(id: id, url: url), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .success(let (url, duration)):
                     let duration = Double(duration) / 10000
@@ -136,7 +136,7 @@ final class PreviewTrack {
 }
 
 extension PreviewTrack: Equatable, Hashable {
-    
+
     var hashValue: Int { return id }
 }
 

@@ -13,20 +13,20 @@ import Himotoki
 
 
 class _HistoryRecord: RealmSwift.Object {
-    
+
     private dynamic var _track: _Track?
-    
+
     private(set) dynamic var createAt: Date = Date()
 
     var track: Track { return _track! }
 }
 
 extension _HistoryRecord {
-    
+
     convenience init(track: Track) {
         self.init()
         let track = track as! _Track
         _track = track
     }
-    
+
 }

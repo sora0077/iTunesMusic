@@ -33,39 +33,39 @@ private let sortConditions = [
 
 
 extension Model {
-    
+
     public final class Album: PlaylistType, Fetchable, FetchableInternal {
-        
+
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        
+
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
-        
+
         var needRefresh: Bool {
             return Date() - getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
-        
+
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
-        
+
         private let collectionId: Int
-        
+
         private let caches: Results<_AlbumCache>
         private var tracks: Results<_Track>
-        
+
         public init(collection: Collection) {
-            
+
             let collection = collection as! _Collection
             self.collectionId = collection._collectionId
-            
+
             let realm = try! iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.allObjects(ofType: _AlbumCache.self).filter(using: "collectionId = \(collectionId)")
             tracks = caches[0].collection._tracks.sorted(with: sortConditions)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
-                
+
                 func updateObserver(with results: Results<_AlbumCache>) {
                     let tracks = results[0].collection
                         ._tracks
@@ -75,7 +75,7 @@ extension Model {
                     }
                     self.tracks = tracks
                 }
-                
+
                 switch changes {
                 case .Initial(let results):
                     updateObserver(with: results)
@@ -92,14 +92,14 @@ extension Model {
 }
 
 extension Model.Album {
-    
+
     public var collection: Collection {
         return caches[0].collection
     }
 }
 
 extension Model.Album: CustomStringConvertible {
-    
+
     public var description: String {
         if Thread.isMainThread {
             return "\(Mirror(reflecting: self))) \(collection.name)"
@@ -109,18 +109,18 @@ extension Model.Album: CustomStringConvertible {
 }
 
 extension Model.Album {
-    
+
     func request(refreshing: Bool, force: Bool) {
-        
+
         let collectionId = self.collectionId
         let cache = getOrCreateCache(collectionId: collectionId, realm: try! iTunesRealm())
         if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
             _requestState.value = .done
             return
         }
-        
+
         let session = Session.sharedSession
-        
+
         var lookup = LookupWithIds<LookupResponse>(id: collectionId)
         lookup.lang = "ja_JP"
         lookup.country = "JP"
@@ -140,7 +140,7 @@ extension Model.Album {
                             realm.add(obj, update: true)
                         }
                     }
-                    
+
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
                     if refreshing {
                         cache.refreshAt = Date()
@@ -158,17 +158,17 @@ extension Model.Album {
 }
 
 extension Model.Album: Swift.Collection {
-    
+
     public var count: Int { return tracks.count }
-    
+
     public var isEmpty: Bool { return tracks.isEmpty }
-    
+
     public var startIndex: Int { return tracks.startIndex }
-    
+
     public var endIndex: Int { return tracks.endIndex }
-    
+
     public subscript (index: Int) -> Track { return tracks[index] }
-    
+
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)
     }

@@ -27,52 +27,52 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
 }
 
 extension Model {
-    
+
     public final class Rss: PlaylistType, Fetchable, FetchableInternal {
-        
+
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        
+
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
-        
+
         var needRefresh: Bool {
             let cache = getOrCreateCache(genreId: id, realm: try! iTunesRealm())
             let refreshAt = cache.refreshAt
             print("rss fetched ", refreshAt, Date() - refreshAt)
             return Date() - getOrCreateCache(genreId: id, realm: try! iTunesRealm()).refreshAt > 3.hours
         }
-        
+
         private var fetched: Int = 0
-        
+
         private let id: Int
         private let url: URL
-        
+
         private let caches: Results<_RssCache>
         private var token: NotificationToken!
         private var objectsToken: NotificationToken!
-        
+
         private var trackIds: [Int] = []
-        
+
         public init(genre: Genre) {
             id = genre.id
             url = genre.rssUrls.topSongs
-            
+
             let realm = try! iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
             fetched = feed.fetched
             trackIds = feed.items.map { $0.id }
-            
+
             caches = realm.allObjects(ofType: _RssCache.self).filter(using: "_genreId = \(id)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
-                
+
                 func updateObserver(with results: Results<_RssCache>) {
                     self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
-                
+
                 switch changes {
                 case .Initial(let results):
                     updateObserver(with: results)
@@ -83,7 +83,7 @@ extension Model {
                 case .Error(let error):
                     fatalError("\(error)")
                 }
-                
+
             }
         }
     }
@@ -91,16 +91,16 @@ extension Model {
 
 
 extension Model.Rss {
-    
+
     func request(refreshing: Bool, force: Bool) {
         if trackIds.isEmpty || (refreshing && needRefresh) {
             fetchFeed()
             return
         }
-        
+
         let session = Session.sharedSession
         let id = self.id
-        
+
         let ids = trackIds[safe: fetched..<(fetched+50)]
         if ids.isEmpty {
             _requestState.value = .done
@@ -111,7 +111,7 @@ extension Model.Rss {
         lookup.country = "JP"
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            
+
             switch result {
             case .success(let response):
                 let realm = try! iTunesRealm()
@@ -128,7 +128,7 @@ extension Model.Rss {
                             realm.add(obj, update: true)
                         }
                     }
-                    
+
                     var done = false
                     let cache = getOrCreateCache(genreId: id, realm: realm)
                     cache.tracks.append(objectsIn: tracks)
@@ -145,13 +145,13 @@ extension Model.Rss {
             }
         }
     }
-    
+
     private func fetchFeed() {
-        
+
         let id = self.id
-        
+
         let session = Session.sharedSession
-        
+
         session.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
@@ -179,21 +179,21 @@ extension Model.Rss {
 }
 
 extension Model.Rss: Swift.Collection {
-    
+
     var tracks: List<_Track> {
         return caches[0].tracks
     }
-    
+
     public var count: Int { return tracks.count }
-    
+
     public var isEmpty: Bool { return tracks.isEmpty }
-    
+
     public var startIndex: Int { return tracks.startIndex }
-    
+
     public var endIndex: Int { return tracks.endIndex }
-    
+
     public subscript (index: Int) -> Track { return tracks[index] }
-    
+
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)
     }

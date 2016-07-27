@@ -1,0 +1,12 @@
+line_length: 300
+excluded:
+  - Pods
+  - Carthage
+
+disabled_rules:
+  - variable_name
+  - type_name
+force_cast: warning
+force_try: warning
+
+type_name: warning

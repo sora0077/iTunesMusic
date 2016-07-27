@@ -17,9 +17,9 @@ public struct Model {}
 public enum CollectionChange {
     case initial
     case update(deletions: [Int], insertions: [Int], modifications: [Int])
-    
+
     init<T>(_ change: RealmCollectionChange<T>) {
-        
+
         switch change {
         case .Initial:
             self = .initial
@@ -38,58 +38,58 @@ public enum RequestState: Int {
 
 
 public protocol Fetchable {
-    
+
     var requestState: Observable<RequestState> { get }
-    
+
     func fetch()
-    
+
     func refresh()
-    
+
     func refresh(force: Bool)
 }
 
 protocol FetchableInternal: Fetchable {
-    
+
     var _requestState: Variable<RequestState> { get }
-    
+
     var needRefresh: Bool { get }
-    
+
     var hasNoPaginatedContents: Bool { get }
-    
+
     func request(refreshing: Bool, force: Bool)
 }
 
 extension Fetchable {
-    
+
     public func fetch() {
         _request(refreshing: false, force: false)
     }
-    
+
     public func refresh() {
         refresh(force: false)
     }
-    
+
     public func refresh(force: Bool) {
         let s = self as! FetchableInternal
         if force || s.needRefresh {
             _request(refreshing: true, force: force)
         }
     }
-    
+
     private func _request(refreshing: Bool, force: Bool) {
         let s = self as! FetchableInternal
         if [.done, .requesting].contains(s._requestState.value) {
             return
         }
-        
+
         s._requestState.value = .requesting
-        
+
         s.request(refreshing: refreshing, force: force)
     }
 }
 
 extension FetchableInternal {
-    
+
     var hasNoPaginatedContents: Bool {
         return [.done, .error].contains(_requestState.value)
     }

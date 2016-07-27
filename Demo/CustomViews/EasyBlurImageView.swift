@@ -15,7 +15,7 @@ private func convertRadiusKey(_ radius: Float) -> Int {
 }
 
 final class EasyBlurImageView: UIImageView {
-    
+
     override var image: UIImage? {
         didSet {
             if supressDidSet {
@@ -25,7 +25,7 @@ final class EasyBlurImageView: UIImageView {
             }
         }
     }
-    
+
     var blurRadius: Float = 0 {
         didSet {
             setBlurImage()
@@ -35,7 +35,7 @@ final class EasyBlurImageView: UIImageView {
     private var supressDidSet: Bool = false
     private var originalImage: UIImage?
     private var imageCache: [Int: UIImage] = [:]
-    
+
     private let context = CIContext(options: [
         kCIContextWorkingColorSpace: NSNull()
     ])
@@ -43,19 +43,19 @@ final class EasyBlurImageView: UIImageView {
     deinit {
         print("deinit EasyBlurImageView")
     }
-    
+
     private func createBluredImages() {
         #if (arch(i386) || arch(x86_64)) && os(iOS)
         #else
-            
+
             guard let image = self.image.flatMap(CIImage.init) else { return }
-            
+
             DispatchQueue.global(attributes: .qosBackground).async {
-                
+
                 for i in 0...20 {
                     let clampFilter = CIFilter(name: "CIAffineClamp")!
                     let blurFilter = CIFilter(name: "CIGaussianBlur")!
-                    
+
                     blurFilter.setValue(i, forKey: "inputRadius")
                     clampFilter.setValue(image, forKey: kCIInputImageKey)
                     blurFilter.setValue(clampFilter.outputImage!, forKey: kCIInputImageKey)
@@ -68,15 +68,15 @@ final class EasyBlurImageView: UIImageView {
             }
         #endif
     }
-    
+
     private func setBlurImage() {
         supressDidSet = true
         defer {
             supressDidSet = false
         }
-        
+
         #if (arch(i386) || arch(x86_64)) && os(iOS)
-            
+
         #else
             let key = convertRadiusKey(blurRadius)
             if let image = imageCache[key] {

@@ -11,34 +11,34 @@ import APIKit
 
 
 struct GetPreviewUrl: iTunesRequestType {
-    
+
     typealias Response = (URL, Int)
-    
+
     let id: Int
-    
+
     let baseURL: URL
-    
+
     var method: HTTPMethod { return .GET }
-    
+
     var path: String { return "" }
-    
+
     var headerFields: [String : String] {
         return [
             "X-Apple-Store-Front": "143462-9,4",
         ]
     }
-    
+
     var dataParser: DataParserType {
         return PropertyListDataParser(options: [])
     }
-    
+
     init(id: Int, url: URL) {
         self.id = id
         baseURL = url
     }
-    
+
     func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
-        
+
         let items = object["items"] as! [[String: AnyObject]]
         for item in items {
             guard let id = item["item-id"] as? Int else { continue }
@@ -52,7 +52,7 @@ struct GetPreviewUrl: iTunesRequestType {
 
 
 private func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
-    
+
     if let offers = item["store-offers"] as? [String: AnyObject] {
         let preview: String
         let duration: Int
@@ -67,7 +67,7 @@ private func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
             return (url, duration)
         }
     }
-    
-    
+
+
     throw iTunesMusicError.notFound
 }

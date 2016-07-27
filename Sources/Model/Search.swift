@@ -27,43 +27,43 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 }
 
 extension Model {
-    
+
     public final class Search: PlaylistType, Fetchable, FetchableInternal {
-        
+
         var name: String { return term }
-        
+
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        
+
         let _requestState = Variable<RequestState>(.none)
         public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
-        
+
         private let _refreshing = Variable<Bool>(false)
-        
+
         var needRefresh: Bool {
             return Date() - getOrCreateCache(term: term, realm: try! iTunesRealm()).refreshAt > 60.minutes
         }
-        
+
         private let term: String
         private let caches: Results<_SearchCache>
         private var token: NotificationToken!
         private var objectsToken: NotificationToken?
-        
+
         public init(term: String) {
             self.term = term
-            
+
             let realm = try! iTunesRealm()
             _ = getOrCreateCache(term: term, realm: realm)
             caches = realm.allObjects(ofType: _SearchCache.self).filter(using: "term = %@", term)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
-                
+
                 func updateObserver(with results: Results<_SearchCache>) {
                     self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
-                
+
                 switch changes {
                 case .Initial(let results):
                     updateObserver(with: results)
@@ -74,23 +74,23 @@ extension Model {
                 case .Error(let error):
                     fatalError("\(error)")
                 }
-                
+
             }
         }
-        
+
     }
 }
 
 
 extension Model.Search {
-    
+
     func request(refreshing: Bool, force: Bool) {
         if term.isEmpty { return }
-        
+
         _refreshing.value = refreshing
-        
+
         let session = Session(adapter: NSURLSessionAdapter(configuration: URLSessionConfiguration.default))
-        
+
         var search: SearchWithKeyword<SearchResponse>
         if refreshing {
             search = SearchWithKeyword(term: term)
@@ -143,21 +143,21 @@ extension Model.Search {
 }
 
 extension Model.Search: Swift.Collection {
-    
+
     var tracks: List<_Track> {
         return caches[0].objects
     }
-    
+
     public var count: Int { return tracks.count }
-    
+
     public var isEmpty: Bool { return tracks.isEmpty }
-    
+
     public var startIndex: Int { return tracks.startIndex }
-    
+
     public var endIndex: Int { return tracks.endIndex }
-    
+
     public subscript (index: Int) -> Track { return tracks[index] }
-    
+
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)
     }

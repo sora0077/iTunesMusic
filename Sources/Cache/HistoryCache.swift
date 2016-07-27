@@ -13,11 +13,10 @@ import Himotoki
 
 
 class _HistoryCache: RealmSwift.Object {
-    
+
     let objects = List<_HistoryRecord>()
-    
+
     dynamic var createAt: Date = Date()
-    
+
     dynamic var updateAt: Date = Date()
 }
-

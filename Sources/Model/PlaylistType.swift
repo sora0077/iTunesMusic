@@ -12,11 +12,11 @@ import RxSwift
 
 
 public protocol PlaylistType: class {
-    
+
     var changes: Observable<CollectionChange> { get }
-    
+
     var count: Int { get }
     var isEmpty: Bool { get }
-    
+
     subscript (index: Int) -> Track { get }
 }

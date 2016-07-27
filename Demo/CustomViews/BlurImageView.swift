@@ -10,28 +10,28 @@ import GLKit
 
 
 final class BlurImageView: GLKView {
-    
+
     var blurRadius: Float = 0 {
         didSet {
             blurFilter.setValue(blurRadius, forKey: "inputRadius")
             setNeedsDisplay()
         }
     }
-    
+
     var image: UIImage? {
         didSet {
             inputCIImage = image.map { CIImage(image: $0)! }
         }
     }
-    
+
     private var inputCIImage: CIImage? {
         didSet { setNeedsDisplay() }
     }
-    
+
     private let clampFilter = CIFilter(name: "CIAffineClamp")!
     private let blurFilter = CIFilter(name: "CIGaussianBlur")!
     private let ciContext: CIContext
-    
+
     override init(frame: CGRect) {
         let glContext = EAGLContext(api: .openGLES2)
         ciContext = CIContext(
@@ -43,7 +43,7 @@ final class BlurImageView: GLKView {
         super.init(frame: frame, context: glContext!)
         enableSetNeedsDisplay = true
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         let glContext = EAGLContext(api: .openGLES2)
         ciContext = CIContext(
@@ -56,8 +56,8 @@ final class BlurImageView: GLKView {
         context = glContext!
         enableSetNeedsDisplay = true
     }
-    
-    
+
+
     override func draw(_ rect: CGRect) {
         if let inputCIImage = inputCIImage {
             clampFilter.setValue(inputCIImage, forKey: kCIInputImageKey)

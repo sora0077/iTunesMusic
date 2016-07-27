@@ -13,14 +13,14 @@ import SnapKit
 
 
 class BaseViewController: UIViewController {
-    
+
     let disposeBag = DisposeBag()
-    
+
     var modules: [UIView: ViewModuleProtocol] = [:]
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         modules.forEach { $0.1.install() }
     }
 }
@@ -28,12 +28,12 @@ class BaseViewController: UIViewController {
 class GenresViewController: BaseViewController {
 
     private let genres = Model.Genres()
-    
+
     private let tableView = UITableView()
-    
+
     init() {
         super.init(nibName: nil, bundle: nil)
-        
+
         modules[tableView] = TableViewModule(
             view: tableView,
             superview: { [unowned self] in self.view },
@@ -48,31 +48,31 @@ class GenresViewController: BaseViewController {
             onSelect: { (self, tableView, element, indexPath) in
                 let genre = self.genres[indexPath.row]
                 let vc = RssViewController(genre: genre)
-                
+
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         )
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        
+
         genres.changes
             .subscribe(tableView.rx_itemUpdates())
             .addDisposableTo(disposeBag)
-        
+
         genres.refresh()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
         }

@@ -30,7 +30,7 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collect
 
 
 extension UIScrollView {
-    
+
     func rx_reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
         return rx_contentOffset
             .map { [weak self] contentOffset in
@@ -47,7 +47,7 @@ extension UIScrollView {
 
 private var UITableView_isMoving: UInt8 = 0
 extension UITableView {
-    
+
     var isMoving: Bool {
         set {
             objc_setAssociatedObject(self, &UITableView_isMoving, newValue, .OBJC_ASSOCIATION_ASSIGN)
@@ -56,7 +56,7 @@ extension UITableView {
             return objc_getAssociatedObject(self, &UITableView_isMoving) as? Bool ?? false
         }
     }
-    
+
     func rx_itemUpdates(_ configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
         return UIBindingObserver(UIElement: self) { tableView, changes in
             switch changes {
@@ -75,9 +75,9 @@ extension UITableView {
             }
         }.asObserver()
     }
-    
+
     func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
-        
+
         beginUpdates()
         if isMoving && deletions.count == insertions.count && modifications.isEmpty {
             isMoving = false
@@ -96,34 +96,34 @@ extension UITableView {
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    
+
     private let disposeBag = DisposeBag()
 
     private var artist: Model.Artist!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
-        
+
         SDWebImageManager.shared().imageCache.clearDisk()
         SDWebImageManager.shared().imageCache.clearMemory()
-        
+
         let session = AVAudioSession.sharedInstance()
         try! session.setCategory(AVAudioSessionCategoryPlayback)
         try! session.setActive(true)
-        
+
         application.beginReceivingRemoteControlEvents()
-        
+
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
-        
+
         launch()
-        
+
         player.install(middleware: ControlCenter())
-        
+
         window?.tintColor = UIColor.lightGray()
-        
+
         print((try! iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((try! iTunesRealm()).schema.objectSchema.map { $0.className })
-        
+
         return true
     }
 

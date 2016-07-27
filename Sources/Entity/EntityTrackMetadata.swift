@@ -12,61 +12,61 @@ import Realm
 
 
 public protocol TrackMetadata {
-    
+
     var duration: Double? { get }
-    
+
     var fileURL: URL? { get }
-    
+
     var previewURL: URL? { get }
 }
 
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
-    
+
     private dynamic var _trackId: Int = 0
-    
+
     private dynamic var _track: _Track?
-    
+
     private dynamic var _longPreviewUrl: String?
-    
+
     private dynamic var _longPreviewFileUrl: String?
-    
+
     private let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
-    
+
     dynamic var _createAt: Date = Date()
-    
+
     override class func primaryKey() -> String? { return "_trackId" }
-    
+
     init(track: _Track) {
         super.init()
-        
+
         _trackId = track.trackId
         _track = track
     }
-    
+
     required init(realm: RLMRealm, schema: RLMObjectSchema) {
         super.init(realm: realm, schema: schema)
     }
-    
+
     required init() {
         super.init()
     }
-    
+
     required init(value: AnyObject, schema: RLMSchema) {
         super.init(value: value, schema: schema)
     }
-    
+
 }
 
 extension _TrackMetadata {
-    
+
     var previewURL: URL? {
         return _longPreviewUrl.flatMap(URL.init)
     }
-    
+
     var fileURL: URL? {
         guard let filename = _longPreviewFileUrl else { return nil }
-        
+
         let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         let fileURL = try! URL(fileURLWithPath: cachePath).appendingPathComponent(filename)
         if let path = fileURL.path, FileManager.default.fileExists(atPath: path) {
@@ -74,7 +74,7 @@ extension _TrackMetadata {
         }
         return nil
     }
-    
+
     var duration: Double? {
         set {
             _longPreviewDuration.value = newValue
@@ -83,11 +83,11 @@ extension _TrackMetadata {
             return _longPreviewDuration.value
         }
     }
-    
+
     func updatePreviewURL(_ url: URL) {
         _longPreviewUrl = url.absoluteString
     }
-    
+
     func updateCache(filename: String) {
         _longPreviewFileUrl = filename
     }
