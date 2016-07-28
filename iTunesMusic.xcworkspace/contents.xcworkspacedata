@@ -29,6 +29,6 @@
       location = "group:Carthage/Checkouts/SnapKit/SnapKit.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Carthage/Checkouts/Fuzi/Fuzi.xcodeproj">
+      location = "group:Carthage/Checkouts/SWXMLHash/SWXMLHash.xcodeproj">
    </FileRef>
 </Workspace>

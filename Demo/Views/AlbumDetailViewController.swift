@@ -313,6 +313,9 @@ extension AlbumDetailViewController: UITableViewDelegate {
         let track = album[indexPath.row]
         guard track.canPreview else { return }
 
+        review = Model.Review(collection: track.collection)
+        review.fetch()
+
         print(track)
 //        artist = Model.Artist(artist: album[indexPath.row].artist)
 //        artist.fetch()

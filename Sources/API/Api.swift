@@ -9,7 +9,7 @@
 import Foundation
 import APIKit
 import Himotoki
-import Fuzi
+import SWXMLHash
 
 
 protocol iTunesRequestType: RequestType {
@@ -58,9 +58,16 @@ class PropertyListDataParser: DataParserType {
 
 class XMLDataParser: DataParserType {
 
+    class Wrapper {
+        let xml: XMLIndexer
+        init(xml: XMLIndexer) {
+            self.xml = xml
+        }
+    }
+
     var contentType: String? = "application/xml"
 
     func parseData(_ data: Data) throws -> AnyObject {
-        return try HTMLDocument(data: data)
+        return Wrapper(xml: SWXMLHash.parse(data))
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 import APIKit
 import Himotoki
-import Fuzi
+import SWXMLHash
 
 
 struct ListReviews<R: Decodable>: iTunesRequestType {
@@ -41,23 +41,22 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
     func intercept(object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject {
 
         // swiftlint:disable force_cast
-        let doc = object as! HTMLDocument
-        let entries = doc.xpath("//entry")
+        let doc = (object as! XMLDataParser.Wrapper).xml
+        let entries = doc["feed"]["entry"].all
 
         guard entries.count > 1 else {
             return []
         }
-
         return entries[1..<entries.endIndex].map { entry in
             [
-                "updated": entry.firstChild(tag: "updated")!.stringValue,
-                "id": entry.firstChild(tag: "id")!.stringValue,
-                "title": entry.firstChild(tag: "title")!.stringValue,
-                "content": entry.firstChild(xpath: "content[@type='text']")!.stringValue,
-                "rating": entry.firstChild(tag: "rating")!.stringValue,
-                "voteSum": entry.firstChild(tag: "voteSum")!.stringValue,
-                "voteCount": entry.firstChild(tag: "voteCount")!.stringValue,
-                "auther": entry.firstChild(xpath: "author/name")!.stringValue
+                "updated": entry["updated"].element!.text!,
+                "id": entry["id"].element!.text!,
+                "title": entry["title"].element!.text!,
+                "content": try! entry["content"].withAttr("type", "text").element!.text!,
+                "rating": entry["im:rating"].element!.text!,
+                "voteSum": entry["im:voteSum"].element!.text!,
+                "voteCount": entry["im:voteCount"].element!.text!,
+                "auther": entry["author"]["name"].element!.text!,
             ]
         }
     }
