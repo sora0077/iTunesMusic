@@ -47,6 +47,8 @@ final class _Review: RealmSwift.Object, Review {
     private(set) dynamic var voteSum = 0
 
     private(set) dynamic var postedAt = Date.distantPast
+
+    override class func primaryKey() -> String? { return "id" }
 }
 
 private let intTransformer = Transformer<String, Int> {

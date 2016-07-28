@@ -99,22 +99,12 @@ extension Model.Album {
     }
 }
 
-extension Model.Album: CustomStringConvertible {
-
-    public var description: String {
-        if Thread.isMainThread {
-            return "\(Mirror(reflecting: self))) \(collection.name)"
-        }
-        return "\(Mirror(reflecting: self)))"
-    }
-}
-
 extension Model.Album {
 
     func request(refreshing: Bool, force: Bool) {
 
         let collectionId = self.collectionId
-        let cache = getOrCreateCache(collectionId: collectionId, realm: iTunesRealm())
+        let cache = caches[0]
         if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
             _requestState.value = .done
             return
@@ -127,6 +117,9 @@ extension Model.Album {
         lookup.country = "JP"
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            defer {
+                tick()
+            }
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
@@ -150,7 +143,6 @@ extension Model.Album {
                     print(cache.collection._trackCount, cache.collection._tracks.count)
                     self._requestState.value = .done
                 }
-                tick()
             case .failure(let error):
                 print(error)
                 self._requestState.value = .error

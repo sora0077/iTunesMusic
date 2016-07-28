@@ -84,6 +84,17 @@ extension Fetchable {
             return
         }
 
+        print("now request, \(self)")
+
+        guard Thread.isMainThread else {
+            defer {
+                DispatchQueue.main.async {
+                    self._request(refreshing: refreshing, force: force)
+                }
+            }
+            return
+        }
+
         s._requestState.value = .requesting
 
         s.request(refreshing: refreshing, force: force)

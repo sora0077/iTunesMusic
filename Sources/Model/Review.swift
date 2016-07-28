@@ -48,7 +48,7 @@ extension Model {
             return Date() - getOrCreateCache(collectionId: collectionId, realm: iTunesRealm()).refreshAt > 6.hours
         }
 
-        init(collection: iTunesMusic.Collection) {
+        public init(collection: iTunesMusic.Collection) {
             collectionId = collection.id
 
             let realm = iTunesRealm()
@@ -83,15 +83,22 @@ extension Model.Review {
 
     func request(refreshing: Bool, force: Bool) {
 
-        if !refreshing && caches[0].fetched {
+        let cache = caches[0]
+        print(cache)
+
+        if !refreshing && cache.fetched {
             _requestState.value = .done
             return
         }
 
         let collectionId = self.collectionId
 
-        Session.sharedSession.sendRequest(ListReviews<_Review>(id: collectionId), callbackQueue: callbackQueue) { [weak self] result in
+        let request = ListReviews<_Review>(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
+        Session.sharedSession.sendRequest(request, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            defer {
+                tick()
+            }
             switch result {
             case .success(let response) where !response.isEmpty:
                 let realm = iTunesRealm()
@@ -100,14 +107,16 @@ extension Model.Review {
                     realm.add(response, update: true)
 
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-                    cache.page += 1
                     if refreshing {
                         cache.refreshAt = Date()
-                        cache.page = 0
+                        cache.page = 1
+                        cache.fetched = false
+                        cache.objects.removeAllObjects()
                     }
-                    self._requestState.value = .done
+                    cache.page += 1
+                    cache.objects.append(objectsIn: response)
+                    self._requestState.value = .none
                 }
-                tick()
             case .success:
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
@@ -116,7 +125,6 @@ extension Model.Review {
                     cache.fetched = true
                     self._requestState.value = .done
                 }
-                tick()
             case .failure(let error):
                 print(error)
                 self._requestState.value = .error

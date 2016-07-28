@@ -90,8 +90,6 @@ extension Model.Search {
 
         _refreshing.value = refreshing
 
-        let session = Session(adapter: NSURLSessionAdapter(configuration: URLSessionConfiguration.default))
-
         var search: SearchWithKeyword<SearchResponse>
         if refreshing {
             search = SearchWithKeyword(term: term)
@@ -101,7 +99,7 @@ extension Model.Search {
         }
         search.lang = "ja_JP"
         search.country = "JP"
-        session.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             defer {
                 self._refreshing.value = false
@@ -128,6 +126,7 @@ extension Model.Search {
                     if refreshing {
                         cache.objects.removeAllObjects()
                         cache.refreshAt = Date()
+                        cache.offset = 0
                     }
                     cache.objects.append(objectsIn: tracks.reversed())
                     cache.updateAt = Date()

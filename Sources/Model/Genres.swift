@@ -110,11 +110,12 @@ extension Model.Genres {
             return
         }
 
-        let session = Session(adapter: NSURLSessionAdapter(configuration: URLSessionConfiguration.default))
-
         var listGenres = ListGenres<_Genre>()
         listGenres.country = "jp"
-        session.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
+        Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
+            defer {
+                tick()
+            }
             switch result {
             case .success(let cache):
                 let realm = iTunesRealm()

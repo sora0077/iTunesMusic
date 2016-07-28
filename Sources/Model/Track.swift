@@ -65,6 +65,9 @@ extension Model.Track {
         lookup.country = "JP"
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            defer {
+                tick()
+            }
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
@@ -81,7 +84,6 @@ extension Model.Track {
                     }
                     self._requestState.value = .done
                 }
-                tick()
             case .failure(let error):
                 print(error)
                 self._requestState.value = .error

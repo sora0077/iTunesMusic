@@ -85,7 +85,7 @@ extension Model.Artist {
     func request(refreshing: Bool, force: Bool) {
 
         let artistId = self.artistId
-        let cache = getOrCreateCache(artistId: artistId, realm: iTunesRealm())
+        let cache = caches[0]
         if !refreshing && cache.fetched {
             _requestState.value = .done
             return
@@ -98,6 +98,9 @@ extension Model.Artist {
         lookup.country = "JP"
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            defer {
+                tick()
+            }
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
@@ -121,7 +124,6 @@ extension Model.Artist {
                     }
                     self._requestState.value = .done
                 }
-                tick()
             case .failure(let error):
                 print(error)
                 self._requestState.value = .error

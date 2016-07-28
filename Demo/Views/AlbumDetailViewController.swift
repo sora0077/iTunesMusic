@@ -303,6 +303,8 @@ extension AlbumDetailViewController: UITableViewDataSource {
     }
 }
 
+var review: Model.Review!
+
 extension AlbumDetailViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
