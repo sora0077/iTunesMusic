@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+import Himotoki
 
 
 public protocol Review {
@@ -21,6 +22,13 @@ public protocol Review {
     var rating: Int { get }
 }
 
+extension Review {
+
+    var impl: _Review {
+        // swiftlint:disable force_cast
+        return self as! _Review
+    }
+}
 
 final class _Review: RealmSwift.Object, Review {
 
@@ -39,4 +47,34 @@ final class _Review: RealmSwift.Object, Review {
     private(set) dynamic var voteSum = 0
 
     private(set) dynamic var postedAt = Date.distantPast
+}
+
+private let intTransformer = Transformer<String, Int> {
+    guard let val = Int($0) else {
+        throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
+    }
+    return val
+}
+
+private let postedAtTransformer = Transformer<String, Date> { string in
+    //  2016-06-29T07:00:00-07:00
+    return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:sszzzz")!
+}
+
+extension _Review: Decodable {
+
+    static func decode(_ e: Extractor) throws -> Self {
+
+        let obj = self.init()
+        obj.id = try intTransformer.apply(e.value("id"))
+        obj.auther = try e.value("auther")
+        obj.title = try e.value("title")
+        obj.content = try e.value("content")
+        obj.rating = try intTransformer.apply(e.value("rating"))
+        obj.voteCount = try intTransformer.apply(e.value("voteCount"))
+        obj.voteSum = try intTransformer.apply(e.value("voteSum"))
+        obj.postedAt = try postedAtTransformer.apply(e.value("updated"))
+
+        return obj
+    }
 }

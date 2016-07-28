@@ -16,6 +16,7 @@ private func getOrCreateCache(realm: Realm) -> _HistoryCache {
         return cache
     } else {
         let cache = _HistoryCache()
+        // swiftlint:disable force_try
         try! realm.write {
             realm.add(cache)
         }

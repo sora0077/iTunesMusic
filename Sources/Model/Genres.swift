@@ -21,6 +21,7 @@ private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
     } else {
         let cache = _GenresCache()
         cache.key = key
+        // swiftlint:disable force_try
         try! realm.write {
             realm.add(cache)
         }
@@ -32,6 +33,7 @@ extension Model {
 
     public final class Genres: Fetchable, FetchableInternal {
 
+        // swiftlint:disable nesting
         private enum InitialDefaultGenre: Int {
 
             case top = 34

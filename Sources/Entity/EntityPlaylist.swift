@@ -18,6 +18,7 @@ public protocol MyPlaylist {
 extension MyPlaylist {
 
     var impl: _MyPlaylist {
+        // swiftlint:disable force_cast
         return self as! _MyPlaylist
     }
 }

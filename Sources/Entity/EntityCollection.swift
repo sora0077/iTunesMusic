@@ -32,6 +32,7 @@ public protocol Collection {
 extension Collection {
 
     var impl: _Collection {
+        // swiftlint:disable force_cast
         return self as! _Collection
     }
 }
@@ -112,7 +113,7 @@ extension _Collection: Decodable {
     }
 }
 
-
+// swiftlint:disable force_try
 private let artworkRegex = try! RegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
 private let artworkCached = Cache<NSString, NSURL>()
 

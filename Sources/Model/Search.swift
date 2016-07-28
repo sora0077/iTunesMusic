@@ -18,6 +18,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
         return cache
     } else {
         let cache = _SearchCache()
+        // swiftlint:disable force_try
         try! realm.write {
             cache.term = term
             realm.add(cache)
@@ -110,6 +111,7 @@ extension Model.Search {
             case .success(let response):
                 let realm = iTunesRealm()
                 let cache = getOrCreateCache(term: self.term, realm: realm)
+                // swiftlint:disable force_try
                 try! realm.write {
                     var tracks: [_Track] = []
                     response.objects.reversed().forEach {

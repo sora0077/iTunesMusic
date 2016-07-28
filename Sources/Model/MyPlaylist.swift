@@ -16,6 +16,7 @@ private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
         return cache
     }
     let cache = _MyPlaylistCache()
+    // swiftlint:disable force_try
     try! realm.write {
         let playlist = _MyPlaylist()
         playlist.title = "お気に入り"
@@ -94,6 +95,7 @@ extension Model.MyPlaylist {
 
     public func insert(track: Track, at index: Int) {
         let realm = iTunesRealm()
+        // swiftlint:disable force_try
         try! realm.write {
             playlist.tracks.insert(track.impl, at: index)
         }
@@ -101,6 +103,7 @@ extension Model.MyPlaylist {
 
     public func append(track: Track) {
         let realm = iTunesRealm()
+        // swiftlint:disable force_try
         try! realm.write {
             playlist.tracks.append(track.impl)
         }
@@ -108,6 +111,7 @@ extension Model.MyPlaylist {
 
     public func remove(at index: Int) {
         let realm = iTunesRealm()
+        // swiftlint:disable force_try
         try! realm.write {
             playlist.tracks.remove(objectAtIndex: index)
         }
@@ -115,6 +119,7 @@ extension Model.MyPlaylist {
 
     public func move(from src: Int, to dst: Int) {
         let realm = iTunesRealm()
+        // swiftlint:disable force_try
         try! realm.write {
             playlist.tracks.move(from: src, to: dst)
         }

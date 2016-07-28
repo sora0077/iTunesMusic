@@ -18,6 +18,7 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
         return cache
     } else {
         let cache = _RssCache()
+        // swiftlint:disable force_try
         try! realm.write {
             cache._genreId = genreId
             realm.add(cache)

@@ -38,6 +38,7 @@ public protocol Track: EntityInterface {
 extension Track {
 
     var impl: _Track {
+        // swiftlint:disable force_cast
         return self as! _Track
     }
 }

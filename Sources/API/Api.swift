@@ -9,6 +9,8 @@
 import Foundation
 import APIKit
 import Himotoki
+import Fuzi
+
 
 protocol iTunesRequestType: RequestType {
 
@@ -51,5 +53,14 @@ class PropertyListDataParser: DataParserType {
 
     func parseData(_ data: Data) throws -> AnyObject {
         return try PropertyListSerialization.propertyList(from: data, options: PropertyListSerialization.MutabilityOptions(), format: nil)
+    }
+}
+
+class XMLDataParser: DataParserType {
+
+    var contentType: String? = "application/xml"
+
+    func parseData(_ data: Data) throws -> AnyObject {
+        return try HTMLDocument(data: data)
     }
 }

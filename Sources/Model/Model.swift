@@ -70,6 +70,7 @@ extension Fetchable {
     }
 
     public func refresh(force: Bool) {
+        // swiftlint:disable force_cast
         let s = self as! FetchableInternal
         if force || s.needRefresh {
             _request(refreshing: true, force: force)
@@ -77,6 +78,7 @@ extension Fetchable {
     }
 
     private func _request(refreshing: Bool, force: Bool) {
+        // swiftlint:disable force_cast
         let s = self as! FetchableInternal
         if [.done, .requesting].contains(s._requestState.value) {
             return

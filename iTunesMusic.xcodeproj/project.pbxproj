@@ -31,6 +31,8 @@
 		D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A31D0CFA2700AAAD58 /* Preview.swift */; };
 		D91B42A81D0EFBF700AAAD58 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A71D0EFBF700AAAD58 /* History.swift */; };
 		D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */; };
+		D91E68D01D4A4A40005CF411 /* ReviewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91E68CF1D4A4A40005CF411 /* ReviewCache.swift */; };
+		D91E68D21D4A4AE3005CF411 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91E68D11D4A4AE3005CF411 /* Cache.swift */; };
 		D929E4481D1C44C70045C316 /* Rss.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4471D1C44C70045C316 /* Rss.swift */; };
 		D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4491D1C44E50045C316 /* GetRss.swift */; };
 		D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4531D1EE9500045C316 /* AppDelegate.swift */; };
@@ -52,6 +54,8 @@
 		D96A93DD1D48E8A900B693D4 /* 9to10.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DC1D48E8A900B693D4 /* 9to10.swift */; };
 		D96A93DF1D48FBD200B693D4 /* EntityReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DE1D48FBD200B693D4 /* EntityReview.swift */; };
 		D96A93E11D4909F000B693D4 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E01D4909F000B693D4 /* Review.swift */; };
+		D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E21D49110A00B693D4 /* ListReviews.swift */; };
+		D96A93E71D49161B00B693D4 /* Fuzi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96A93E61D49161B00B693D4 /* Fuzi.framework */; };
 		D96C957B1D3A17B9000116FD /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957A1D3A17B9000116FD /* PlaylistViewController.swift */; };
 		D96C957E1D3A6CCB000116FD /* MyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957C1D3A66D2000116FD /* MyPlaylist.swift */; };
 		D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */; };
@@ -183,6 +187,8 @@
 		D91B42A31D0CFA2700AAAD58 /* Preview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preview.swift; sourceTree = "<group>"; };
 		D91B42A71D0EFBF700AAAD58 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
 		D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryCache.swift; sourceTree = "<group>"; };
+		D91E68CF1D4A4A40005CF411 /* ReviewCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewCache.swift; sourceTree = "<group>"; };
+		D91E68D11D4A4AE3005CF411 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		D929E4471D1C44C70045C316 /* Rss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rss.swift; sourceTree = "<group>"; };
 		D929E4491D1C44E50045C316 /* GetRss.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetRss.swift; sourceTree = "<group>"; };
 		D929E4511D1EE9500045C316 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -206,6 +212,8 @@
 		D96A93DC1D48E8A900B693D4 /* 9to10.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 9to10.swift; sourceTree = "<group>"; };
 		D96A93DE1D48FBD200B693D4 /* EntityReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityReview.swift; sourceTree = "<group>"; };
 		D96A93E01D4909F000B693D4 /* Review.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		D96A93E21D49110A00B693D4 /* ListReviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReviews.swift; sourceTree = "<group>"; };
+		D96A93E61D49161B00B693D4 /* Fuzi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fuzi.framework; path = "Carthage/Checkouts/Fuzi/build/Debug-iphoneos/Fuzi.framework"; sourceTree = "<group>"; };
 		D96C957A1D3A17B9000116FD /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		D96C957C1D3A66D2000116FD /* MyPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylist.swift; sourceTree = "<group>"; };
 		D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylistCache.swift; sourceTree = "<group>"; };
@@ -244,6 +252,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D96A93E71D49161B00B693D4 /* Fuzi.framework in Frameworks */,
 				D9D1F3E31D422D72007E7058 /* RxCocoa.framework in Frameworks */,
 				D9D1F3E11D422D6A007E7058 /* SnapKit.framework in Frameworks */,
 				D9D1F3DF1D422D63007E7058 /* Timepiece.framework in Frameworks */,
@@ -297,6 +306,7 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D96A93E61D49161B00B693D4 /* Fuzi.framework */,
 				D9D1F3E21D422D72007E7058 /* RxCocoa.framework */,
 				D9D1F3E01D422D6A007E7058 /* SnapKit.framework */,
 				D9D1F3DE1D422D63007E7058 /* Timepiece.framework */,
@@ -413,6 +423,7 @@
 		D91B42911D04C46C00AAAD58 /* Cache */ = {
 			isa = PBXGroup;
 			children = (
+				D91E68D11D4A4AE3005CF411 /* Cache.swift */,
 				D91B42941D05BBDB00AAAD58 /* SearchCache.swift */,
 				D91B42A91D0EFCD700AAAD58 /* HistoryCache.swift */,
 				D9FD12ED1D18324F0010E81D /* GenresCache.swift */,
@@ -420,6 +431,7 @@
 				D9EA0B501D27FE2A001C3F2F /* AlbumCache.swift */,
 				D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */,
 				D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */,
+				D91E68CF1D4A4A40005CF411 /* ReviewCache.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -433,6 +445,7 @@
 				D91B42A11D0C5D9600AAAD58 /* GetPreviewUrl.swift */,
 				D9FD12E91D182F930010E81D /* ListGenres.swift */,
 				D929E4491D1C44E50045C316 /* GetRss.swift */,
+				D96A93E21D49110A00B693D4 /* ListReviews.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -862,6 +875,7 @@
 			files = (
 				D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */,
 				D9FD12EE1D18324F0010E81D /* GenresCache.swift in Sources */,
+				D91E68D01D4A4A40005CF411 /* ReviewCache.swift in Sources */,
 				D98D566A1D20270C007B09DB /* RssCache.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
 				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
@@ -869,6 +883,7 @@
 				D99164121D37D37C0091BF09 /* Track.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D929E4481D1C44C70045C316 /* Rss.swift in Sources */,
+				D91E68D21D4A4AE3005CF411 /* Cache.swift in Sources */,
 				D9165FEF1D2C0ADD00B701E3 /* Utils.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
 				D96A93DD1D48E8A900B693D4 /* 9to10.swift in Sources */,
@@ -888,6 +903,7 @@
 				D96A93E11D4909F000B693D4 /* Review.swift in Sources */,
 				D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */,
 				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
+				D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
@@ -1080,7 +1096,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/Fuzi/build/Debug-iphoneos",
+				);
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = iTunesMusic/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1101,7 +1121,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/Fuzi/build/Debug-iphoneos",
+				);
+				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = iTunesMusic/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

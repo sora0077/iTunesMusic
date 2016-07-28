@@ -9,10 +9,14 @@
 import Foundation
 
 
-private var Locale_migrator: UInt8 = 0
 extension Locale {
 
     final class Compatible {
+
+        // swiftlint:disable nesting
+        private struct Key {
+            static var countryCode: UInt8 = 0
+        }
 
         private let locale: Locale
 
@@ -20,6 +24,7 @@ extension Locale {
             if #available(iOS 10, *) {
                 return locale.countryCode
             }
+            // swiftlint:disable force_cast
             return locale.object(forKey: Locale.Key.countryCode) as! String
         }
 
@@ -30,14 +35,14 @@ extension Locale {
 
     var compatible: Compatible {
         set {
-            objc_setAssociatedObject(self, &Locale_migrator, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &Compatible.Key.countryCode, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            if let obj = objc_getAssociatedObject(self, &Locale_migrator) as? Compatible {
+            if let obj = objc_getAssociatedObject(self, &Compatible.Key.countryCode) as? Compatible {
                 return obj
             }
             let compatible = Compatible(locale: self)
-            objc_setAssociatedObject(self, &Locale_migrator, compatible, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &Compatible.Key.countryCode, compatible, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             return compatible
         }
     }

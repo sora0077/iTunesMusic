@@ -5,4 +5,6 @@ github "sora0077/Timepiece" "master"
 github "ReactiveX/RxSwift" "swift-3.0"
 github "realm/realm-cocoa" "master"
 
+github "cezheng/Fuzi" "swift-3"
+
 github "SnapKit/SnapKit" "feature/0.40.0"

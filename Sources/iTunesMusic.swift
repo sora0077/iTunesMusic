@@ -36,7 +36,9 @@ private let configuration: Realm.Configuration = {
         _Genre.self,
         _TrackMetadata.self,
         _Track.self,
-        _RssCache.self
+        _RssCache.self,
+        _Review.self,
+        _ReviewCache.self,
     ]
     return config
 }()
@@ -49,5 +51,6 @@ public func launch() {
 }
 
 public func iTunesRealm() -> Realm {
+    // swiftlint:disable force_try
     return try! Realm(configuration: configuration)
 }

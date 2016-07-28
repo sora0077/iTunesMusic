@@ -21,6 +21,7 @@ private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
     let cache = _ArtistCache()
     cache.artistId = artistId
     cache.artist = realm.object(ofType: _Artist.self, forPrimaryKey: artistId)!
+    // swiftlint:disable force_try
     try! realm.write {
         realm.add(cache)
     }
@@ -50,11 +51,10 @@ extension Model {
 
         public init(artist: iTunesMusic.Artist) {
 
-            let artist = artist as! _Artist
-            self.artistId = artist._artistId
+            self.artistId = artist.id
 
             let realm = iTunesRealm()
-            let cache = getOrCreateCache(artistId: artistId, realm: realm)
+            _ = getOrCreateCache(artistId: artistId, realm: realm)
             caches = realm.allObjects(ofType: _ArtistCache.self).filter(using: "artistId = \(artistId)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
@@ -101,6 +101,7 @@ extension Model.Artist {
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
+                // swiftlint:disable force_try
                 try! realm.write {
                     response.objects.forEach {
                         switch $0 {

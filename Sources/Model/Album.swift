@@ -20,6 +20,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     let cache = _AlbumCache()
     cache.collectionId = collectionId
     cache.collection = realm.object(ofType: _Collection.self, forPrimaryKey: collectionId)!
+    // swiftlint:disable force_try
     try! realm.write {
         realm.add(cache)
     }
@@ -129,6 +130,7 @@ extension Model.Album {
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
+                // swiftlint:disable force_try
                 try! realm.write {
                     response.objects.reversed().forEach {
                         switch $0 {
