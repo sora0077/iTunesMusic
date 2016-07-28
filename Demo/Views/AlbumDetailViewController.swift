@@ -303,7 +303,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
     }
 }
 
-var review: Model.Review!
+var review: Model.Reviews!
 
 extension AlbumDetailViewController: UITableViewDelegate {
 
@@ -313,7 +313,7 @@ extension AlbumDetailViewController: UITableViewDelegate {
         let track = album[indexPath.row]
         guard track.canPreview else { return }
 
-        review = Model.Review(collection: track.collection)
+        review = Model.Reviews(collection: track.collection)
         review.fetch()
 
         print(track)

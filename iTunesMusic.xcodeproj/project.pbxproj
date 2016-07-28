@@ -56,7 +56,7 @@
 		D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */; };
 		D96A93DD1D48E8A900B693D4 /* 9to10.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DC1D48E8A900B693D4 /* 9to10.swift */; };
 		D96A93DF1D48FBD200B693D4 /* EntityReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DE1D48FBD200B693D4 /* EntityReview.swift */; };
-		D96A93E11D4909F000B693D4 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E01D4909F000B693D4 /* Review.swift */; };
+		D96A93E11D4909F000B693D4 /* Reviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E01D4909F000B693D4 /* Reviews.swift */; };
 		D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E21D49110A00B693D4 /* ListReviews.swift */; };
 		D96C957B1D3A17B9000116FD /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957A1D3A17B9000116FD /* PlaylistViewController.swift */; };
 		D96C957E1D3A6CCB000116FD /* MyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957C1D3A66D2000116FD /* MyPlaylist.swift */; };
@@ -215,7 +215,7 @@
 		D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistDetailViewController.swift; sourceTree = "<group>"; };
 		D96A93DC1D48E8A900B693D4 /* 9to10.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 9to10.swift; sourceTree = "<group>"; };
 		D96A93DE1D48FBD200B693D4 /* EntityReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityReview.swift; sourceTree = "<group>"; };
-		D96A93E01D4909F000B693D4 /* Review.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		D96A93E01D4909F000B693D4 /* Reviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reviews.swift; sourceTree = "<group>"; };
 		D96A93E21D49110A00B693D4 /* ListReviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReviews.swift; sourceTree = "<group>"; };
 		D96C957A1D3A17B9000116FD /* PlaylistViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		D96C957C1D3A66D2000116FD /* MyPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylist.swift; sourceTree = "<group>"; };
@@ -469,7 +469,7 @@
 				D9EA0B581D2AAD74001C3F2F /* Artist.swift */,
 				D99164101D37D36D0091BF09 /* Track.swift */,
 				D96C957C1D3A66D2000116FD /* MyPlaylist.swift */,
-				D96A93E01D4909F000B693D4 /* Review.swift */,
+				D96A93E01D4909F000B693D4 /* Reviews.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -904,7 +904,7 @@
 				D9EA0B531D28AD0A001C3F2F /* EntityArtist.swift in Sources */,
 				D9165FE51D2C03C300B701E3 /* Player.swift in Sources */,
 				D96A93DF1D48FBD200B693D4 /* EntityReview.swift in Sources */,
-				D96A93E11D4909F000B693D4 /* Review.swift in Sources */,
+				D96A93E11D4909F000B693D4 /* Reviews.swift in Sources */,
 				D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */,
 				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
 				D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  Review.swift
+//  Reviews.swift
 //  iTunesMusic
 //
 //  Created by 林達也 on 2016/07/28.
@@ -29,7 +29,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
 
 extension Model {
 
-    public final class Review: Fetchable, FetchableInternal {
+    public final class Reviews: Fetchable, FetchableInternal {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         private let _changes = PublishSubject<CollectionChange>()
@@ -79,7 +79,7 @@ extension Model {
     }
 }
 
-extension Model.Review {
+extension Model.Reviews {
 
     func request(refreshing: Bool, force: Bool) {
 
@@ -133,13 +133,13 @@ extension Model.Review {
     }
 }
 
-extension Model.Review {
+extension Model.Reviews {
 
     var objects: List<_Review> { return caches[0].objects }
 }
 
 
-extension Model.Review: Swift.Collection {
+extension Model.Reviews: Swift.Collection {
 
     public var startIndex: Int { return objects.startIndex }
 
