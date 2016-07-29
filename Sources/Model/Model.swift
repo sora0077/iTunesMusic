@@ -81,9 +81,9 @@ protocol _Fetchable: class, Fetchable {
 
     var _refreshDuration: Duration { get }
 
-    var needRefresh: Bool { get }
+    var _needRefresh: Bool { get }
 
-    var hasNoPaginatedContents: Bool { get }
+    var _hasNoPaginatedContents: Bool { get }
 
     func request(refreshing: Bool, force: Bool)
 }
@@ -116,24 +116,24 @@ extension Fetchable {
             return
         }
         // swiftlint:disable force_cast
-        let s = self as! _Fetchable
-        if force || s.needRefresh {
+        let `self` = self as! _Fetchable
+        if force || self._needRefresh {
             _request(refreshing: true, force: force)
         }
     }
 
     private func _request(refreshing: Bool, force: Bool) {
         // swiftlint:disable force_cast
-        let s = self as! _Fetchable
-        if [.done, .requesting].contains(s._requestState.value) {
+        let `self` = self as! _Fetchable
+        if [.done, .requesting].contains(self._requestState.value) {
             return
         }
 
         print("now request, \(self)")
 
-        s._requestState.value = .requesting
+        self._requestState.value = .requesting
 
-        s.request(refreshing: refreshing, force: force)
+        self.request(refreshing: refreshing, force: force)
     }
 }
 
@@ -143,7 +143,7 @@ private struct _FetchableKey {
 
 extension _Fetchable {
 
-    var needRefresh: Bool {
+    var _needRefresh: Bool {
         return Date() - _refreshAt > _refreshDuration
     }
 
@@ -156,7 +156,7 @@ extension _Fetchable {
         return state
     }
 
-    var hasNoPaginatedContents: Bool {
+    var _hasNoPaginatedContents: Bool {
         return [.done, .error].contains(_requestState.value)
     }
 }

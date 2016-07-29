@@ -34,7 +34,7 @@ extension Model {
         var name: String { return term }
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
 
         private let _refreshing = Variable<Bool>(false)
 

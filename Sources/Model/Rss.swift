@@ -88,7 +88,7 @@ extension Model.Rss: _Fetchable {
     var _refreshDuration: Duration { return 3.hours }
 
     func request(refreshing: Bool, force: Bool) {
-        if trackIds.isEmpty || (refreshing && needRefresh) {
+        if trackIds.isEmpty || (refreshing && _needRefresh) {
             fetchFeed()
             return
         }

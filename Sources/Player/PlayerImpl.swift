@@ -249,7 +249,7 @@ final class PlayerImpl: NSObject, Player {
             updateQueue()
         } else {
             print(playlist)
-            if let paginator = paginator, !paginator.hasNoPaginatedContents {
+            if let paginator = paginator, !paginator._hasNoPaginatedContents {
                 return
             }
             _playlists = _playlists.dropFirst()
