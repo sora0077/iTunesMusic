@@ -29,7 +29,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 
 extension Model {
 
-    public final class Search: PlaylistType, Fetchable, _Fetchable, _ObservableList {
+    public final class Search: PlaylistType, Fetchable, _ObservableList {
 
         var name: String { return term }
 
@@ -37,8 +37,6 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
 
         private let _refreshing = Variable<Bool>(false)
-
-        var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 
         private let term: String
         private let caches: Results<_SearchCache>
@@ -78,7 +76,11 @@ extension Model {
 }
 
 
-extension Model.Search {
+extension Model.Search: _Fetchable {
+
+    var _refreshAt: Date { return caches[0].refreshAt }
+
+    var _refreshDuration: Duration { return 60.minutes }
 
     func request(refreshing: Bool, force: Bool) {
         if term.isEmpty { return }

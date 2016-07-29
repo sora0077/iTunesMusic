@@ -29,7 +29,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
 
 extension Model {
 
-    public final class Reviews: Fetchable, _Fetchable, _ObservableList {
+    public final class Reviews: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
@@ -40,8 +40,6 @@ extension Model {
 
         private var token: NotificationToken!
         private var objectsToken: NotificationToken!
-
-        var needRefresh: Bool { return Date() - caches[0].refreshAt > 6.hours }
 
         public init(collection: iTunesMusic.Collection) {
             collectionId = collection.id
@@ -74,7 +72,11 @@ extension Model {
     }
 }
 
-extension Model.Reviews {
+extension Model.Reviews: _Fetchable {
+
+    var _refreshAt: Date { return caches[0].refreshAt }
+
+    var _refreshDuration: Duration { return 6.hours }
 
     func request(refreshing: Bool, force: Bool) {
 

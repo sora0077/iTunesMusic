@@ -10,14 +10,18 @@ import Foundation
 import RxSwift
 import APIKit
 import RealmSwift
+import Timepiece
 
 
 extension Model {
 
-    public final class Track: Fetchable, _Fetchable {
+    public final class Track: Fetchable {
 
         public let trackId: Int
         public var track: iTunesMusic.Track? {
+            if Thread.isMainThread {
+                return caches.first
+            }
             let realm = iTunesRealm()
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
@@ -25,22 +29,20 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
 
         private var token: NotificationToken!
-
-        private(set) var needRefresh: Bool = true
+        private let caches: Results<_Track>
 
         public init(trackId: Int) {
             self.trackId = trackId
 
             let realm = iTunesRealm()
-            token = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId).addNotificationBlock { [weak self] changes in
+            caches = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId)
+            token = caches.addNotificationBlock { [weak self] changes in
                 switch changes {
                 case let .Initial(results):
-                    self?.needRefresh = results.isEmpty
                     if !results.isEmpty {
                         self?._requestState.value = .done
                     }
                 case let .Update(results, deletions: _, insertions: _, modifications: _):
-                    self?.needRefresh = results.isEmpty
                     if !results.isEmpty {
                         self?._requestState.value = .done
                     }
@@ -52,8 +54,11 @@ extension Model {
     }
 }
 
-extension Model.Track {
+extension Model.Track: _Fetchable {
 
+    var _refreshAt: Date { return caches.first?._createAt ?? Date.distantPast }
+
+    var _refreshDuration: Duration { return 1.year }
 
     func request(refreshing: Bool, force: Bool) {
 

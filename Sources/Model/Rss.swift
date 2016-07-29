@@ -29,12 +29,10 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
 
 extension Model {
 
-    public final class Rss: PlaylistType, Fetchable, _Fetchable, _ObservableList {
+    public final class Rss: PlaylistType, Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-
-        var needRefresh: Bool { return Date() - caches[0].refreshAt > 3.hours }
 
         private var fetched: Int = 0
 
@@ -83,7 +81,11 @@ extension Model {
 }
 
 
-extension Model.Rss {
+extension Model.Rss: _Fetchable {
+
+    var _refreshAt: Date { return caches[0].refreshAt }
+
+    var _refreshDuration: Duration { return 3.hours }
 
     func request(refreshing: Bool, force: Bool) {
         if trackIds.isEmpty || (refreshing && needRefresh) {

@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import Timepiece
 
 
 public struct Model {}
@@ -76,6 +77,10 @@ protocol _Fetchable: class, Fetchable {
 
     var _requestState: Variable<RequestState> { get }
 
+    var _refreshAt: Date { get }
+
+    var _refreshDuration: Duration { get }
+
     var needRefresh: Bool { get }
 
     var hasNoPaginatedContents: Bool { get }
@@ -137,6 +142,10 @@ private struct _FetchableKey {
 }
 
 extension _Fetchable {
+
+    var needRefresh: Bool {
+        return Date() - _refreshAt > _refreshDuration
+    }
 
     var _requestState: Variable<RequestState> {
         if let state = objc_getAssociatedObject(self, &_FetchableKey._requestState) as? Variable<RequestState> {

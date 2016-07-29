@@ -35,12 +35,10 @@ private let sortConditions = [
 
 extension Model {
 
-    public final class Album: PlaylistType, Fetchable, _Fetchable, _ObservableList {
+    public final class Album: PlaylistType, Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-
-        var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
@@ -94,7 +92,11 @@ extension Model.Album {
     }
 }
 
-extension Model.Album {
+extension Model.Album: _Fetchable {
+
+    var _refreshAt: Date { return caches[0].refreshAt }
+
+    var _refreshDuration: Duration { return 60.minutes }
 
     func request(refreshing: Bool, force: Bool) {
 
