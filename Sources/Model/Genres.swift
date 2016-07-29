@@ -31,7 +31,7 @@ private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
 
 extension Model {
 
-    public final class Genres: Fetchable, FetchableInternal {
+    public final class Genres: Fetchable, _Fetchable {
 
         // swiftlint:disable nesting
         private enum InitialDefaultGenre: Int {

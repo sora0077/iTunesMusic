@@ -35,13 +35,12 @@ private let sortConditions = [
 
 extension Model {
 
-    public final class Album: PlaylistType, Fetchable, FetchableInternal {
+    public final class Album: PlaylistType, Fetchable, _Fetchable {
 
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-        private(set) var _requestState = Variable<RequestState>(.none)
 
         var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 

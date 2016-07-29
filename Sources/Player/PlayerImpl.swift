@@ -229,7 +229,7 @@ final class PlayerImpl: NSObject, Player {
 
         let (playlist, index, _) = _playlists[_playlists.startIndex]
 
-        let paginator = playlist as? FetchableInternal
+        let paginator = playlist as? _Fetchable
         print(paginator, playlist)
 
         if playlist.count - index < 3 {

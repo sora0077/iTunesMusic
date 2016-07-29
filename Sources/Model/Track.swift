@@ -14,7 +14,7 @@ import RealmSwift
 
 extension Model {
 
-    public final class Track: Fetchable, FetchableInternal {
+    public final class Track: Fetchable, _Fetchable {
 
         public let trackId: Int
         public var track: iTunesMusic.Track? {
@@ -23,7 +23,6 @@ extension Model {
         }
 
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-        private(set) var _requestState = Variable<RequestState>(.none)
 
         private var token: NotificationToken!
 

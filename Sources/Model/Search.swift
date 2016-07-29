@@ -29,14 +29,13 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 
 extension Model {
 
-    public final class Search: PlaylistType, Fetchable, FetchableInternal {
+    public final class Search: PlaylistType, Fetchable, _Fetchable {
 
         var name: String { return term }
 
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
-        let _requestState = Variable<RequestState>(.none)
         public private(set) lazy var requestState: Observable<RequestState> = asReplayObservable(self._requestState)
 
         private let _refreshing = Variable<Bool>(false)

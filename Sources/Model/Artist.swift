@@ -30,13 +30,12 @@ private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
 
 extension Model {
 
-    public final class Artist: Fetchable, FetchableInternal {
+    public final class Artist: Fetchable, _Fetchable {
 
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-        private(set) var _requestState = Variable<RequestState>(.none)
 
         var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 

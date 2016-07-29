@@ -31,11 +31,9 @@ public enum CollectionChange {
     }
 }
 
-
 public enum RequestState: Int {
     case none, requesting, error, done
 }
-
 
 public protocol Fetchable {
 
@@ -48,7 +46,7 @@ public protocol Fetchable {
     func refresh(force: Bool)
 }
 
-protocol FetchableInternal: Fetchable {
+protocol _Fetchable: class, Fetchable {
 
     var _requestState: Variable<RequestState> { get }
 
@@ -87,7 +85,7 @@ extension Fetchable {
             return
         }
         // swiftlint:disable force_cast
-        let s = self as! FetchableInternal
+        let s = self as! _Fetchable
         if force || s.needRefresh {
             _request(refreshing: true, force: force)
         }
@@ -95,7 +93,7 @@ extension Fetchable {
 
     private func _request(refreshing: Bool, force: Bool) {
         // swiftlint:disable force_cast
-        let s = self as! FetchableInternal
+        let s = self as! _Fetchable
         if [.done, .requesting].contains(s._requestState.value) {
             return
         }
@@ -108,7 +106,20 @@ extension Fetchable {
     }
 }
 
-extension FetchableInternal {
+private struct _FetchableKey {
+    static var _requestState: UInt8 = 0
+}
+
+extension _Fetchable {
+
+    var _requestState: Variable<RequestState> {
+        if let state = objc_getAssociatedObject(self, &_FetchableKey._requestState) as? Variable<RequestState> {
+            return state
+        }
+        let state = Variable<RequestState>(.none)
+        objc_setAssociatedObject(self, &_FetchableKey._requestState, state, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return state
+    }
 
     var hasNoPaginatedContents: Bool {
         return [.done, .error].contains(_requestState.value)
