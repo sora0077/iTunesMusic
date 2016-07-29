@@ -31,7 +31,7 @@ private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
 
 extension Model {
 
-    public final class Genres: Fetchable, _Fetchable {
+    public final class Genres: Fetchable, _Fetchable, _ObservableList {
 
         // swiftlint:disable nesting
         private enum InitialDefaultGenre: Int {
@@ -57,9 +57,7 @@ extension Model {
 
         public var isEmpty: Bool { return caches.isEmpty || cache.list.isEmpty }
 
-        private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         var _requestState: Variable<RequestState> { return __requestState }
 

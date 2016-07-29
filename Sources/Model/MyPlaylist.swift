@@ -28,9 +28,8 @@ private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
 
 extension Model {
 
-    public final class MyPlaylists {
+    public final class MyPlaylists: _ObservableList {
 
-        private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
         private let cache: _MyPlaylistCache

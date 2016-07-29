@@ -14,6 +14,7 @@ import RxSwift
 public struct Model {}
 
 
+//MARK: - CollectionChange
 public enum CollectionChange {
     case initial
     case update(deletions: [Int], insertions: [Int], modifications: [Int])
@@ -31,10 +32,35 @@ public enum CollectionChange {
     }
 }
 
+//MARK: - RequestState
 public enum RequestState: Int {
     case none, requesting, error, done
 }
 
+//MARK: - ObservableList
+protocol _ObservableList: class {
+
+    var _changes: PublishSubject<CollectionChange> { get }
+}
+
+private struct _ObservableListKey {
+    static var _changes: UInt8 = 0
+}
+
+extension _ObservableList {
+
+    var _changes: PublishSubject<CollectionChange> {
+        if let change = objc_getAssociatedObject(self, &_ObservableListKey._changes) as? PublishSubject<CollectionChange> {
+            return change
+        }
+        let change = PublishSubject<CollectionChange>()
+        objc_setAssociatedObject(self, &_ObservableListKey._changes, change, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return change
+    }
+
+}
+
+//MARK: - Fetchable
 public protocol Fetchable {
 
     var requestState: Observable<RequestState> { get }
