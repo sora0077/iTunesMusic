@@ -72,6 +72,5 @@ extension ListReviews {
         assert(page != 0)
         self.id = id
         self.page = page
-        country = "jp"
     }
 }

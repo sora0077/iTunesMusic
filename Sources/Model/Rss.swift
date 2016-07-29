@@ -101,9 +101,7 @@ extension Model.Rss: _Fetchable {
             _requestState.value = .done
             return
         }
-        var lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
-        lookup.lang = "ja_JP"
-        lookup.country = "JP"
+        let lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
 

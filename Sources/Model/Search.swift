@@ -87,15 +87,7 @@ extension Model.Search: _Fetchable {
 
         _refreshing.value = refreshing
 
-        var search: SearchWithKeyword<SearchResponse>
-        if refreshing {
-            search = SearchWithKeyword(term: term)
-        } else {
-            let realm = iTunesRealm()
-            search = SearchWithKeyword(term: term, offset: getOrCreateCache(term: term, realm: realm).offset)
-        }
-        search.lang = "ja_JP"
-        search.country = "JP"
+        let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
         Session.sharedSession.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             defer {

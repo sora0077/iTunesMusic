@@ -110,8 +110,7 @@ extension Model.Genres: _Fetchable {
             return
         }
 
-        var listGenres = ListGenres<_Genre>()
-        listGenres.country = "jp"
+        let listGenres = ListGenres<_Genre>()
         Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
             defer {
                 tick()

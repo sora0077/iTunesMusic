@@ -34,17 +34,12 @@ extension Locale {
     }
 
     var compatible: Compatible {
-        set {
-            objc_setAssociatedObject(self, &Compatible.Key.countryCode, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        if let obj = objc_getAssociatedObject(self, &Compatible.Key.countryCode) as? Compatible {
+            return obj
         }
-        get {
-            if let obj = objc_getAssociatedObject(self, &Compatible.Key.countryCode) as? Compatible {
-                return obj
-            }
-            let compatible = Compatible(locale: self)
-            objc_setAssociatedObject(self, &Compatible.Key.countryCode, compatible, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            return compatible
-        }
+        let compatible = Compatible(locale: self)
+        objc_setAssociatedObject(self, &Compatible.Key.countryCode, compatible, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return compatible
     }
 
 }

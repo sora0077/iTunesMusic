@@ -64,9 +64,7 @@ extension Model.Track: _Fetchable {
 
         let session = Session.sharedSession
 
-        var lookup = LookupWithIds<LookupResponse>(id: trackId)
-        lookup.lang = "ja_JP"
-        lookup.country = "JP"
+        let lookup = LookupWithIds<LookupResponse>(id: trackId)
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             defer {

@@ -41,6 +41,7 @@ extension Model {
         private let artistId: Int
 
         private let caches: Results<_ArtistCache>
+        private var collections: Results<_Collection>
 
         public init(artist: iTunesMusic.Artist) {
 
@@ -49,11 +50,13 @@ extension Model {
             let realm = iTunesRealm()
             _ = getOrCreateCache(artistId: artistId, realm: realm)
             caches = realm.allObjects(ofType: _ArtistCache.self).filter(using: "artistId = \(artistId)")
+            collections = caches[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_ArtistCache>) {
-                    self.objectsToken = results[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false).addNotificationBlock { [weak self] changes in
+                    self.collections = results[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)
+                    self.objectsToken = self.collections.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -90,9 +93,7 @@ extension Model.Artist: _Fetchable {
 
         let session = Session.sharedSession
 
-        var lookup = LookupWithIds<LookupResponse>(id: artistId)
-        lookup.lang = "ja_JP"
-        lookup.country = "JP"
+        let lookup = LookupWithIds<LookupResponse>(id: artistId)
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             defer {
@@ -129,20 +130,15 @@ extension Model.Artist: _Fetchable {
     }
 }
 
-extension Model.Artist {
-
-    var objects: AnyRealmCollection<_Collection> { return AnyRealmCollection(caches[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)) }
-}
-
 extension Model.Artist: Swift.Collection {
 
-    public var startIndex: Int { return objects.startIndex }
+    public var startIndex: Int { return collections.startIndex }
 
-    public var endIndex: Int { return objects.endIndex }
+    public var endIndex: Int { return collections.endIndex }
 
-    public subscript (index: Int) -> Collection { return objects[index] }
+    public subscript (index: Int) -> Collection { return collections[index] }
 
     public func index(after i: Int) -> Int {
-        return objects.index(after: i)
+        return collections.index(after: i)
     }
 }

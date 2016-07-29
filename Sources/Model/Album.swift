@@ -109,9 +109,7 @@ extension Model.Album: _Fetchable {
 
         let session = Session.sharedSession
 
-        var lookup = LookupWithIds<LookupResponse>(id: collectionId)
-        lookup.lang = "ja_JP"
-        lookup.country = "JP"
+        let lookup = LookupWithIds<LookupResponse>(id: collectionId)
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             defer {
