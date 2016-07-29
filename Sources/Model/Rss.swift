@@ -37,12 +37,7 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
 
-        var needRefresh: Bool {
-            let cache = getOrCreateCache(genreId: id, realm: iTunesRealm())
-            let refreshAt = cache.refreshAt
-            print("rss fetched ", refreshAt, Date() - refreshAt)
-            return Date() - getOrCreateCache(genreId: id, realm: iTunesRealm()).refreshAt > 3.hours
-        }
+        var needRefresh: Bool { return Date() - caches[0].refreshAt > 3.hours }
 
         private var fetched: Int = 0
 

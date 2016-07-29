@@ -41,9 +41,7 @@ extension Model {
 
         private let _refreshing = Variable<Bool>(false)
 
-        var needRefresh: Bool {
-            return Date() - getOrCreateCache(term: term, realm: iTunesRealm()).refreshAt > 60.minutes
-        }
+        var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 
         private let term: String
         private let caches: Results<_SearchCache>

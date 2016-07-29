@@ -44,9 +44,7 @@ extension Model {
         private var token: NotificationToken!
         private var objectsToken: NotificationToken!
 
-        var needRefresh: Bool {
-            return Date() - getOrCreateCache(collectionId: collectionId, realm: iTunesRealm()).refreshAt > 6.hours
-        }
+        var needRefresh: Bool { return Date() - caches[0].refreshAt > 6.hours }
 
         public init(collection: iTunesMusic.Collection) {
             collectionId = collection.id

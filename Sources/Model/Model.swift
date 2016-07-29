@@ -62,6 +62,14 @@ protocol FetchableInternal: Fetchable {
 extension Fetchable {
 
     public func fetch() {
+        guard Thread.isMainThread else {
+            defer {
+                DispatchQueue.main.async {
+                    self.fetch()
+                }
+            }
+            return
+        }
         _request(refreshing: false, force: false)
     }
 
@@ -70,6 +78,14 @@ extension Fetchable {
     }
 
     public func refresh(force: Bool) {
+        guard Thread.isMainThread else {
+            defer {
+                DispatchQueue.main.async {
+                    self.refresh(force: force)
+                }
+            }
+            return
+        }
         // swiftlint:disable force_cast
         let s = self as! FetchableInternal
         if force || s.needRefresh {
@@ -85,15 +101,6 @@ extension Fetchable {
         }
 
         print("now request, \(self)")
-
-        guard Thread.isMainThread else {
-            defer {
-                DispatchQueue.main.async {
-                    self._request(refreshing: refreshing, force: force)
-                }
-            }
-            return
-        }
 
         s._requestState.value = .requesting
 

@@ -43,9 +43,7 @@ extension Model {
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
         private(set) var _requestState = Variable<RequestState>(.none)
 
-        var needRefresh: Bool {
-            return Date() - getOrCreateCache(collectionId: collectionId, realm: iTunesRealm()).refreshAt > 60.minutes
-        }
+        var needRefresh: Bool { return Date() - caches[0].refreshAt > 60.minutes }
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
