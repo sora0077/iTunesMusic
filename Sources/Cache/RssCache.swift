@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 
 
-class _RssCache: RealmSwift.Object {
+class _RssCache: _Cache {
 
     dynamic var _genreId: Int = 0
 
@@ -20,8 +20,6 @@ class _RssCache: RealmSwift.Object {
             print("didSet genre", _genre?.id)
         }
     }
-
-    dynamic var refreshAt = Date.distantPast
 
     dynamic var fetched: Int = 0
 

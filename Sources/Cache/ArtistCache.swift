@@ -10,15 +10,11 @@ import Foundation
 import RealmSwift
 
 
-final class _ArtistCache: RealmSwift.Object {
+final class _ArtistCache: _Cache {
 
     dynamic var artistId: Int = 0
 
     private dynamic var _artist: _Artist?
-
-    dynamic var refreshAt = Date.distantPast
-
-    dynamic var createAt = Date()
 
     dynamic var fetched = false
 

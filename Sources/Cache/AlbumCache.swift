@@ -10,15 +10,11 @@ import Foundation
 import RealmSwift
 
 
-final class _AlbumCache: RealmSwift.Object {
+final class _AlbumCache: _Cache {
 
     dynamic var collectionId: Int = 0
 
     private dynamic var _collection: _Collection?
-
-    dynamic var refreshAt = Date.distantPast
-
-    dynamic var createAt = Date()
 
     override class func primaryKey() -> String? { return "collectionId" }
 

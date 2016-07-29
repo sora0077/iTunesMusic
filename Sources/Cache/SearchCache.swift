@@ -12,15 +12,9 @@ import RxSwift
 import Himotoki
 
 
-class _SearchCache: RealmSwift.Object, SearchWithKeywordResponseType {
+class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     let objects = List<_Track>()
-
-    dynamic var createAt = Date()
-
-    dynamic var updateAt = Date()
-
-    dynamic var refreshAt = Date.distantPast
 
     dynamic var term: String = ""
 
