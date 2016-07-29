@@ -14,6 +14,13 @@ import RxSwift
 import SDWebImage
 
 
+private var nowPlayingInfo: [String: AnyObject]? = nil {
+    didSet {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+}
+
+
 final class ControlCenter: NSObject, PlayerMiddleware {
     private weak var player: Player?
 
@@ -50,10 +57,8 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             .map(Int.init)
             .distinctUntilChanged()
             .subscribeNext { [weak self] time in
-                if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo,
-                    self?.currentTrackId == info["currentTrackId"] as? Int {
-                    info[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
-                    MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+                if self?.currentTrackId == nowPlayingInfo?["currentTrackId"] as? Int {
+                    nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
                 }
             }
             .addDisposableTo(disposeBag)
@@ -62,7 +67,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     func willStartPlayTrack(_ trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
 
-        print(#function, trackId)
+        print(#function, trackId, track.trackName)
 
         if currentTrackId == nil { currentTrackId = trackId }
 
@@ -80,31 +85,29 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             MPMediaItemPropertyPlaybackDuration: track.metadata?.duration ?? 0,
             "currentTrackId": trackId
         ]
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        nowPlayingInfo = info
 
         let size = UIScreen.main().bounds.size
         let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main().scale))
         SDWebImageManager.shared().downloadImage(with: artworkURL, options: [], progress: nil, completed: { (image, error, cacheType, flag, url) in
+            print(#function, image, error)
             guard let image = image else { return }
 
-            if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo, let currentTrackId = info["currentTrackId"] as? Int, currentTrackId == trackId {
+            if trackId == nowPlayingInfo?["currentTrackId"] as? Int {
                 if #available(iOS 10.0, *) {
-                    info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
+                    nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
                         print(#function, " ", size)
                         return image
                     }
                 } else {
-                    info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+                    nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
                 }
-                MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-
-                print(info)
             }
         })
     }
 
     func didEndPlay() {
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        nowPlayingInfo = nil
 
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.bookmarkCommand.isEnabled = false

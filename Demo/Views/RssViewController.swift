@@ -99,6 +99,8 @@ class RssViewController: BaseViewController {
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableViewAutomaticDimension
 
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(self.playAll))
+
         tableView.rx_reachedBottom()
             .filter { $0 }
             .subscribeNext { [weak self] _ in
@@ -144,5 +146,11 @@ class RssViewController: BaseViewController {
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
         }
+    }
+
+    @objc
+    private func playAll() {
+        print(Thread.isMainThread)
+        player.add(playlist: rss)
     }
 }
