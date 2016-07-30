@@ -112,7 +112,9 @@ extension Model.Genres: _Fetchable {
 
         let listGenres = ListGenres<_Genre>()
         Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
+            let requestState: RequestState
             defer {
+                __requestState.value = requestState
                 tick()
             }
             switch result {
@@ -132,10 +134,10 @@ extension Model.Genres: _Fetchable {
                     }
                     realm.add(cache)
                 }
-                __requestState.value = .done
+                requestState = .done
             case .failure(let error):
                 print(error)
-                __requestState.value = .error
+                requestState = .error
             }
         }
     }

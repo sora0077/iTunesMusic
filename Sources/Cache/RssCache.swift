@@ -15,18 +15,19 @@ class _RssCache: _Cache {
 
     dynamic var _genreId: Int = 0
 
-    dynamic var _genre: _Genre? {
-        didSet {
-            print("didSet genre", _genre?.id)
-        }
-    }
-
     dynamic var fetched: Int = 0
 
-    let items = List<_RssItem>()
+    private let items = List<_RssItem>()
 
     let tracks = List<_Track>()
 
+    var ids: [Int] {
+        return items.map { $0.id }
+    }
+
+    var done: Bool {
+        return items.count == tracks.count
+    }
 
     override class func primaryKey() -> String? { return "_genreId" }
 }

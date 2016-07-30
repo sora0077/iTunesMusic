@@ -96,7 +96,9 @@ extension Model.Artist: _Fetchable {
         let lookup = LookupWithIds<LookupResponse>(id: artistId)
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
             defer {
+                self._requestState.value = requestState
                 tick()
             }
             switch result {
@@ -120,11 +122,11 @@ extension Model.Artist: _Fetchable {
                     if refreshing {
                         cache.refreshAt = Date()
                     }
-                    self._requestState.value = .done
                 }
+                requestState = .done
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }

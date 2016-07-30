@@ -27,6 +27,8 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     }
 }
 
+private let perItems = 50
+
 extension Model {
 
     public final class Rss: PlaylistType, Fetchable, _ObservableList {
@@ -52,7 +54,7 @@ extension Model {
             let realm = iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
             fetched = feed.fetched
-            trackIds = feed.items.map { $0.id }
+            trackIds = feed.ids
 
             caches = realm.allObjects(ofType: _RssCache.self).filter(using: "_genreId = \(id)")
             token = caches.addNotificationBlock { [weak self] changes in
@@ -94,9 +96,8 @@ extension Model.Rss: _Fetchable {
         }
 
         let session = Session.sharedSession
-        let id = self.id
 
-        let ids = trackIds[safe: fetched..<(fetched+50)]
+        let ids = trackIds[safe: fetched..<(fetched+perItems)]
         if ids.isEmpty {
             _requestState.value = .done
             return
@@ -104,10 +105,16 @@ extension Model.Rss: _Fetchable {
         let lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
+            defer {
+                self._requestState.value = requestState
+                tick()
+            }
 
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
+                let cache = getOrCreateCache(genreId: self.id, realm: realm)
                 try! realm.write {
                     var tracks: [_Track] = []
                     response.objects.forEach {
@@ -122,19 +129,15 @@ extension Model.Rss: _Fetchable {
                         }
                     }
 
-                    var done = false
-                    let cache = getOrCreateCache(genreId: id, realm: realm)
                     cache.tracks.append(objectsIn: tracks)
-                    cache.fetched += 50
-                    self.fetched = cache.fetched
+                    cache.fetched += perItems
                     realm.add(cache, update: true)
-                    done = cache.items.count == cache.tracks.count
-                    self._requestState.value = done ? .done : .none
+                    self.fetched = cache.fetched
                 }
-                tick()
+                requestState = cache.done ? .done : .none
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }
@@ -147,25 +150,29 @@ extension Model.Rss: _Fetchable {
 
         session.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
+            defer {
+                self._requestState.value = requestState
+                tick()
+            }
+
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
                 try! realm.write {
                     let genre = realm.object(ofType: _Genre.self, forPrimaryKey: id)
                     response._genreId = genre?.id ?? 0
-                    response._genre = genre
                     response.tracks.removeAllObjects()
                     response.refreshAt = Date()
                     realm.add(response, update: true)
                 }
-                self.trackIds = response.items.map { $0.id }
+                self.trackIds = response.ids
                 self.fetched = response.fetched
-                self._requestState.value = .none
                 self.request(refreshing: false, force: false)
-                tick()
+                requestState = .none
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }

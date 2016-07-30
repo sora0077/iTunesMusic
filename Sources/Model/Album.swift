@@ -112,7 +112,9 @@ extension Model.Album: _Fetchable {
         let lookup = LookupWithIds<LookupResponse>(id: collectionId)
         session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
             defer {
+                self._requestState.value = requestState
                 tick()
             }
             switch result {
@@ -135,12 +137,11 @@ extension Model.Album: _Fetchable {
                     if refreshing {
                         cache.refreshAt = Date()
                     }
-                    print(cache.collection._trackCount, cache.collection._tracks.count)
-                    self._requestState.value = .done
                 }
+                requestState = .done
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }

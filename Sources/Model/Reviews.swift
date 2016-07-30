@@ -93,7 +93,9 @@ extension Model.Reviews: _Fetchable {
         let request = ListReviews<_Review>(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
         Session.sharedSession.sendRequest(request, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
             defer {
+                self._requestState.value = requestState
                 tick()
             }
             switch result {
@@ -112,19 +114,19 @@ extension Model.Reviews: _Fetchable {
                     }
                     cache.page += 1
                     cache.objects.append(objectsIn: response)
-                    self._requestState.value = .none
                 }
+                requestState = .none
             case .success:
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
                 try! realm.write {
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
                     cache.fetched = true
-                    self._requestState.value = .done
                 }
+                requestState = .done
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }
