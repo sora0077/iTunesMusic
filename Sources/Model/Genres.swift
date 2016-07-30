@@ -13,7 +13,7 @@ import APIKit
 import Timepiece
 
 
-private var __requestState = Variable<RequestState>(.none)
+private let __requestState = Variable<RequestState>(.none)
 
 private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
     if let cache = realm.object(ofType: _GenresCache.self, forPrimaryKey: key) {
@@ -58,7 +58,7 @@ extension Model {
         public var isEmpty: Bool { return caches.isEmpty || cache.list.isEmpty }
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
         var _requestState: Variable<RequestState> { return __requestState }
 
         private var token: NotificationToken?
@@ -103,19 +103,18 @@ extension Model.Genres: _Fetchable {
 
     var _refreshDuration: Duration { return 30.days }
 
-    func request(refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
 
         if !refreshing && !caches[0].list.isEmpty {
-            _requestState.value = .done
+            completion(.done)
             return
         }
 
         let listGenres = ListGenres<_Genre>()
-        Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { result in
+        Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { [weak self] result in
             let requestState: RequestState
             defer {
-                __requestState.value = requestState
-                tick()
+                completion(requestState)
             }
             switch result {
             case .success(let cache):
@@ -124,6 +123,7 @@ extension Model.Genres: _Fetchable {
                     realm.add(cache, update: true)
 
                     let cache = getOrCreateCache(key: "default", realm: realm)
+                    cache.updateAt = Date()
                     if refreshing {
                         cache.list.removeAllObjects()
                         cache.refreshAt = Date()

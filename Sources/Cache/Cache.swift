@@ -12,13 +12,9 @@ import RealmSwift
 
 class _Cache: RealmSwift.Object {
 
-    dynamic var refreshAt = Date.distantPast {
-        didSet {
-            updateAt = refreshAt
-        }
-    }
+    dynamic var refreshAt = Date.distantPast
 
-    dynamic var createAt = Date()
+    private(set) dynamic var createAt = Date()
 
     dynamic var updateAt = Date()
 }

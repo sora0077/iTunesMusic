@@ -34,7 +34,7 @@ extension Model {
     public final class Rss: PlaylistType, Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var fetched: Int = 0
 
@@ -89,9 +89,10 @@ extension Model.Rss: _Fetchable {
 
     var _refreshDuration: Duration { return 3.hours }
 
-    func request(refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+
         if trackIds.isEmpty || (refreshing && _needRefresh) {
-            fetchFeed()
+            fetchFeed(completion: completion)
             return
         }
 
@@ -99,7 +100,7 @@ extension Model.Rss: _Fetchable {
 
         let ids = trackIds[safe: fetched..<(fetched+perItems)]
         if ids.isEmpty {
-            _requestState.value = .done
+            completion(.done)
             return
         }
         let lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
@@ -107,8 +108,7 @@ extension Model.Rss: _Fetchable {
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
-                self._requestState.value = requestState
-                tick()
+                completion(requestState)
             }
 
             switch result {
@@ -129,6 +129,12 @@ extension Model.Rss: _Fetchable {
                         }
                     }
 
+                    if refreshing {
+                        cache.tracks.removeAllObjects()
+                        cache.fetched = 0
+                        cache.refreshAt = Date()
+                    }
+                    cache.updateAt = Date()
                     cache.tracks.append(objectsIn: tracks)
                     cache.fetched += perItems
                     realm.add(cache, update: true)
@@ -142,25 +148,14 @@ extension Model.Rss: _Fetchable {
         }
     }
 
-    private func fetchFeed() {
-
-        let id = self.id
-
-        let session = Session.sharedSession
-
-        session.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
+    private func fetchFeed(completion: (RequestState) -> Void) {
+        Session.sharedSession.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                self._requestState.value = requestState
-                tick()
-            }
-
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
                 try! realm.write {
-                    let genre = realm.object(ofType: _Genre.self, forPrimaryKey: id)
+                    let genre = realm.object(ofType: _Genre.self, forPrimaryKey: self.id)
                     response._genreId = genre?.id ?? 0
                     response.tracks.removeAllObjects()
                     response.refreshAt = Date()
@@ -168,11 +163,11 @@ extension Model.Rss: _Fetchable {
                 }
                 self.trackIds = response.ids
                 self.fetched = response.fetched
-                self.request(refreshing: false, force: false)
-                requestState = .none
+                self._requestState.value = .none
+                self.request(refreshing: false, force: false, completion: completion)
             case .failure(let error):
                 print(error)
-                requestState = .error
+                completion(.error)
             }
         }
     }

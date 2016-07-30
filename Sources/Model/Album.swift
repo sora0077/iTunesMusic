@@ -38,7 +38,7 @@ extension Model {
     public final class Album: PlaylistType, Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
@@ -98,12 +98,12 @@ extension Model.Album: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
 
         let collectionId = self.collectionId
         let cache = caches[0]
         if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
-            _requestState.value = .done
+            completion(.done)
             return
         }
 
@@ -114,8 +114,7 @@ extension Model.Album: _Fetchable {
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
-                self._requestState.value = requestState
-                tick()
+                completion(requestState)
             }
             switch result {
             case .success(let response):
@@ -134,6 +133,7 @@ extension Model.Album: _Fetchable {
                     }
 
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+                    cache.updateAt = Date()
                     if refreshing {
                         cache.refreshAt = Date()
                     }

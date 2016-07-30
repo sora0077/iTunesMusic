@@ -33,7 +33,7 @@ extension Model {
     public final class Artist: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
@@ -82,12 +82,12 @@ extension Model.Artist: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
 
         let artistId = self.artistId
         let cache = caches[0]
         if !refreshing && cache.fetched {
-            _requestState.value = .done
+            completion(.done)
             return
         }
 
@@ -98,8 +98,7 @@ extension Model.Artist: _Fetchable {
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
-                self._requestState.value = requestState
-                tick()
+                completion(requestState)
             }
             switch result {
             case .success(let response):
@@ -118,10 +117,11 @@ extension Model.Artist: _Fetchable {
                     }
 
                     let cache = getOrCreateCache(artistId: artistId, realm: realm)
-                    cache.fetched = true
                     if refreshing {
                         cache.refreshAt = Date()
                     }
+                    cache.updateAt = Date()
+                    cache.fetched = true
                 }
                 requestState = .done
             case .failure(let error):

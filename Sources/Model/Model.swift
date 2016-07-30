@@ -75,6 +75,8 @@ public protocol Fetchable {
 
 protocol _Fetchable: class, Fetchable {
 
+    var _refreshing: Variable<Bool> { get }
+
     var _requestState: Variable<RequestState> { get }
 
     var _refreshAt: Date { get }
@@ -85,7 +87,7 @@ protocol _Fetchable: class, Fetchable {
 
     var _hasNoPaginatedContents: Bool { get }
 
-    func request(refreshing: Bool, force: Bool)
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void)
 }
 
 extension Fetchable {
@@ -131,13 +133,19 @@ extension Fetchable {
 
         print("now request, \(self)")
 
+        self._refreshing.value = refreshing
         self._requestState.value = .requesting
 
-        self.request(refreshing: refreshing, force: force)
+        self.request(refreshing: refreshing, force: force) { [weak self] requestState in
+            self?._refreshing.value = false
+            self?._requestState.value = requestState
+            tick()
+        }
     }
 }
 
 private struct _FetchableKey {
+    static var _refreshing: UInt8 = 0
     static var _requestState: UInt8 = 0
 }
 
@@ -145,6 +153,15 @@ extension _Fetchable {
 
     var _needRefresh: Bool {
         return Date() - _refreshAt > _refreshDuration
+    }
+
+    var _refreshing: Variable<Bool> {
+        if let refreshing = objc_getAssociatedObject(self, &_FetchableKey._refreshing) as? Variable<Bool> {
+            return refreshing
+        }
+        let refreshing = Variable<Bool>(false)
+        objc_setAssociatedObject(self, &_FetchableKey._refreshing, refreshing, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return refreshing
     }
 
     var _requestState: Variable<RequestState> {

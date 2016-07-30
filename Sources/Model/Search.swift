@@ -34,9 +34,7 @@ extension Model {
         var name: String { return term }
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
-
-        private let _refreshing = Variable<Bool>(false)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private let term: String
         private let caches: Results<_SearchCache>
@@ -82,17 +80,17 @@ extension Model.Search: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool) {
-        if term.isEmpty { return }
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+        if term.isEmpty { completion(.none); return }
 
         _refreshing.value = refreshing
 
         let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
         Session.sharedSession.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
+            let requestState: RequestState
             defer {
-                self._refreshing.value = false
-                tick()
+                completion(requestState)
             }
             switch result {
             case .success(let response):
@@ -122,11 +120,10 @@ extension Model.Search: _Fetchable {
                     cache.offset += response.objects.count
                 }
                 print("search result cached")
-                self._requestState.value = response.objects.count != search.limit ? .done : .none
-                print(self._requestState.value)
+                requestState = response.objects.count != search.limit ? .done : .none
             case .failure(let error):
                 print(error)
-                self._requestState.value = .error
+                requestState = .error
             }
         }
     }
@@ -134,7 +131,7 @@ extension Model.Search: _Fetchable {
 
 extension Model.Search: Swift.Collection {
 
-    var tracks: List<_Track> {
+    private var tracks: List<_Track> {
         return caches[0].objects
     }
 

@@ -26,7 +26,7 @@ extension Model {
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
 
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var token: NotificationToken!
         private let caches: Results<_Track>
@@ -58,19 +58,16 @@ extension Model.Track: _Fetchable {
 
     var _refreshAt: Date { return caches.first?._createAt ?? Date.distantPast }
 
-    var _refreshDuration: Duration { return 1.year }
+    var _refreshDuration: Duration { return 18.hours }
 
-    func request(refreshing: Bool, force: Bool) {
-
-        let session = Session.sharedSession
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
 
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
-        session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
-                self._requestState.value = requestState
-                tick()
+                completion(requestState)
             }
             switch result {
             case .success(let response):

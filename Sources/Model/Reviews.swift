@@ -32,7 +32,7 @@ extension Model {
     public final class Reviews: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState)
+        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private let collectionId: Int
 
@@ -78,13 +78,13 @@ extension Model.Reviews: _Fetchable {
 
     var _refreshDuration: Duration { return 6.hours }
 
-    func request(refreshing: Bool, force: Bool) {
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
 
         let cache = caches[0]
         print(cache)
 
         if !refreshing && cache.fetched {
-            _requestState.value = .done
+            completion(.done)
             return
         }
 
@@ -95,11 +95,10 @@ extension Model.Reviews: _Fetchable {
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
-                self._requestState.value = requestState
-                tick()
+                completion(requestState)
             }
             switch result {
-            case .success(let response) where !response.isEmpty:
+            case .success(let response):
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
                 try! realm.write {
@@ -112,18 +111,12 @@ extension Model.Reviews: _Fetchable {
                         cache.fetched = false
                         cache.objects.removeAllObjects()
                     }
+                    cache.updateAt = Date()
+                    cache.fetched = response.isEmpty
                     cache.page += 1
                     cache.objects.append(objectsIn: response)
                 }
-                requestState = .none
-            case .success:
-                let realm = iTunesRealm()
-                // swiftlint:disable force_try
-                try! realm.write {
-                    let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-                    cache.fetched = true
-                }
-                requestState = .done
+                requestState = response.isEmpty ? .done : .none
             case .failure(let error):
                 print(error)
                 requestState = .error
@@ -132,13 +125,9 @@ extension Model.Reviews: _Fetchable {
     }
 }
 
-extension Model.Reviews {
-
-    var objects: List<_Review> { return caches[0].objects }
-}
-
-
 extension Model.Reviews: Swift.Collection {
+
+    private var objects: List<_Review> { return caches[0].objects }
 
     public var startIndex: Int { return objects.startIndex }
 
