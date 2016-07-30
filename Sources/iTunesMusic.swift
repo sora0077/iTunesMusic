@@ -13,11 +13,14 @@ import RxSwift
 import RealmSwift
 
 
-public let player: Player = PlayerImpl(previewer: Preview.shared)
+private let _previewer = Preview()
+
+public let player: Player = PlayerImpl(previewer: _previewer)
 
 private let configuration: Realm.Configuration = {
     let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-    let fileURL = NSURL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
+    // swiftlint:disable force_try
+    let fileURL = try! URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
     var config = Realm.Configuration(fileURL: fileURL)
     config.objectTypes = [
         _GenresCache.self,
@@ -47,7 +50,7 @@ private let configuration: Realm.Configuration = {
 public func launch() {
 
     player.install(middleware: Model.History.shared)
-    player.install(middleware: Downloader())
+    player.install(middleware: Downloader(previewer: _previewer))
 }
 
 public func iTunesRealm() -> Realm {

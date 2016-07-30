@@ -148,7 +148,7 @@ final class PlayerImpl: NSObject, Player {
         if _playingQueue.isEmpty { return }
         if _player.items().count > 2 { return }
 
-        if !Thread.isMainThread {
+        guard Thread.isMainThread else {
             DispatchQueue.main.async {
                 self.updateQueue()
             }

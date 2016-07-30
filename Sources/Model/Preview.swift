@@ -18,10 +18,6 @@ final class Preview {
 
     private let cache = Cache<NSNumber, PreviewTrack>()
 
-    static let shared = Preview()
-
-    init() {}
-
     subscript (track track: Track) -> PreviewTrack? {
         set {
             cache.setObject(PreviewTrack(track: track), forKey: track.trackId)
