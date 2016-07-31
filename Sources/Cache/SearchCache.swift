@@ -14,7 +14,7 @@ import Himotoki
 
 class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
-    let objects = List<_Track>()
+    let objects = List<_Media>()
 
     dynamic var term: String = ""
 

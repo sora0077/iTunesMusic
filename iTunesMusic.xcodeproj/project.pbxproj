@@ -48,6 +48,7 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
+		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
 		D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */; };
@@ -209,6 +210,7 @@
 		D929E46A1D1EE9510045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
+		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 		D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewModule.swift; sourceTree = "<group>"; };
@@ -414,6 +416,7 @@
 		D91B428E1D044AD200AAAD58 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
+				D9494C9F1D4DBE8400A77C45 /* Entity.swift */,
 				D9EA0B521D28AD0A001C3F2F /* EntityArtist.swift */,
 				D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */,
 				D91B428F1D044AE600AAAD58 /* EntityTrack.swift */,
@@ -919,6 +922,7 @@
 				D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */,
 				D96C957E1D3A6CCB000116FD /* MyPlaylist.swift in Sources */,
 				D9165FE41D2C03C300B701E3 /* CrossFadePlayer.swift in Sources */,
+				D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */,
 				D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */,
 				D9EA0B591D2AAD74001C3F2F /* Artist.swift in Sources */,
 				D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */,

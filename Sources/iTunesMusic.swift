@@ -23,6 +23,7 @@ private let configuration: Realm.Configuration = {
     let fileURL = try! URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
     var config = Realm.Configuration(fileURL: fileURL)
     config.objectTypes = [
+        _Media.self,
         _GenresCache.self,
         _Collection.self,
         _ChartUrls.self,

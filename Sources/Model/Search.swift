@@ -41,17 +41,21 @@ extension Model {
         private var token: NotificationToken!
         private var objectsToken: NotificationToken?
 
+        private var tracks: Results<_Media>
+
         public init(term: String) {
             self.term = term
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(term: term, realm: realm)
             caches = realm.allObjects(ofType: _SearchCache.self).filter(using: "term = %@", term)
+            tracks = caches[0].objects.filter(using: "track != nil")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_SearchCache>) {
-                    self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
+                    self.tracks = results[0].objects.filter(using: "track != nil")
+                    self.objectsToken = self.tracks.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -70,6 +74,29 @@ extension Model {
             }
         }
 
+    }
+}
+
+
+extension Model.Search {
+
+    public enum Result {
+        case track(Track)
+        case collection(Collection)
+        case artist(Artist)
+    }
+
+    public func result(at index: Int) -> Result {
+        switch caches[0].objects[index].object {
+        case let obj as Track:
+            return .track(obj)
+        case let obj as Collection:
+            return .collection(obj)
+        case let obj as Artist:
+            return .artist(obj)
+        default:
+            fatalError()
+        }
     }
 }
 
@@ -98,15 +125,17 @@ extension Model.Search: _Fetchable {
                 let cache = getOrCreateCache(term: self.term, realm: realm)
                 // swiftlint:disable force_try
                 try! realm.write {
-                    var tracks: [_Track] = []
+                    var medias: [_Media] = []
                     response.objects.reversed().forEach {
                         switch $0 {
                         case .track(let obj):
-                            tracks.append(obj)
+                            medias.append(_Media.track(track: obj))
                             realm.add(obj, update: true)
                         case .collection(let obj):
+                            medias.append(_Media.collection(collection: obj))
                             realm.add(obj, update: true)
                         case .artist(let obj):
+                            medias.append(_Media.artist(artist: obj))
                             realm.add(obj, update: true)
                         }
                     }
@@ -115,7 +144,7 @@ extension Model.Search: _Fetchable {
                         cache.refreshAt = Date()
                         cache.offset = 0
                     }
-                    cache.objects.append(objectsIn: tracks.reversed())
+                    cache.objects.append(objectsIn: medias.reversed())
                     cache.updateAt = Date()
                     cache.offset += response.objects.count
                 }
@@ -131,10 +160,6 @@ extension Model.Search: _Fetchable {
 
 extension Model.Search: Swift.Collection {
 
-    private var tracks: List<_Track> {
-        return caches[0].objects
-    }
-
     public var count: Int { return tracks.count }
 
     public var isEmpty: Bool { return tracks.isEmpty }
@@ -143,7 +168,7 @@ extension Model.Search: Swift.Collection {
 
     public var endIndex: Int { return tracks.endIndex }
 
-    public subscript (index: Int) -> Track { return tracks[index] }
+    public subscript (index: Int) -> Track { return tracks[index].track! }
 
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)
