@@ -53,15 +53,13 @@ extension Model {
 }
 
 
-extension Model.History {
-
-    public func record(at index: Int) -> (Track, Date) {
-        return (cache.objects[index].track, cache.objects[index].createAt)
-    }
-}
-
-
 extension Model.History: PlaylistType {
+
+    public var tracksChanges: Observable<CollectionChange> { return changes }
+
+    public var trackCount: Int { return cache.objects.count }
+
+    public var isTrackEmpty: Bool { return cache.objects.isEmpty }
 
     public func track(at index: Int) -> Track { return cache.objects[index].track }
 }
@@ -84,15 +82,15 @@ extension Model.History: PlayerMiddleware {
 
 extension Model.History: Swift.Collection {
 
-    public var count: Int { return cache.objects.count }
+    public var count: Int { return trackCount }
 
-    public var isEmpty: Bool { return cache.objects.isEmpty }
+    public var isEmpty: Bool { return isTrackEmpty }
 
     public var startIndex: Int { return cache.objects.startIndex }
 
     public var endIndex: Int { return cache.objects.endIndex }
 
-    public subscript (index: Int) -> Track { return cache.objects[index].track }
+    public subscript (index: Int) -> (Track, Date) { return (cache.objects[index].track, cache.objects[index].createAt) }
 
     public func index(after i: Int) -> Int {
         return cache.objects.index(after: i)

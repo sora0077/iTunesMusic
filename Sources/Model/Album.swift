@@ -88,6 +88,12 @@ extension Model {
 
 extension Model.Album: PlaylistType {
 
+    public var tracksChanges: Observable<CollectionChange> { return changes }
+
+    public var trackCount: Int { return tracks.count }
+
+    public var isTrackEmpty: Bool { return tracks.isEmpty }
+
     public func track(at index: Int) -> Track { return tracks[index] }
 }
 
@@ -156,15 +162,15 @@ extension Model.Album: _Fetchable {
 
 extension Model.Album: Swift.Collection {
 
-    public var count: Int { return tracks.count }
+    public var count: Int { return trackCount }
 
-    public var isEmpty: Bool { return tracks.isEmpty }
+    public var isEmpty: Bool { return isTrackEmpty }
 
     public var startIndex: Int { return tracks.startIndex }
 
     public var endIndex: Int { return tracks.endIndex }
 
-    public subscript (index: Int) -> Track { return tracks[index] }
+    public subscript (index: Int) -> Track { return track(at: index) }
 
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)

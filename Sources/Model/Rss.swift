@@ -85,6 +85,12 @@ extension Model {
 
 extension Model.Rss: PlaylistType {
 
+    public var tracksChanges: Observable<CollectionChange> { return changes }
+
+    public var trackCount: Int { return tracks.count }
+
+    public var isTrackEmpty: Bool { return tracks.isEmpty }
+
     public func track(at index: Int) -> Track {
         return tracks[index]
     }
@@ -187,7 +193,7 @@ extension Model.Rss: Swift.Collection {
         return caches[0].tracks
     }
 
-    public var count: Int { return tracks.count }
+    public var count: Int { return trackCount }
 
     public var isEmpty: Bool { return tracks.isEmpty }
 
@@ -195,7 +201,7 @@ extension Model.Rss: Swift.Collection {
 
     public var endIndex: Int { return tracks.endIndex }
 
-    public subscript (index: Int) -> Track { return tracks[index] }
+    public subscript (index: Int) -> Track { return track(at: index) }
 
     public func index(after i: Int) -> Int {
         return tracks.index(after: i)

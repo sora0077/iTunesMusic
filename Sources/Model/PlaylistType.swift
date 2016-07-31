@@ -13,10 +13,10 @@ import RxSwift
 
 public protocol PlaylistType: class {
 
-    var changes: Observable<CollectionChange> { get }
+    var tracksChanges: Observable<CollectionChange> { get }
 
-    var count: Int { get }
-    var isEmpty: Bool { get }
+    var trackCount: Int { get }
+    var isTrackEmpty: Bool { get }
 
     func track(at index: Int) -> Track
 }

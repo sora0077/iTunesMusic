@@ -35,11 +35,14 @@ extension Model {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
+        public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
+        private let _tracksChanges = PublishSubject<CollectionChange>()
 
         private let term: String
         private let caches: Results<_SearchCache>
         private var token: NotificationToken!
         private var objectsToken: NotificationToken?
+        private var tracksToken: NotificationToken?
 
         private var tracks: Results<_Media>
 
@@ -55,7 +58,10 @@ extension Model {
 
                 func updateObserver(with results: Results<_SearchCache>) {
                     self.tracks = results[0].objects.filter(using: "track != nil")
-                    self.objectsToken = self.tracks.addNotificationBlock { [weak self] changes in
+                    self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
+                        self?._tracksChanges.onNext(CollectionChange(changes))
+                    }
+                    self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -80,30 +86,11 @@ extension Model {
 
 extension Model.Search: PlaylistType {
 
+    public var trackCount: Int { return tracks.count }
+
+    public var isTrackEmpty: Bool { return tracks.isEmpty }
+
     public func track(at index: Int) -> Track { return tracks[index].track! }
-}
-
-
-extension Model.Search {
-
-    public enum Result {
-        case track(Track)
-        case collection(Collection)
-        case artist(Artist)
-    }
-
-    public func result(at index: Int) -> Result {
-        switch caches[0].objects[index].object {
-        case let obj as Track:
-            return .track(obj)
-        case let obj as Collection:
-            return .collection(obj)
-        case let obj as Artist:
-            return .artist(obj)
-        default:
-            fatalError()
-        }
-    }
 }
 
 
@@ -166,17 +153,36 @@ extension Model.Search: _Fetchable {
 
 extension Model.Search: Swift.Collection {
 
-    public var count: Int { return tracks.count }
+    public enum Result {
+        case track(Track)
+        case collection(Collection)
+        case artist(Artist)
+    }
 
-    public var isEmpty: Bool { return tracks.isEmpty }
+    private var results: List<_Media> { return caches[0].objects }
 
-    public var startIndex: Int { return tracks.startIndex }
+    public var count: Int { return results.count }
 
-    public var endIndex: Int { return tracks.endIndex }
+    public var isEmpty: Bool { return results.isEmpty }
 
-    public subscript (index: Int) -> Track { return tracks[index].track! }
+    public var startIndex: Int { return results.startIndex }
+
+    public var endIndex: Int { return results.endIndex }
+
+    public subscript (index: Int) -> Result {
+        switch caches[0].objects[index].object {
+        case let obj as Track:
+            return .track(obj)
+        case let obj as Collection:
+            return .collection(obj)
+        case let obj as Artist:
+            return .artist(obj)
+        default:
+            fatalError()
+        }
+    }
 
     public func index(after i: Int) -> Int {
-        return tracks.index(after: i)
+        return results.index(after: i)
     }
 }

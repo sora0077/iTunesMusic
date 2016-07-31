@@ -28,13 +28,11 @@ private extension AVPlayerItem {
 
 private class OneTrackPlaylist: PlaylistType {
 
-    private var changes: Observable<CollectionChange> = asObservable(Variable(.initial))
+    private var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
 
-    private var count: Int { return objects.count }
+    private var trackCount: Int { return objects.count }
 
-    private var isEmpty: Bool { return objects.isEmpty }
-
-    subscript (index: Int) -> Track { return objects[index] }
+    private var isTrackEmpty: Bool { return objects.isEmpty }
 
     private let objects: [Track]
 
@@ -234,16 +232,16 @@ final class PlayerImpl: NSObject, Player {
         let paginator = playlist as? _Fetchable
         print(paginator, playlist)
 
-        if playlist.count - index < 3 {
+        if playlist.trackCount - index < 3 {
             paginator?.fetch()
 
-            if playlist.isEmpty {
+            if playlist.isTrackEmpty {
                 return
             }
         }
-        print("play", playlist.count, index, _playingQueue.count)
+        print("play", playlist.trackCount, index, _playingQueue.count)
 
-        if playlist.count > index {
+        if playlist.trackCount > index {
             print("will play ", playlist.track(at: index).trackName)
             let track = playlist.track(at: index)
             _playingQueue.append(track)
@@ -318,7 +316,7 @@ final class PlayerImpl: NSObject, Player {
         let disposeBag = DisposeBag()
         _playlists.append((playlist, 0, disposeBag))
         updatePlaylistQueue()
-        playlist.changes
+        playlist.tracksChanges
             .subscribe(
                 onNext: { [weak self, weak playlist = playlist] changes in
                     guard let `self` = self, let playlist = playlist else { return }

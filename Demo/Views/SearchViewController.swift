@@ -87,7 +87,7 @@ class SearchViewController: BaseViewController {
             list: search!,
             onGenerate: { (self, tableView, element, indexPath) in
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-                if let track = self.search?[indexPath.row] {
+                if let track = self.search?.track(at: indexPath.row) {
                     cell.textLabel?.text = track.trackName
                 }
                 return cell
@@ -97,7 +97,7 @@ class SearchViewController: BaseViewController {
 
                 guard let search = self.search else { return }
 
-                let vc = AlbumDetailViewController(collection: search[indexPath.row].collection)
+                let vc = AlbumDetailViewController(collection: search.track(at: indexPath.row).collection)
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         )

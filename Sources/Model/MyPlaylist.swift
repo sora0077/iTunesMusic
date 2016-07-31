@@ -93,6 +93,12 @@ extension Model {
 
 extension Model.MyPlaylist: PlaylistType {
 
+    public var tracksChanges: Observable<CollectionChange> { return changes }
+
+    public var trackCount: Int { return playlist.tracks.count }
+
+    public var isTrackEmpty: Bool { return playlist.tracks.isEmpty }
+
     public func track(at index: Int) -> Track { return playlist.tracks[index] }
 }
 
@@ -134,15 +140,15 @@ extension Model.MyPlaylist {
 
 extension Model.MyPlaylist: Swift.Collection {
 
-    public var count: Int { return playlist.tracks.count }
+    public var count: Int { return trackCount }
 
-    public var isEmpty: Bool { return playlist.tracks.isEmpty }
+    public var isEmpty: Bool { return isTrackEmpty }
 
     public var startIndex: Int { return playlist.tracks.startIndex }
 
     public var endIndex: Int { return playlist.tracks.endIndex }
 
-    public subscript (index: Int) -> Track { return playlist.tracks[index] }
+    public subscript (index: Int) -> Track { return track(at: index) }
 
     public func index(after i: Int) -> Int {
         return playlist.tracks.index(after: i)
