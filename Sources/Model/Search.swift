@@ -29,7 +29,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 
 extension Model {
 
-    public final class Search: PlaylistType, Fetchable, _ObservableList {
+    public final class Search: Fetchable, _ObservableList {
 
         var name: String { return term }
 
@@ -75,6 +75,12 @@ extension Model {
         }
 
     }
+}
+
+
+extension Model.Search: PlaylistType {
+
+    public func track(at index: Int) -> Track { return tracks[index].track! }
 }
 
 

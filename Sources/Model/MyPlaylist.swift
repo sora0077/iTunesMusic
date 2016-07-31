@@ -68,7 +68,7 @@ extension Model.MyPlaylists: Swift.Collection {
 
 extension Model {
 
-    public final class MyPlaylist: PlaylistType {
+    public final class MyPlaylist {
 
         private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
@@ -89,6 +89,13 @@ extension Model {
         }
     }
 }
+
+
+extension Model.MyPlaylist: PlaylistType {
+
+    public func track(at index: Int) -> Track { return playlist.tracks[index] }
+}
+
 
 extension Model.MyPlaylist {
 

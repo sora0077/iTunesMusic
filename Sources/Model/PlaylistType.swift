@@ -18,5 +18,5 @@ public protocol PlaylistType: class {
     var count: Int { get }
     var isEmpty: Bool { get }
 
-    subscript (index: Int) -> Track { get }
+    func track(at index: Int) -> Track
 }

@@ -35,7 +35,7 @@ private let sortConditions = [
 
 extension Model {
 
-    public final class Album: PlaylistType, Fetchable, _ObservableList {
+    public final class Album: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
@@ -84,6 +84,13 @@ extension Model {
         }
     }
 }
+
+
+extension Model.Album: PlaylistType {
+
+    public func track(at index: Int) -> Track { return tracks[index] }
+}
+
 
 extension Model.Album {
 

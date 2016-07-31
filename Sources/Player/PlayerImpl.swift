@@ -39,6 +39,8 @@ private class OneTrackPlaylist: PlaylistType {
     private let objects: [Track]
 
     init(track: Track) { objects = [track] }
+
+    private func track(at index: Int) -> Track { return objects[index] }
 }
 
 final class PlayerImpl: NSObject, Player {
@@ -242,8 +244,8 @@ final class PlayerImpl: NSObject, Player {
         print("play", playlist.count, index, _playingQueue.count)
 
         if playlist.count > index {
-            print("will play ", playlist[index].trackName)
-            let track = playlist[index]
+            print("will play ", playlist.track(at: index).trackName)
+            let track = playlist.track(at: index)
             _playingQueue.append(track)
             _playlists[_playlists.startIndex].1 += 1
             updateQueue()

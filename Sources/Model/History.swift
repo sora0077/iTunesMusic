@@ -24,9 +24,10 @@ private func getOrCreateCache(realm: Realm) -> _HistoryCache {
     }
 }
 
+
 extension Model {
 
-    public final class History: PlaylistType, _ObservableList {
+    public final class History: _ObservableList {
 
         public let name = "履歴"
 
@@ -51,12 +52,20 @@ extension Model {
     }
 }
 
+
 extension Model.History {
 
     public func record(at index: Int) -> (Track, Date) {
         return (cache.objects[index].track, cache.objects[index].createAt)
     }
 }
+
+
+extension Model.History: PlaylistType {
+
+    public func track(at index: Int) -> Track { return cache.objects[index].track }
+}
+
 
 extension Model.History: PlayerMiddleware {
 
@@ -71,6 +80,7 @@ extension Model.History: PlayerMiddleware {
         }
     }
 }
+
 
 extension Model.History: Swift.Collection {
 

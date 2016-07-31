@@ -31,7 +31,7 @@ private let perItems = 50
 
 extension Model {
 
-    public final class Rss: PlaylistType, Fetchable, _ObservableList {
+    public final class Rss: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
@@ -79,6 +79,14 @@ extension Model {
 
             }
         }
+    }
+}
+
+
+extension Model.Rss: PlaylistType {
+
+    public func track(at index: Int) -> Track {
+        return tracks[index]
     }
 }
 
