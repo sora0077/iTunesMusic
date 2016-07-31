@@ -2,6 +2,7 @@
 github "sora0077/APIKit" "master"
 github "ikesyo/Himotoki" "swift3"
 github "sora0077/Timepiece" "master"
+github "sora0077/iOS9to10" "master"
 github "ReactiveX/RxSwift" "swift-3.0"
 github "realm/realm-cocoa" "master"
 

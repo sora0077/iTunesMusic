@@ -63,9 +63,9 @@ class SearchViewController: BaseViewController {
         searhBar.rx_text
             .debounce(0.3, scheduler: MainScheduler.instance)
             .distinctUntilChanged()
-            .doOnNext { str in
+            .do(onNext: { str in
                 print(str)
-            }
+            })
             .subscribeNext { [weak self] str in
                 self?.search = Model.Search(term: str)
             }

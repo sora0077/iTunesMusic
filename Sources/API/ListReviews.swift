@@ -10,6 +10,7 @@ import Foundation
 import APIKit
 import Himotoki
 import SWXMLHash
+import iOS9to10
 
 
 struct ListReviews<R: Decodable>: iTunesRequestType {

@@ -33,10 +33,17 @@ struct SearchResponse: SearchWithKeywordResponseType {
     let objects: [Wrapper]
 }
 
+extension SearchResponse {
+
+    init(objects: [Wrapper]) {
+        self.objects = objects
+    }
+}
+
 extension SearchResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> SearchResponse {
-        let results = e.rawValue["results"] as! [[String: AnyObject]]
+        guard let results = e.rawValue["results"] as? [[String: AnyObject]] else { return SearchResponse(objects: []) }
         var items: [Wrapper] = []
         for item in results {
             guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
@@ -49,7 +56,7 @@ extension SearchResponse: Decodable {
                 items.append(Wrapper.artist(try Himotoki.decodeValue(item)))
             }
         }
-        return SearchResponse(term: "", objects: items)
+        return SearchResponse(objects: items)
     }
 }
 

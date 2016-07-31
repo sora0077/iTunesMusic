@@ -55,7 +55,6 @@
 		D95E4CFD1D33FBD800985C66 /* BlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4CFC1D33FBD800985C66 /* BlurImageView.swift */; };
 		D95E4CFF1D34011500985C66 /* EasyBlurImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4CFE1D34011500985C66 /* EasyBlurImageView.swift */; };
 		D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */; };
-		D96A93DD1D48E8A900B693D4 /* 9to10.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DC1D48E8A900B693D4 /* 9to10.swift */; };
 		D96A93DF1D48FBD200B693D4 /* EntityReview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93DE1D48FBD200B693D4 /* EntityReview.swift */; };
 		D96A93E11D4909F000B693D4 /* Reviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E01D4909F000B693D4 /* Reviews.swift */; };
 		D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96A93E21D49110A00B693D4 /* ListReviews.swift */; };
@@ -63,6 +62,9 @@
 		D96C957E1D3A6CCB000116FD /* MyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957C1D3A66D2000116FD /* MyPlaylist.swift */; };
 		D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */; };
 		D96C95831D3A840F000116FD /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */; };
+		D97EF28F1D4E64350048A23D /* iOS9to10.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97EF28E1D4E64350048A23D /* iOS9to10.framework */; };
+		D97EF2901D4E64430048A23D /* iOS9to10.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97EF28E1D4E64350048A23D /* iOS9to10.framework */; };
+		D97EF2911D4E64430048A23D /* iOS9to10.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D97EF28E1D4E64350048A23D /* iOS9to10.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D98D566A1D20270C007B09DB /* RssCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98D56691D20270C007B09DB /* RssCache.swift */; };
 		D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164091D37CEA90091BF09 /* ControlCenter.swift */; };
 		D99164121D37D37C0091BF09 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164101D37D36D0091BF09 /* Track.swift */; };
@@ -150,6 +152,7 @@
 				D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */,
 				D91E68E41D4A7443005CF411 /* SWXMLHash.framework in Embed Frameworks */,
 				D9D1F3F51D422E1F007E7058 /* APIKit.framework in Embed Frameworks */,
+				D97EF2911D4E64430048A23D /* iOS9to10.framework in Embed Frameworks */,
 				D9D1F3F31D422E1F007E7058 /* Himotoki.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -217,7 +220,6 @@
 		D95E4CFC1D33FBD800985C66 /* BlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurImageView.swift; sourceTree = "<group>"; };
 		D95E4CFE1D34011500985C66 /* EasyBlurImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EasyBlurImageView.swift; sourceTree = "<group>"; };
 		D95E4D001D35284500985C66 /* ArtistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistDetailViewController.swift; sourceTree = "<group>"; };
-		D96A93DC1D48E8A900B693D4 /* 9to10.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = 9to10.swift; sourceTree = "<group>"; };
 		D96A93DE1D48FBD200B693D4 /* EntityReview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityReview.swift; sourceTree = "<group>"; };
 		D96A93E01D4909F000B693D4 /* Reviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reviews.swift; sourceTree = "<group>"; };
 		D96A93E21D49110A00B693D4 /* ListReviews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListReviews.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 		D96C957C1D3A66D2000116FD /* MyPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylist.swift; sourceTree = "<group>"; };
 		D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylistCache.swift; sourceTree = "<group>"; };
 		D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
+		D97EF28E1D4E64350048A23D /* iOS9to10.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = iOS9to10.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D98D56691D20270C007B09DB /* RssCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssCache.swift; sourceTree = "<group>"; };
 		D99164091D37CEA90091BF09 /* ControlCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenter.swift; sourceTree = "<group>"; };
 		D99164101D37D36D0091BF09 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
@@ -264,6 +267,7 @@
 				D9D1F3DF1D422D63007E7058 /* Timepiece.framework in Frameworks */,
 				D9D1F3DD1D422D58007E7058 /* RxSwift.framework in Frameworks */,
 				D9D1F3DB1D422D52007E7058 /* Result.framework in Frameworks */,
+				D97EF28F1D4E64350048A23D /* iOS9to10.framework in Frameworks */,
 				D91E68E51D4A7465005CF411 /* SWXMLHash.framework in Frameworks */,
 				D9D1F3D91D422D4D007E7058 /* RealmSwift.framework in Frameworks */,
 				D9D1F3D71D422D49007E7058 /* Realm.framework in Frameworks */,
@@ -296,6 +300,7 @@
 				D9D1F3EA1D422E1F007E7058 /* RxSwift.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
 				A3EBD53B13274EA09CCDD9C0 /* Pods_Demo.framework in Frameworks */,
+				D97EF2901D4E64430048A23D /* iOS9to10.framework in Frameworks */,
 				D9D1F3EE1D422E1F007E7058 /* RealmSwift.framework in Frameworks */,
 				D9D1F3E61D422D8F007E7058 /* SnapKit.framework in Frameworks */,
 			);
@@ -314,6 +319,7 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D97EF28E1D4E64350048A23D /* iOS9to10.framework */,
 				D91E68E21D4A7443005CF411 /* SWXMLHash.framework */,
 				D9D1F3E21D422D72007E7058 /* RxCocoa.framework */,
 				D9D1F3E01D422D6A007E7058 /* SnapKit.framework */,
@@ -408,7 +414,6 @@
 				D91B42961D07071400AAAD58 /* API */,
 				D91B42991D070FA600AAAD58 /* iTunesMusic.swift */,
 				D9165FEE1D2C0ADD00B701E3 /* Utils.swift */,
-				D96A93DC1D48E8A900B693D4 /* 9to10.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -895,7 +900,6 @@
 				D91E68D21D4A4AE3005CF411 /* Cache.swift in Sources */,
 				D9165FEF1D2C0ADD00B701E3 /* Utils.swift in Sources */,
 				D91B42A41D0CFA2700AAAD58 /* Preview.swift in Sources */,
-				D96A93DD1D48E8A900B693D4 /* 9to10.swift in Sources */,
 				D9FD12F01D1C2C610010E81D /* EntityGenre.swift in Sources */,
 				D9EA0B511D27FE2A001C3F2F /* AlbumCache.swift in Sources */,
 				D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */,
