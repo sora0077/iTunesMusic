@@ -72,6 +72,7 @@ extension Model.Track: _Fetchable {
             switch result {
             case .success(let response):
                 let realm = iTunesRealm()
+                // swiftlint:disable force_try
                 try! realm.write {
                     response.objects.reversed().forEach {
                         switch $0 {

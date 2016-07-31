@@ -48,6 +48,38 @@ extension Model {
     }
 }
 
+extension Model.MyPlaylists {
+
+    public func insert(playlist: Model.MyPlaylist, at index: Int) {
+        let realm = iTunesRealm()
+        // swiftlint:disable force_try
+        try! realm.write {
+            cache.playlists.insert(playlist.playlist, at: index)
+        }
+    }
+
+    public func append(playlist: Model.MyPlaylist) {
+        let realm = iTunesRealm()
+        try! realm.write {
+            cache.playlists.append(playlist.playlist)
+        }
+    }
+
+    public func remove(at index: Int) {
+        let realm = iTunesRealm()
+        try! realm.write {
+            cache.playlists.remove(objectAtIndex: index)
+        }
+    }
+
+    public func move(from src: Int, to dst: Int) {
+        let realm = iTunesRealm()
+        try! realm.write {
+            cache.playlists.move(from: src, to: dst)
+        }
+    }
+}
+
 extension Model.MyPlaylists: Swift.Collection {
 
     public var startIndex: Int { return cache.playlists.startIndex }
@@ -68,9 +100,8 @@ extension Model.MyPlaylists: Swift.Collection {
 
 extension Model {
 
-    public final class MyPlaylist {
+    public final class MyPlaylist: _ObservableList {
 
-        private let _changes = PublishSubject<CollectionChange>()
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
         private var token: NotificationToken?
