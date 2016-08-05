@@ -38,7 +38,6 @@ extension Model {
     public final class Album: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
@@ -48,11 +47,12 @@ extension Model {
         private let caches: Results<_AlbumCache>
         private var tracks: Results<_Track>
 
-        public init(collection: Collection) {
+        public convenience init(collection: Collection) {
+            self.init(collectionId: collection.id)
+        }
 
-            let collection = collection.impl
-            self.collectionId = collection.id
-
+        public init(collectionId: Int) {
+            self.collectionId = collectionId
             let realm = iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.allObjects(ofType: _AlbumCache.self).filter(using: "collectionId = \(collectionId)")

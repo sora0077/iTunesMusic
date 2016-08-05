@@ -34,7 +34,7 @@ final class PlaylistDetailViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = editButtonItem()
 
-                view.addSubview(tableView)
+        view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(view)
         }
@@ -76,7 +76,6 @@ extension PlaylistDetailViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-
         playlist.remove(at: indexPath.row)
     }
 

@@ -58,7 +58,6 @@ extension Model {
         public var isEmpty: Bool { return caches.isEmpty || cache.list.isEmpty }
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
         var _requestState: Variable<RequestState> { return __requestState }
 
         private var token: NotificationToken?

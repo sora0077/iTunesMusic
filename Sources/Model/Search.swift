@@ -34,7 +34,6 @@ extension Model {
         var name: String { return term }
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
         public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
         private let _tracksChanges = PublishSubject<CollectionChange>()
 

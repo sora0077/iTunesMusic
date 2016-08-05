@@ -33,7 +33,6 @@ extension Model {
     public final class Artist: Fetchable, _ObservableList {
 
         public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?
@@ -43,9 +42,12 @@ extension Model {
         private let caches: Results<_ArtistCache>
         private var collections: Results<_Collection>
 
-        public init(artist: iTunesMusic.Artist) {
+        public convenience init(artist: iTunesMusic.Artist) {
+            self.init(artistId: artist.id)
+        }
 
-            self.artistId = artist.id
+        public init(artistId: Int) {
+            self.artistId = artistId
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(artistId: artistId, realm: realm)

@@ -62,7 +62,7 @@ extension _ObservableList {
 }
 
 //MARK: - Fetchable
-public protocol Fetchable {
+public protocol Fetchable: class {
 
     var requestState: Observable<RequestState> { get }
 
@@ -90,7 +90,21 @@ protocol _Fetchable: class, Fetchable {
     func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void)
 }
 
+private struct FetchableKey {
+    static var requestState: UInt8 = 0
+}
+
 extension Fetchable {
+
+    public var requestState: Observable<RequestState> {
+        if let state = objc_getAssociatedObject(self, &FetchableKey.requestState) as? Observable<RequestState> {
+            return state
+        }
+        // swiftlint:disable force_cast
+        let state = asObservable((self as! _Fetchable)._requestState).distinctUntilChanged()
+        objc_setAssociatedObject(self, &FetchableKey.requestState, state, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return state
+    }
 
     public func fetch() {
         guard Thread.isMainThread else {

@@ -26,10 +26,12 @@ extension Model {
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
 
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
-
         private var token: NotificationToken!
         private let caches: Results<_Track>
+
+        public convenience init(track: Track) {
+            self.init(trackId: track.trackId)
+        }
 
         public init(trackId: Int) {
             self.trackId = trackId

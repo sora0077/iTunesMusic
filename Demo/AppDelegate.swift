@@ -99,8 +99,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private let disposeBag = DisposeBag()
 
-    private var artist: Model.Artist!
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 
