@@ -31,7 +31,7 @@ extension Model {
 
     public final class Search: Fetchable, ObservableList, _ObservableList {
 
-        var name: String { return term }
+        public var name: String { return term }
 
         public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
         private let _tracksChanges = PublishSubject<CollectionChange>()

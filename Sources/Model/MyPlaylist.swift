@@ -120,6 +120,8 @@ extension Model {
 
 extension Model.MyPlaylist: PlaylistType {
 
+    public var name: String { return playlist.title }
+
     public var tracksChanges: Observable<CollectionChange> { return changes }
 
     public var trackCount: Int { return playlist.tracks.count }

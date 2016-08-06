@@ -28,6 +28,8 @@ private extension AVPlayerItem {
 
 private class OneTrackPlaylist: PlaylistType {
 
+    private var name: String { return objects[0].trackName }
+
     private var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
 
     private var trackCount: Int { return objects.count }

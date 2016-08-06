@@ -13,6 +13,8 @@ import RxSwift
 
 public protocol PlaylistType: class {
 
+    var name: String { get }
+
     var tracksChanges: Observable<CollectionChange> { get }
 
     var trackCount: Int { get }

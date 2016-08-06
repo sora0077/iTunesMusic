@@ -37,6 +37,7 @@ extension Model {
 
         private let id: Int
         private let url: URL
+        public let name: String
 
         private let caches: Results<_RssCache>
         private var token: NotificationToken!
@@ -47,6 +48,7 @@ extension Model {
         public init(genre: Genre) {
             id = genre.id
             url = genre.rssUrls.topSongs
+            name = genre.name
 
             let realm = iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
