@@ -29,11 +29,10 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 
 extension Model {
 
-    public final class Search: Fetchable, _ObservableList {
+    public final class Search: Fetchable, ObservableList, _ObservableList {
 
         var name: String { return term }
 
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
         public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
         private let _tracksChanges = PublishSubject<CollectionChange>()
 

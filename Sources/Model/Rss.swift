@@ -31,10 +31,7 @@ private let perItems = 50
 
 extension Model {
 
-    public final class Rss: Fetchable, _ObservableList {
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
+    public final class Rss: Fetchable, ObservableList, _ObservableList {
 
         private var fetched: Int = 0
 

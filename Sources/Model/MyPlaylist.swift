@@ -28,9 +28,7 @@ private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
 
 extension Model {
 
-    public final class MyPlaylists: _ObservableList {
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    public final class MyPlaylists: ObservableList, _ObservableList {
 
         private let cache: _MyPlaylistCache
         private var token: NotificationToken?
@@ -100,9 +98,7 @@ extension Model.MyPlaylists: Swift.Collection {
 
 extension Model {
 
-    public final class MyPlaylist: _ObservableList {
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    public final class MyPlaylist: ObservableList, _ObservableList {
 
         private var token: NotificationToken?
 

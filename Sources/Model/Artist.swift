@@ -30,9 +30,7 @@ private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
 
 extension Model {
 
-    public final class Artist: Fetchable, _ObservableList {
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
+    public final class Artist: Fetchable, ObservableList, _ObservableList {
 
         private var objectsToken: NotificationToken?
         private var token: NotificationToken?

@@ -29,10 +29,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
 
 extension Model {
 
-    public final class Reviews: Fetchable, _ObservableList {
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
-        public private(set) lazy var requestState: Observable<RequestState> = asObservable(self._requestState).distinctUntilChanged()
+    public final class Reviews: Fetchable, ObservableList, _ObservableList {
 
         private let collectionId: Int
 

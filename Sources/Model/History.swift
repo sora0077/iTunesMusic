@@ -27,13 +27,11 @@ private func getOrCreateCache(realm: Realm) -> _HistoryCache {
 
 extension Model {
 
-    public final class History: _ObservableList {
+    public final class History: ObservableList, _ObservableList {
 
         public let name = "履歴"
 
         public static let shared = History()
-
-        public private(set) lazy var changes: Observable<CollectionChange> = asObservable(self._changes)
 
         private var objectsToken: NotificationToken?
         private let cache: _HistoryCache
