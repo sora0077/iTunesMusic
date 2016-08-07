@@ -22,3 +22,28 @@ class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     override class func primaryKey() -> String? { return "term" }
 }
+
+
+final class _SearchTrendsCache: _Cache {
+
+    private dynamic var id: Int = 0
+
+    dynamic var name: String = ""
+
+    private dynamic var _trendings: String = ""
+
+    override class func primaryKey() -> String? { return "id" }
+
+    override class func ignoredProperties() -> [String] {
+        return ["trendings"]
+    }
+
+    var trendings: [String] {
+        set {
+            _trendings = newValue.joined(separator: "\t")
+        }
+        get {
+            return _trendings.components(separatedBy: "\t").filter { $0 != "" }
+        }
+    }
+}

@@ -103,6 +103,7 @@ extension _Collection: Decodable {
         obj._country = try e.value("country")
         obj._currency = try e.value("currency")
 
+//        print(e.rawValue)
         obj._copyright = try e.valueOptional("copyright")
 
         obj._releaseDate = try releaseDateTransformer.apply(e.value("releaseDate"))

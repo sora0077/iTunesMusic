@@ -31,6 +31,30 @@ extension Model {
 
     public final class Search: Fetchable, ObservableList, _ObservableList {
 
+        // swiftlint:disable nesting
+        public final class Trends: Fetchable, ObservableList, _ObservableList {
+            public var name: String {
+                return cache.name
+            }
+            private var results: [String] = []
+
+            private let cache: _SearchTrendsCache
+
+            private init() {
+                let realm = iTunesRealm()
+                self.cache = realm.allObjects(ofType: _SearchTrendsCache.self).first ?? _SearchTrendsCache()
+                try! realm.write {
+                    realm.add(self.cache, update: true)
+                }
+                DispatchQueue.main.async {
+                    self.results = self.cache.trendings
+                    self._changes.onNext(.initial)
+                }
+            }
+        }
+
+        public let trends = Trends()
+
         public var name: String { return term }
 
         private let term: String
@@ -183,4 +207,68 @@ extension Model.Search: Swift.Collection {
     public func index(after i: Int) -> Int {
         return results.index(after: i)
     }
+}
+
+//MARK: - Search.Trends
+extension Model.Search.Trends: _Fetchable {
+
+    var _refreshAt: Date { return cache.refreshAt }
+
+    var _refreshDuration: Duration { return 60.minutes }
+
+    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+
+        let trends = SearchHintTrends()
+        Session.sharedSession.sendRequest(trends, callbackQueue: callbackQueue) { [weak self] result in
+            guard let `self` = self else { return }
+            let requestState: RequestState
+            defer {
+                completion(requestState)
+            }
+            switch result {
+            case .success(let response):
+                let realm = iTunesRealm()
+                try! realm.write {
+                    let cache = realm.allObjects(ofType: _SearchTrendsCache.self).first ?? _SearchTrendsCache()
+                    cache.name = response.name
+                    cache.trendings = response.trends
+                    cache.updateAt = Date()
+                    if refreshing {
+                        cache.refreshAt = Date()
+                    }
+                    realm.add(cache, update: true)
+                }
+                let indices = response.trends.enumerated().map { $0.offset }
+                let changes: CollectionChange
+                if self.results.count == indices.count {
+                    changes = .update(deletions: [], insertions: [], modifications: indices)
+                } else {
+                    changes = .update(deletions: [], insertions: indices, modifications: [])
+                }
+                self.results = response.trends
+                DispatchQueue.main.async {
+                    self._changes.onNext(changes)
+                }
+                requestState = .done
+            case .failure(let error):
+                print(error)
+                requestState = .error
+            }
+        }
+    }
+}
+
+extension Model.Search.Trends: Swift.Collection {
+
+    public var count: Int { return results.count }
+
+    public var isEmpty: Bool { return results.isEmpty }
+
+    public var startIndex: Int { return results.startIndex }
+
+    public var endIndex: Int { return results.endIndex }
+
+    public subscript (index: Int) -> String { return results[index] }
+
+    public func index(after i: Int) -> Int { return results.index(after: i) }
 }

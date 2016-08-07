@@ -16,12 +16,16 @@ class SearchViewController: BaseViewController {
     private var search: Model.Search? = Model.Search(term: "") {
         didSet {
             guard let search = search else { return }
-            updateTableModule()
             searchDisposeBag = DisposeBag()
-            search.changes
+            search.trends.changes
                 .subscribe(tableView.rx_itemUpdates())
                 .addDisposableTo(searchDisposeBag)
+            search.changes
+                .subscribe(tableView.rx_itemUpdates { idx in (idx, 1) })
+                .addDisposableTo(searchDisposeBag)
             search.refresh()
+
+            search.trends.refresh()
         }
     }
     private var searchDisposeBag = DisposeBag()
@@ -29,24 +33,19 @@ class SearchViewController: BaseViewController {
     private let tableView = UITableView()
     private let searhBar = UISearchBar()
 
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-
-        updateTableModule()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.closeAction))
 
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(view)
+        }
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.keyboardDismissMode = .interactive
+        tableView.delegate = self
+        tableView.dataSource = self
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
 
@@ -78,33 +77,62 @@ class SearchViewController: BaseViewController {
         searhBar.becomeFirstResponder()
     }
 
-    private func updateTableModule() {
-
-        modules[tableView] = TableViewModule(
-            view: tableView,
-            superview: { [unowned self] in self.view },
-            controller: self,
-            list: search!,
-            onGenerate: { (self, tableView, element, indexPath) in
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-                if let track = self.search?.track(at: indexPath.row) {
-                    cell.textLabel?.text = track.trackName
-                }
-                return cell
-            },
-            onSelect: { (self, tableView, element, indexPath) in
-                tableView.deselectRow(at: indexPath, animated: true)
-
-                guard let search = self.search else { return }
-
-                let vc = AlbumDetailViewController(collection: search.track(at: indexPath.row).collection)
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        )
-    }
-
     @objc
     private func closeAction() {
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension SearchViewController: UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return search?.trends.count ?? 0
+        case 1:
+            return search?.count ?? 0
+        default:
+            fatalError()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = nil
+        switch indexPath.section {
+        case 0:
+            if let trends = search?.trends {
+                cell.textLabel?.text = "\(trends.name) - \(trends[indexPath.row])"
+            }
+        case 1:
+            if let track = search?.track(at: indexPath.row) {
+                cell.textLabel?.text = track.trackName
+            }
+        default:
+            fatalError()
+        }
+        return cell
+    }
+}
+
+extension SearchViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        guard let search = search else { return }
+
+        switch indexPath.section {
+        case 0:
+            self.search = Model.Search(term: search.trends[indexPath.row])
+        default:
+            let vc = AlbumDetailViewController(collection: search.track(at: indexPath.row).collection)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

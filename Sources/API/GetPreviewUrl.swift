@@ -18,13 +18,15 @@ struct GetPreviewUrl: iTunesRequestType {
 
     let baseURL: URL
 
+    private let locale: Locale
+
     var method: HTTPMethod { return .GET }
 
     var path: String { return "" }
 
     var headerFields: [String : String] {
         return [
-            "X-Apple-Store-Front": "143462-9,4",
+            "X-Apple-Store-Front": appleStoreFront(locale: locale),
         ]
     }
 
@@ -32,9 +34,10 @@ struct GetPreviewUrl: iTunesRequestType {
         return PropertyListDataParser(options: [])
     }
 
-    init(id: Int, url: URL) {
+    init(id: Int, url: URL, locale: Locale = Locale.current) {
         self.id = id
         baseURL = url
+        self.locale = locale
     }
 
     func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {

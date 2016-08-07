@@ -17,13 +17,14 @@ private let _previewer = Preview()
 
 public let player: Player = PlayerImpl(previewer: _previewer)
 
-public let realmObjectTypes: [RealmSwift.Object.Type] = [
+private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,
     _GenresCache.self,
     _Collection.self,
     _ChartUrls.self,
     _HistoryCache.self,
     _SearchCache.self,
+    _SearchTrendsCache.self,
     _ArtistCache.self,
     _Artist.self,
     _RssUrls.self,

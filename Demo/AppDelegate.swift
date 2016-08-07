@@ -83,9 +83,15 @@ extension UITableView {
             isMoving = false
             reloadSections(IndexSet(0..<numberOfSections), with: .automatic)
         } else {
-            deleteRows(at: deletions, with: .automatic)
-            insertRows(at: insertions, with: .top)
-            reloadRows(at: modifications, with: .automatic)
+            if !deletions.isEmpty {
+                deleteRows(at: deletions, with: .automatic)
+            }
+            if !insertions.isEmpty {
+                insertRows(at: insertions, with: .top)
+            }
+            if !modifications.isEmpty {
+                reloadRows(at: modifications, with: .automatic)
+            }
         }
         endUpdates()
     }
