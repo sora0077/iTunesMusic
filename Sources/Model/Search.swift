@@ -33,9 +33,6 @@ extension Model {
 
         public var name: String { return term }
 
-        public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
-        private let _tracksChanges = PublishSubject<CollectionChange>()
-
         private let term: String
         private let caches: Results<_SearchCache>
         private var token: NotificationToken!
@@ -43,6 +40,9 @@ extension Model {
         private var tracksToken: NotificationToken?
 
         private var tracks: Results<_Media>
+
+        public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
+        private let _tracksChanges = PublishSubject<CollectionChange>()
 
         public init(term: String) {
             self.term = term

@@ -84,8 +84,6 @@ extension Model {
 
 extension Model.Rss: PlaylistType {
 
-    public var tracksChanges: Observable<CollectionChange> { return changes }
-
     public var trackCount: Int { return tracks.count }
 
     public var isTrackEmpty: Bool { return tracks.isEmpty }

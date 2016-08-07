@@ -17,38 +17,43 @@ private let _previewer = Preview()
 
 public let player: Player = PlayerImpl(previewer: _previewer)
 
+public let realmObjectTypes: [RealmSwift.Object.Type] = [
+    _Media.self,
+    _GenresCache.self,
+    _Collection.self,
+    _ChartUrls.self,
+    _HistoryCache.self,
+    _SearchCache.self,
+    _ArtistCache.self,
+    _Artist.self,
+    _RssUrls.self,
+    _RssItem.self,
+    _MyPlaylist.self,
+    _MyPlaylistCache.self,
+    _AlbumCache.self,
+    _HistoryRecord.self,
+    _Genre.self,
+    _TrackMetadata.self,
+    _Track.self,
+    _RssCache.self,
+    _Review.self,
+    _ReviewCache.self,
+]
+
 private let configuration: Realm.Configuration = {
     let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
     // swiftlint:disable force_try
     let fileURL = try! URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
     var config = Realm.Configuration(fileURL: fileURL)
-    config.objectTypes = [
-        _Media.self,
-        _GenresCache.self,
-        _Collection.self,
-        _ChartUrls.self,
-        _HistoryCache.self,
-        _SearchCache.self,
-        _ArtistCache.self,
-        _Artist.self,
-        _RssUrls.self,
-        _RssItem.self,
-        _MyPlaylist.self,
-        _MyPlaylistCache.self,
-        _AlbumCache.self,
-        _HistoryRecord.self,
-        _Genre.self,
-        _TrackMetadata.self,
-        _Track.self,
-        _RssCache.self,
-        _Review.self,
-        _ReviewCache.self,
-    ]
+    config.objectTypes = realmObjectTypes
     return config
 }()
 
+public struct LaunchOptions {
 
-public func launch() {
+}
+
+public func launch(with options: LaunchOptions? = nil) {
 
     player.install(middleware: Model.History.shared)
     player.install(middleware: Downloader(previewer: _previewer))

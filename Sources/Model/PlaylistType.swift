@@ -22,3 +22,8 @@ public protocol PlaylistType: class {
 
     func track(at index: Int) -> Track
 }
+
+extension PlaylistType where Self: ObservableList {
+
+    public var tracksChanges: Observable<CollectionChange> { return changes }
+}

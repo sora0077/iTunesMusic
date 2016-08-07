@@ -50,7 +50,6 @@ extension Model.MyPlaylists {
 
     public func insert(playlist: Model.MyPlaylist, at index: Int) {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
         try! realm.write {
             cache.playlists.insert(playlist.playlist, at: index)
         }
@@ -121,8 +120,6 @@ extension Model {
 extension Model.MyPlaylist: PlaylistType {
 
     public var name: String { return playlist.title }
-
-    public var tracksChanges: Observable<CollectionChange> { return changes }
 
     public var trackCount: Int { return playlist.tracks.count }
 

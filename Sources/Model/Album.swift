@@ -88,8 +88,6 @@ extension Model.Album: PlaylistType {
 
     public var name: String { return collection.name }
 
-    public var tracksChanges: Observable<CollectionChange> { return changes }
-
     public var trackCount: Int { return tracks.count }
 
     public var isTrackEmpty: Bool { return tracks.isEmpty }

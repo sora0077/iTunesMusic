@@ -53,8 +53,6 @@ extension Model {
 
 extension Model.History: PlaylistType {
 
-    public var tracksChanges: Observable<CollectionChange> { return changes }
-
     public var trackCount: Int { return cache.objects.count }
 
     public var isTrackEmpty: Bool { return cache.objects.isEmpty }
