@@ -30,6 +30,9 @@ public protocol Track: EntityInterface {
 
     var canPreview: Bool { get }
 
+    /// milli seconds
+    var duration: Int { get }
+
     var metadata: TrackMetadata? { get }
 
     func artworkURL(size: Int) -> URL
@@ -104,6 +107,8 @@ extension _Track {
     var canPreview: Bool {
         return _previewUrl != nil
     }
+
+    var duration: Int { return _trackTimeMillis }
 
     var metadata: TrackMetadata? {
         return _metadata.first

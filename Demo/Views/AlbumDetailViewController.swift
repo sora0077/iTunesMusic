@@ -64,11 +64,17 @@ private final class HeaderView: UIView {
 private class TableViewCell: UITableViewCell {
 
     let button = UIButton(type: .system)
+    let durationLabel = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        contentView.addSubview(durationLabel)
         contentView.addSubview(button)
+        durationLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(contentView)
+            make.right.equalTo(button.snp.left).offset(-8)
+        }
         button.snp.makeConstraints { make in
             make.rightMargin.equalTo(contentView).offset(-8)
             make.centerY.equalTo(contentView)
@@ -289,6 +295,9 @@ extension AlbumDetailViewController: UITableViewDataSource {
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
         cell.textLabel?.text = track.trackName
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
+
+        let seconds = track.duration / 1000
+        cell.durationLabel.text = "\(seconds/60):\(seconds%60)"
         if track.canPreview {
             cell.textLabel?.textColor = UIColor.black()
             cell.selectionStyle = .default
