@@ -13,9 +13,8 @@ import RxSwift
 
 class SearchViewController: BaseViewController {
 
-    private var search: Model.Search? = Model.Search(term: "") {
+    private var search: Model.Search = Model.Search(term: "") {
         didSet {
-            guard let search = search else { return }
             searchDisposeBag = DisposeBag()
             search.trends.changes
                 .subscribe(tableView.rx_itemUpdates())
@@ -55,7 +54,7 @@ class SearchViewController: BaseViewController {
         tableView.rx_reachedBottom()
             .filter { $0 }
             .subscribeNext { [weak self] _ in
-                self?.search?.fetch()
+                self?.search.fetch()
             }
             .addDisposableTo(disposeBag)
 
@@ -92,9 +91,9 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return search?.trends.count ?? 0
+            return search.trends.count
         case 1:
-            return search?.count ?? 0
+            return search.count
         default:
             fatalError()
         }
@@ -105,13 +104,9 @@ extension SearchViewController: UITableViewDataSource {
         cell.textLabel?.text = nil
         switch indexPath.section {
         case 0:
-            if let trends = search?.trends {
-                cell.textLabel?.text = "\(trends.name) - \(trends[indexPath.row])"
-            }
+            cell.textLabel?.text = "\(search.trends.name) - \(search.trends[indexPath.row])"
         case 1:
-            if let track = search?.track(at: indexPath.row) {
-                cell.textLabel?.text = track.trackName
-            }
+            cell.textLabel?.text = search.track(at: indexPath.row).trackName
         default:
             fatalError()
         }
@@ -124,8 +119,6 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         tableView.deselectRow(at: indexPath, animated: true)
-
-        guard let search = search else { return }
 
         switch indexPath.section {
         case 0:
