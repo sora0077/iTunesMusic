@@ -20,6 +20,13 @@ func tick() {
     }
 }
 
+func doOnMainThread(_ block: @autoclosure(escaping) () -> Void) -> Bool {
+    guard Thread.isMainThread else {
+        DispatchQueue.main.async(execute: block)
+        return false
+    }
+    return true
+}
 
 func asObservable<T: ObservableConvertibleType>(_ input: T) -> Observable<T.E> {
     return input.asObservable().observeOn(MainScheduler.instance).shareReplay(1)

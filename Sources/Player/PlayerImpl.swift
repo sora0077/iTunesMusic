@@ -135,10 +135,7 @@ final class PlayerImpl: NSObject, Player {
         middleware.middlewareInstalled(self)
     }
 
-    func play() {
-        print(_player.rate)
-        _player.play()
-    }
+    func play() { _player.play() }
 
     func pause() { _player.pause() }
 
@@ -150,16 +147,11 @@ final class PlayerImpl: NSObject, Player {
         if _playingQueue.isEmpty { return }
         if _player.items().count > 2 { return }
 
-        guard Thread.isMainThread else {
-            DispatchQueue.main.async {
-                self.updateQueue()
-            }
-            return
-        }
+        guard doOnMainThread(self.updateQueue()) else { return }
 
         print("run updateQueue")
         let track = _playingQueue[_playingQueue.startIndex].impl
-        if !track.canPreview {
+        guard !track.canPreview else {
             _playingQueue = _playingQueue.dropFirst()
             return updateQueue()
         }
@@ -176,44 +168,31 @@ final class PlayerImpl: NSObject, Player {
             }
             return nil
         }
-        if let (url, duration) = getPreviewInfo() {
-
-            _playingQueue = _playingQueue.dropFirst()
-
-            print("add player queue ", track._trackName, url)
-            let item = AVPlayerItem(asset: AVAsset(url: url))
-            item.trackId = track.id
-
-            DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosDefault).async {
-
-                if let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first {
-                    let inputParams = AVMutableAudioMixInputParameters(track: track)
-
-                    let fadeDuration = CMTimeMakeWithSeconds(5, 600)
-                    let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600)
-                    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600)
-
-                    inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
-                    inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
-
-                    let audioMix = AVMutableAudioMix()
-                    audioMix.inputParameters = [inputParams]
-                    item.audioMix = audioMix
-                }
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(self.didEndPlay),
-                    name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                    object: item
-                )
-
-                self._player.insert(item, after: nil)
-                if self._player.status == .readyToPlay {
-                    self.play()
-                }
-            }
-        } else {
+        guard let (url, duration) = getPreviewInfo() else {
             fetch(previewer.queueing(track: track))
+            return
+        }
+
+        _playingQueue = _playingQueue.dropFirst()
+
+        print("add player queue ", track._trackName, url)
+        let item = AVPlayerItem(asset: AVAsset(url: url))
+        item.trackId = track.id
+
+        DispatchQueue.global(attributes: .qosDefault).async {
+
+            configureFading(item: item, duration: duration)
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(self.didEndPlay),
+                name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+                object: item
+            )
+
+            self._player.insert(item, after: nil)
+            if self._player.status == .readyToPlay {
+                self.play()
+            }
         }
     }
 
@@ -222,12 +201,7 @@ final class PlayerImpl: NSObject, Player {
         if _playingQueue.count > 2 { updateQueue(); return }
         if _player.items().count > 2 { return }
 
-        if !Thread.isMainThread {
-            DispatchQueue.main.async {
-                self.updatePlaylistQueue()
-            }
-            return
-        }
+        guard doOnMainThread(self.updatePlaylistQueue()) else { return }
 
         let (playlist, index, _) = _playlists[_playlists.startIndex]
 
@@ -352,4 +326,22 @@ final class PlayerImpl: NSObject, Player {
             pause()
         }
     }
+}
+
+private func configureFading(item: AVPlayerItem, duration: Double) {
+
+    guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
+
+    let inputParams = AVMutableAudioMixInputParameters(track: track)
+
+    let fadeDuration = CMTimeMakeWithSeconds(5, 600)
+    let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600)
+    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600)
+
+    inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+    inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+
+    let audioMix = AVMutableAudioMix()
+    audioMix.inputParameters = [inputParams]
+    item.audioMix = audioMix
 }
