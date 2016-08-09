@@ -106,7 +106,7 @@ extension SearchViewController: UITableViewDataSource {
         case 0:
             cell.textLabel?.text = "\(search.trends.name) - \(search.trends[indexPath.row])"
         case 1:
-            cell.textLabel?.text = search.track(at: indexPath.row).trackName
+            cell.textLabel?.text = search.track(at: indexPath.row).name
         default:
             fatalError()
         }

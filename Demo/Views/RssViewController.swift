@@ -65,7 +65,7 @@ class RssViewController: BaseViewController {
                 let track = self.rss[indexPath.row]
 
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
-                cell.titleLabel.text = track.trackName
+                cell.titleLabel.text = track.name
                 let size = { Int($0 * UIScreen.main().scale) }
 
                 let artworkURL = track.artworkURL(size: size(120))

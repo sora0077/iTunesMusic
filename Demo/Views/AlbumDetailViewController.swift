@@ -293,7 +293,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let track = album[indexPath.row]
 
         cell.detailTextLabel?.text = "\(indexPath.row + 1)"
-        cell.textLabel?.text = track.trackName
+        cell.textLabel?.text = track.name
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
 
         let seconds = track.duration / 1000

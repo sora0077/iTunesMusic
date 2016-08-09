@@ -33,7 +33,7 @@ extension Downloader: PlayerMiddleware {
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             if track.histories.count > 2 {
                 let preview = previewer.queueing(track: track)
-                print("will cache in disk", track.trackName)
+                print("will cache in disk", track.name)
                 preview.download()
                     .subscribeNext { [weak self] url, _ in
                         print("cache ", url)

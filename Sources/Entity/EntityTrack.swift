@@ -18,11 +18,11 @@ public protocol EntityInterface {
 
 public protocol Track: EntityInterface {
 
-    var trackId: Int { get }
+    var id: Int { get }
 
-    var trackName: String { get }
+    var name: String { get }
 
-    var trackViewURL: URL { get }
+    var viewURL: URL { get }
 
     var collection: Collection { get }
 
@@ -94,11 +94,11 @@ class _Track: RealmSwift.Object, Track {
 
 extension _Track {
 
-    var trackId: Int { return _trackId }
+    var id: Int { return _trackId }
 
-    var trackName: String { return _trackName }
+    var name: String { return _trackName }
 
-    var trackViewURL: URL { return URL(string: _trackViewUrl)! }
+    var viewURL: URL { return URL(string: _trackViewUrl)! }
 
     var collection: Collection { return _collection! }
 

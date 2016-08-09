@@ -49,7 +49,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
         player.nowPlaying
             .subscribeNext { [weak self] track in
-                self?.currentTrackId = track?.trackId
+                self?.currentTrackId = track?.id
             }
             .addDisposableTo(disposeBag)
 
@@ -67,7 +67,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     func willStartPlayTrack(_ trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
 
-        print(#function, trackId, track.trackName)
+        print(#function, trackId, track.name)
 
         if currentTrackId == nil { currentTrackId = trackId }
 
@@ -79,7 +79,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         commandCenter.nextTrackCommand.isEnabled = true
 
         let info: [String: AnyObject] = [
-            MPMediaItemPropertyTitle: track.trackName,
+            MPMediaItemPropertyTitle: track.name,
             MPMediaItemPropertyArtist: track.artist.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
             MPMediaItemPropertyPlaybackDuration: track.metadata?.duration ?? 0,

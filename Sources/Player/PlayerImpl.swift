@@ -28,7 +28,7 @@ private extension AVPlayerItem {
 
 private class OneTrackPlaylist: PlaylistType {
 
-    private var name: String { return objects[0].trackName }
+    private var name: String { return objects[0].name }
 
     private var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
 
@@ -167,11 +167,11 @@ final class PlayerImpl: NSObject, Player {
             guard let duration = track.metadata?.duration else { return nil }
 
             if let fileURL = track.metadata?.fileURL {
-                print("load from file ", track.trackName)
+                print("load from file ", track.name)
                 return (fileURL, duration)
             }
             if let url = track.metadata?.previewURL {
-                print("load from network ", track.trackName)
+                print("load from network ", track.name)
                 return (url, duration)
             }
             return nil
@@ -182,7 +182,7 @@ final class PlayerImpl: NSObject, Player {
 
             print("add player queue ", track._trackName, url)
             let item = AVPlayerItem(asset: AVAsset(url: url))
-            item.trackId = track.trackId
+            item.trackId = track.id
 
             DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosDefault).async {
 
@@ -244,7 +244,7 @@ final class PlayerImpl: NSObject, Player {
         print("play", playlist.trackCount, index, _playingQueue.count)
 
         if playlist.trackCount > index {
-            print("will play ", playlist.track(at: index).trackName)
+            print("will play ", playlist.track(at: index).name)
             let track = playlist.track(at: index)
             _playingQueue.append(track)
             _playlists[_playlists.startIndex].1 += 1
@@ -280,7 +280,7 @@ final class PlayerImpl: NSObject, Player {
                     guard let `self` = self else { return }
                     DispatchQueue.main.async {
                         self._previewQueue[id] = nil
-                        self._playingQueue = ArraySlice(self._playingQueue.filter { $0.trackId != id })
+                        self._playingQueue = ArraySlice(self._playingQueue.filter { $0.id != id })
                         self.updatePlaylistQueue()
                     }
                 }

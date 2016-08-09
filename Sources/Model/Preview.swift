@@ -20,10 +20,10 @@ final class Preview {
 
     subscript (track track: Track) -> PreviewTrack? {
         set {
-            cache.setObject(PreviewTrack(track: track), forKey: track.trackId)
+            cache.setObject(PreviewTrack(track: track), forKey: track.id)
         }
         get {
-            return cache.object(forKey: track.trackId)
+            return cache.object(forKey: track.id)
         }
     }
 
@@ -32,7 +32,7 @@ final class Preview {
             return previewTrack
         }
         let previewTrack = PreviewTrack(track: track)
-        cache.setObject(previewTrack, forKey: track.trackId)
+        cache.setObject(previewTrack, forKey: track.id)
         return previewTrack
     }
 }
@@ -44,8 +44,8 @@ final class PreviewTrack {
     let url: URL
 
     private init(track: Track) {
-        id = track.trackId
-        url = track.trackViewURL
+        id = track.id
+        url = track.viewURL
     }
     func download() -> Observable<(URL, duration: Double)> {
         let id = self.id

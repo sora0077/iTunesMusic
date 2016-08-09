@@ -63,7 +63,7 @@ extension PlaylistDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let track = playlist[indexPath.row]
-        cell.textLabel?.text = track.trackName
+        cell.textLabel?.text = track.name
         return cell
     }
 

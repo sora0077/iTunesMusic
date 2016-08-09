@@ -40,7 +40,7 @@ final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     init(track: _Track) {
         super.init()
 
-        _trackId = track.trackId
+        _trackId = track.id
         _track = track
     }
 
