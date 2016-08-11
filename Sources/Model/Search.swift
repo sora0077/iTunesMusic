@@ -179,6 +179,17 @@ extension Model.Search: Swift.Collection {
         case track(Track)
         case collection(Collection)
         case artist(Artist)
+
+        private init(type: _Media.MediaType) {
+            switch type {
+            case let .track(obj):
+                self = .track(obj)
+            case let .collection(obj):
+                self = .collection(obj)
+            case let .artist(obj):
+                self = .artist(obj)
+            }
+        }
     }
 
     private var results: List<_Media> { return caches[0].objects }
@@ -192,16 +203,7 @@ extension Model.Search: Swift.Collection {
     public var endIndex: Int { return results.endIndex }
 
     public subscript (index: Int) -> Result {
-        switch caches[0].objects[index].object {
-        case let obj as Track:
-            return .track(obj)
-        case let obj as Collection:
-            return .collection(obj)
-        case let obj as Artist:
-            return .artist(obj)
-        default:
-            fatalError()
-        }
+        return Result(type: results[index].type)
     }
 
     public func index(after i: Int) -> Int {

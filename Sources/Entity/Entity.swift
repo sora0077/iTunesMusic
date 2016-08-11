@@ -12,21 +12,27 @@ import RealmSwift
 
 final class _Media: RealmSwift.Object {
 
+    enum MediaType {
+        case track(Track)
+        case collection(Collection)
+        case artist(Artist)
+    }
+
     private(set) dynamic var track: _Track?
 
     private(set) dynamic var collection: _Collection?
 
     private(set) dynamic var artist: _Artist?
 
-    var object: AnyObject {
+    var type: MediaType {
         if let obj = track {
-            return obj
+            return .track(obj)
         }
         if let obj = collection {
-            return obj
+            return .collection(obj)
         }
         if let obj = artist {
-            return obj
+            return .artist(obj)
         }
         fatalError()
     }

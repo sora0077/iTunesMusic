@@ -297,7 +297,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
         cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
 
         let seconds = track.duration / 1000
-        cell.durationLabel.text = "\(seconds/60):\(seconds%60)"
+        cell.durationLabel.text = "\(seconds/60):\(String(format: "%02d", seconds%60))"
         if track.canPreview {
             cell.textLabel?.textColor = UIColor.black()
             cell.selectionStyle = .default
