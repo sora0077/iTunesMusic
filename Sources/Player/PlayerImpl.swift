@@ -147,7 +147,7 @@ final class PlayerImpl: NSObject, Player {
         if _playingQueue.isEmpty { return }
         if _player.items().count > 2 { return }
 
-        guard doOnMainThread(self.updateQueue()) else { return }
+        guard doOnMainThread(execute: self.updateQueue()) else { return }
 
         print("run updateQueue")
         let track = _playingQueue[_playingQueue.startIndex].impl
@@ -201,7 +201,7 @@ final class PlayerImpl: NSObject, Player {
         if _playingQueue.count > 2 { updateQueue(); return }
         if _player.items().count > 2 { return }
 
-        guard doOnMainThread(self.updatePlaylistQueue()) else { return }
+        guard doOnMainThread(execute: self.updatePlaylistQueue()) else { return }
 
         let (playlist, index, _) = _playlists[_playlists.startIndex]
 

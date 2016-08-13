@@ -20,7 +20,7 @@ func tick() {
     }
 }
 
-func doOnMainThread(_ block: @autoclosure(escaping) () -> Void) -> Bool {
+func doOnMainThread(execute block: @autoclosure(escaping) () -> Void) -> Bool {
     guard Thread.isMainThread else {
         DispatchQueue.main.async(execute: block)
         return false
