@@ -31,7 +31,4 @@
    <FileRef
       location = "group:Carthage/Checkouts/SWXMLHash/SWXMLHash.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/iOS9to10/iOS9to10.xcodeproj">
-   </FileRef>
 </Workspace>

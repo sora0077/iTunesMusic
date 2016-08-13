@@ -16,7 +16,7 @@ func appleStoreFront(locale: Locale = Locale.current) -> String {
     return "143462-9,4"
 }
 
-func iTunesUserAgent(version: String = UIDevice.current().systemVersion) -> String {
+func iTunesUserAgent(version: String = UIDevice.current.systemVersion) -> String {
     return "iTunes-iPhone/\(version)"
 }
 
@@ -27,7 +27,7 @@ protocol iTunesRequestType: RequestType {
 
 extension iTunesRequestType {
 
-    func intercept(urlRequest: URLRequest) throws -> URLRequest {
+    func interceptURLRequest(_ urlRequest: URLRequest) throws -> URLRequest {
         print(self, urlRequest)
         return urlRequest
     }
@@ -35,7 +35,7 @@ extension iTunesRequestType {
 
 extension iTunesRequestType where Response: Decodable {
 
-    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
         do {
             return try decodeValue(object)
         } catch {
@@ -45,7 +45,7 @@ extension iTunesRequestType where Response: Decodable {
     }
 }
 
-public enum iTunesMusicError: ErrorProtocol {
+public enum iTunesMusicError: Error {
     case notFound
 }
 

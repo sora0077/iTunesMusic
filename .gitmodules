@@ -1,0 +1,27 @@
+[submodule "Carthage/Checkouts/Himotoki"]
+	path = Carthage/Checkouts/Himotoki
+	url = https://github.com/ikesyo/Himotoki.git
+[submodule "Carthage/Checkouts/iOS9to10"]
+	path = Carthage/Checkouts/iOS9to10
+	url = https://github.com/sora0077/iOS9to10.git
+[submodule "Carthage/Checkouts/realm-cocoa"]
+	path = Carthage/Checkouts/realm-cocoa
+	url = https://github.com/realm/realm-cocoa.git
+[submodule "Carthage/Checkouts/Result"]
+	path = Carthage/Checkouts/Result
+	url = https://github.com/antitypical/Result.git
+[submodule "Carthage/Checkouts/APIKit"]
+	path = Carthage/Checkouts/APIKit
+	url = https://github.com/ishkawa/APIKit.git
+[submodule "Carthage/Checkouts/RxSwift"]
+	path = Carthage/Checkouts/RxSwift
+	url = https://github.com/ReactiveX/RxSwift.git
+[submodule "Carthage/Checkouts/SnapKit"]
+	path = Carthage/Checkouts/SnapKit
+	url = https://github.com/SnapKit/SnapKit.git
+[submodule "Carthage/Checkouts/SWXMLHash"]
+	path = Carthage/Checkouts/SWXMLHash
+	url = https://github.com/drmohundro/SWXMLHash.git
+[submodule "Carthage/Checkouts/Timepiece"]
+	path = Carthage/Checkouts/Timepiece
+	url = https://github.com/sora0077/Timepiece.git

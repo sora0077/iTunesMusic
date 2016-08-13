@@ -115,8 +115,8 @@ extension _Collection: Decodable {
 }
 
 // swiftlint:disable force_try
-private let artworkRegex = try! RegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
-private let artworkCached = Cache<NSString, NSURL>()
+private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
+private let artworkCached = NSCache<NSString, NSURL>()
 
 extension _Collection {
 

@@ -52,15 +52,15 @@ struct LookupWithIds<Results where Results: Decodable>: iTunesRequestType {
 
     let method = HTTPMethod.GET
 
-    let baseURL = URL(string: "https://itunes.apple.com")!
+    let baseUrl = URL(string: "https://itunes.apple.com")!
 
     let path = "lookup"
 
     let ids: [Int]
 
-    var lang = Locale.current.localeIdentifier
+    var lang = Locale.current.identifier
 
-    var country = Locale.current.compatible.countryCode
+    var country = Locale.current.regionCode!
 
     let limit = 500
 

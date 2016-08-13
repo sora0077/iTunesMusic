@@ -21,7 +21,7 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collect
     return AnyObserver { on in
         if case .next(let playlist) = on {
             let urls = playlist.flatMap { $0.artworkURL(size: size) }
-            DispatchQueue.global(attributes: .qosBackground).async {
+            DispatchQueue.global(qos: .background).async {
                 SDWebImagePrefetcher.shared().prefetchURLs(urls)
             }
         }
@@ -126,7 +126,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         player.install(middleware: ControlCenter())
 
-        window?.tintColor = UIColor.lightGray()
+        window?.tintColor = UIColor.lightGray
 
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })

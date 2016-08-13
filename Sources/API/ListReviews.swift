@@ -10,7 +10,6 @@ import Foundation
 import APIKit
 import Himotoki
 import SWXMLHash
-import iOS9to10
 
 
 struct ListReviews<R: Decodable>: iTunesRequestType {
@@ -19,7 +18,7 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
 
     let method = HTTPMethod.GET
 
-    let baseURL: URL = URL(string: "https://itunes.apple.com")!
+    let baseUrl: URL = URL(string: "https://itunes.apple.com")!
 
     var path: String {
         return "\(country)/rss/customerreviews/page=\(page)/id=\(id)/sortby=\(sortby)/\(format)"
@@ -33,13 +32,13 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
 
     var page: UInt = 0
 
-    var country = Locale.current.compatible.countryCode
+    var country = Locale.current.regionCode
 
     var sortby = "mostrecent"
 
     var format = "xml"
 
-    func intercept(object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject {
+    func interceptObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject {
 
         // swiftlint:disable force_cast
         let doc = (object as! XMLDataParser.Wrapper).xml
@@ -62,7 +61,7 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
         }
     }
 
-    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
         return try decodeArray(object)
     }
 }

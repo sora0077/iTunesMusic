@@ -87,8 +87,8 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         ]
         nowPlayingInfo = info
 
-        let size = UIScreen.main().bounds.size
-        let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main().scale))
+        let size = UIScreen.main.bounds.size
+        let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main.scale))
         SDWebImageManager.shared().downloadImage(with: artworkURL, options: [], progress: nil, completed: { (image, error, cacheType, flag, url) in
             print(#function, image, error)
             guard let image = image else { return }

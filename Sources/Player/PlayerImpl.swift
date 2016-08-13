@@ -179,7 +179,7 @@ final class PlayerImpl: NSObject, Player {
         let item = AVPlayerItem(asset: AVAsset(url: url))
         item.trackId = track.id
 
-        DispatchQueue.global(attributes: .qosDefault).async {
+        DispatchQueue.global(qos: .default).async {
 
             configureFading(item: item, duration: duration)
             NotificationCenter.default.addObserver(

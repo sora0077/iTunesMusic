@@ -16,7 +16,7 @@ import AVFoundation
 
 final class Preview {
 
-    private let cache = Cache<NSNumber, PreviewTrack>()
+    private let cache = NSCache<NSNumber, PreviewTrack>()
 
     subscript (track track: Track) -> PreviewTrack? {
         set {
@@ -56,7 +56,7 @@ final class PreviewTrack {
                     return Observable.just((url, duration))
                 }
                 return Observable.create { subscriber in
-                    let filename = url.lastPathComponent!
+                    let filename = url.lastPathComponent
 
                     let task = URLSession.shared.downloadTask(with: url, completionHandler: { (url, response, error) in
                         if let src = url {

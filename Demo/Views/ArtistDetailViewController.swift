@@ -64,7 +64,7 @@ final class ArtistDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor.white()
+        view.backgroundColor = UIColor.white
 
         view.addSubview(tableView)
 
@@ -106,7 +106,7 @@ extension ArtistDetailViewController: UITableViewDataSource {
 
         let collection = artist[indexPath.row]
         cell.titleLabel.text = collection.name
-        let size = { Int($0 * UIScreen.main().scale) }
+        let size = { Int($0 * UIScreen.main.scale) }
 
         let thumbnailURL = collection.artworkURL(size: size(120))
         let artworkURL = collection.artworkURL(size: size(120))

@@ -16,7 +16,7 @@ struct GetPreviewUrl: iTunesRequestType {
 
     let id: Int
 
-    let baseURL: URL
+    let baseUrl: URL
 
     private let locale: Locale
 
@@ -36,11 +36,11 @@ struct GetPreviewUrl: iTunesRequestType {
 
     init(id: Int, url: URL, locale: Locale = Locale.current) {
         self.id = id
-        baseURL = url
+        baseUrl = url
         self.locale = locale
     }
 
-    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
 
         if let items = object["items"] as? [[String: AnyObject]] {
             for item in items {

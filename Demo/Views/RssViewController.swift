@@ -66,7 +66,7 @@ class RssViewController: BaseViewController {
 
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
                 cell.titleLabel.text = track.name
-                let size = { Int($0 * UIScreen.main().scale) }
+                let size = { Int($0 * UIScreen.main.scale) }
 
                 let artworkURL = track.artworkURL(size: size(120))
                 cell.artworkImageView.sd_setImage(with: track.artworkURL(size: size(60)), placeholderImage: nil, options: [], progress: nil) { [weak wcell=cell] (image, error, type, url) in
@@ -116,7 +116,7 @@ class RssViewController: BaseViewController {
             .map { [weak self] _ in self?.rss }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main().scale)))
+            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
         rss.requestState

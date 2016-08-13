@@ -67,7 +67,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
 
     let method = HTTPMethod.GET
 
-    let baseURL = URL(string: "https://itunes.apple.com")!
+    let baseUrl = URL(string: "https://itunes.apple.com")!
 
     let path = "search"
 
@@ -77,9 +77,9 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
 
     var entity = "song"
 
-    var lang = Locale.current.localeIdentifier
+    var lang = Locale.current.identifier
 
-    var country = Locale.current.compatible.countryCode
+    var country = Locale.current.regionCode!
 
     var offset: Int
 

@@ -79,7 +79,7 @@ private class TableViewCell: UITableViewCell {
             make.rightMargin.equalTo(contentView).offset(-8)
             make.centerY.equalTo(contentView)
         }
-        button.tintColor = UIColor.black()
+        button.tintColor = UIColor.black
         button.setTitle("Add", for: UIControlState())
     }
 
@@ -90,7 +90,7 @@ private class TableViewCell: UITableViewCell {
 
 extension UINavigationController {
 
-    public override func childViewControllerForStatusBarStyle() -> UIViewController? {
+    public override var childViewControllerForStatusBarStyle: UIViewController? {
         return visibleViewController
     }
 }
@@ -147,7 +147,7 @@ class AlbumDetailViewController: UIViewController {
             make.width.equalTo(tableView.snp.width)
             make.height.equalTo(264)
         }
-        let size = { Int($0 * UIScreen.main().scale) }
+        let size = { Int($0 * UIScreen.main.scale) }
         let thumbnailURL = album.collection.artworkURL(size: size(view.frame.width/2))
         let artworkURL = album.collection.artworkURL(size: size(view.frame.width))
         headerView.artworkImageView.sd_setImage(with: thumbnailURL, placeholderImage: nil, options: [], progress: nil) { [weak wview=headerView] (image, error, type, url) in
@@ -172,7 +172,7 @@ class AlbumDetailViewController: UIViewController {
 
             bar.setBackgroundImage(UIImage(), for: .default)
             bar.shadowImage = UIImage()
-            bar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white()]
+            bar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
             bar.setTitleVerticalPositionAdjustment(60, for: .default)
             bar.clipsToBounds = true
         }
@@ -189,7 +189,7 @@ class AlbumDetailViewController: UIViewController {
         }
     }
 
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
@@ -225,7 +225,7 @@ class AlbumDetailViewController: UIViewController {
             .map { [weak self] _ in self?.album }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main().scale)))
+            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
         album.refresh()
@@ -271,7 +271,7 @@ private extension AlbumDetailViewController {
     @objc
     func addPlaylist(_ sender: UIButton, event: UIEvent) {
         guard
-            let point = event.allTouches()?.first?.location(in: tableView),
+            let point = event.allTouches?.first?.location(in: tableView),
             let indexPath = tableView.indexPathForRow(at: point)
         else { return }
 
@@ -299,10 +299,10 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let seconds = track.duration / 1000
         cell.durationLabel.text = "\(seconds/60):\(String(format: "%02d", seconds%60))"
         if track.canPreview {
-            cell.textLabel?.textColor = UIColor.black()
+            cell.textLabel?.textColor = UIColor.black
             cell.selectionStyle = .default
         } else {
-            cell.textLabel?.textColor = UIColor.lightGray()
+            cell.textLabel?.textColor = UIColor.lightGray
             cell.selectionStyle = .none
         }
         cell.button.removeTarget(nil, action: nil, for: [])

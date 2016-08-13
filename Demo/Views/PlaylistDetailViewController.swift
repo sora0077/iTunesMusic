@@ -32,7 +32,7 @@ final class PlaylistDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.rightBarButtonItem = editButtonItem()
+        navigationItem.rightBarButtonItem = editButtonItem
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in

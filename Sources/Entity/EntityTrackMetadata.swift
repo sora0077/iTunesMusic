@@ -69,7 +69,7 @@ extension _TrackMetadata {
 
         let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
         let fileURL = try! URL(fileURLWithPath: cachePath).appendingPathComponent(filename)
-        if let path = fileURL.path, FileManager.default.fileExists(atPath: path) {
+        if FileManager.default.fileExists(atPath: fileURL.path) {
             return fileURL
         }
         return nil
