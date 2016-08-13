@@ -44,7 +44,7 @@ private let realmObjectTypes: [RealmSwift.Object.Type] = [
 private let configuration: Realm.Configuration = {
     let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
     // swiftlint:disable force_try
-    let fileURL = try! URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
+    let fileURL = URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
     var config = Realm.Configuration(fileURL: fileURL)
     config.objectTypes = realmObjectTypes
     return config

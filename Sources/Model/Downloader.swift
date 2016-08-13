@@ -35,10 +35,10 @@ extension Downloader: PlayerMiddleware {
                 let preview = previewer.queueing(track: track)
                 print("will cache in disk", track.name)
                 preview.download()
-                    .subscribeNext { [weak self] url, _ in
+                    .subscribe(onNext: { [weak self] url, _ in
                         print("cache ", url)
                         self?.downloaded.insert(trackId)
-                    }
+                    })
                     .addDisposableTo(disposeBag)
             }
         }

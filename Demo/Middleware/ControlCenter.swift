@@ -48,19 +48,19 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
 
         player.nowPlaying
-            .subscribeNext { [weak self] track in
+            .subscribe(onNext: { [weak self] track in
                 self?.currentTrackId = track?.id
-            }
+            })
             .addDisposableTo(disposeBag)
 
         player.currentTime
             .map(Int.init)
             .distinctUntilChanged()
-            .subscribeNext { [weak self] time in
+            .subscribe(onNext: { [weak self] time in
                 if self?.currentTrackId == nowPlayingInfo?["currentTrackId"] as? Int {
                     nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
                 }
-            }
+            })
             .addDisposableTo(disposeBag)
     }
 

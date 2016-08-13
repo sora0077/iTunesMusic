@@ -202,19 +202,19 @@ class AlbumDetailViewController: UIViewController {
     private func observe() {
 
         headerView.artistButton.rx_tap
-            .subscribeNext { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 guard let `self` = self else { return }
                 let vc = ArtistDetailViewController(artist: self.album.collection.artist)
                 self.navigationController?.pushViewController(vc, animated: true)
-            }
+            })
             .addDisposableTo(disposeBag)
 
         tableView.rx_reachedBottom()
             .filter { $0 }
             .debounce(0.5, scheduler: MainScheduler.instance)
-            .subscribeNext { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 self?.album.fetch()
-            }
+            })
             .addDisposableTo(disposeBag)
 
         album.changes

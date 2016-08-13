@@ -53,9 +53,9 @@ class SearchViewController: BaseViewController {
 
         tableView.rx_reachedBottom()
             .filter { $0 }
-            .subscribeNext { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 self?.search.fetch()
-            }
+            })
             .addDisposableTo(disposeBag)
 
         searhBar.rx_text
@@ -64,9 +64,9 @@ class SearchViewController: BaseViewController {
             .do(onNext: { str in
                 print(str)
             })
-            .subscribeNext { [weak self] str in
+            .subscribe(onNext: { [weak self] str in
                 self?.search = Model.Search(term: str)
-            }
+            })
             .addDisposableTo(disposeBag)
     }
 

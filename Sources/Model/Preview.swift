@@ -61,8 +61,13 @@ final class PreviewTrack {
                     let task = URLSession.shared.downloadTask(with: url, completionHandler: { (url, response, error) in
                         if let src = url {
                             let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-                            let to = try! URL(fileURLWithPath: path).appendingPathComponent(filename)
-                            _ = try? FileManager.default.moveItem(at: src, to: to)
+                            let to = URL(fileURLWithPath: path).appendingPathComponent(filename)
+                            do {
+                                try FileManager.default.moveItem(at: src, to: to)
+                            } catch {
+                                subscriber.onError(error)
+                                return
+                            }
 
                             let realm = iTunesRealm()
                             let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
@@ -79,7 +84,7 @@ final class PreviewTrack {
                         }
                     })
                     task.resume()
-                    return AnonymousDisposable {
+                    return Disposables.create {
                         task.cancel()
                     }
                 }
@@ -123,7 +128,7 @@ final class PreviewTrack {
                     subscriber.onError(error)
                 }
             }
-            return AnonymousDisposable {
+            return Disposables.create {
                 task?.cancel()
             }
         }

@@ -103,9 +103,9 @@ class RssViewController: BaseViewController {
 
         tableView.rx_reachedBottom()
             .filter { $0 }
-            .subscribeNext { [weak self] _ in
+            .subscribe(onNext: { [weak self] _ in
                 self?.rss.fetch()
-            }
+            })
             .addDisposableTo(disposeBag)
 
         rss.changes
@@ -120,7 +120,7 @@ class RssViewController: BaseViewController {
             .addDisposableTo(disposeBag)
 
         rss.requestState
-            .subscribeNext { [weak self] state in
+            .subscribe(onNext: { [weak self] state in
                 func title() -> String {
                     switch state {
                     case .none:
@@ -134,7 +134,7 @@ class RssViewController: BaseViewController {
                     }
                 }
                 self?.title = title()
-            }
+            })
             .addDisposableTo(disposeBag)
 
         rss.refresh()
