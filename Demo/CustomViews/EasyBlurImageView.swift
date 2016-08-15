@@ -50,7 +50,7 @@ final class EasyBlurImageView: UIImageView {
 
             guard let image = self.image.flatMap(CIImage.init) else { return }
 
-            DispatchQueue.global(attributes: .qosBackground).async {
+            DispatchQueue.global(qos: .background).async {
 
                 for i in 0...20 {
                     let clampFilter = CIFilter(name: "CIAffineClamp")!

@@ -37,19 +37,19 @@ final class _Media: RealmSwift.Object {
         fatalError()
     }
 
-    static func track(track: _Track) -> _Media {
+    static func track(track: _Track) -> Self {
         let media = self.init()
         media.track = track
         return media
     }
 
-    static func collection(collection: _Collection) -> _Media {
+    static func collection(collection: _Collection) -> Self {
         let media = self.init()
         media.collection = collection
         return media
     }
 
-    static func artist(artist: _Artist) -> _Media {
+    static func artist(artist: _Artist) -> Self {
         let media = self.init()
         media.artist = artist
         return media
