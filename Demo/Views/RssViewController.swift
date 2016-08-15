@@ -9,7 +9,6 @@
 import UIKit
 import iTunesMusic
 import RxSwift
-import PINRemoteImage
 import SnapKit
 
 
@@ -66,16 +65,7 @@ class RssViewController: BaseViewController {
 
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
                 cell.titleLabel.text = track.name
-                let size = { Int($0 * UIScreen.main.scale) }
-
-                let artworkURL = track.artworkURL(size: size(120))
-
-                cell.artworkImageView.pin_setImage(from: track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] result in
-                    guard let cell = wcell else { return }
-                    DispatchQueue.main.async {
-                        cell.artworkImageView.pin_setImage(from: artworkURL, placeholderImage: result.image)
-                    }
-                }
+                cell.artworkImageView.setArtwork(from: track, size: 120)
                 return cell
             },
             onSelect: { (self, tableView, element, indexPath) in

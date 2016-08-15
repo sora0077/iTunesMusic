@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import SnapKit
-import PINRemoteImage
 import iTunesMusic
 
 
@@ -147,16 +146,7 @@ class AlbumDetailViewController: UIViewController {
             make.width.equalTo(tableView.snp.width)
             make.height.equalTo(264)
         }
-        let size = { Int($0 * UIScreen.main.scale) }
-        let thumbnailURL = album.collection.artworkURL(size: size(view.frame.width/2))
-        let artworkURL = album.collection.artworkURL(size: size(view.frame.width))
-
-        headerView.artworkImageView.pin_setImage(from: thumbnailURL, placeholderImage: nil) { [weak wview=headerView] result in
-            guard let view = wview else { return }
-            DispatchQueue.main.async {
-                view.artworkImageView.pin_setImage(from: artworkURL, placeholderImage: result.image)
-            }
-        }
+        headerView.artworkImageView.setArtwork(from: album.collection, size: view.frame.width)
 
         title = album.collection.name
         headerView.artistButton.setTitle(album.collection.artist.name, for: .normal)

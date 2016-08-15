@@ -12,8 +12,6 @@ import iTunesMusic
 import APIKit
 import RxSwift
 import RxCocoa
-import PINRemoteImage
-import PINCache
 import RealmSwift
 import MediaPlayer
 
@@ -23,7 +21,7 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collect
         if case .next(let playlist) = on {
             let urls = playlist.flatMap { $0.artworkURL(size: size) }
             DispatchQueue.global(qos: .background).async {
-                PINRemoteImageManager.shared().prefetchImages(with: urls)
+                prefetchImages(with: urls)
             }
         }
     }
@@ -109,7 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 
-        PINRemoteImageManager.shared().cache.removeAllObjects()
+        clearAllImageCaches()
 
         let session = AVAudioSession.sharedInstance()
         do {

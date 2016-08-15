@@ -99,6 +99,7 @@
 		D9A33E4B1D622EC400E33E5D /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E4A1D622EC400E33E5D /* Himotoki.framework */; };
 		D9A33E4C1D622ECA00E33E5D /* Himotoki.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E4A1D622EC400E33E5D /* Himotoki.framework */; };
 		D9A33E4D1D622ECA00E33E5D /* Himotoki.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E4A1D622EC400E33E5D /* Himotoki.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9A33E501D62383300E33E5D /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */; };
 		D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */; };
 		D9AAE06D1D27622600FF29C3 /* AlbumDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */; };
 		D9AAE0711D276DFB00FF29C3 /* EntityCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */; };
@@ -249,6 +250,7 @@
 		D9A33E311D6229E800E33E5D /* Timepiece.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Timepiece.framework; path = Carthage/Build/iOS/Timepiece.framework; sourceTree = "<group>"; };
 		D9A33E351D6229F300E33E5D /* APIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = APIKit.framework; path = Carthage/Build/iOS/APIKit.framework; sourceTree = "<group>"; };
 		D9A33E4A1D622EC400E33E5D /* Himotoki.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Himotoki.framework; path = Carthage/Build/iOS/Himotoki.framework; sourceTree = "<group>"; };
+		D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
 		D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumDetailViewController.swift; sourceTree = "<group>"; };
 		D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityCollection.swift; sourceTree = "<group>"; };
@@ -509,6 +511,7 @@
 		D929E4521D1EE9500045C316 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				D9A33E4E1D6237FF00E33E5D /* Utils */,
 				D9573C281D3E7ACC00783AA4 /* Module */,
 				D99164081D37CEA90091BF09 /* Middleware */,
 				D95E4CFB1D33FBC300985C66 /* CustomViews */,
@@ -571,6 +574,14 @@
 				D99164091D37CEA90091BF09 /* ControlCenter.swift */,
 			);
 			path = Middleware;
+			sourceTree = "<group>";
+		};
+		D9A33E4E1D6237FF00E33E5D /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		D9AAE06E1D27624500FF29C3 /* TableViewCells */ = {
@@ -1000,6 +1011,7 @@
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,
 				D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */,
 				D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */,
+				D9A33E501D62383300E33E5D /* ImageFetcher.swift in Sources */,
 				D96C957B1D3A17B9000116FD /* PlaylistViewController.swift in Sources */,
 				D9AAE06D1D27622600FF29C3 /* AlbumDetailViewController.swift in Sources */,
 				D96C95831D3A840F000116FD /* PlaylistDetailViewController.swift in Sources */,

@@ -40,12 +40,7 @@ extension Fetchable {
     }
 
     public func fetch() {
-        guard Thread.isMainThread else {
-            defer {
-                DispatchQueue.main.async {
-                    self.fetch()
-                }
-            }
+        guard doOnMainThread(execute: self.fetch()) else {
             return
         }
         _request(refreshing: false, force: false)
@@ -56,12 +51,7 @@ extension Fetchable {
     }
 
     public func refresh(force: Bool) {
-        guard Thread.isMainThread else {
-            defer {
-                DispatchQueue.main.async {
-                    self.refresh(force: force)
-                }
-            }
+        guard doOnMainThread(execute: self.refresh(force: force)) else {
             return
         }
         // swiftlint:disable force_cast
@@ -84,9 +74,11 @@ extension Fetchable {
         self._requestState.value = .requesting
 
         self.request(refreshing: refreshing, force: force) { [weak self] requestState in
-            self?._refreshing.value = false
-            self?._requestState.value = requestState
-            tick()
+            DispatchQueue.main.async {
+                self?._refreshing.value = false
+                self?._requestState.value = requestState
+                tick()
+            }
         }
     }
 }
