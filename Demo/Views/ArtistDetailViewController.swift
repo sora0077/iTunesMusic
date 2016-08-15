@@ -110,10 +110,10 @@ extension ArtistDetailViewController: UITableViewDataSource {
 
         let thumbnailURL = collection.artworkURL(size: size(120))
         let artworkURL = collection.artworkURL(size: size(120))
-        cell.artworkImageView.sd_setImage(with: thumbnailURL, placeholderImage: nil, options: [], progress: nil) { [weak wcell=cell] (image, error, type, url) in
+        cell.artworkImageView.pin_setImage(from: thumbnailURL, placeholderImage: nil) { [weak wcell=cell] result in
             guard let cell = wcell else { return }
             DispatchQueue.main.async {
-                cell.artworkImageView.sd_setImage(with: artworkURL, placeholderImage: image)
+                cell.artworkImageView.pin_setImage(from: artworkURL, placeholderImage: result.image)
             }
         }
         return cell

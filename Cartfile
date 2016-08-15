@@ -8,3 +8,5 @@ github "realm/realm-cocoa" "master"
 github "drmohundro/SWXMLHash" "xcode-8.0"
 
 github "SnapKit/SnapKit" "feature/0.40.0"
+
+github "pinterest/PINRemoteImage"

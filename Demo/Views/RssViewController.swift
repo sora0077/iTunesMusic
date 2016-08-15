@@ -9,7 +9,7 @@
 import UIKit
 import iTunesMusic
 import RxSwift
-import SDWebImage
+import PINRemoteImage
 import SnapKit
 
 
@@ -69,10 +69,11 @@ class RssViewController: BaseViewController {
                 let size = { Int($0 * UIScreen.main.scale) }
 
                 let artworkURL = track.artworkURL(size: size(120))
-                cell.artworkImageView.sd_setImage(with: track.artworkURL(size: size(60)), placeholderImage: nil, options: [], progress: nil) { [weak wcell=cell] (image, error, type, url) in
+
+                cell.artworkImageView.pin_setImage(from: track.artworkURL(size: size(60)), placeholderImage: nil) { [weak wcell=cell] result in
                     guard let cell = wcell else { return }
                     DispatchQueue.main.async {
-                        cell.artworkImageView.sd_setImage(with: artworkURL, placeholderImage: image)
+                        cell.artworkImageView.pin_setImage(from: artworkURL, placeholderImage: result.image)
                     }
                 }
                 return cell

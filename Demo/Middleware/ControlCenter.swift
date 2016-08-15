@@ -11,7 +11,7 @@ import UIKit
 import MediaPlayer
 import iTunesMusic
 import RxSwift
-import SDWebImage
+import PINRemoteImage
 
 
 private var nowPlayingInfo: [String: AnyObject]? = nil {
@@ -89,9 +89,9 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
         let size = UIScreen.main.bounds.size
         let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main.scale))
-        SDWebImageManager.shared().downloadImage(with: artworkURL, options: [], progress: nil, completed: { (image, error, cacheType, flag, url) in
-            print(#function, image, error)
-            guard let image = image else { return }
+        PINRemoteImageManager.shared().downloadImage(with: artworkURL, options: []) { result in
+            print(#function, result.image, result.error)
+            guard let image = result.image else { return }
 
             if trackId == nowPlayingInfo?["currentTrackId"] as? Int {
                 if #available(iOS 10.0, *) {
@@ -103,7 +103,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
                     nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
                 }
             }
-        })
+        }
     }
 
     func didEndPlay() {

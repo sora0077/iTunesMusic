@@ -22,3 +22,9 @@
 [submodule "Carthage/Checkouts/Timepiece"]
 	path = Carthage/Checkouts/Timepiece
 	url = https://github.com/sora0077/Timepiece.git
+[submodule "Carthage/Checkouts/PINCache"]
+	path = Carthage/Checkouts/PINCache
+	url = https://github.com/pinterest/PINCache.git
+[submodule "Carthage/Checkouts/PINRemoteImage"]
+	path = Carthage/Checkouts/PINRemoteImage
+	url = https://github.com/pinterest/PINRemoteImage.git

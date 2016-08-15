@@ -148,7 +148,7 @@ extension Model.Rss: _Fetchable {
                     cache.updateAt = Date()
                     cache.tracks.append(objectsIn: tracks)
                     cache.fetched += perItems
-                    
+
                     realm.add(cache, update: true)
                     self.fetched = cache.fetched
                 }
