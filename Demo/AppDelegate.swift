@@ -16,7 +16,7 @@ import RealmSwift
 import MediaPlayer
 
 
-func rx_prefetchArtworkURLs<Playlist: PlaylistType where Playlist: Swift.Collection, Playlist.Iterator.Element == Track>(size: Int) -> AnyObserver<Playlist> {
+func rx_prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Playlist> where Playlist: Swift.Collection, Playlist.Iterator.Element == Track {
     return AnyObserver { on in
         if case .next(let playlist) = on {
             let urls = playlist.flatMap { $0.artworkURL(size: size) }
@@ -40,6 +40,8 @@ extension UIScrollView {
                 let threshold = max(0.0, scrollView.contentSize.height - visibleHeight - visibleHeight * offsetRatio)
                 return y > threshold
             }
+            .throttle(0.3, scheduler: MainScheduler.instance)
+            .distinctUntilChanged()
     }
 }
 

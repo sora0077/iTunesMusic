@@ -27,6 +27,26 @@ func downloadImage(with url: URL, _ completion: (Result<UIImage, NSError>) -> Vo
     }
 }
 
+private final class Wrapper<T> {
+    let value: T
+    init(_ value: T) { self.value = value }
+}
+
+private struct UIImageViewKey {
+    static var itm_imageURL: UInt8 = 0
+}
+
+extension UIImageView {
+
+    private var itm_imageURL: URL? {
+        set {
+            objc_setAssociatedObject(self, &UIImageViewKey.itm_imageURL, newValue.map(Wrapper.init), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return (objc_getAssociatedObject(self, &UIImageViewKey.itm_imageURL) as? Wrapper<URL>)?.value
+        }
+    }
+}
 
 extension UIImageView {
 
@@ -39,16 +59,26 @@ extension UIImageView {
     }
 
     private func _setArtwork(generator: (Int) -> URL, size width: CGFloat) {
+        guard doOnMainThread(execute: self._setArtwork(generator: generator, size: width)) else {
+            return
+        }
 
         let size = { Int($0 * UIScreen.main.scale) }
 
         let thumbnailURL = generator(size(width / 2))
         let artworkURL = generator(size(width))
 
+        if thumbnailURL != itm_imageURL {
+            image = nil
+            setNeedsLayout()
+        }
+        itm_imageURL = thumbnailURL
         pin_setImage(from: thumbnailURL, placeholderImage: nil) { [weak self] result in
-            guard let `self` = self else { return }
             DispatchQueue.main.async {
-                self.pin_setImage(from: artworkURL, placeholderImage: result.image)
+                if thumbnailURL == self?.itm_imageURL {
+                    self?.itm_imageURL = artworkURL
+                    self?.pin_setImage(from: artworkURL, placeholderImage: result.image)
+                }
             }
         }
     }

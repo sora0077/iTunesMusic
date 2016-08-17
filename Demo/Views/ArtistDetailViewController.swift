@@ -69,7 +69,7 @@ final class ArtistDetailViewController: UIViewController {
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(0)
+            make.edges.equalTo(view)
         }
 
         tableView.delegate = self
@@ -106,16 +106,7 @@ extension ArtistDetailViewController: UITableViewDataSource {
 
         let collection = artist[indexPath.row]
         cell.titleLabel.text = collection.name
-        let size = { Int($0 * UIScreen.main.scale) }
-
-        let thumbnailURL = collection.artworkURL(size: size(120))
-        let artworkURL = collection.artworkURL(size: size(120))
-        cell.artworkImageView.pin_setImage(from: thumbnailURL, placeholderImage: nil) { [weak wcell=cell] result in
-            guard let cell = wcell else { return }
-            DispatchQueue.main.async {
-                cell.artworkImageView.pin_setImage(from: artworkURL, placeholderImage: result.image)
-            }
-        }
+        cell.artworkImageView.setArtwork(from: collection, size: 120)
         return cell
     }
 }
