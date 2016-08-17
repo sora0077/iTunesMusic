@@ -50,11 +50,11 @@ extension UIImageView {
 
 extension UIImageView {
 
-    func setArtwork(from artwork: Track, size width: CGFloat) {
+    func setArtwork(of artwork: Track, size width: CGFloat) {
         _setArtwork(generator: artwork.artworkURL, size: width)
     }
 
-    func setArtwork(from artwork: iTunesMusic.Collection, size width: CGFloat) {
+    func setArtwork(of artwork: iTunesMusic.Collection, size width: CGFloat) {
         _setArtwork(generator: artwork.artworkURL, size: width)
     }
 

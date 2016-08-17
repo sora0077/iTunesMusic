@@ -106,7 +106,7 @@ extension ArtistDetailViewController: UITableViewDataSource {
 
         let collection = artist[indexPath.row]
         cell.titleLabel.text = collection.name
-        cell.artworkImageView.setArtwork(from: collection, size: 120)
+        cell.artworkImageView.setArtwork(of: collection, size: 120)
         return cell
     }
 }

@@ -65,7 +65,7 @@ class RssViewController: BaseViewController {
 
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
                 cell.titleLabel.text = track.name
-                cell.artworkImageView.setArtwork(from: track, size: 120)
+                cell.artworkImageView.setArtwork(of: track, size: 120)
                 return cell
             },
             onSelect: { (self, tableView, element, indexPath) in

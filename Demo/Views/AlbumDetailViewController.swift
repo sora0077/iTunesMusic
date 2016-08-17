@@ -146,7 +146,7 @@ class AlbumDetailViewController: UIViewController {
             make.width.equalTo(tableView.snp.width)
             make.height.equalTo(264)
         }
-        headerView.artworkImageView.setArtwork(from: album.collection, size: view.frame.width)
+        headerView.artworkImageView.setArtwork(of: album.collection, size: view.frame.width)
 
         title = album.collection.name
         headerView.artistButton.setTitle(album.collection.artist.name, for: .normal)
