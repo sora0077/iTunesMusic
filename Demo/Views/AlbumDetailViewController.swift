@@ -200,7 +200,7 @@ class AlbumDetailViewController: UIViewController {
             })
             .addDisposableTo(disposeBag)
 
-        tableView.rx_reachedBottom()
+        tableView.rx.reachedBottom()
             .filter { $0 }
             .debounce(0.5, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
@@ -209,14 +209,14 @@ class AlbumDetailViewController: UIViewController {
             .addDisposableTo(disposeBag)
 
         album.changes
-            .subscribe(tableView.rx_itemUpdates())
+            .subscribe(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
         album.changes
             .map { [weak self] _ in self?.album }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
+            .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
         album.refresh()

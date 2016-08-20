@@ -17,10 +17,10 @@ class SearchViewController: BaseViewController {
         didSet {
             searchDisposeBag = DisposeBag()
             search.trends.changes
-                .subscribe(tableView.rx_itemUpdates())
+                .subscribe(tableView.rx.itemUpdates())
                 .addDisposableTo(searchDisposeBag)
             search.changes
-                .subscribe(tableView.rx_itemUpdates { idx in (idx, 1) })
+                .subscribe(tableView.rx.itemUpdates { idx in (idx, 1) })
                 .addDisposableTo(searchDisposeBag)
             search.refresh()
 
@@ -51,7 +51,7 @@ class SearchViewController: BaseViewController {
         navigationItem.titleView = searhBar
 
 
-        tableView.rx_reachedBottom()
+        tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
                 self?.search.fetch()

@@ -92,7 +92,7 @@ class RssViewController: BaseViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(self.playAll))
 
-        tableView.rx_reachedBottom()
+        tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
                 self?.rss.fetch()
@@ -100,14 +100,14 @@ class RssViewController: BaseViewController {
             .addDisposableTo(disposeBag)
 
         rss.changes
-            .subscribe(tableView.rx_itemUpdates())
+            .subscribe(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
         rss.changes
             .map { [weak self] _ in self?.rss }
             .filter { $0 != nil }
             .map { $0! }
-            .subscribe(rx_prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
+            .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
         rss.requestState

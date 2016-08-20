@@ -32,7 +32,7 @@ final class PlaylistViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
 
         playlists.changes
-            .subscribe(tableView.rx_itemUpdates())
+            .subscribe(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
     }
 

@@ -16,7 +16,7 @@ import RealmSwift
 import MediaPlayer
 
 
-func rx_prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Playlist> where Playlist: Swift.Collection, Playlist.Iterator.Element == Track {
+func prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Playlist> where Playlist: Swift.Collection, Playlist.Iterator.Element == Track {
     return AnyObserver { on in
         if case .next(let playlist) = on {
             let urls = playlist.flatMap { $0.artworkURL(size: size) }
@@ -28,12 +28,12 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Pl
 }
 
 
-extension UIScrollView {
+extension Reactive where Base: UIScrollView {
 
-    func rx_reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
-        return rx.contentOffset
-            .map { [weak self] contentOffset in
-                guard let scrollView = self else { return false }
+    func reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
+        return contentOffset
+            .map { [weak base=base] contentOffset in
+                guard let scrollView = base else { return false }
 
                 let visibleHeight = scrollView.frame.height - scrollView.contentInset.top - scrollView.contentInset.bottom
                 let y = contentOffset.y + scrollView.contentInset.top
@@ -46,35 +46,19 @@ extension UIScrollView {
 }
 
 
-fileprivate var UITableView_isMoving: UInt8 = 0
 extension UITableView {
+
+    private struct UITableViewKey {
+        static var isMoving: UInt8 = 0
+    }
 
     var isMoving: Bool {
         set {
-            objc_setAssociatedObject(self, &UITableView_isMoving, newValue, .OBJC_ASSOCIATION_ASSIGN)
+            objc_setAssociatedObject(self, &UITableViewKey.isMoving, newValue, .OBJC_ASSOCIATION_ASSIGN)
         }
         get {
-            return objc_getAssociatedObject(self, &UITableView_isMoving) as? Bool ?? false
+            return objc_getAssociatedObject(self, &UITableViewKey.isMoving) as? Bool ?? false
         }
-    }
-
-    func rx_itemUpdates(_ configure: ((_ index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
-        return UIBindingObserver(UIElement: self) { tableView, changes in
-            switch changes {
-            case .initial:
-                tableView.reloadData()
-            case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
-                func indexPath(_ i: Int) -> IndexPath {
-                    let (row, section) = configure?(i) ?? (i, 0)
-                    return IndexPath(row: row, section: section)
-                }
-                tableView.performUpdates(
-                    deletions: deletions.map(indexPath),
-                    insertions: insertions.map(indexPath),
-                    modifications: modifications.map(indexPath)
-                )
-            }
-        }.asObserver()
     }
 
     func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
@@ -97,6 +81,29 @@ extension UITableView {
         endUpdates()
     }
 }
+
+extension Reactive where Base: UITableView {
+
+    func itemUpdates(_ configure: ((_ index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
+        return UIBindingObserver(UIElement: base) { tableView, changes in
+            switch changes {
+            case .initial:
+                tableView.reloadData()
+            case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
+                func indexPath(_ i: Int) -> IndexPath {
+                    let (row, section) = configure?(i) ?? (i, 0)
+                    return IndexPath(row: row, section: section)
+                }
+                tableView.performUpdates(
+                    deletions: deletions.map(indexPath),
+                    insertions: insertions.map(indexPath),
+                    modifications: modifications.map(indexPath)
+                )
+            }
+        }.asObserver()
+    }
+}
+
 
 
 @UIApplicationMain

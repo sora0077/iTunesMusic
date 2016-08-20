@@ -64,7 +64,7 @@ class GenresViewController: BaseViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
 
         genres.changes
-            .subscribe(tableView.rx_itemUpdates())
+            .subscribe(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
         genres.refresh()

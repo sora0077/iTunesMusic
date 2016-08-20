@@ -79,7 +79,7 @@ final class ArtistDetailViewController: UIViewController {
         tableView.register(TableViewCell.self, forCellReuseIdentifier: "Cell")
 
         artist.changes
-            .bindTo(tableView.rx_itemUpdates())
+            .bindTo(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
         artist.refresh()
