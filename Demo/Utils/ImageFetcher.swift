@@ -23,11 +23,7 @@ func prefetchImages(with urls: [URL]) {
 
 func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSError>) -> Void) {
     PINRemoteImageManager.shared().downloadImage(with: url, options: []) { r in
-        if let image = r.image {
-            completion(.success(image))
-        } else {
-            completion(.failure(r.error as! NSError))
-        }
+        completion(Result(r.image, failWith: r.error as! NSError))
     }
 }
 

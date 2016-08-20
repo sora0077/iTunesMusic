@@ -61,7 +61,7 @@ extension SearchResponse: Decodable {
 }
 
 
-struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: Decodable>: iTunesRequestType {
+struct SearchWithKeyword<Results: SearchWithKeywordResponseType>: iTunesRequestType where Results: Decodable {
 
     typealias Response = Results
 

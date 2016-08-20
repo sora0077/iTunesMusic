@@ -16,7 +16,7 @@ protocol ViewModuleProtocol {
 }
 
 
-class TableViewModule<List: Swift.Collection, Controller: UIViewController where List.Index == Int, List.IndexDistance == Int>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate {
+class TableViewModule<List: Swift.Collection, Controller: UIViewController>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate where List.Index == Int, List.IndexDistance == Int {
 
     typealias CellForRowAtIndexPath = (_ self: Controller, _ tableView: UITableView, _ element: List.Iterator.Element, _ indexPath: IndexPath) -> UITableViewCell
 
