@@ -13,7 +13,7 @@ import Himotoki
 
 struct LookupResponse {
 
-    private enum WrapperType: String {
+    fileprivate enum WrapperType: String {
         case track, collection, artist
     }
 
@@ -29,7 +29,7 @@ struct LookupResponse {
 extension LookupResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> LookupResponse {
-        let results = e.rawValue["results"] as! [[String: AnyObject]]
+        let results = (e.rawValue as! [String: AnyObject])["results"] as! [[String: AnyObject]]
         var items: [Wrapper] = []
         for item in results {
             guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
@@ -64,7 +64,7 @@ struct LookupWithIds<Results: Decodable>: iTunesRequestType {
 
     let limit = 500
 
-    var queryParameters: [String : AnyObject]? {
+    var queryParameters: [String : Any]? {
         return [
             "id": ids.map(String.init).joined(separator: ","),
             "entity": "song",

@@ -11,7 +11,7 @@ import RealmSwift
 import RxSwift
 
 
-private func getOrCreateCache(realm: Realm) -> _HistoryCache {
+fileprivate func getOrCreateCache(realm: Realm) -> _HistoryCache {
     if let cache = realm.allObjects(ofType: _HistoryCache.self).first {
         return cache
     } else {
@@ -33,10 +33,10 @@ extension Model {
 
         public static let shared = History()
 
-        private var objectsToken: NotificationToken?
-        private let cache: _HistoryCache
+        fileprivate var objectsToken: NotificationToken?
+        fileprivate let cache: _HistoryCache
 
-        private init() {
+        fileprivate init() {
 
             let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)

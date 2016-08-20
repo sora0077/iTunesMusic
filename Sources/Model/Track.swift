@@ -26,8 +26,8 @@ extension Model {
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
 
-        private var token: NotificationToken!
-        private let caches: Results<_Track>
+        fileprivate var token: NotificationToken!
+        fileprivate let caches: Results<_Track>
 
         public convenience init(track: Track) {
             self.init(trackId: track.trackId)
@@ -62,7 +62,7 @@ extension Model.Track: _Fetchable {
 
     var _refreshDuration: Duration { return 18.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
         Session.sharedSession.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in

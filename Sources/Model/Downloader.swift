@@ -13,11 +13,11 @@ import RealmSwift
 
 final class Downloader {
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
-    private let previewer: Preview
+    fileprivate let previewer: Preview
 
-    private var downloaded: Set<Int> = []
+    fileprivate var downloaded: Set<Int> = []
 
     init(previewer: Preview) {
         self.previewer = previewer

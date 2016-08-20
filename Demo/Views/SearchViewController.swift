@@ -13,7 +13,7 @@ import RxSwift
 
 class SearchViewController: BaseViewController {
 
-    private var search: Model.Search = Model.Search(term: "") {
+    fileprivate var search: Model.Search = Model.Search(term: "") {
         didSet {
             searchDisposeBag = DisposeBag()
             search.trends.changes
@@ -27,10 +27,10 @@ class SearchViewController: BaseViewController {
             search.trends.refresh()
         }
     }
-    private var searchDisposeBag = DisposeBag()
+    fileprivate var searchDisposeBag = DisposeBag()
 
-    private let tableView = UITableView()
-    private let searhBar = UISearchBar()
+    fileprivate let tableView = UITableView()
+    fileprivate let searhBar = UISearchBar()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,7 +58,7 @@ class SearchViewController: BaseViewController {
             })
             .addDisposableTo(disposeBag)
 
-        searhBar.rx_text
+        searhBar.rx.text
             .debounce(0.3, scheduler: MainScheduler.instance)
             .distinctUntilChanged()
             .do(onNext: { str in
@@ -77,7 +77,7 @@ class SearchViewController: BaseViewController {
     }
 
     @objc
-    private func closeAction() {
+    fileprivate func closeAction() {
         dismiss(animated: true, completion: nil)
     }
 }

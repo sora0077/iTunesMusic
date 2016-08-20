@@ -13,7 +13,7 @@ import iTunesMusic
 import RxSwift
 
 
-private var nowPlayingInfo: [String: AnyObject]? = nil {
+fileprivate var nowPlayingInfo: [String: Any]? = nil {
     didSet {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
@@ -21,11 +21,11 @@ private var nowPlayingInfo: [String: AnyObject]? = nil {
 
 
 final class ControlCenter: NSObject, PlayerMiddleware {
-    private weak var player: Player?
+    fileprivate weak var player: Player?
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
-    private var currentTrackId: Int?
+    fileprivate var currentTrackId: Int?
 
     func middlewareInstalled(_ player: Player) {
         self.player = player
@@ -77,7 +77,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.nextTrackCommand.isEnabled = true
 
-        let info: [String: AnyObject] = [
+        let info: [String: Any] = [
             MPMediaItemPropertyTitle: track.name,
             MPMediaItemPropertyArtist: track.artist.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
@@ -117,7 +117,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
 
     @objc
-    private func togglePlayPause() {
+    fileprivate func togglePlayPause() {
         guard let player = player else { return }
         if player.playing {
             pause()
@@ -126,7 +126,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         }
     }
     @objc
-    private func play() {
+    fileprivate func play() {
         player?.play()
         if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
             info[MPNowPlayingInfoPropertyPlaybackRate] = 1
@@ -134,7 +134,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         }
     }
     @objc
-    private func pause() {
+    fileprivate func pause() {
         player?.pause()
         if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
             info[MPNowPlayingInfoPropertyPlaybackRate] = 0
@@ -142,13 +142,13 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         }
     }
     @objc
-    private func nextTrackCommand() {
+    fileprivate func nextTrackCommand() {
         player?.nextTrack()
 
     }
 
     @objc
-    private func bookmark() {
+    fileprivate func bookmark() {
         guard let trackId = currentTrackId else { return }
         guard let track = Model.Track(trackId: trackId).track else { return }
 
@@ -156,7 +156,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         playlist.append(track: track)
     }
 //    @objc
-//    private func skipBackward() {
+//    fileprivate func skipBackward() {
 //
 //    }
 }

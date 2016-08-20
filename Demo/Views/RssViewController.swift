@@ -12,7 +12,7 @@ import RxSwift
 import SnapKit
 
 
-private class TableViewCell: UITableViewCell {
+fileprivate class TableViewCell: UITableViewCell {
 
     let artworkImageView = UIImageView()
 
@@ -46,9 +46,9 @@ private class TableViewCell: UITableViewCell {
 
 class RssViewController: BaseViewController {
 
-    private let rss: Model.Rss
+    fileprivate let rss: Model.Rss
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
     init(genre: Genre) {
         rss = Model.Rss(genre: genre)
@@ -140,7 +140,7 @@ class RssViewController: BaseViewController {
     }
 
     @objc
-    private func playAll() {
+    fileprivate func playAll() {
         print(Thread.isMainThread)
         player.add(playlist: rss)
     }

@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 import Timepiece
 
-private let releaseDateTransformer = Transformer<String, Date> { string in
+fileprivate let releaseDateTransformer = Transformer<String, Date> { string in
     //  2016-06-29T07:00:00Z
     return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")!
 }
@@ -115,8 +115,8 @@ extension _Collection: Decodable {
 }
 
 // swiftlint:disable force_try
-private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
-private let artworkCached = NSCache<NSString, NSURL>()
+fileprivate let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
+fileprivate let artworkCached = NSCache<NSString, NSURL>()
 
 extension _Collection {
 
@@ -128,7 +128,7 @@ extension _Collection {
 
     func artworkURL(size: Int) -> URL {
         let base = _artworkUrl100
-        let key = "\(base)_____\(size)"
+        let key = "\(base)_____\(size)" as NSString
         if let url = artworkCached.object(forKey: key) as? URL {
             return url
         }
@@ -140,7 +140,7 @@ extension _Collection {
             withTemplate: "\(size)x\(size)"
         )
         let url = URL(string: replaced)!
-        artworkCached.setObject(url, forKey: key)
+        artworkCached.setObject(url as NSURL, forKey: key)
         return url
     }
 }

@@ -13,7 +13,7 @@ import RealmSwift
 import Timepiece
 
 
-private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
+fileprivate func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     if let cache = realm.object(ofType: _RssCache.self, forPrimaryKey: genreId) {
         return cache
     } else {
@@ -27,23 +27,23 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     }
 }
 
-private let perItems = 50
+fileprivate let perItems = 50
 
 extension Model {
 
     public final class Rss: Fetchable, ObservableList, _ObservableList {
 
-        private var fetched: Int = 0
+        fileprivate var fetched: Int = 0
 
-        private let id: Int
-        private let url: URL
+        fileprivate let id: Int
+        fileprivate let url: URL
         public let name: String
 
-        private let caches: Results<_RssCache>
-        private var token: NotificationToken!
-        private var objectsToken: NotificationToken!
+        fileprivate let caches: Results<_RssCache>
+        fileprivate var token: NotificationToken!
+        fileprivate var objectsToken: NotificationToken!
 
-        private var trackIds: [Int] = []
+        fileprivate var trackIds: [Int] = []
 
         public init(genre: Genre) {
             id = genre.id
@@ -100,7 +100,7 @@ extension Model.Rss: _Fetchable {
 
     var _refreshDuration: Duration { return 3.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         if trackIds.isEmpty || (refreshing && _needRefresh) {
             fetchFeed(completion: completion)
@@ -160,7 +160,7 @@ extension Model.Rss: _Fetchable {
         }
     }
 
-    private func fetchFeed(completion: (RequestState) -> Void) {
+    fileprivate func fetchFeed(completion: @escaping (RequestState) -> Void) {
         Session.sharedSession.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {

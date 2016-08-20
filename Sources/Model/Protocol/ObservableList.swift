@@ -16,7 +16,7 @@ public protocol ObservableList: class {
     var changes: Observable<CollectionChange> { get }
 }
 
-private struct ObservableListKey {
+fileprivate struct ObservableListKey {
 
     static var changes: UInt8 = 0
 }
@@ -41,7 +41,7 @@ protocol _ObservableList: class {
     var _changes: PublishSubject<CollectionChange> { get }
 }
 
-private struct _ObservableListKey {
+fileprivate struct _ObservableListKey {
     static var _changes: UInt8 = 0
 }
 

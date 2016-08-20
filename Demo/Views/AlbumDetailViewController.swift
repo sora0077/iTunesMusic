@@ -12,7 +12,7 @@ import SnapKit
 import iTunesMusic
 
 
-private final class HeaderView: UIView {
+fileprivate final class HeaderView: UIView {
 
     let artworkImageView = EasyBlurImageView()
 
@@ -60,7 +60,7 @@ private final class HeaderView: UIView {
     }
 }
 
-private class TableViewCell: UITableViewCell {
+fileprivate class TableViewCell: UITableViewCell {
 
     let button = UIButton(type: .system)
     let durationLabel = UILabel()
@@ -89,7 +89,7 @@ private class TableViewCell: UITableViewCell {
 
 extension UINavigationController {
 
-    public override var childViewControllerForStatusBarStyle: UIViewController? {
+    open override var childViewControllerForStatusBarStyle: UIViewController? {
         return visibleViewController
     }
 }
@@ -97,12 +97,12 @@ extension UINavigationController {
 
 class AlbumDetailViewController: UIViewController {
 
-    private lazy var headerView: HeaderView = HeaderView(parentController: self)
+    fileprivate lazy var headerView: HeaderView = HeaderView(parentController: self)
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
-    private let album: Model.Album
-    private let disposeBag = DisposeBag()
+    fileprivate let album: Model.Album
+    fileprivate let disposeBag = DisposeBag()
 
     var artist: Model.Artist!
 
@@ -115,7 +115,7 @@ class AlbumDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var originalNavigationBarSettings: (backgroundImage: UIImage?, shadowImage: UIImage?) = (nil, nil)
+    fileprivate var originalNavigationBarSettings: (backgroundImage: UIImage?, shadowImage: UIImage?) = (nil, nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -185,14 +185,14 @@ class AlbumDetailViewController: UIViewController {
     }
 
     @objc
-    private func playAll() {
+    fileprivate func playAll() {
         print(Thread.isMainThread)
         player.add(playlist: album)
     }
 
-    private func observe() {
+    fileprivate func observe() {
 
-        headerView.artistButton.rx_tap
+        headerView.artistButton.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 guard let `self` = self else { return }
                 let vc = ArtistDetailViewController(artist: self.album.collection.artist)
@@ -257,7 +257,7 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
     }
 }
 
-private extension AlbumDetailViewController {
+fileprivate extension AlbumDetailViewController {
 
     @objc
     func addPlaylist(_ sender: UIButton, event: UIEvent) {

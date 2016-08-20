@@ -23,7 +23,7 @@ public protocol Fetchable: class {
     func refresh(force: Bool)
 }
 
-private struct FetchableKey {
+fileprivate struct FetchableKey {
     static var requestState: UInt8 = 0
 }
 
@@ -61,7 +61,7 @@ extension Fetchable {
         }
     }
 
-    private func _request(refreshing: Bool, force: Bool) {
+    fileprivate func _request(refreshing: Bool, force: Bool) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if [.done, .requesting].contains(self._requestState.value) {
@@ -99,10 +99,10 @@ protocol _Fetchable: class, Fetchable {
 
     var _hasNoPaginatedContents: Bool { get }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void)
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void)
 }
 
-private struct _FetchableKey {
+fileprivate struct _FetchableKey {
     static var _refreshing: UInt8 = 0
     static var _requestState: UInt8 = 0
 }

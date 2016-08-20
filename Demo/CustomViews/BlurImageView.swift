@@ -24,13 +24,13 @@ final class BlurImageView: GLKView {
         }
     }
 
-    private var inputCIImage: CIImage? {
+    fileprivate var inputCIImage: CIImage? {
         didSet { setNeedsDisplay() }
     }
 
-    private let clampFilter = CIFilter(name: "CIAffineClamp")!
-    private let blurFilter = CIFilter(name: "CIGaussianBlur")!
-    private let ciContext: CIContext
+    fileprivate let clampFilter = CIFilter(name: "CIAffineClamp")!
+    fileprivate let blurFilter = CIFilter(name: "CIGaussianBlur")!
+    fileprivate let ciContext: CIContext
 
     override init(frame: CGRect) {
         let glContext = EAGLContext(api: .openGLES2)

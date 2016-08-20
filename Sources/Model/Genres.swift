@@ -13,9 +13,9 @@ import APIKit
 import Timepiece
 
 
-private let __requestState = Variable<RequestState>(.none)
+fileprivate let __requestState = Variable<RequestState>(.none)
 
-private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
+fileprivate func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
     if let cache = realm.object(ofType: _GenresCache.self, forPrimaryKey: key) {
         return cache
     } else {
@@ -34,7 +34,7 @@ extension Model {
     public final class Genres: Fetchable, ObservableList, _ObservableList {
 
         // swiftlint:disable nesting
-        private enum InitialDefaultGenre: Int {
+        fileprivate enum InitialDefaultGenre: Int {
 
             case top = 34
 
@@ -59,10 +59,10 @@ extension Model {
 
         var _requestState: Variable<RequestState> { return __requestState }
 
-        private var token: NotificationToken?
-        private var objectsToken: NotificationToken?
-        private let caches: Results<_GenresCache>
-        private var cache: _GenresCache {
+        fileprivate var token: NotificationToken?
+        fileprivate var objectsToken: NotificationToken?
+        fileprivate let caches: Results<_GenresCache>
+        fileprivate var cache: _GenresCache {
             return caches[0]
         }
 
@@ -101,7 +101,7 @@ extension Model.Genres: _Fetchable {
 
     var _refreshDuration: Duration { return 30.days }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         if !refreshing && !caches[0].list.isEmpty {
             completion(.done)

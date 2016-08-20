@@ -32,7 +32,7 @@ final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
 
     let tracks = List<_Track>()
 
-    private(set) dynamic var createAt = Date()
+    fileprivate(set) dynamic var createAt = Date()
 
     dynamic var updateAt = Date()
 

@@ -12,7 +12,7 @@ import RxSwift
 import SnapKit
 
 
-private class TableViewCell: UITableViewCell {
+fileprivate class TableViewCell: UITableViewCell {
 
     let artworkImageView = UIImageView()
 
@@ -46,11 +46,11 @@ private class TableViewCell: UITableViewCell {
 
 final class ArtistDetailViewController: UIViewController {
 
-    private let artist: Model.Artist
+    fileprivate let artist: Model.Artist
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
     init(artist: Artist) {
         self.artist = Model.Artist(artist: artist)

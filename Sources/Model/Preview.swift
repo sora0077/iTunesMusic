@@ -16,14 +16,14 @@ import AVFoundation
 
 final class Preview {
 
-    private let cache = NSCache<NSNumber, PreviewTrack>()
+    fileprivate let cache = NSCache<NSString, PreviewTrack>()
 
     subscript (track track: Track) -> PreviewTrack? {
         set {
-            cache.setObject(PreviewTrack(track: track), forKey: track.id)
+            cache.setObject(PreviewTrack(track: track), forKey: "\(track.id)" as NSString)
         }
         get {
-            return cache.object(forKey: track.id)
+            return cache.object(forKey: "\(track.id)" as NSString)
         }
     }
 
@@ -32,7 +32,7 @@ final class Preview {
             return previewTrack
         }
         let previewTrack = PreviewTrack(track: track)
-        cache.setObject(previewTrack, forKey: track.id)
+        cache.setObject(previewTrack, forKey: "\(track.id)" as NSString)
         return previewTrack
     }
 }
@@ -43,7 +43,7 @@ final class PreviewTrack {
     let id: Int
     let url: URL
 
-    private init(track: Track) {
+    fileprivate init(track: Track) {
         id = track.id
         url = track.viewURL
     }

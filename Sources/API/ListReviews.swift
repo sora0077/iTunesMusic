@@ -38,7 +38,7 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
 
     var format = "xml"
 
-    func interceptObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> AnyObject {
+    func interceptObject(_ object: Any, urlResponse: HTTPURLResponse) throws -> Any {
 
         // swiftlint:disable force_cast
         let doc = (object as! XMLDataParser.Wrapper).xml
@@ -61,7 +61,7 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
         }
     }
 
-    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         return try decodeArray(object)
     }
 }

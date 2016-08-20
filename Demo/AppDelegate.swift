@@ -31,7 +31,7 @@ func rx_prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Pl
 extension UIScrollView {
 
     func rx_reachedBottom(offsetRatio: CGFloat = 0) -> Observable<Bool> {
-        return rx_contentOffset
+        return rx.contentOffset
             .map { [weak self] contentOffset in
                 guard let scrollView = self else { return false }
 
@@ -46,7 +46,7 @@ extension UIScrollView {
 }
 
 
-private var UITableView_isMoving: UInt8 = 0
+fileprivate var UITableView_isMoving: UInt8 = 0
 extension UITableView {
 
     var isMoving: Bool {
@@ -58,14 +58,14 @@ extension UITableView {
         }
     }
 
-    func rx_itemUpdates(_ configure: ((index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
+    func rx_itemUpdates(_ configure: ((_ index: Int) -> (row: Int, section: Int))? = nil) -> AnyObserver<CollectionChange> {
         return UIBindingObserver(UIElement: self) { tableView, changes in
             switch changes {
             case .initial:
                 tableView.reloadData()
             case let .update(deletions: deletions, insertions: insertions, modifications: modifications):
                 func indexPath(_ i: Int) -> IndexPath {
-                    let (row, section) = configure?(index: i) ?? (i, 0)
+                    let (row, section) = configure?(i) ?? (i, 0)
                     return IndexPath(row: row, section: section)
                 }
                 tableView.performUpdates(
@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

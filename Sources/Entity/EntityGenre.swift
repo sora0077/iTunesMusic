@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 
 
-private let int = Transformer<String, Int> {
+fileprivate let int = Transformer<String, Int> {
     guard let val = Int($0) else {
         throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
     }
@@ -38,17 +38,17 @@ public protocol RssUrls {
 
 class _Genre: RealmSwift.Object {
 
-    private(set) dynamic var _name: String = ""
+    fileprivate(set) dynamic var _name: String = ""
 
-    private(set) dynamic var _id: Int = 0
+    fileprivate(set) dynamic var _id: Int = 0
 
-    private(set) dynamic var _url: String = ""
+    fileprivate(set) dynamic var _url: String = ""
 
-    private(set) dynamic var _rssUrls: _RssUrls?
+    fileprivate(set) dynamic var _rssUrls: _RssUrls?
 
-    private(set) dynamic var _chartUrls: _ChartUrls?
+    fileprivate(set) dynamic var _chartUrls: _ChartUrls?
 
-    private let _subgenres = List<_Genre>()
+    fileprivate let _subgenres = List<_Genre>()
 
     override class func primaryKey() -> String? { return "_id" }
 }

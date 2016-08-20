@@ -39,7 +39,7 @@ class ViewController: UIViewController {
     }
 
     @objc
-    private func searchAction() {
+    fileprivate func searchAction() {
         let vc = SearchViewController()
         let nav = UINavigationController(rootViewController: vc)
 

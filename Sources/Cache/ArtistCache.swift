@@ -14,7 +14,7 @@ final class _ArtistCache: _Cache {
 
     dynamic var artistId: Int = 0
 
-    private dynamic var _artist: _Artist?
+    fileprivate dynamic var _artist: _Artist?
 
     dynamic var fetched = false
 

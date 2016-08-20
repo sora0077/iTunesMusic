@@ -14,7 +14,7 @@ class _Cache: RealmSwift.Object {
 
     dynamic var refreshAt = Date.distantPast
 
-    private(set) dynamic var createAt = Date()
+    fileprivate(set) dynamic var createAt = Date()
 
     dynamic var updateAt = Date()
 }

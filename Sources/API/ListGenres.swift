@@ -21,14 +21,14 @@ struct ListGenres<Response: Decodable>: iTunesRequestType {
 
     var country = Locale.current.regionCode!
 
-    var queryParameters: [String : AnyObject]? {
+    var queryParameters: [String : Any]? {
         return [
             "id": 34,  // music
             "cc": country,
         ]
     }
 
-    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         let root = (object as! [String: AnyObject]).values.first as! [String: AnyObject]
         return try Response.decodeValue(root)
     }

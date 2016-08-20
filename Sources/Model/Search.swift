@@ -13,7 +13,7 @@ import APIKit
 import Timepiece
 
 
-private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
+fileprivate func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
     if let cache = realm.object(ofType: _SearchCache.self, forPrimaryKey: term) {
         return cache
     } else {
@@ -36,11 +36,11 @@ extension Model {
             public var name: String {
                 return cache.name
             }
-            private var results: [String] = []
+            fileprivate var results: [String] = []
 
-            private let cache: _SearchTrendsCache
+            fileprivate let cache: _SearchTrendsCache
 
-            private init() {
+            fileprivate init() {
                 let realm = iTunesRealm()
                 self.cache = realm.allObjects(ofType: _SearchTrendsCache.self).first ?? _SearchTrendsCache()
                 try! realm.write {
@@ -57,16 +57,16 @@ extension Model {
 
         public var name: String { return term }
 
-        private let term: String
-        private let caches: Results<_SearchCache>
-        private var token: NotificationToken!
-        private var objectsToken: NotificationToken?
-        private var tracksToken: NotificationToken?
+        fileprivate let term: String
+        fileprivate let caches: Results<_SearchCache>
+        fileprivate var token: NotificationToken!
+        fileprivate var objectsToken: NotificationToken?
+        fileprivate var tracksToken: NotificationToken?
 
-        private var tracks: Results<_Media>
+        fileprivate var tracks: Results<_Media>
 
-        public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
-        private let _tracksChanges = PublishSubject<CollectionChange>()
+        public fileprivate(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
+        fileprivate let _tracksChanges = PublishSubject<CollectionChange>()
 
         public init(term: String) {
             self.term = term
@@ -122,7 +122,7 @@ extension Model.Search: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
         if term.isEmpty { completion(.none); return }
 
         _refreshing.value = refreshing
@@ -180,7 +180,7 @@ extension Model.Search: Swift.Collection {
         case collection(Collection)
         case artist(Artist)
 
-        private init(type: _Media.MediaType) {
+        fileprivate init(type: _Media.MediaType) {
             switch type {
             case let .track(obj):
                 self = .track(obj)
@@ -192,7 +192,7 @@ extension Model.Search: Swift.Collection {
         }
     }
 
-    private var results: List<_Media> { return caches[0].objects }
+    fileprivate var results: List<_Media> { return caches[0].objects }
 
     public var count: Int { return results.count }
 
@@ -218,7 +218,7 @@ extension Model.Search.Trends: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         let trends = SearchHintTrends()
         Session.sharedSession.sendRequest(trends, callbackQueue: callbackQueue) { [weak self] result in

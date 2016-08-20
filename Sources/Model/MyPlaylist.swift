@@ -11,7 +11,7 @@ import RealmSwift
 import RxSwift
 
 
-private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
+fileprivate func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
     if let cache = realm.allObjects(ofType: _MyPlaylistCache.self).first {
         return cache
     }
@@ -30,8 +30,8 @@ extension Model {
 
     public final class MyPlaylists: ObservableList, _ObservableList {
 
-        private let cache: _MyPlaylistCache
-        private var token: NotificationToken?
+        fileprivate let cache: _MyPlaylistCache
+        fileprivate var token: NotificationToken?
 
         public init() {
 
@@ -99,9 +99,9 @@ extension Model {
 
     public final class MyPlaylist: ObservableList, _ObservableList {
 
-        private var token: NotificationToken?
+        fileprivate var token: NotificationToken?
 
-        private let playlist: _MyPlaylist
+        fileprivate let playlist: _MyPlaylist
 
         public init(playlist: iTunesMusic.MyPlaylist) {
             let playlist = playlist.impl

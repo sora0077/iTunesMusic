@@ -13,11 +13,11 @@ import iTunesMusic
 
 final class PlaylistViewController: UIViewController {
 
-    private let playlists = Model.MyPlaylists()
+    fileprivate let playlists = Model.MyPlaylists()
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()

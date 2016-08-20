@@ -13,7 +13,7 @@ import RxSwift
 import Timepiece
 
 
-private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
+fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
     if let cache = realm.object(ofType: _ReviewCache.self, forPrimaryKey: collectionId) {
         return cache
     }
@@ -31,12 +31,12 @@ extension Model {
 
     public final class Reviews: Fetchable, ObservableList, _ObservableList {
 
-        private let collectionId: Int
+        fileprivate let collectionId: Int
 
-        private let caches: Results<_ReviewCache>
+        fileprivate let caches: Results<_ReviewCache>
 
-        private var token: NotificationToken!
-        private var objectsToken: NotificationToken!
+        fileprivate var token: NotificationToken!
+        fileprivate var objectsToken: NotificationToken!
 
         public init(collection: iTunesMusic.Collection) {
             collectionId = collection.id
@@ -75,7 +75,7 @@ extension Model.Reviews: _Fetchable {
 
     var _refreshDuration: Duration { return 6.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         let cache = caches[0]
         print(cache)
@@ -124,7 +124,7 @@ extension Model.Reviews: _Fetchable {
 
 extension Model.Reviews: Swift.Collection {
 
-    private var objects: List<_Review> { return caches[0].objects }
+    fileprivate var objects: List<_Review> { return caches[0].objects }
 
     public var startIndex: Int { return objects.startIndex }
 

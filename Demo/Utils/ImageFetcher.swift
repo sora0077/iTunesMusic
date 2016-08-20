@@ -21,24 +21,28 @@ func prefetchImages(with urls: [URL]) {
     PINRemoteImageManager.shared().prefetchImages(with: urls)
 }
 
-func downloadImage(with url: URL, _ completion: (Result<UIImage, NSError>) -> Void) {
+func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSError>) -> Void) {
     PINRemoteImageManager.shared().downloadImage(with: url, options: []) { r in
-        completion(Result(r.image, failWith: r.error!))
+        if let image = r.image {
+            completion(.success(image))
+        } else {
+            completion(.failure(r.error as! NSError))
+        }
     }
 }
 
-private final class Wrapper<T> {
+fileprivate final class Wrapper<T> {
     let value: T
     init(_ value: T) { self.value = value }
 }
 
-private struct UIImageViewKey {
+fileprivate struct UIImageViewKey {
     static var itm_imageURL: UInt8 = 0
 }
 
 extension UIImageView {
 
-    private var itm_imageURL: URL? {
+    fileprivate var itm_imageURL: URL? {
         set {
             objc_setAssociatedObject(self, &UIImageViewKey.itm_imageURL, newValue.map(Wrapper.init), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
@@ -58,7 +62,7 @@ extension UIImageView {
         _setArtwork(generator: artwork.artworkURL, size: width)
     }
 
-    private func _setArtwork(generator: (Int) -> URL, size width: CGFloat) {
+    fileprivate func _setArtwork(generator: @escaping (Int) -> URL, size width: CGFloat) {
         guard doOnMainThread(execute: self._setArtwork(generator: generator, size: width)) else {
             return
         }

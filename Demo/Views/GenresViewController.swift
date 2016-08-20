@@ -27,9 +27,9 @@ class BaseViewController: UIViewController {
 
 class GenresViewController: BaseViewController {
 
-    private let genres = Model.Genres()
+    fileprivate let genres = Model.Genres()
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
     init() {
         super.init(nibName: nil, bundle: nil)

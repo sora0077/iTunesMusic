@@ -9,7 +9,7 @@
 import UIKit
 
 
-private func convertRadiusKey(_ radius: Float) -> Int {
+fileprivate func convertRadiusKey(_ radius: Float) -> Int {
 //    return Int(round(Double(radius * 10)))
     return Int(round(radius))
 }
@@ -32,11 +32,11 @@ final class EasyBlurImageView: UIImageView {
         }
     }
 
-    private var supressDidSet: Bool = false
-    private var originalImage: UIImage?
-    private var imageCache: [Int: UIImage] = [:]
+    fileprivate var supressDidSet: Bool = false
+    fileprivate var originalImage: UIImage?
+    fileprivate var imageCache: [Int: UIImage] = [:]
 
-    private let context = CIContext(options: [
+    fileprivate let context = CIContext(options: [
         kCIContextWorkingColorSpace: NSNull()
     ])
 
@@ -44,7 +44,7 @@ final class EasyBlurImageView: UIImageView {
         print("deinit EasyBlurImageView")
     }
 
-    private func createBluredImages() {
+    fileprivate func createBluredImages() {
         #if (arch(i386) || arch(x86_64)) && os(iOS)
         #else
 
@@ -69,7 +69,7 @@ final class EasyBlurImageView: UIImageView {
         #endif
     }
 
-    private func setBlurImage() {
+    fileprivate func setBlurImage() {
         supressDidSet = true
         defer {
             supressDidSet = false

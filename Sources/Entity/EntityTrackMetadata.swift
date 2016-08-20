@@ -23,15 +23,15 @@ public protocol TrackMetadata {
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
 
-    private dynamic var _trackId: Int = 0
+    fileprivate dynamic var _trackId: Int = 0
 
-    private dynamic var _track: _Track?
+    fileprivate dynamic var _track: _Track?
 
-    private dynamic var _longPreviewUrl: String?
+    fileprivate dynamic var _longPreviewUrl: String?
 
-    private dynamic var _longPreviewFileUrl: String?
+    fileprivate dynamic var _longPreviewFileUrl: String?
 
-    private let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
+    fileprivate let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
 
     dynamic var _createAt: Date = Date()
 
@@ -52,7 +52,7 @@ final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
         super.init()
     }
 
-    required init(value: AnyObject, schema: RLMSchema) {
+    required init(value: Any, schema: RLMSchema) {
         super.init(value: value, schema: schema)
     }
 

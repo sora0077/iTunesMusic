@@ -26,11 +26,11 @@ class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
 final class _SearchTrendsCache: _Cache {
 
-    private dynamic var id: Int = 0
+    fileprivate dynamic var id: Int = 0
 
     dynamic var name: String = ""
 
-    private dynamic var _trendings: String = ""
+    fileprivate dynamic var _trendings: String = ""
 
     override class func primaryKey() -> String? { return "id" }
 

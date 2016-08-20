@@ -17,7 +17,7 @@ class _RssCache: _Cache {
 
     dynamic var fetched: Int = 0
 
-    private let items = List<_RssItem>()
+    fileprivate let items = List<_RssItem>()
 
     let tracks = List<_Track>()
 
@@ -42,9 +42,11 @@ extension _RssCache: Decodable {
 
     static func decode(_ e: Extractor) throws -> Self {
         let obj = self.init()
-        let entry = e.rawValue["feed"]!!["entry"] as! [[String: AnyObject]]
+        let entry = (e.rawValue as! [String: [String: Any]])["feed"]!["entry"] as! [[String: AnyObject]]
         let items = entry
-            .map { $0["id"]!["attributes"]!!["im:id"] as! String }
+            .map { $0["id"] as! [String: AnyObject] }
+            .map { $0["attributes"] as! [String: AnyObject] }
+            .map { $0["im:id"] as! String }
             .map { Int($0)! }
             .map { (id) -> _RssItem in
                 let item = _RssItem()

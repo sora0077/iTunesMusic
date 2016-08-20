@@ -14,7 +14,7 @@ import Timepiece
 import Himotoki
 
 
-private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
+fileprivate func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
     if let cache = realm.object(ofType: _ArtistCache.self, forPrimaryKey: artistId) {
         return cache
     }
@@ -32,13 +32,13 @@ extension Model {
 
     public final class Artist: Fetchable, ObservableList, _ObservableList {
 
-        private var objectsToken: NotificationToken?
-        private var token: NotificationToken?
+        fileprivate var objectsToken: NotificationToken?
+        fileprivate var token: NotificationToken?
 
-        private let artistId: Int
+        fileprivate let artistId: Int
 
-        private let caches: Results<_ArtistCache>
-        private var collections: Results<_Collection>
+        fileprivate let caches: Results<_ArtistCache>
+        fileprivate var collections: Results<_Collection>
 
         public convenience init(artist: iTunesMusic.Artist) {
             self.init(artistId: artist.id)
@@ -82,7 +82,7 @@ extension Model.Artist: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         let artistId = self.artistId
         let cache = caches[0]

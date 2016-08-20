@@ -14,7 +14,7 @@ final class _AlbumCache: _Cache {
 
     dynamic var collectionId: Int = 0
 
-    private dynamic var _collection: _Collection?
+    fileprivate dynamic var _collection: _Collection?
 
     override class func primaryKey() -> String? { return "collectionId" }
 

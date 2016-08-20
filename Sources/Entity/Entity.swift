@@ -18,11 +18,11 @@ final class _Media: RealmSwift.Object {
         case artist(Artist)
     }
 
-    private(set) dynamic var track: _Track?
+    fileprivate(set) dynamic var track: _Track?
 
-    private(set) dynamic var collection: _Collection?
+    fileprivate(set) dynamic var collection: _Collection?
 
-    private(set) dynamic var artist: _Artist?
+    fileprivate(set) dynamic var artist: _Artist?
 
     var type: MediaType {
         if let obj = track {

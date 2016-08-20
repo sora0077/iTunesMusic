@@ -13,7 +13,7 @@ import Timepiece
 import APIKit
 
 
-private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
+fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     if let cache = realm.object(ofType: _AlbumCache.self, forPrimaryKey: collectionId) {
         return cache
     }
@@ -27,7 +27,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     return cache
 }
 
-private let sortConditions = [
+fileprivate let sortConditions = [
     SortDescriptor(property: "_discNumber", ascending: true),
     SortDescriptor(property: "_trackNumber", ascending: true)
 ]
@@ -37,13 +37,13 @@ extension Model {
 
     public final class Album: Fetchable, ObservableList, _ObservableList {
 
-        private var objectsToken: NotificationToken?
-        private var token: NotificationToken?
+        fileprivate var objectsToken: NotificationToken?
+        fileprivate var token: NotificationToken?
 
-        private let collectionId: Int
+        fileprivate let collectionId: Int
 
-        private let caches: Results<_AlbumCache>
-        private var tracks: Results<_Track>
+        fileprivate let caches: Results<_AlbumCache>
+        fileprivate var tracks: Results<_Track>
 
         public convenience init(collection: Collection) {
             self.init(collectionId: collection.id)
@@ -109,7 +109,7 @@ extension Model.Album: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
 
         let collectionId = self.collectionId
         let cache = caches[0]

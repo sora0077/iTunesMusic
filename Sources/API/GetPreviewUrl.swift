@@ -18,7 +18,7 @@ struct GetPreviewUrl: iTunesRequestType {
 
     let baseUrl: URL
 
-    private let locale: Locale
+    fileprivate let locale: Locale
 
     var method: HTTPMethod { return .GET }
 
@@ -40,9 +40,9 @@ struct GetPreviewUrl: iTunesRequestType {
         self.locale = locale
     }
 
-    func responseFromObject(_ object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
 
-        if let items = object["items"] as? [[String: AnyObject]] {
+        if let items = (object as! [String: AnyObject])["items"] as? [[String: AnyObject]] {
             for item in items {
                 guard let id = item["item-id"] as? Int else { continue }
                 if self.id == id {
@@ -55,7 +55,7 @@ struct GetPreviewUrl: iTunesRequestType {
 }
 
 
-private func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
+fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
 
     if let offers = item["store-offers"] as? [String: AnyObject] {
         let preview: String

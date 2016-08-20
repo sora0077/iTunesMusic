@@ -11,7 +11,7 @@ import RxSwift
 import APIKit
 
 
-let callbackQueue = CallbackQueue.DispatchQueue(DispatchQueue.global(qos: .background))
+let callbackQueue = CallbackQueue.dispatchQueue(DispatchQueue.global(qos: .background))
 
 
 func tick() {

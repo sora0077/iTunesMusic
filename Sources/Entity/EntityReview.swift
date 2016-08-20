@@ -32,33 +32,33 @@ extension Review {
 
 final class _Review: RealmSwift.Object, Review {
 
-    private(set) dynamic var id = 0
+    fileprivate(set) dynamic var id = 0
 
-    private(set) dynamic var auther = ""
+    fileprivate(set) dynamic var auther = ""
 
-    private(set) dynamic var title = ""
+    fileprivate(set) dynamic var title = ""
 
-    private(set) dynamic var content = ""
+    fileprivate(set) dynamic var content = ""
 
-    private(set) dynamic var rating = 0
+    fileprivate(set) dynamic var rating = 0
 
-    private(set) dynamic var voteCount = 0
+    fileprivate(set) dynamic var voteCount = 0
 
-    private(set) dynamic var voteSum = 0
+    fileprivate(set) dynamic var voteSum = 0
 
-    private(set) dynamic var postedAt = Date.distantPast
+    fileprivate(set) dynamic var postedAt = Date.distantPast
 
     override class func primaryKey() -> String? { return "id" }
 }
 
-private let intTransformer = Transformer<String, Int> {
+fileprivate let intTransformer = Transformer<String, Int> {
     guard let val = Int($0) else {
         throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
     }
     return val
 }
 
-private let postedAtTransformer = Transformer<String, Date> { string in
+fileprivate let postedAtTransformer = Transformer<String, Date> { string in
     //  2016-06-29T07:00:00-07:00
     return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:sszzzz")!
 }

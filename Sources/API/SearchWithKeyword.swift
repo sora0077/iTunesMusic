@@ -18,7 +18,7 @@ protocol SearchWithKeywordResponseType {
 
 struct SearchResponse: SearchWithKeywordResponseType {
 
-    private enum WrapperType: String {
+    fileprivate enum WrapperType: String {
         case track, collection, artist
     }
 
@@ -43,7 +43,7 @@ extension SearchResponse {
 extension SearchResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> SearchResponse {
-        guard let results = e.rawValue["results"] as? [[String: AnyObject]] else { return SearchResponse(objects: []) }
+        guard let results = (e.rawValue as! [String: AnyObject])["results"] as? [[String: AnyObject]] else { return SearchResponse(objects: []) }
         var items: [Wrapper] = []
         for item in results {
             guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
@@ -85,7 +85,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
 
     var limit: Int = 50
 
-    var queryParameters: [String : AnyObject]? {
+    var queryParameters: [String : Any]? {
         return [
             "term": term,
             "media": media,
@@ -97,7 +97,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType where Results: D
         ]
     }
 
-    func response(from object: AnyObject, urlResponse: HTTPURLResponse) throws -> Response {
+    func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
 
         var obj: Response = try decodeValue(object)
         obj.term = term

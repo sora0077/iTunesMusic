@@ -18,24 +18,24 @@ protocol ViewModuleProtocol {
 
 class TableViewModule<List: Swift.Collection, Controller: UIViewController where List.Index == Int, List.IndexDistance == Int>: NSObject, ViewModuleProtocol, UITableViewDataSource, UITableViewDelegate {
 
-    typealias CellForRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> UITableViewCell
+    typealias CellForRowAtIndexPath = (_ self: Controller, _ tableView: UITableView, _ element: List.Iterator.Element, _ indexPath: IndexPath) -> UITableViewCell
 
-    typealias DidSelectRowAtIndexPath = (self: Controller, tableView: UITableView, element: List.Iterator.Element, indexPath: IndexPath) -> Void
+    typealias DidSelectRowAtIndexPath = (_ self: Controller, _ tableView: UITableView, _ element: List.Iterator.Element, _ indexPath: IndexPath) -> Void
 
-    private let tableView: UITableView
+    fileprivate let tableView: UITableView
 
-    private let superview: () -> UIView
+    fileprivate let superview: () -> UIView
 
-    private let list: List
+    fileprivate let list: List
 
-    private weak var viewController: Controller?
+    fileprivate weak var viewController: Controller?
 
-    private let generator: CellForRowAtIndexPath
+    fileprivate let generator: CellForRowAtIndexPath
 
-    private let selector: DidSelectRowAtIndexPath?
+    fileprivate let selector: DidSelectRowAtIndexPath?
 
     init(view: UITableView,
-         superview: () -> UIView,
+         superview: @escaping () -> UIView,
          controller: Controller,
          list: List,
          onGenerate: CellForRowAtIndexPath,
@@ -59,14 +59,14 @@ class TableViewModule<List: Swift.Collection, Controller: UIViewController where
 
     @objc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return generator(self: viewController!, tableView: tableView, element: list[indexPath.row], indexPath: indexPath)
+        return generator(viewController!, tableView, list[indexPath.row], indexPath)
     }
 
     //MARK: - UITableViewDelegate
     @objc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let vc = viewController else { return }
-        selector?(self: vc, tableView: tableView, element: list[(indexPath as NSIndexPath).row], indexPath: indexPath)
+        selector?(vc, tableView, list[indexPath.row], indexPath)
     }
 }
 

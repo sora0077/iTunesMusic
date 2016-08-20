@@ -85,7 +85,7 @@ class _Track: RealmSwift.Object, Track {
 
     let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 
-    private let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
+    fileprivate let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
 
     dynamic var _metadataUpdated: Int = 0
 

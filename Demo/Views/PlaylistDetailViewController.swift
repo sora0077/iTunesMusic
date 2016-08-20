@@ -14,11 +14,11 @@ import SnapKit
 
 final class PlaylistDetailViewController: UIViewController {
 
-    private let playlist: Model.MyPlaylist
+    fileprivate let playlist: Model.MyPlaylist
 
-    private let tableView = UITableView()
+    fileprivate let tableView = UITableView()
 
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
 
     init(playlist: MyPlaylist) {
         self.playlist = Model.MyPlaylist(playlist: playlist)
