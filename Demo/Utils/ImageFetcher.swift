@@ -23,6 +23,7 @@ func prefetchImages(with urls: [URL]) {
 
 func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSError>) -> Void) {
     PINRemoteImageManager.shared().downloadImage(with: url, options: []) { r in
+        // swiftlint:disable force_cast
         completion(Result(r.image, failWith: r.error as! NSError))
     }
 }

@@ -59,14 +59,14 @@ extension Model {
 
         fileprivate let term: String
         fileprivate let caches: Results<_SearchCache>
-        fileprivate var token: NotificationToken!
-        fileprivate var objectsToken: NotificationToken?
-        fileprivate var tracksToken: NotificationToken?
-
         fileprivate var tracks: Results<_Media>
+        private var token: NotificationToken!
+        private var objectsToken: NotificationToken?
+        private var tracksToken: NotificationToken?
 
-        public fileprivate(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
-        fileprivate let _tracksChanges = PublishSubject<CollectionChange>()
+
+        public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
+        private let _tracksChanges = PublishSubject<CollectionChange>()
 
         public init(term: String) {
             self.term = term

@@ -13,61 +13,64 @@ import RxSwift
 import RealmSwift
 
 
-fileprivate var AVPlayerItem_trackId: UInt8 = 0
 fileprivate extension AVPlayerItem {
+
+    private struct AVPlayerItemKey {
+        static var trackId: UInt8 = 0
+    }
 
     var trackId: Int? {
         get {
-            return objc_getAssociatedObject(self, &AVPlayerItem_trackId) as? Int
+            return objc_getAssociatedObject(self, &AVPlayerItemKey.trackId) as? Int
         }
         set {
-            objc_setAssociatedObject(self, &AVPlayerItem_trackId, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AVPlayerItemKey.trackId, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 }
 
 fileprivate class OneTrackPlaylist: PlaylistType {
 
-    fileprivate var name: String { return objects[0].name }
+    var name: String { return objects[0].name }
 
-    fileprivate var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
+    var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
 
-    fileprivate var trackCount: Int { return objects.count }
+    var trackCount: Int { return objects.count }
 
-    fileprivate var isTrackEmpty: Bool { return objects.isEmpty }
+    var isTrackEmpty: Bool { return objects.isEmpty }
 
-    fileprivate let objects: [Track]
+    let objects: [Track]
 
     init(track: Track) { objects = [track] }
 
-    fileprivate func track(at index: Int) -> Track { return objects[index] }
+    func track(at index: Int) -> Track { return objects[index] }
 }
 
 final class PlayerImpl: NSObject, Player {
 
     var playlists: [PlaylistType] { return _playlists.map { $0.0 } }
 
-    fileprivate var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
+    private var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
 
-    fileprivate var _playingQueue: ArraySlice<Track> = []
+    private var _playingQueue: ArraySlice<Track> = []
 
-    fileprivate var _previewQueue: [Int: PreviewTrack] = [:]
+    private var _previewQueue: [Int: PreviewTrack] = [:]
 
-    fileprivate let _player = AVQueuePlayer()
+    private let _player = AVQueuePlayer()
 
-    fileprivate let _disposeBag = DisposeBag()
+    private let _disposeBag = DisposeBag()
 
-    fileprivate(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
-    fileprivate let _nowPlayingTrack = Variable<Track?>(nil)
+    private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
+    private let _nowPlayingTrack = Variable<Track?>(nil)
 
-    fileprivate(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
-    fileprivate let _currentTime = Variable<Float64>(0)
+    private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
+    private let _currentTime = Variable<Float64>(0)
 
-    fileprivate var _installs: [PlayerMiddleware] = []
+    private var _installs: [PlayerMiddleware] = []
 
     var playing: Bool { return _player.rate != 0 }
 
-    fileprivate let previewer: Preview
+    private let previewer: Preview
 
     init(previewer: Preview) {
         self.previewer = previewer
@@ -141,7 +144,7 @@ final class PlayerImpl: NSObject, Player {
 
     func nextTrack() { _player.advanceToNextItem() }
 
-    fileprivate func updateQueue() {
+    private func updateQueue() {
 
         print("caller updateQueue")
         if _playingQueue.isEmpty { return }
@@ -196,7 +199,7 @@ final class PlayerImpl: NSObject, Player {
         }
     }
 
-    fileprivate func updatePlaylistQueue() {
+    private func updatePlaylistQueue() {
         if _playlists.isEmpty { updateQueue(); return }
         if _playingQueue.count > 2 { updateQueue(); return }
         if _player.items().count > 2 { return }
@@ -234,7 +237,7 @@ final class PlayerImpl: NSObject, Player {
         }
     }
 
-    fileprivate func fetch(_ preview: PreviewTrack) {
+    private func fetch(_ preview: PreviewTrack) {
         let id = preview.id
         if _previewQueue[id] != nil {
             return
@@ -281,7 +284,7 @@ final class PlayerImpl: NSObject, Player {
         _add(playlist: playlist)
     }
 
-    fileprivate func _add(playlist: PlaylistType) {
+    private func _add(playlist: PlaylistType) {
 
         assert(Thread.isMainThread)
 
@@ -316,7 +319,7 @@ final class PlayerImpl: NSObject, Player {
     }
 
     @objc
-    fileprivate func didEndPlay(_ notification: Foundation.Notification) {
+    private func didEndPlay(_ notification: Foundation.Notification) {
         assert(Thread.isMainThread)
 
         if let item = notification.object as? AVPlayerItem, let trackId = item.trackId {
@@ -328,7 +331,7 @@ final class PlayerImpl: NSObject, Player {
     }
 }
 
-fileprivate func configureFading(item: AVPlayerItem, duration: Double) {
+private func configureFading(item: AVPlayerItem, duration: Double) {
 
     guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
 

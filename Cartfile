@@ -10,3 +10,6 @@ github "drmohundro/SWXMLHash" "xcode-8.0"
 github "SnapKit/SnapKit" "feature/0.40.0"
 
 github "pinterest/PINRemoteImage"
+
+github "sora0077/WindowKit" "master"
+github "sora0077/ErrorEventHandler" "master"
