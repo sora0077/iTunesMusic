@@ -12,6 +12,7 @@ import RealmSwift
 import APIKit
 import Timepiece
 import Himotoki
+import ErrorEventHandler
 
 
 fileprivate func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
@@ -82,7 +83,7 @@ extension Model.Artist: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let artistId = self.artistId
         let cache = caches[0]

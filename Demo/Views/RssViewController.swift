@@ -95,7 +95,7 @@ class RssViewController: BaseViewController {
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
-                self?.rss.fetch()
+                self?.rss.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
             })
             .addDisposableTo(disposeBag)
 
@@ -128,7 +128,7 @@ class RssViewController: BaseViewController {
             })
             .addDisposableTo(disposeBag)
 
-        rss.refresh()
+        rss.refresh(ifError: CommonError.self, level: AppErrorLevel.alert)
     }
 
     override func viewDidAppear(_ animated: Bool) {

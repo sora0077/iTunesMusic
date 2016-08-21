@@ -11,6 +11,7 @@ import APIKit
 import RealmSwift
 import RxSwift
 import Timepiece
+import ErrorEventHandler
 
 
 fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
@@ -75,7 +76,7 @@ extension Model.Reviews: _Fetchable {
 
     var _refreshDuration: Duration { return 6.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let cache = caches[0]
         print(cache)

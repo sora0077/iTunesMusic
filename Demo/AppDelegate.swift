@@ -18,10 +18,57 @@ import WindowKit
 import ErrorEventHandler
 
 
+extension UIAlertController {
+
+    static func alertController(with event: ErrorLog.Event) -> UIAlertController {
+        let alert = UIAlertController(
+            title: (event.error as? AppError)?.title,
+            message: "",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            event.resolved()
+        }))
+
+        return alert
+    }
+}
+
+protocol AppError: ErrorLog.Error {
+    var title: String { get }
+}
+
+enum CommonError: AppError {
+    case none, error(Swift.Error)
+
+    init(error: Swift.Error?) {
+        self = error.map(CommonError.error) ?? .none
+    }
+
+    var title: String {
+        return "エラー"
+    }
+}
+
+enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
+    case slirent, alert
+}
+
+enum WindowLevel: Int, WindowKit.WindowLevel {
+    case main
+    case alert
+
+    static var mainWindowLevel: WindowLevel = .main
+}
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+
+    private lazy var manager: Manager<WindowLevel> = Manager(mainWindow: self.window!)
 
     private let disposeBag = DisposeBag()
 
@@ -40,9 +87,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         application.beginReceivingRemoteControlEvents()
 
 
-        ErrorLog.event
-            .drive(onNext: { error in
+        manager[.alert].rootViewController = UIViewController()
 
+        ErrorLog.event
+            .drive(onNext: { [weak self] error in
+                print(error)
+                switch error.level {
+                case let level as AppErrorLevel:
+                    switch level {
+                    case .alert:
+                        let alert = UIAlertController.alertController(with: error)
+                        self?.manager[.alert].rootViewController?.present(alert, animated: true, completion: nil)
+                    case .slirent:
+                        break
+                    }
+                default:
+                    break
+                }
             })
             .addDisposableTo(disposeBag)
 

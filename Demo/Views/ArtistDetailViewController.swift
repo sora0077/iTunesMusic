@@ -82,7 +82,7 @@ final class ArtistDetailViewController: UIViewController {
             .bindTo(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
-        artist.refresh()
+        artist.refresh(ifError: CommonError.self, level: AppErrorLevel.alert)
     }
 
     override func viewDidAppear(_ animated: Bool) {

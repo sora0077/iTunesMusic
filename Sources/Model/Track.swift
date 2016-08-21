@@ -11,6 +11,7 @@ import RxSwift
 import APIKit
 import RealmSwift
 import Timepiece
+import ErrorEventHandler
 
 
 extension Model {
@@ -62,7 +63,7 @@ extension Model.Track: _Fetchable {
 
     var _refreshDuration: Duration { return 18.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
         Session.sharedSession.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in

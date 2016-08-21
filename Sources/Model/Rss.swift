@@ -11,6 +11,7 @@ import APIKit
 import RxSwift
 import RealmSwift
 import Timepiece
+import ErrorEventHandler
 
 
 fileprivate func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
@@ -100,22 +101,18 @@ extension Model.Rss: _Fetchable {
 
     var _refreshDuration: Duration { return 3.hours }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
-
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
         if trackIds.isEmpty || (refreshing && _needRefresh) {
-            fetchFeed(completion: completion)
+            fetchFeed(ifError: errorType, level: level, completion: completion)
             return
         }
-
-        let session = Session.sharedSession
 
         let ids = trackIds[safe: fetched..<(fetched+perItems)]
         if ids.isEmpty {
             completion(.done)
             return
         }
-        let lookup = LookupWithIds<LookupResponse>(ids: Array(ids))
-        session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.sendRequest(LookupWithIds<LookupResponse>(ids: Array(ids)), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -160,7 +157,7 @@ extension Model.Rss: _Fetchable {
         }
     }
 
-    fileprivate func fetchFeed(completion: @escaping (RequestState) -> Void) {
+    fileprivate func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
         Session.sharedSession.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
@@ -176,7 +173,7 @@ extension Model.Rss: _Fetchable {
                 self.trackIds = response.ids
                 self.fetched = response.fetched
                 self._requestState.value = .none
-                self.request(refreshing: false, force: false, completion: completion)
+                self.request(refreshing: false, force: false, ifError: errorType, level: level, completion: completion)
             case .failure(let error):
                 print(error)
                 completion(.error)

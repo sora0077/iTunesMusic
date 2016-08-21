@@ -11,6 +11,20 @@ import iTunesMusic
 import RxSwift
 
 
+enum SearchError: AppError {
+
+    case none, error(Swift.Error)
+
+    init(error: Swift.Error?) {
+        self = error.map { .error($0) } ?? .none
+    }
+
+    var title: String {
+        return "検索失敗"
+    }
+}
+
+
 class SearchViewController: BaseViewController {
 
     fileprivate var search: Model.Search = Model.Search(term: "") {
@@ -22,9 +36,9 @@ class SearchViewController: BaseViewController {
             search.changes
                 .subscribe(tableView.rx.itemUpdates { idx in (idx, 1) })
                 .addDisposableTo(searchDisposeBag)
-            search.refresh()
+            search.refresh(ifError: SearchError.self, level: AppErrorLevel.alert)
 
-            search.trends.refresh()
+            search.trends.refresh(ifError: SearchError.self, level: AppErrorLevel.alert)
         }
     }
     fileprivate var searchDisposeBag = DisposeBag()
@@ -54,7 +68,7 @@ class SearchViewController: BaseViewController {
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
-                self?.search.fetch()
+                self?.search.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
             })
             .addDisposableTo(disposeBag)
 

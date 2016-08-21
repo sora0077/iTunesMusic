@@ -11,6 +11,22 @@ import AVKit
 import AVFoundation
 import RxSwift
 import RealmSwift
+import ErrorEventHandler
+
+
+fileprivate enum PlayerError: ErrorLog.Error {
+
+    case none
+
+    init(error: Swift.Error?) {
+        self = .none
+    }
+}
+
+fileprivate enum PlayerErrorLevel: ErrorLog.Level {
+    case none
+}
+
 
 
 fileprivate extension AVPlayerItem {
@@ -212,7 +228,7 @@ final class PlayerImpl: NSObject, Player {
         print(paginator, playlist)
 
         if playlist.trackCount - index < 3 {
-            paginator?.fetch()
+            paginator?.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
 
             if playlist.isTrackEmpty {
                 return

@@ -204,7 +204,7 @@ class AlbumDetailViewController: UIViewController {
             .filter { $0 }
             .debounce(0.5, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
-                self?.album.fetch()
+                self?.album.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
             })
             .addDisposableTo(disposeBag)
 
@@ -219,7 +219,7 @@ class AlbumDetailViewController: UIViewController {
             .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
-        album.refresh()
+        album.refresh(ifError: CommonError.self, level: AppErrorLevel.alert)
     }
 }
 
@@ -314,7 +314,7 @@ extension AlbumDetailViewController: UITableViewDelegate {
         guard track.canPreview else { return }
 
         review = Model.Reviews(collection: track.collection)
-        review.fetch()
+        review.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
 
         print(track)
 //        artist = Model.Artist(artist: album[indexPath.row].artist)

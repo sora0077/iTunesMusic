@@ -11,6 +11,7 @@ import RealmSwift
 import RxSwift
 import APIKit
 import Timepiece
+import ErrorEventHandler
 
 
 fileprivate func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
@@ -122,7 +123,7 @@ extension Model.Search: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
         if term.isEmpty { completion(.none); return }
 
         _refreshing.value = refreshing
@@ -218,7 +219,7 @@ extension Model.Search.Trends: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let trends = SearchHintTrends()
         Session.sharedSession.sendRequest(trends, callbackQueue: callbackQueue) { [weak self] result in

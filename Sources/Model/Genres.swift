@@ -11,6 +11,7 @@ import RxSwift
 import RealmSwift
 import APIKit
 import Timepiece
+import ErrorEventHandler
 
 
 fileprivate let __requestState = Variable<RequestState>(.none)
@@ -101,7 +102,7 @@ extension Model.Genres: _Fetchable {
 
     var _refreshDuration: Duration { return 30.days }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         if !refreshing && !caches[0].list.isEmpty {
             completion(.done)

@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Timepiece
+import ErrorEventHandler
 
 
 //MARK: - Fetchable
@@ -16,11 +17,11 @@ public protocol Fetchable: class {
 
     var requestState: Observable<RequestState> { get }
 
-    func fetch()
+    func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
 
-    func refresh()
+    func refresh(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
 
-    func refresh(force: Bool)
+    func refresh(force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
 }
 
 fileprivate struct FetchableKey {
@@ -39,29 +40,29 @@ extension Fetchable {
         return state
     }
 
-    public func fetch() {
-        guard doOnMainThread(execute: self.fetch()) else {
+    public func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
+        guard doOnMainThread(execute: self.fetch(ifError: errorType, level: level)) else {
             return
         }
-        _request(refreshing: false, force: false)
+        _request(refreshing: false, force: false, ifError: errorType, level: level)
     }
 
-    public func refresh() {
-        refresh(force: false)
+    public func refresh(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
+        refresh(force: false, ifError: errorType, level: level)
     }
 
-    public func refresh(force: Bool) {
-        guard doOnMainThread(execute: self.refresh(force: force)) else {
+    public func refresh(force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
+        guard doOnMainThread(execute: self.refresh(force: force, ifError: errorType, level: level)) else {
             return
         }
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if force || self._needRefresh {
-            _request(refreshing: true, force: force)
+            _request(refreshing: true, force: force, ifError: errorType, level: level)
         }
     }
 
-    fileprivate func _request(refreshing: Bool, force: Bool) {
+    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if [.done, .requesting].contains(self._requestState.value) {
@@ -73,10 +74,13 @@ extension Fetchable {
         self._refreshing.value = refreshing
         self._requestState.value = .requesting
 
-        self.request(refreshing: refreshing, force: force) { [weak self] requestState in
+        self.request(refreshing: refreshing, force: force, ifError: errorType, level: level) { [weak self] requestState in
             DispatchQueue.main.async {
                 self?._refreshing.value = false
                 self?._requestState.value = requestState
+                if requestState == .error {
+                    ErrorLog.enqueue(error: nil, with: errorType, level: level)
+                }
                 tick()
             }
         }
@@ -99,7 +103,7 @@ protocol _Fetchable: class, Fetchable {
 
     var _hasNoPaginatedContents: Bool { get }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void)
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void)
 }
 
 fileprivate struct _FetchableKey {

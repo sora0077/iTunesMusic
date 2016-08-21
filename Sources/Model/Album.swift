@@ -11,6 +11,7 @@ import RealmSwift
 import RxSwift
 import Timepiece
 import APIKit
+import ErrorEventHandler
 
 
 fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
@@ -109,7 +110,7 @@ extension Model.Album: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let collectionId = self.collectionId
         let cache = caches[0]
