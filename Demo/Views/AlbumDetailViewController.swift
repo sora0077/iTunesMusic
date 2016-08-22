@@ -12,6 +12,15 @@ import SnapKit
 import iTunesMusic
 
 
+extension Track {
+
+    var time: String {
+        let seconds = duration / 1000
+        return "\(seconds/60):\(String(format: "%02d", seconds%60))"
+    }
+}
+
+
 fileprivate final class HeaderView: UIView {
 
     let artworkImageView = EasyBlurImageView()
@@ -62,14 +71,28 @@ fileprivate final class HeaderView: UIView {
 
 fileprivate class TableViewCell: UITableViewCell {
 
+    let titleLabel = UILabel()
     let button = UIButton(type: .system)
     let durationLabel = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
+        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
+        titleLabel.numberOfLines = 0
+
+        durationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: UIFontWeightUltraLight)
+
+        contentView.addSubview(titleLabel)
         contentView.addSubview(durationLabel)
         contentView.addSubview(button)
+        titleLabel.snp.makeConstraints { make in
+            make.top.bottom.greaterThanOrEqualTo(contentView).offset(8)
+            make.centerY.equalTo(contentView)
+            make.left.equalTo(contentView).offset(16)
+            make.right.lessThanOrEqualTo(durationLabel.snp.left).offset(-8)
+            make.height.greaterThanOrEqualTo(30)
+        }
         durationLabel.snp.makeConstraints { make in
             make.centerY.equalTo(contentView)
             make.right.equalTo(button.snp.left).offset(-8)
@@ -146,6 +169,7 @@ class AlbumDetailViewController: UIViewController {
             make.width.equalTo(tableView.snp.width)
             make.height.equalTo(264)
         }
+        print(album.collection.artworkURL(size: Int(view.frame.height)))
         headerView.artworkImageView.setArtwork(of: album.collection, size: view.frame.width)
 
         title = album.collection.name
@@ -283,19 +307,17 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TableViewCell
         let track = album[indexPath.row]
 
-        cell.detailTextLabel?.text = "\(indexPath.row + 1)"
-        cell.textLabel?.text = track.name
-        cell.textLabel?.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
+        cell.titleLabel.text = track.name
 
-        let seconds = track.duration / 1000
-        cell.durationLabel.text = "\(seconds/60):\(String(format: "%02d", seconds%60))"
+        cell.durationLabel.text = track.time
         if track.canPreview {
-            cell.textLabel?.textColor = UIColor.black
+            cell.titleLabel.textColor = UIColor.black
             cell.selectionStyle = .default
         } else {
-            cell.textLabel?.textColor = UIColor.lightGray
+            cell.titleLabel.textColor = UIColor.lightGray
             cell.selectionStyle = .none
         }
+
         cell.button.removeTarget(nil, action: nil, for: [])
         cell.button.addTarget(self, action: #selector(self.addPlaylist(_:event:)), for: .touchUpInside)
 
