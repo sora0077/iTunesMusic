@@ -23,7 +23,7 @@ extension UIAlertController {
     static func alertController(with event: ErrorLog.Event) -> UIAlertController {
         let alert = UIAlertController(
             title: (event.error as? AppError)?.title,
-            message: "",
+            message: (event.error as? AppError)?.message,
             preferredStyle: .alert
         )
 
@@ -37,6 +37,12 @@ extension UIAlertController {
 
 protocol AppError: ErrorLog.Error {
     var title: String { get }
+    var message: String? { get }
+}
+
+extension AppError {
+
+    var message: String? { return nil }
 }
 
 enum CommonError: AppError {
@@ -49,6 +55,17 @@ enum CommonError: AppError {
     var title: String {
         return "エラー"
     }
+
+    #if DEBUG
+    var message: String? {
+        switch self {
+        case .none:
+            return "不明なエラー"
+        case .error(let error):
+            return "\(error)"
+        }
+    }
+    #endif
 }
 
 enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
@@ -57,7 +74,7 @@ enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
 
 enum WindowLevel: Int, WindowKit.WindowLevel {
     case main
-    case alert
+    case alert = 2
 
     static var mainWindowLevel: WindowLevel = .main
 }

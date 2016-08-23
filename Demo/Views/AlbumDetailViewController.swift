@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import StoreKit
 import RxSwift
 import SnapKit
 import iTunesMusic
+import ErrorEventHandler
 
 
 extension Track {
@@ -75,6 +77,10 @@ fileprivate class TableViewCell: UITableViewCell {
     let button = UIButton(type: .system)
     let durationLabel = UILabel()
 
+    let gesture = UILongPressGestureRecognizer()
+
+    private(set) var disposeBag = DisposeBag()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -103,10 +109,19 @@ fileprivate class TableViewCell: UITableViewCell {
         }
         button.tintColor = UIColor.black
         button.setTitle("Add", for: UIControlState())
+
+
+        contentView.addGestureRecognizer(gesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    fileprivate override func prepareForReuse() {
+        super.prepareForReuse()
+
+        disposeBag = DisposeBag()
     }
 }
 
@@ -321,11 +336,41 @@ extension AlbumDetailViewController: UITableViewDataSource {
         cell.button.removeTarget(nil, action: nil, for: [])
         cell.button.addTarget(self, action: #selector(self.addPlaylist(_:event:)), for: .touchUpInside)
 
+        let id = track.id
+
+        cell.gesture.rx.event.asDriver()
+            .filter { (gesture) -> Bool in
+                gesture.state == .recognized
+            }
+            .throttle(0.1)
+            .drive(
+                onNext: { [weak self] (gesture) in
+                    let vc = SKStoreProductViewController()
+                    vc.delegate = self
+                    DispatchQueue.main.async {
+                        self?.present(vc, animated: true, completion: {
+                            vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
+                                print(error)
+                                if !result {
+                                    ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
+                                }
+                            })
+                        })
+                    }
+                }
+            )
+            .addDisposableTo(cell.disposeBag)
+
         return cell
     }
 }
 
-var review: Model.Reviews!
+extension AlbumDetailViewController: SKStoreProductViewControllerDelegate {
+
+    func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
+}
 
 extension AlbumDetailViewController: UITableViewDelegate {
 
@@ -334,18 +379,6 @@ extension AlbumDetailViewController: UITableViewDelegate {
 
         let track = album[indexPath.row]
         guard track.canPreview else { return }
-
-        review = Model.Reviews(collection: track.collection)
-        review.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
-
-        print(track)
-//        artist = Model.Artist(artist: album[indexPath.row].artist)
-//        artist.fetch()
-//        artist.changes.subscribeNext { changes in
-//            for album in self.artist {
-//                print(album)
-//            }
-//        }.addDisposableTo(disposeBag)
 
         player.add(track: track)
     }
