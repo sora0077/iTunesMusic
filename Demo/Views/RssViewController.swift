@@ -18,6 +18,8 @@ fileprivate class TableViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
 
+    let albumLabel = UILabel()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .value1, reuseIdentifier: reuseIdentifier)
 
@@ -35,6 +37,16 @@ fileprivate class TableViewCell: UITableViewCell {
             make.left.equalTo(artworkImageView.snp.right).offset(8)
             make.right.equalTo(contentView).offset(-40)
             make.centerY.equalTo(contentView)
+        }
+
+        contentView.addSubview(albumLabel)
+        albumLabel.numberOfLines = 0
+        albumLabel.font = UIFont.systemFont(ofSize: 12, weight: UIFontWeightLight)
+        albumLabel.snp.makeConstraints { make in
+            make.left.equalTo(artworkImageView.snp.right).offset(24)
+            make.right.equalTo(contentView).offset(-40)
+            make.top.equalTo(titleLabel.snp.bottom).offset(8)
+            make.bottom.lessThanOrEqualTo(contentView.snp.bottom).offset(-8)
         }
     }
 
@@ -66,6 +78,7 @@ class RssViewController: BaseViewController {
                 cell.detailTextLabel?.text = "\(indexPath.row + 1)"
                 cell.titleLabel.text = track.name
                 cell.artworkImageView.setArtwork(of: track, size: 120)
+                cell.albumLabel.text = track.collection.name
                 return cell
             },
             onSelect: { (self, tableView, element, indexPath) in

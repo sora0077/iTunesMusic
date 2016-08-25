@@ -133,11 +133,23 @@ extension Model.Album: _Fetchable {
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
                 try! realm.write {
+                    var collectionNames: [Int: String] = [:]
+                    var collectionCensoredNames: [Int: String] = [:]
                     response.objects.reversed().forEach {
                         switch $0 {
                         case .track(let obj):
+                            if let c = obj._collection {
+                                collectionNames[c._collectionId] = c._collectionName
+                                collectionCensoredNames[c._collectionId] = c._collectionCensoredName
+                            }
                             realm.add(obj, update: true)
                         case .collection(let obj):
+                            if let name = collectionNames[obj._collectionId] {
+                                obj._collectionName = name
+                            }
+                            if let name = collectionCensoredNames[obj._collectionId] {
+                                obj._collectionCensoredName = name
+                            }
                             realm.add(obj, update: true)
                         case .artist(let obj):
                             realm.add(obj, update: true)
