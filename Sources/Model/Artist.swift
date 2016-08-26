@@ -114,6 +114,7 @@ extension Model.Artist: _Fetchable {
                             realm.add(obj, update: true)
                         case .artist(let obj):
                             realm.add(obj, update: true)
+                        case .unknown:()
                         }
                     }
 

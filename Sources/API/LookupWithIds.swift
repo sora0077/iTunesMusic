@@ -21,28 +21,33 @@ struct LookupResponse {
         case track(_Track)
         case collection(_Collection)
         case artist(_Artist)
+        case unknown
     }
 
     let objects: [Wrapper]
 }
 
+extension LookupResponse.Wrapper: Decodable {
+
+    static func decode(_ e: Extractor) throws -> LookupResponse.Wrapper {
+        guard let wrapperType = LookupResponse.WrapperType(rawValue: try e.valueOptional("wrapperType") ?? "") else {
+            return .unknown
+        }
+        switch wrapperType {
+        case .track:
+            return .track(try Himotoki.decodeValue(e.rawValue))
+        case .collection:
+            return .collection(try Himotoki.decodeValue(e.rawValue))
+        case .artist:
+            return .artist(try Himotoki.decodeValue(e.rawValue))
+        }
+    }
+}
+
 extension LookupResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> LookupResponse {
-        let results = (e.rawValue as! [String: AnyObject])["results"] as! [[String: AnyObject]]
-        var items: [Wrapper] = []
-        for item in results {
-            guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
-            switch wrapperType {
-            case .track:
-                items.append(Wrapper.track(try Himotoki.decodeValue(item)))
-            case .collection:
-                items.append(Wrapper.collection(try Himotoki.decodeValue(item)))
-            case .artist:
-                items.append(Wrapper.artist(try Himotoki.decodeValue(item)))
-            }
-        }
-        return LookupResponse(objects: items)
+        return LookupResponse(objects: try e.array("results"))
     }
 }
 
