@@ -49,36 +49,56 @@ extension UIImageView {
     }
 }
 
+fileprivate var localCache: [Int: [Int: URL]] = [:]
+
 extension UIImageView {
 
     func setArtwork(of artwork: Track, size width: CGFloat) {
-        _setArtwork(generator: artwork.artworkURL, size: width)
+        _setArtwork(id: artwork.collection.id, generator: artwork.artworkURL, size: width)
     }
 
     func setArtwork(of artwork: iTunesMusic.Collection, size width: CGFloat) {
-        _setArtwork(generator: artwork.artworkURL, size: width)
+        _setArtwork(id: artwork.id, generator: artwork.artworkURL, size: width)
     }
 
-    fileprivate func _setArtwork(generator: @escaping (Int) -> URL, size width: CGFloat) {
-        guard doOnMainThread(execute: self._setArtwork(generator: generator, size: width)) else {
+    private func _setArtwork(id: Int, generator: @escaping (Int) -> URL, size width: CGFloat) {
+        guard doOnMainThread(execute: self._setArtwork(id: id, generator: generator, size: width)) else {
             return
         }
 
+        let placeholderURL = localCache[id]?.sorted(by: { $0.key > $1.key }).first?.value
         let size = { Int($0 * UIScreen.main.scale) }
 
         let thumbnailURL = generator(size(width / 2))
         let artworkURL = generator(size(width))
 
-        if thumbnailURL != itm_imageURL {
+        var imageURLs = [thumbnailURL, artworkURL]
+        if let url = placeholderURL, ![thumbnailURL, artworkURL].contains(url) {
+            imageURLs = [url, thumbnailURL, artworkURL]
+        }
+
+        localCache[id] = localCache[id] ?? [:]
+        localCache[id]![size(width / 2)] = thumbnailURL
+        localCache[id]![size(width)] = artworkURL
+
+        if let url = itm_imageURL, !imageURLs.contains(url) {
             image = nil
             setNeedsLayout()
         }
-        itm_imageURL = thumbnailURL
-        pin_setImage(from: thumbnailURL, placeholderImage: nil) { [weak self] result in
+        _setImage(from: imageURLs)
+    }
+
+    private func _setImage(from urls: [URL], placeholder: UIImage? = nil) {
+        guard !urls.isEmpty else { return }
+
+        var urls = urls
+        let url = urls[0]
+        urls.remove(at: 0)
+        itm_imageURL = url
+        pin_setImage(from: url, placeholderImage: placeholder) { [weak self] result in
             DispatchQueue.main.async {
-                if thumbnailURL == self?.itm_imageURL {
-                    self?.itm_imageURL = artworkURL
-                    self?.pin_setImage(from: artworkURL, placeholderImage: result.image)
+                if url == self?.itm_imageURL {
+                    self?._setImage(from: urls, placeholder: result.image)
                 }
             }
         }

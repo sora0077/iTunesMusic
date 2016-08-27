@@ -73,13 +73,11 @@ extension _Collection: Swift.Collection {
     var endIndex: Int { return _tracks.endIndex }
 
     subscript (index: Int) -> Track {
-        return _tracks.sorted(with: [
-            SortDescriptor(property: "_trackNumber")
-        ])[index]
+        return _tracks.sorted(onProperty: "_trackNumber")[index]
     }
 
     func index(after i: Int) -> Int {
-        return _tracks.index(after: i)
+        return _tracks.sorted(onProperty: "_trackNumber").index(after: i)
     }
 }
 
