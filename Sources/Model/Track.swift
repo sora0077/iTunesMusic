@@ -92,7 +92,7 @@ extension Model.Track: _Fetchable {
                 requestState = .done
             case .failure(let error):
                 print(error)
-                requestState = .error
+                requestState = .error(error)
             }
         }
     }

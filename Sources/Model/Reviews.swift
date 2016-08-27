@@ -117,7 +117,7 @@ extension Model.Reviews: _Fetchable {
                 requestState = response.isEmpty ? .done : .none
             case .failure(let error):
                 print(error)
-                requestState = .error
+                requestState = .error(error)
             }
         }
     }

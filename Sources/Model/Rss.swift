@@ -153,7 +153,7 @@ extension Model.Rss: _Fetchable {
                 requestState = cache.done ? .done : .none
             case .failure(let error):
                 print(error)
-                requestState = .error
+                requestState = .error(error)
             }
         }
     }
@@ -177,7 +177,7 @@ extension Model.Rss: _Fetchable {
                 self.request(refreshing: false, force: false, ifError: errorType, level: level, completion: completion)
             case .failure(let error):
                 print(error)
-                completion(.error)
+                completion(.error(error))
             }
         }
     }

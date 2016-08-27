@@ -78,7 +78,7 @@ extension Fetchable {
             DispatchQueue.main.async {
                 self?._refreshing.value = false
                 self?._requestState.value = requestState
-                if requestState == .error {
+                if case .error = requestState {
                     ErrorLog.enqueue(error: nil, with: errorType, level: level)
                 }
                 tick()
@@ -136,6 +136,11 @@ extension _Fetchable {
     }
 
     var _hasNoPaginatedContents: Bool {
-        return [.done, .error].contains(_requestState.value)
+        switch _requestState.value {
+        case .error, .done:
+            return true
+        default:
+            return false
+        }
     }
 }

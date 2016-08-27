@@ -34,6 +34,21 @@ public enum CollectionChange {
 }
 
 //MARK: - RequestState
-public enum RequestState: Int {
-    case none, requesting, error, done
+public enum RequestState: Equatable {
+    case none, requesting, error(Swift.Error), done
+
+    public static func == (lhs: RequestState, rhs: RequestState) -> Bool {
+        switch (lhs, rhs) {
+        case (.none, .none):
+            return true
+        case (.requesting, .requesting):
+            return true
+        case (.error, .error):
+            return true
+        case (.done, .done):
+            return true
+        default:
+            return false
+        }
+    }
 }

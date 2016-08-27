@@ -168,7 +168,7 @@ extension Model.Search: _Fetchable {
                 requestState = response.objects.count != search.limit ? .done : .none
             case .failure(let error):
                 print(error)
-                requestState = .error
+                requestState = .error(error)
             }
         }
     }
@@ -255,7 +255,7 @@ extension Model.Search.Trends: _Fetchable {
                 requestState = .done
             case .failure(let error):
                 print(error)
-                requestState = .error
+                requestState = .error(error)
             }
         }
     }
