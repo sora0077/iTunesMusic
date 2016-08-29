@@ -28,3 +28,9 @@
 [submodule "Carthage/Checkouts/PINRemoteImage"]
 	path = Carthage/Checkouts/PINRemoteImage
 	url = https://github.com/pinterest/PINRemoteImage.git
+[submodule "Carthage/Checkouts/ErrorEventHandler"]
+	path = Carthage/Checkouts/ErrorEventHandler
+	url = https://github.com/sora0077/ErrorEventHandler.git
+[submodule "Carthage/Checkouts/WindowKit"]
+	path = Carthage/Checkouts/WindowKit
+	url = https://github.com/sora0077/WindowKit.git

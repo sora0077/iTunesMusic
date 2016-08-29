@@ -2,7 +2,7 @@
 github "ishkawa/APIKit" "si-swift3"
 github "ikesyo/Himotoki" "swift3"
 github "sora0077/Timepiece" "master"
-github "ReactiveX/RxSwift" "swift-3.0"
+github "ReactiveX/RxSwift" "develop"
 github "realm/realm-cocoa" "master"
 
 github "drmohundro/SWXMLHash" "xcode-8.0"

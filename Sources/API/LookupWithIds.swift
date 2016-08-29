@@ -55,7 +55,7 @@ struct LookupWithIds<Results: Decodable>: iTunesRequestType {
 
     typealias Response = Results
 
-    let method = HTTPMethod.GET
+    let method = HTTPMethod.get
 
     let baseUrl = URL(string: "https://itunes.apple.com")!
 

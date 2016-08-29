@@ -16,7 +16,7 @@ struct ListReviews<R: Decodable>: iTunesRequestType {
 
     typealias Response = [R]
 
-    let method = HTTPMethod.GET
+    let method = HTTPMethod.get
 
     let baseUrl: URL = URL(string: "https://itunes.apple.com")!
 

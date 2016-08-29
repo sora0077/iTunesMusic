@@ -20,7 +20,7 @@ struct GetPreviewUrl: iTunesRequestType {
 
     fileprivate let locale: Locale
 
-    var method: HTTPMethod { return .GET }
+    let method = HTTPMethod.get
 
     var path: String { return "" }
 

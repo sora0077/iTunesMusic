@@ -15,7 +15,7 @@ struct GetRss<R: Decodable>: iTunesRequestType {
 
     typealias Response = R
 
-    let method = HTTPMethod.GET
+    let method = HTTPMethod.get
 
     let baseUrl: URL
 

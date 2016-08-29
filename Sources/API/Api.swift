@@ -60,7 +60,7 @@ class PropertyListDataParser: DataParserType {
         self.contentType = contentType
     }
 
-    func parseData(_ data: Data) throws -> Any {
+    func parse(data: Data) throws -> Any {
         return try PropertyListSerialization.propertyList(from: data, options: PropertyListSerialization.MutabilityOptions(), format: nil)
     }
 }
@@ -76,7 +76,7 @@ class XMLDataParser: DataParserType {
 
     var contentType: String? = "application/xml"
 
-    func parseData(_ data: Data) throws -> Any {
+    func parse(data: Data) throws -> Any {
         return Wrapper(xml: SWXMLHash.parse(data))
     }
 }

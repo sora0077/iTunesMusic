@@ -31,7 +31,7 @@ struct SearchHintTrends: iTunesRequestType {
 
     typealias Response = SearchHintTrendsResponse
 
-    let method = HTTPMethod.GET
+    let method = HTTPMethod.get
 
     let baseUrl = URL(string: "https://search.itunes.apple.com")!
 
