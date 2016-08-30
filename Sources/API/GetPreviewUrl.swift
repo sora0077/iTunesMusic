@@ -18,11 +18,11 @@ struct GetPreviewUrl: iTunesRequestType {
 
     let baseUrl: URL
 
-    fileprivate let locale: Locale
+    private let locale: Locale
 
     let method = HTTPMethod.get
 
-    var path: String { return "" }
+    let path = ""
 
     var headerFields: [String : String] {
         return [
@@ -69,7 +69,6 @@ fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
             return (url, duration)
         }
     }
-
 
     throw iTunesMusicError.notFound
 }
