@@ -44,6 +44,8 @@ class LayerDesignableView: UIView {
     var shadowOpacity: Float = 0 {
         didSet {
             layer.shadowOpacity = shadowOpacity
+            layer.shouldRasterize = true
+            layer.rasterizationScale = UIScreen.main.scale
         }
     }
 
