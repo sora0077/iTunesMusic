@@ -13,3 +13,4 @@ github "pinterest/PINRemoteImage"
 
 github "sora0077/WindowKit" "master"
 github "sora0077/ErrorEventHandler" "master"
+github "sora0077/VYPlayIndicatorSwift" "master"

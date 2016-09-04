@@ -45,6 +45,8 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
+		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
+		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
@@ -169,6 +171,7 @@
 				D9A33E441D622A3B00E33E5D /* Realm.framework in Embed Frameworks */,
 				D9A33E381D622A3B00E33E5D /* APIKit.framework in Embed Frameworks */,
 				D9A33E461D622A3B00E33E5D /* RealmSwift.framework in Embed Frameworks */,
+				D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */,
 				D9A33E401D622A3B00E33E5D /* RxCocoa.framework in Embed Frameworks */,
 				D9A399211D69630500D0F9A4 /* ErrorEventHandler.framework in Embed Frameworks */,
 				D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */,
@@ -228,6 +231,7 @@
 		D929E46A1D1EE9510045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
+		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
@@ -329,6 +333,7 @@
 				D9A33E3B1D622A3B00E33E5D /* SWXMLHash.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
 				D9A33E231D6225BD00E33E5D /* PINRemoteImage.framework in Frameworks */,
+				D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */,
 				D9A33E471D622A3B00E33E5D /* Result.framework in Frameworks */,
 				D9A33E3D1D622A3B00E33E5D /* Timepiece.framework in Frameworks */,
 				D9A33E391D622A3B00E33E5D /* SnapKit.framework in Frameworks */,
@@ -351,6 +356,7 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */,
 				D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */,
 				D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */,
 				D9A33E4A1D622EC400E33E5D /* Himotoki.framework */,

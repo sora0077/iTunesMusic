@@ -34,3 +34,6 @@
 [submodule "Carthage/Checkouts/WindowKit"]
 	path = Carthage/Checkouts/WindowKit
 	url = https://github.com/sora0077/WindowKit.git
+[submodule "Carthage/Checkouts/VYPlayIndicatorSwift"]
+	path = Carthage/Checkouts/VYPlayIndicatorSwift
+	url = https://github.com/sora0077/VYPlayIndicatorSwift.git

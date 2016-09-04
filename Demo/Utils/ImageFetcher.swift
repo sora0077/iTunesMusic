@@ -28,11 +28,6 @@ func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSErr
     }
 }
 
-fileprivate final class Wrapper<T> {
-    let value: T
-    init(_ value: T) { self.value = value }
-}
-
 fileprivate struct UIImageViewKey {
     static var itm_imageURL: UInt8 = 0
 }
@@ -41,10 +36,10 @@ extension UIImageView {
 
     fileprivate var itm_imageURL: URL? {
         set {
-            objc_setAssociatedObject(self, &UIImageViewKey.itm_imageURL, newValue.map(Wrapper.init), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &UIImageViewKey.itm_imageURL, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         get {
-            return (objc_getAssociatedObject(self, &UIImageViewKey.itm_imageURL) as? Wrapper<URL>)?.value
+            return objc_getAssociatedObject(self, &UIImageViewKey.itm_imageURL) as? URL
         }
     }
 }

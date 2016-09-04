@@ -36,7 +36,7 @@ extension Reactive where Base: UIScrollView {
                 let threshold = max(0.0, scrollView.contentSize.height - visibleHeight - visibleHeight * offsetRatio)
                 return y > threshold
             }
-            .throttle(0.3, scheduler: MainScheduler.instance)
+            .throttle(0.1, scheduler: MainScheduler.instance)
             .distinctUntilChanged()
     }
 }
@@ -58,7 +58,6 @@ extension UITableView {
     }
 
     func performUpdates(deletions: [IndexPath], insertions: [IndexPath], modifications: [IndexPath]) {
-
         beginUpdates()
         if isMoving && deletions.count == insertions.count && modifications.isEmpty {
             isMoving = false

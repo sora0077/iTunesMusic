@@ -13,7 +13,7 @@ import iTunesMusic
 import RxSwift
 
 
-fileprivate var nowPlayingInfo: [String: Any]? = nil {
+private var nowPlayingInfo: [String: Any]? = nil {
     didSet {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }

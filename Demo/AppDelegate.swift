@@ -16,6 +16,7 @@ import RealmSwift
 import MediaPlayer
 import WindowKit
 import ErrorEventHandler
+import VYPlayIndicatorSwift
 
 
 extension UIAlertController {
@@ -76,7 +77,7 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
     case main
     case alert = 2
 
-    static var mainWindowLevel: WindowLevel = .main
+    static let mainWindowLevel: WindowLevel = .main
 }
 
 
