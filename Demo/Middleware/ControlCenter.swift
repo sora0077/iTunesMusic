@@ -85,18 +85,16 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
 
     private func sendMessage() {
-        var encodables: [String: Any]?
+        var encodables: [String: Any] = [:]
         if let info = encodableNowPlayingInfo {
             encodables = [:]
             for (key, value) in info {
                 if let value = value as? NSCoding {
-                    encodables?[key] = value
+                    encodables[key] = value
                 }
             }
-        } else {
-            encodables = nil
         }
-        wormhole.passMessageObject(encodables as? NSCoding, identifier: "playerWidgetNeedsUpdating")
+        wormhole.passMessageObject(encodables as NSCoding?, identifier: "playerWidgetNeedsUpdating")
     }
 
     func willStartPlayTrack(_ trackId: Int) {
