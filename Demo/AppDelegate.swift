@@ -127,7 +127,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
 
-        launch()
+        launch(with: LaunchOptions(location: .group("group.jp.sora0077.itunesmusic")))
 
         player.install(middleware: ControlCenter())
 

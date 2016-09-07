@@ -20,11 +20,11 @@ extension ErrorLog {
 }
 
 
-fileprivate let _previewer = Preview()
+private let _previewer = Preview()
 
 public let player: Player = PlayerImpl(previewer: _previewer)
 
-fileprivate let realmObjectTypes: [RealmSwift.Object.Type] = [
+private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,
     _GenresCache.self,
     _Collection.self,
@@ -48,21 +48,43 @@ fileprivate let realmObjectTypes: [RealmSwift.Object.Type] = [
     _ReviewCache.self,
 ]
 
-fileprivate let configuration: Realm.Configuration = {
-    let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-    // swiftlint:disable force_try
-    let fileURL = URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
-    var config = Realm.Configuration(fileURL: fileURL)
+
+private let configuration: Realm.Configuration = {
+    var config = Realm.Configuration()
     config.objectTypes = realmObjectTypes
+    switch launchOptions.location {
+    case .default:
+        let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+        config.fileURL = URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
+    case .group(let identifier):
+        let dir = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
+        config.fileURL = dir!.appendingPathComponent("itunes.realm")
+    }
     return config
 }()
 
+
+public enum RealmLocation {
+    case `default`
+    case group(String)
+}
+
 public struct LaunchOptions {
+    public var location: RealmLocation
+
+    public init(location: RealmLocation = .default) {
+        self.location = location
+    }
+}
+private var launchOptions: LaunchOptions!
+
+/// TODO:
+public func migrateRealm(from: RealmLocation, to: RealmLocation) {
 
 }
 
-public func launch(with options: LaunchOptions? = nil) {
-
+public func launch(with options: LaunchOptions = LaunchOptions()) {
+    launchOptions = options
     player.install(middleware: Model.History.shared)
     player.install(middleware: Downloader(previewer: _previewer))
 }
