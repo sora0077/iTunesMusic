@@ -17,6 +17,7 @@ import MediaPlayer
 import WindowKit
 import ErrorEventHandler
 import VYPlayIndicatorSwift
+import MMWormhole
 
 
 extension UIAlertController {
@@ -81,6 +82,9 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
 }
 
 
+let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -90,8 +94,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private let disposeBag = DisposeBag()
 
+    private let wormhole = MMWormhole(applicationGroupIdentifier: appGroupIdentifier, optionalDirectory: "wormhole")
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+
+        wormhole.listenForMessage(withIdentifier: "aaa") { (_) in
+            print("listenForMessage aaa")
+        }
 
         clearAllImageCaches()
 
@@ -127,7 +137,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
 
-        launch(with: LaunchOptions(location: .group("group.jp.sora0077.itunesmusic")))
+        launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
 
         player.install(middleware: ControlCenter())
 

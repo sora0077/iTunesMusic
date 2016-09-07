@@ -37,3 +37,6 @@
 [submodule "Carthage/Checkouts/VYPlayIndicatorSwift"]
 	path = Carthage/Checkouts/VYPlayIndicatorSwift
 	url = https://github.com/sora0077/VYPlayIndicatorSwift.git
+[submodule "Carthage/Checkouts/MMWormhole"]
+	path = Carthage/Checkouts/MMWormhole
+	url = https://github.com/mutualmobile/MMWormhole.git

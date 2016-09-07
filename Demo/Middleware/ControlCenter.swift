@@ -11,13 +11,7 @@ import UIKit
 import MediaPlayer
 import iTunesMusic
 import RxSwift
-
-
-private var nowPlayingInfo: [String: Any]? = nil {
-    didSet {
-        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-    }
-}
+import MMWormhole
 
 
 final class ControlCenter: NSObject, PlayerMiddleware {
@@ -26,6 +20,28 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate var currentTrackId: Int?
+
+    private var nowPlayingInfo: [String: Any]? = nil {
+        didSet {
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            if let nowPlayingInfo = nowPlayingInfo, let trackId = nowPlayingInfo["currentTrackId"] as? Int {
+                let trackId2 = encodableNowPlayingInfo?["currentTrackId"] as? Int
+                if trackId != trackId2 || nowPlayingInfo.keys.contains("artworkImageUpdated") {
+                    encodableNowPlayingInfo = nowPlayingInfo
+                }
+            } else {
+                encodableNowPlayingInfo = nil
+            }
+            nowPlayingInfo?["artworkImageUpdated"] = nil
+        }
+    }
+    private var encodableNowPlayingInfo: [String: Any]? = nil {
+        didSet {
+            sendMessage()
+        }
+    }
+
+    private let wormhole = MMWormhole(applicationGroupIdentifier: appGroupIdentifier, optionalDirectory: "wormhole")
 
     func middlewareInstalled(_ player: Player) {
         self.player = player
@@ -56,11 +72,31 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             .map(Int.init)
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] time in
-                if self?.currentTrackId == nowPlayingInfo?["currentTrackId"] as? Int {
-                    nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
+                if self?.currentTrackId == self?.nowPlayingInfo?["currentTrackId"] as? Int {
+                    self?.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
                 }
             })
             .addDisposableTo(disposeBag)
+
+        wormhole.listenForMessage(withIdentifier: "playerWidgetDidFinishLaunching") { [weak self] _ in
+            print("widget wake ")
+            self?.sendMessage()
+        }
+    }
+
+    private func sendMessage() {
+        var encodables: [String: Any]?
+        if let info = encodableNowPlayingInfo {
+            encodables = [:]
+            for (key, value) in info {
+                if let value = value as? NSCoding {
+                    encodables?[key] = value
+                }
+            }
+        } else {
+            encodables = nil
+        }
+        wormhole.passMessageObject(encodables as? NSCoding, identifier: "playerWidgetNeedsUpdating")
     }
 
     func willStartPlayTrack(_ trackId: Int) {
@@ -80,6 +116,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         let info: [String: Any] = [
             MPMediaItemPropertyTitle: track.name,
             MPMediaItemPropertyArtist: track.artist.name,
+            MPMediaItemPropertyAlbumTitle: track.collection.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
             MPMediaItemPropertyPlaybackDuration: track.metadata?.duration ?? 0,
             "currentTrackId": trackId
@@ -88,18 +125,21 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
         let size = UIScreen.main.bounds.size
         let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main.scale))
-        downloadImage(with: artworkURL) { result in
+        downloadImage(with: artworkURL) { [weak self] result in
+            guard let `self` = self else { return }
             print(#function, result)
             guard case .success(let image) = result else { return }
 
-            if trackId == nowPlayingInfo?["currentTrackId"] as? Int {
+            if trackId == self.nowPlayingInfo?["currentTrackId"] as? Int {
+                self.nowPlayingInfo?["artworkImage"] = image
+                self.nowPlayingInfo?["artworkImageUpdated"] = true
                 if #available(iOS 10.0, *) {
-                    nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
+                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
                         print(#function, " ", size)
                         return image
                     }
                 } else {
-                    nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
+                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
                 }
             }
         }
