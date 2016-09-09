@@ -87,8 +87,7 @@ extension UIImageView {
         guard !urls.isEmpty else { return }
 
         var urls = urls
-        let url = urls[0]
-        urls.remove(at: 0)
+        let url = urls.remove(at: 0)
         itm_imageURL = url
         pin_setImage(from: url, placeholderImage: placeholder) { [weak self] result in
             DispatchQueue.main.async {

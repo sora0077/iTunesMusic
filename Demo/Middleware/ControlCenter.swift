@@ -12,6 +12,7 @@ import MediaPlayer
 import iTunesMusic
 import RxSwift
 import MMWormhole
+import NotificationCenter
 
 
 final class ControlCenter: NSObject, PlayerMiddleware {
@@ -95,6 +96,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             }
         }
         wormhole.passMessageObject(encodables as NSCoding?, identifier: "playerWidgetNeedsUpdating")
+        NCWidgetController.widgetController().setHasContent(!encodables.isEmpty, forWidgetWithBundleIdentifier: "jp.sora0077.Demo.iTunesMusicPlayerWidget")
     }
 
     func willStartPlayTrack(_ trackId: Int) {
