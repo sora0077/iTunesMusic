@@ -1,5 +1,5 @@
 
-github "ishkawa/APIKit" "si-swift3"
+github "sora0077/APIKit" "si-swift3"
 github "ikesyo/Himotoki" "swift3"
 github "sora0077/Timepiece" "master"
 github "ReactiveX/RxSwift" "develop"

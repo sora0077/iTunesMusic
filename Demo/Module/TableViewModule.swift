@@ -38,7 +38,7 @@ class TableViewModule<List: Swift.Collection, Controller: UIViewController>: NSO
          superview: @escaping () -> UIView,
          controller: Controller,
          list: List,
-         onGenerate: CellForRowAtIndexPath,
+         onGenerate: @escaping CellForRowAtIndexPath,
          onSelect: DidSelectRowAtIndexPath? = nil) {
         self.superview = superview
         self.list = list
