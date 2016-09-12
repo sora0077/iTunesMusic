@@ -71,7 +71,7 @@ final class PreviewTrack {
 
                             let realm = iTunesRealm()
                             let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
-                            try! realm.write {
+                            try? realm.write {
                                 let metadata = _TrackMetadata(track: track)
                                 metadata.updateCache(filename: filename)
                                 metadata.duration = duration
@@ -99,10 +99,10 @@ final class PreviewTrack {
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: id) {
             if let duration = track.metadata?.duration {
                 if let fileURL = track.metadata?.fileURL {
-                    return Observable.just((fileURL, duration))
+                    return .just((fileURL, duration))
                 }
                 if let url = track.metadata?.previewURL {
-                    return Observable.just((url, duration))
+                    return .just((url, duration))
                 }
             }
         }
@@ -115,7 +115,7 @@ final class PreviewTrack {
                 case .success(let (url, duration)):
                     let duration = Double(duration) / 10000
                     let realm = iTunesRealm()
-                    try! realm.write {
+                    try? realm.write {
                         guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
                         let metadata = _TrackMetadata(track: track)
                         metadata.updatePreviewURL(url)

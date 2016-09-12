@@ -168,18 +168,12 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     @objc
     fileprivate func play() {
         player?.play()
-        if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
-            info[MPNowPlayingInfoPropertyPlaybackRate] = 1
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-        }
+        nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 1
     }
     @objc
     fileprivate func pause() {
         player?.pause()
-        if var info = MPNowPlayingInfoCenter.default().nowPlayingInfo {
-            info[MPNowPlayingInfoPropertyPlaybackRate] = 0
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = info
-        }
+        nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0
     }
     @objc
     fileprivate func nextTrackCommand() {
