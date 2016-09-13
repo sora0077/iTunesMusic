@@ -114,6 +114,7 @@
 		D9A399211D69630500D0F9A4 /* ErrorEventHandler.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9A399221D69630A00D0F9A4 /* WindowKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */; };
 		D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9A3B8AD1D8837B50048B842 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A3B8AC1D8837B50048B842 /* Router.swift */; };
 		D9A9386B1D697EC800F91D0F /* Utils+Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */; };
 		D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */; };
 		D9AAE06D1D27622600FF29C3 /* AlbumDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */; };
@@ -299,6 +300,7 @@
 		D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
 		D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WindowKit.framework; path = Carthage/Build/iOS/WindowKit.framework; sourceTree = "<group>"; };
 		D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ErrorEventHandler.framework; path = Carthage/Build/iOS/ErrorEventHandler.framework; sourceTree = "<group>"; };
+		D9A3B8AC1D8837B50048B842 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utils+Reactive.swift"; sourceTree = "<group>"; };
 		D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumDetailViewController.swift; sourceTree = "<group>"; };
@@ -574,6 +576,7 @@
 			isa = PBXGroup;
 			children = (
 				D97716661D803D4700547FD4 /* Demo.entitlements */,
+				D9A3B8AB1D88377A0048B842 /* Router */,
 				D9A33E4E1D6237FF00E33E5D /* Utils */,
 				D9573C281D3E7ACC00783AA4 /* Module */,
 				D99164081D37CEA90091BF09 /* Middleware */,
@@ -649,6 +652,14 @@
 				D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		D9A3B8AB1D88377A0048B842 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				D9A3B8AC1D8837B50048B842 /* Router.swift */,
+			);
+			path = Router;
 			sourceTree = "<group>";
 		};
 		D9AAE06E1D27624500FF29C3 /* TableViewCells */ = {
@@ -998,6 +1009,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D9A3B8AD1D8837B50048B842 /* Router.swift in Sources */,
 				D9AF2B011D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift in Sources */,
 				D9AF2AF91D75C6DC00D7751C /* AlbumListMiddleTableViewCell.swift in Sources */,
 				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,

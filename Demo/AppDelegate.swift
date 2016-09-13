@@ -76,7 +76,8 @@ enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
 
 enum WindowLevel: Int, WindowKit.WindowLevel {
     case main
-    case alert = 2
+    case routing
+    case alert = 10
 
     static let mainWindowLevel: WindowLevel = .main
 }
@@ -114,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.beginReceivingRemoteControlEvents()
 
-
+        manager[.routing].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
 
         ErrorLog.event
@@ -138,10 +139,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
 
         launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
-
         player.install(middleware: ControlCenter())
 
         window?.tintColor = UIColor.lightGray
+
+        Router.default.get(pattern: "") { request in
+
+        }
 
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
