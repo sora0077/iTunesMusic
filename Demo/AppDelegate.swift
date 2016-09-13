@@ -75,6 +75,7 @@ enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
 }
 
 enum WindowLevel: Int, WindowKit.WindowLevel {
+    case background = -1
     case main
     case routing
     case alert = 10
@@ -86,12 +87,37 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
 
 
+final class PlayingViewController: UIViewController {
+
+    let artworkImageView = UIImageView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        artworkImageView.contentMode = .scaleAspectFill
+        view.addSubview(artworkImageView)
+        artworkImageView.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
+    }
+}
+
+
+func delegate() -> AppDelegate {
+    return UIApplication.shared.delegate as! AppDelegate
+}
+
+func playingViewController() -> PlayingViewController {
+    return delegate().manager[.background].rootViewController as! PlayingViewController
+}
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    private lazy var manager: Manager<WindowLevel> = Manager(mainWindow: self.window!)
+    fileprivate lazy var manager: Manager<WindowLevel> = Manager(mainWindow: self.window!)
 
     private let disposeBag = DisposeBag()
 
@@ -115,6 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.beginReceivingRemoteControlEvents()
 
+        manager[.background].rootViewController = PlayingViewController()
         manager[.routing].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
 
@@ -141,11 +168,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
         player.install(middleware: ControlCenter())
 
+        window?.backgroundColor = .clear
         window?.tintColor = UIColor.lightGray
+
+        manager[.background].backgroundColor = .gray
 
         Router.default.get(pattern: "") { request in
 
         }
+
+        print(UIWindowLevelNormal)
+        print(UIWindowLevelAlert)
 
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })

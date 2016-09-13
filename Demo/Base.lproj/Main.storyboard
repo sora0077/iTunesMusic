@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11173.2" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11143.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,11 +17,36 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ioW-A5-FIW">
+                                <connections>
+                                    <segue destination="eht-v0-WV9" kind="embed" id="0lE-3S-o7f"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ozG-eP-PMh">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="bs4-PG-vBM"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="rQs-6a-wCM" kind="embed" id="5Ax-42-5xX"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ioW-A5-FIW" secondAttribute="bottom" id="92g-Ym-QlY"/>
+                            <constraint firstItem="ozG-eP-PMh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="HIt-07-0CM"/>
+                            <constraint firstItem="ioW-A5-FIW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="adf-ZI-8eq"/>
+                            <constraint firstAttribute="trailing" secondItem="ioW-A5-FIW" secondAttribute="trailing" id="noH-Np-jo6"/>
+                            <constraint firstItem="ozG-eP-PMh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ou4-d7-vFk"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ozG-eP-PMh" secondAttribute="bottom" id="sgY-mZ-PBl"/>
+                            <constraint firstItem="ioW-A5-FIW" firstAttribute="leading" secondItem="ozG-eP-PMh" secondAttribute="trailing" id="tEO-Lk-tAa"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="56.799999999999997" y="63.418290854572717"/>
         </scene>
         <!--New Playlist Editor View Controller-->
         <scene sceneID="Cgn-E9-Kfy">
@@ -55,6 +80,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9c-GS-iGM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1236" y="139"/>
+        </scene>
+        <!--Main View Controller-->
+        <scene sceneID="bkY-Og-7TP">
+            <objects>
+                <viewController id="eht-v0-WV9" customClass="MainViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gRD-xf-3D0">
+                        <rect key="frame" x="0.0" y="0.0" width="311" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bpU-c1-Pv4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="647.20000000000005" y="62.518740629685162"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="jTL-xR-NSE">
+            <objects>
+                <viewController id="rQs-6a-wCM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lw2-9C-Gfm">
+                        <rect key="frame" x="0.0" y="0.0" width="64" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nQ7-9V-cFy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-192" y="712"/>
         </scene>
     </scenes>
 </document>

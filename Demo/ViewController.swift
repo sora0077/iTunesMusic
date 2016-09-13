@@ -18,19 +18,19 @@ class ViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        let tab = UITabBarController()
-        tab.viewControllers = [
-            UINavigationController(rootViewController: GenresViewController()),
-            UINavigationController(rootViewController: PlaylistViewController())
-        ]
-
-        present(tab, animated: true, completion: nil)
-
-        tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .search,
-            target: self,
-            action: #selector(self.searchAction)
-        )
+//        let tab = UITabBarController()
+//        tab.viewControllers = [
+//            UINavigationController(rootViewController: GenresViewController()),
+//            UINavigationController(rootViewController: PlaylistViewController())
+//        ]
+//
+//        present(tab, animated: true, completion: nil)
+//
+//        tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
+//            barButtonSystemItem: .search,
+//            target: self,
+//            action: #selector(self.searchAction)
+//        )
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,5 +44,19 @@ class ViewController: UIViewController {
         let nav = UINavigationController(rootViewController: vc)
 
         presentedViewController?.present(nav, animated: true, completion: nil)
+    }
+}
+
+class MainViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        let genres = GenresViewController()
+        let nav = UINavigationController(rootViewController: genres)
+
+        addChildViewController(nav)
+        view.addSubview(nav.view)
+        nav.didMove(toParentViewController: self)
     }
 }

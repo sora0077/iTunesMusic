@@ -62,6 +62,7 @@ class GenresViewController: BaseViewController {
         super.viewDidLoad()
 
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.backgroundColor = .clear
 
         genres.changes
             .subscribe(tableView.rx.itemUpdates())
