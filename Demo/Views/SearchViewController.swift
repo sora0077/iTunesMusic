@@ -25,7 +25,7 @@ enum SearchError: AppError {
 }
 
 
-class SearchViewController: BaseViewController {
+class SearchViewController: UIViewController {
 
     fileprivate var search: Model.Search = Model.Search(term: "") {
         didSet {

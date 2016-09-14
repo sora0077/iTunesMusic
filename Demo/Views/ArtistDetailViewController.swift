@@ -50,8 +50,6 @@ final class ArtistDetailViewController: UIViewController {
 
     fileprivate let tableView = UITableView()
 
-    fileprivate let disposeBag = DisposeBag()
-
     init(artist: Artist) {
         self.artist = Model.Artist(artist: artist)
         super.init(nibName: nil, bundle: nil)

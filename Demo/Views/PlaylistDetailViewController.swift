@@ -18,8 +18,6 @@ final class PlaylistDetailViewController: UIViewController {
 
     fileprivate let tableView = UITableView()
 
-    fileprivate let disposeBag = DisposeBag()
-
     init(playlist: MyPlaylist) {
         self.playlist = Model.MyPlaylist(playlist: playlist)
         super.init(nibName: nil, bundle: nil)

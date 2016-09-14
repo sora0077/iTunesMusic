@@ -12,57 +12,24 @@ import RxSwift
 import SnapKit
 
 
-class BaseViewController: UIViewController {
-
-    let disposeBag = DisposeBag()
-
-    var modules: [UIView: ViewModuleProtocol] = [:]
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        modules.forEach { $0.1.install() }
-    }
-}
-
-class GenresViewController: BaseViewController {
+class GenresViewController: UIViewController {
 
     fileprivate let genres = Model.Genres()
 
     fileprivate let tableView = UITableView()
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
-
-        modules[tableView] = TableViewModule(
-            view: tableView,
-            superview: { [unowned self] in self.view },
-            controller: self,
-            list: genres,
-            onGenerate: { (self, tableView, element, indexPath) in
-                let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-                let genre = self.genres[indexPath.row]
-                cell.textLabel?.text = genre.name
-                return cell
-            },
-            onSelect: { (self, tableView, element, indexPath) in
-                let genre = self.genres[indexPath.row]
-                let vc = RssViewController(genre: genre)
-
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
-        )
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        view.addSubview(tableView)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.delegate = self
+        tableView.dataSource = self
         tableView.backgroundColor = .clear
+        tableView.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
 
         genres.changes
             .subscribe(tableView.rx.itemUpdates())
@@ -77,5 +44,28 @@ class GenresViewController: BaseViewController {
         if let indexPath = tableView.indexPathForSelectedRow {
             tableView.deselectRow(at: indexPath, animated: true)
         }
+    }
+}
+
+extension GenresViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return genres.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+
+        cell.textLabel?.text = genres[indexPath.row].name
+        return cell
+    }
+}
+
+extension GenresViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let vc = RssViewController(genre: genres[indexPath.row])
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

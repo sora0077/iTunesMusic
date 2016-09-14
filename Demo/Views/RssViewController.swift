@@ -18,8 +18,6 @@ class RssViewController: UIViewController {
 
     fileprivate let tableView = UITableView()
 
-    fileprivate let disposeBag = DisposeBag()
-
     init(genre: Genre) {
         rss = Model.Rss(genre: genre)
         super.init(nibName: nil, bundle: nil)

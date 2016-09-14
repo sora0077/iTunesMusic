@@ -140,7 +140,6 @@ class AlbumDetailViewController: UIViewController {
     fileprivate let tableView = UITableView()
 
     fileprivate let album: Model.Album
-    fileprivate let disposeBag = DisposeBag()
 
     var artist: Model.Artist!
 
