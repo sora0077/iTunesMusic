@@ -94,8 +94,8 @@ final class PlayingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        artworkImageView.contentMode = .scaleAspectFill
         view.addSubview(artworkImageView)
+        artworkImageView.contentMode = .scaleAspectFill
         artworkImageView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
@@ -171,7 +171,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.backgroundColor = .clear
         window?.tintColor = UIColor.lightGray
 
-        manager[.background].backgroundColor = .gray
+        manager[.background].backgroundColor = UIColor(hex: 0x3b393a)
 
         Router.default.get(pattern: "") { request in
 

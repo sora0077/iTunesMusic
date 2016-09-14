@@ -27,6 +27,7 @@ class GenresViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
+        tableView.tableFooterView = UIView()
         tableView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
@@ -56,7 +57,11 @@ extension GenresViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
+        cell.selectionStyle = .blue
         cell.textLabel?.text = genres[indexPath.row].name
+        cell.textLabel?.textColor = .white
+        cell.textLabel?.backgroundColor = .clear
+        cell.backgroundColor = UIColor(hex: 0x20201e, alpha: 0.95)
         return cell
     }
 }

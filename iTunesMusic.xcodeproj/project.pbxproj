@@ -46,6 +46,7 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
+		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
 		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
 		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
@@ -259,6 +260,7 @@
 		D929E45F1D1EE9500045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
+		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D95085871D8063C0003A3D65 /* MMWormhole.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMWormhole.framework; path = Carthage/Build/iOS/MMWormhole.framework; sourceTree = "<group>"; };
@@ -650,6 +652,7 @@
 			children = (
 				D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */,
 				D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */,
+				D93CDF7B1D898F4F00E8D387 /* Color.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1011,6 +1014,7 @@
 			files = (
 				D9A3B8AD1D8837B50048B842 /* Router.swift in Sources */,
 				D9AF2B011D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift in Sources */,
+				D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */,
 				D9AF2AF91D75C6DC00D7751C /* AlbumListMiddleTableViewCell.swift in Sources */,
 				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,
 				D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */,
@@ -1134,7 +1138,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1180,7 +1184,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
