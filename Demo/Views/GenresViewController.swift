@@ -36,7 +36,7 @@ class GenresViewController: UIViewController {
             .subscribe(tableView.rx.itemUpdates())
             .addDisposableTo(disposeBag)
 
-        genres.refresh(ifError: CommonError.self, level: AppErrorLevel.alert)
+        action(genres.refresh)
     }
 
     override func viewDidAppear(_ animated: Bool) {

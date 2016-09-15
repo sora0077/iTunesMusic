@@ -20,60 +20,6 @@ import VYPlayIndicatorSwift
 import MMWormhole
 
 
-extension UIAlertController {
-
-    static func alertController(with event: ErrorLog.Event) -> UIAlertController {
-        let alert = UIAlertController(
-            title: (event.error as? AppError)?.title,
-            message: (event.error as? AppError)?.message,
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            event.resolved()
-        }))
-
-        return alert
-    }
-}
-
-protocol AppError: ErrorLog.Error {
-    var title: String { get }
-    var message: String? { get }
-}
-
-extension AppError {
-
-    var message: String? { return nil }
-}
-
-enum CommonError: AppError {
-    case none, error(Swift.Error)
-
-    init(error: Swift.Error?) {
-        self = error.map(CommonError.error) ?? .none
-    }
-
-    var title: String {
-        return "エラー"
-    }
-
-    #if DEBUG
-    var message: String? {
-        switch self {
-        case .none:
-            return "不明なエラー"
-        case .error(let error):
-            return "\(error)"
-        }
-    }
-    #endif
-}
-
-enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
-    case slirent, alert
-}
-
 enum WindowLevel: Int, WindowKit.WindowLevel {
     case background = -1
     case main

@@ -36,9 +36,7 @@ class SearchViewController: UIViewController {
             search.changes
                 .subscribe(tableView.rx.itemUpdates { idx in (idx, 1) })
                 .addDisposableTo(searchDisposeBag)
-            search.refresh(ifError: SearchError.self, level: AppErrorLevel.alert)
-
-            search.trends.refresh(ifError: SearchError.self, level: AppErrorLevel.alert)
+            action(search.refresh, error: SearchError.self)
         }
     }
     fileprivate var searchDisposeBag = DisposeBag()
@@ -68,7 +66,7 @@ class SearchViewController: UIViewController {
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
-                self?.search.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
+                action(self?.search.fetch, error: SearchError.self)
             })
             .addDisposableTo(disposeBag)
 

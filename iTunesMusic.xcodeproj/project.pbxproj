@@ -47,6 +47,7 @@
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
 		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
+		D93CDF7E1D8AE28600E8D387 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7D1D8AE28600E8D387 /* Action.swift */; };
 		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
 		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
@@ -261,6 +262,7 @@
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		D93CDF7D1D8AE28600E8D387 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D95085871D8063C0003A3D65 /* MMWormhole.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMWormhole.framework; path = Carthage/Build/iOS/MMWormhole.framework; sourceTree = "<group>"; };
@@ -653,6 +655,7 @@
 				D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */,
 				D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */,
 				D93CDF7B1D898F4F00E8D387 /* Color.swift */,
+				D93CDF7D1D8AE28600E8D387 /* Action.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1025,6 +1028,7 @@
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,
 				D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */,
 				D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */,
+				D93CDF7E1D8AE28600E8D387 /* Action.swift in Sources */,
 				D9AF2AFD1D75C6F000D7751C /* AlbumListBottomTableViewCell.swift in Sources */,
 				D9A33E501D62383300E33E5D /* ImageFetcher.swift in Sources */,
 				D9AF2B041D75C83E00D7751C /* LayerDesignableView.swift in Sources */,

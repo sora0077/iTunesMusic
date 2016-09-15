@@ -94,7 +94,7 @@ class RssViewController: UIViewController {
             })
             .addDisposableTo(disposeBag)
 
-        rss.refresh(ifError: CommonError.self, level: AppErrorLevel.alert)
+        action(rss.refresh)
     }
 
     override func viewDidAppear(_ animated: Bool) {
