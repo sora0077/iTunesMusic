@@ -107,6 +107,13 @@ class RssViewController: UIViewController {
             })
             .addDisposableTo(disposeBag)
 
+        rss.requestState
+            .map { $0 != .requesting }
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: false)
+            .drive(refreshControl.rx.enabled)
+            .addDisposableTo(disposeBag)
+
         action(rss.refresh)
     }
 

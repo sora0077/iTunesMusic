@@ -163,18 +163,12 @@ extension Model.Rss: _Fetchable {
             guard let `self` = self else { return }
             switch result {
             case .success(let response):
-                let realm = iTunesRealm()
-                try! realm.write {
-                    let genre = realm.object(ofType: _Genre.self, forPrimaryKey: self.id)
-                    response._genreId = genre?.id ?? 0
-                    response.tracks.removeAll()
-                    response.refreshAt = Date()
-                    realm.add(response, update: true)
-                }
                 self.trackIds = response.ids
                 self.fetched = response.fetched
                 self._requestState.value = .none
-                self.request(refreshing: false, force: false, ifError: errorType, level: level, completion: completion)
+                DispatchQueue.main.async {
+                    self.request(refreshing: true, force: false, ifError: errorType, level: level, completion: completion)
+                }
             case .failure(let error):
                 print(error)
                 completion(.error(error))
