@@ -12,7 +12,7 @@ import Himotoki
 import SWXMLHash
 
 
-struct ListReviews<R: Decodable>: iTunesRequestType {
+struct ListReviews<R: Decodable>: iTunesRequest {
 
     typealias Response = [R]
 

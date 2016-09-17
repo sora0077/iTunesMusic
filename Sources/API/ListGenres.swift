@@ -11,7 +11,7 @@ import APIKit
 import Himotoki
 
 
-struct ListGenres<Response: Decodable>: iTunesRequestType {
+struct ListGenres<Response: Decodable>: iTunesRequest {
 
     let method = HTTPMethod.get
 

@@ -11,7 +11,7 @@ import APIKit
 import Himotoki
 
 
-struct GetRss<R: Decodable>: iTunesRequestType {
+struct GetRss<R: Decodable>: iTunesRequest {
 
     typealias Response = R
 

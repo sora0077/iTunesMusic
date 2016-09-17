@@ -21,11 +21,11 @@ func iTunesUserAgent(version: String = UIDevice.current.systemVersion) -> String
 }
 
 
-protocol iTunesRequestType: Request {
+protocol iTunesRequest: Request {
 
 }
 
-extension iTunesRequestType {
+extension iTunesRequest {
 
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         print(self, urlRequest)
@@ -33,7 +33,7 @@ extension iTunesRequestType {
     }
 }
 
-extension iTunesRequestType where Response: Decodable {
+extension iTunesRequest where Response: Decodable {
 
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         do {

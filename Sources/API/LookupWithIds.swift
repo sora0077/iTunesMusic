@@ -51,7 +51,7 @@ extension LookupResponse: Decodable {
     }
 }
 
-struct LookupWithIds<Results: Decodable>: iTunesRequestType {
+struct LookupWithIds<Results: Decodable>: iTunesRequest {
 
     typealias Response = Results
 

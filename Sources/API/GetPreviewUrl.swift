@@ -10,7 +10,7 @@ import Foundation
 import APIKit
 
 
-struct GetPreviewUrl: iTunesRequestType {
+struct GetPreviewUrl: iTunesRequest {
 
     typealias Response = (URL, Int)
 

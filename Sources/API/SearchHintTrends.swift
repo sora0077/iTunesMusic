@@ -27,7 +27,7 @@ extension SearchHintTrendsResponse: Decodable {
     }
 }
 
-struct SearchHintTrends: iTunesRequestType {
+struct SearchHintTrends: iTunesRequest {
 
     typealias Response = SearchHintTrendsResponse
 
