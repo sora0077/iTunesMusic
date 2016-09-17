@@ -184,7 +184,7 @@ class AlbumDetailViewController: UIViewController {
             make.height.equalTo(264)
         }
         print(album.collection.artworkURL(size: Int(view.frame.height)))
-        playingViewController().artworkImageView.setArtwork(of: album.collection, size: view.frame.height)
+        playingViewController().setArtwork(of: album.collection, size: view.frame.height)
 
 
         title = album.collection.name

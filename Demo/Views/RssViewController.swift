@@ -58,6 +58,15 @@ class RssViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(self.playAll))
 
+        let refreshControl = UIRefreshControl()
+        refreshControl.rx.controlEvent(.valueChanged)
+            .delay(0.8, scheduler: MainScheduler.instance)
+            .subscribe { [weak self] event in
+                action({ error, level in self?.rss.refresh(force: true, ifError: error, level: level) })
+            }
+            .addDisposableTo(disposeBag)
+        tableView.refreshControl = refreshControl
+
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(onNext: { [weak self] _ in
@@ -67,6 +76,10 @@ class RssViewController: UIViewController {
 
         rss.changes
             .subscribe(tableView.rx.itemUpdates())
+            .addDisposableTo(disposeBag)
+
+        rss.changes
+            .subscribe { _ in refreshControl.endRefreshing() }
             .addDisposableTo(disposeBag)
 
         rss.changes

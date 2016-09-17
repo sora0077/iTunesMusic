@@ -65,7 +65,7 @@ extension Fetchable {
     fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
-        if [.done, .requesting].contains(self._requestState.value) {
+        if !force && [.done, .requesting].contains(self._requestState.value) {
             return
         }
 

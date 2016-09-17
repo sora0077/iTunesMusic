@@ -102,7 +102,7 @@ extension Model.Rss: _Fetchable {
     var _refreshDuration: Duration { return 3.hours }
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        if trackIds.isEmpty || (refreshing && _needRefresh) {
+        if force || trackIds.isEmpty || (refreshing && _needRefresh) {
             fetchFeed(ifError: errorType, level: level, completion: completion)
             return
         }
