@@ -21,7 +21,7 @@ func iTunesUserAgent(version: String = UIDevice.current.systemVersion) -> String
 }
 
 
-protocol iTunesRequestType: RequestType {
+protocol iTunesRequestType: Request {
 
 }
 
@@ -49,7 +49,7 @@ public enum iTunesMusicError: Error {
     case notFound
 }
 
-class PropertyListDataParser: DataParserType {
+class PropertyListDataParser: DataParser {
 
     let contentType: String?
 
@@ -65,7 +65,7 @@ class PropertyListDataParser: DataParserType {
     }
 }
 
-class XMLDataParser: DataParserType {
+class XMLDataParser: DataParser {
 
     class Wrapper {
         let xml: XMLIndexer

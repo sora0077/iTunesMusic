@@ -57,7 +57,7 @@ struct LookupWithIds<Results: Decodable>: iTunesRequestType {
 
     let method = HTTPMethod.get
 
-    let baseUrl = URL(string: "https://itunes.apple.com")!
+    let baseURL = URL(string: "https://itunes.apple.com")!
 
     let path = "lookup"
 

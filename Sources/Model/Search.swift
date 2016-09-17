@@ -43,7 +43,7 @@ extension Model {
 
             fileprivate init() {
                 let realm = iTunesRealm()
-                self.cache = realm.allObjects(ofType: _SearchTrendsCache.self).first ?? _SearchTrendsCache()
+                self.cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
                 try! realm.write {
                     realm.add(self.cache, update: true)
                 }
@@ -74,13 +74,13 @@ extension Model {
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(term: term, realm: realm)
-            caches = realm.allObjects(ofType: _SearchCache.self).filter(using: "term = %@", term)
-            tracks = caches[0].objects.filter(using: "track != nil")
+            caches = realm.objects(_SearchCache.self).filter("term = %@", term)
+            tracks = caches[0].objects.filter("track != nil")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_SearchCache>) {
-                    self.tracks = results[0].objects.filter(using: "track != nil")
+                    self.tracks = results[0].objects.filter("track != nil")
                     self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
                         self?._tracksChanges.onNext(CollectionChange(changes))
                     }
@@ -90,13 +90,13 @@ extension Model {
                 }
 
                 switch changes {
-                case .Initial(let results):
+                case .initial(let results):
                     updateObserver(with: results)
-                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
                         updateObserver(with: results)
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
 
@@ -129,7 +129,7 @@ extension Model.Search: _Fetchable {
         _refreshing.value = refreshing
 
         let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
-        Session.sharedSession.sendRequest(search, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -156,7 +156,7 @@ extension Model.Search: _Fetchable {
                         }
                     }
                     if refreshing {
-                        cache.objects.removeAllObjects()
+                        cache.objects.removeAll()
                         cache.refreshAt = Date()
                         cache.offset = 0
                     }
@@ -222,7 +222,7 @@ extension Model.Search.Trends: _Fetchable {
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let trends = SearchHintTrends()
-        Session.sharedSession.sendRequest(trends, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(trends, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -232,7 +232,7 @@ extension Model.Search.Trends: _Fetchable {
             case .success(let response):
                 let realm = iTunesRealm()
                 try! realm.write {
-                    let cache = realm.allObjects(ofType: _SearchTrendsCache.self).first ?? _SearchTrendsCache()
+                    let cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
                     cache.name = response.name
                     cache.trendings = response.trends
                     cache.updateAt = Date()

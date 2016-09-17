@@ -23,11 +23,11 @@ public enum CollectionChange {
     init<T>(_ change: RealmCollectionChange<T>) {
 
         switch change {
-        case .Initial:
+        case .initial:
             self = .initial
-        case let .Update(_, deletions: deletions, insertions: insertions, modifications: modifications):
+        case let .update(_, deletions: deletions, insertions: insertions, modifications: modifications):
             self = .update(deletions: deletions, insertions: insertions, modifications: modifications)
-        case let .Error(error):
+        case let .error(error):
             fatalError("\(error)")
         }
     }

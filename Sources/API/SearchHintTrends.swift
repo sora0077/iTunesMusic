@@ -33,7 +33,7 @@ struct SearchHintTrends: iTunesRequestType {
 
     let method = HTTPMethod.get
 
-    let baseUrl = URL(string: "https://search.itunes.apple.com")!
+    let baseURL = URL(string: "https://search.itunes.apple.com")!
 
     let path = "/WebObjects/MZSearchHints.woa/wa/trends"
 

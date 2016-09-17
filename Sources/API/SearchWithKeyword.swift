@@ -67,7 +67,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType>: iTunesRequestT
 
     let method = HTTPMethod.get
 
-    let baseUrl = URL(string: "https://itunes.apple.com")!
+    let baseURL = URL(string: "https://itunes.apple.com")!
 
     let path = "search"
 

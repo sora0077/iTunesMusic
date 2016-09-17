@@ -16,7 +16,7 @@ struct GetPreviewUrl: iTunesRequestType {
 
     let id: Int
 
-    let baseUrl: URL
+    let baseURL: URL
 
     private let locale: Locale
 
@@ -30,13 +30,13 @@ struct GetPreviewUrl: iTunesRequestType {
         ]
     }
 
-    var dataParser: DataParserType {
+    var dataParser: DataParser {
         return PropertyListDataParser(options: [])
     }
 
     init(id: Int, url: URL, locale: Locale = Locale.current) {
         self.id = id
-        baseUrl = url
+        baseURL = url
         self.locale = locale
     }
 

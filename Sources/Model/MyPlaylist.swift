@@ -12,7 +12,7 @@ import RxSwift
 
 
 fileprivate func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
-    if let cache = realm.allObjects(ofType: _MyPlaylistCache.self).first {
+    if let cache = realm.objects(_MyPlaylistCache.self).first {
         return cache
     }
     let cache = _MyPlaylistCache()

@@ -17,7 +17,7 @@ struct GetRss<R: Decodable>: iTunesRequestType {
 
     let method = HTTPMethod.get
 
-    let baseUrl: URL
+    let baseURL: URL
 
     let path: String
 }
@@ -27,7 +27,7 @@ extension GetRss {
     init(url: URL, limit: Int=200) {
         var comps = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         comps.path = ""
-        baseUrl = comps.url!
+        baseURL = comps.url!
 
         var paths = url.path.components(separatedBy: "/")
         paths.insert("limit=\(limit)", at: paths.count - 1)

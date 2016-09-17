@@ -50,26 +50,26 @@ extension Model {
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(artistId: artistId, realm: realm)
-            caches = realm.allObjects(ofType: _ArtistCache.self).filter(using: "artistId = \(artistId)")
-            collections = caches[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)
+            caches = realm.objects(_ArtistCache.self).filter("artistId = \(artistId)")
+            collections = caches[0].artist._collections.sorted(byProperty: "_collectionId", ascending: false)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_ArtistCache>) {
-                    self.collections = results[0].artist._collections.sorted(onProperty: "_collectionId", ascending: false)
+                    self.collections = results[0].artist._collections.sorted(byProperty: "_collectionId", ascending: false)
                     self.objectsToken = self.collections.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
 
                 switch changes {
-                case .Initial(let results):
+                case .initial(let results):
                     updateObserver(with: results)
-                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
                         updateObserver(with: results)
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
             }
@@ -95,7 +95,7 @@ extension Model.Artist: _Fetchable {
         let session = Session.sharedSession
 
         let lookup = LookupWithIds<LookupResponse>(id: artistId)
-        session.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        session.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {

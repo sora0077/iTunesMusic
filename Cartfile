@@ -1,16 +1,16 @@
 
-github "sora0077/APIKit" "si-swift3"
+github "ishkawa/APIKit" "master"
 github "ikesyo/Himotoki" "swift3"
 github "sora0077/Timepiece" "master"
 github "ReactiveX/RxSwift" "develop"
 github "realm/realm-cocoa" "master"
 
-github "drmohundro/SWXMLHash" "xcode-8.0"
+github "drmohundro/SWXMLHash" "master"
 
 github "mutualmobile/MMWormhole"
 
 
-github "SnapKit/SnapKit" "feature/0.40.0"
+github "SnapKit/SnapKit" "develop"
 
 github "pinterest/PINRemoteImage"
 

@@ -15,7 +15,7 @@ struct ListGenres<Response: Decodable>: iTunesRequestType {
 
     let method = HTTPMethod.get
 
-    let baseUrl: URL = URL(string: "https://itunes.apple.com")!
+    let baseURL: URL = URL(string: "https://itunes.apple.com")!
 
     let path: String = "WebObjects/MZStoreServices.woa/ws/genres"
 

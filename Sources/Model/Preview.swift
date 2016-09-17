@@ -110,7 +110,7 @@ final class PreviewTrack {
         let session = Session.sharedSession
 
         return Observable.create { subscriber in
-            let task = session.sendRequest(GetPreviewUrl(id: id, url: url), callbackQueue: callbackQueue) { result in
+            let task = session.send(GetPreviewUrl(id: id, url: url), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .success(let (url, duration)):
                     let duration = Double(duration) / 10000

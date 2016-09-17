@@ -44,7 +44,7 @@ extension Model {
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(collectionId: collectionId, realm: realm)
-            caches = realm.allObjects(ofType: _ReviewCache.self).filter(using: "collectionId = \(collectionId)")
+            caches = realm.objects(_ReviewCache.self).filter("collectionId = \(collectionId)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
@@ -55,13 +55,13 @@ extension Model {
                 }
 
                 switch changes {
-                case .Initial(let results):
+                case .initial(let results):
                     updateObserver(with: results)
-                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
                         updateObserver(with: results)
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
             }
@@ -89,7 +89,7 @@ extension Model.Reviews: _Fetchable {
         let collectionId = self.collectionId
 
         let request = ListReviews<_Review>(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
-        Session.sharedSession.sendRequest(request, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(request, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -107,7 +107,7 @@ extension Model.Reviews: _Fetchable {
                         cache.refreshAt = Date()
                         cache.page = 1
                         cache.fetched = false
-                        cache.objects.removeAllObjects()
+                        cache.objects.removeAll()
                     }
                     cache.updateAt = Date()
                     cache.fetched = response.isEmpty

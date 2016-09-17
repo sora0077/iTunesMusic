@@ -56,7 +56,7 @@ extension Model {
             fetched = feed.fetched
             trackIds = feed.ids
 
-            caches = realm.allObjects(ofType: _RssCache.self).filter(using: "_genreId = \(id)")
+            caches = realm.objects(_RssCache.self).filter("_genreId = \(id)")
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
@@ -67,13 +67,13 @@ extension Model {
                 }
 
                 switch changes {
-                case .Initial(let results):
+                case .initial(let results):
                     updateObserver(with: results)
-                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
                         updateObserver(with: results)
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
 
@@ -112,7 +112,7 @@ extension Model.Rss: _Fetchable {
             completion(.done)
             return
         }
-        Session.sharedSession.sendRequest(LookupWithIds<LookupResponse>(ids: Array(ids)), callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(LookupWithIds<LookupResponse>(ids: Array(ids)), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -139,7 +139,7 @@ extension Model.Rss: _Fetchable {
                     }
 
                     if refreshing {
-                        cache.tracks.removeAllObjects()
+                        cache.tracks.removeAll()
                         cache.fetched = 0
                         cache.refreshAt = Date()
                     }
@@ -159,7 +159,7 @@ extension Model.Rss: _Fetchable {
     }
 
     fileprivate func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        Session.sharedSession.sendRequest(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success(let response):
@@ -167,7 +167,7 @@ extension Model.Rss: _Fetchable {
                 try! realm.write {
                     let genre = realm.object(ofType: _Genre.self, forPrimaryKey: self.id)
                     response._genreId = genre?.id ?? 0
-                    response.tracks.removeAllObjects()
+                    response.tracks.removeAll()
                     response.refreshAt = Date()
                     realm.add(response, update: true)
                 }

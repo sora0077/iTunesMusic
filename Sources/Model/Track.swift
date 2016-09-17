@@ -38,18 +38,18 @@ extension Model {
             self.trackId = trackId
 
             let realm = iTunesRealm()
-            caches = realm.allObjects(ofType: _Track.self).filter(using: "_trackId = %@", trackId)
+            caches = realm.objects(_Track.self).filter("_trackId = %@", trackId)
             token = caches.addNotificationBlock { [weak self] changes in
                 switch changes {
-                case let .Initial(results):
+                case let .initial(results):
                     if !results.isEmpty {
                         self?._requestState.value = .done
                     }
-                case let .Update(results, deletions: _, insertions: _, modifications: _):
+                case let .update(results, deletions: _, insertions: _, modifications: _):
                     if !results.isEmpty {
                         self?._requestState.value = .done
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
             }
@@ -66,7 +66,7 @@ extension Model.Track: _Fetchable {
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
-        Session.sharedSession.sendRequest(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {

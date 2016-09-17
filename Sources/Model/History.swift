@@ -12,7 +12,7 @@ import RxSwift
 
 
 fileprivate func getOrCreateCache(realm: Realm) -> _HistoryCache {
-    if let cache = realm.allObjects(ofType: _HistoryCache.self).first {
+    if let cache = realm.objects(_HistoryCache.self).first {
         return cache
     } else {
         let cache = _HistoryCache()

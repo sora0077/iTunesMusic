@@ -71,7 +71,7 @@ extension Model {
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(key: "default", realm: realm)
-            caches = realm.allObjects(ofType: _GenresCache.self).filter(using: "key == %@", "default").sorted(onProperty: "createAt", ascending: false)
+            caches = realm.objects(_GenresCache.self).filter("key == %@", "default").sorted(byProperty: "createAt", ascending: false)
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
@@ -82,13 +82,13 @@ extension Model {
                 }
 
                 switch changes {
-                case .Initial(let results):
+                case .initial(let results):
                     updateObserver(results)
-                case .Update(let results, deletions: _, insertions: let insertions, modifications: _):
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
                     if !insertions.isEmpty {
                         updateObserver(results)
                     }
-                case .Error(let error):
+                case .error(let error):
                     fatalError("\(error)")
                 }
             }
@@ -110,7 +110,7 @@ extension Model.Genres: _Fetchable {
         }
 
         let listGenres = ListGenres<_Genre>()
-        Session.sharedSession.sendRequest(listGenres, callbackQueue: callbackQueue) { [weak self] result in
+        Session.sharedSession.send(listGenres, callbackQueue: callbackQueue) { [weak self] result in
             let requestState: RequestState
             defer {
                 completion(requestState)
@@ -124,7 +124,7 @@ extension Model.Genres: _Fetchable {
                     let cache = getOrCreateCache(key: "default", realm: realm)
                     cache.updateAt = Date()
                     if refreshing {
-                        cache.list.removeAllObjects()
+                        cache.list.removeAll()
                         cache.refreshAt = Date()
                     }
 
