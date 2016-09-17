@@ -27,7 +27,7 @@ protocol iTunesRequestType: RequestType {
 
 extension iTunesRequestType {
 
-    func interceptURLRequest(_ urlRequest: URLRequest) throws -> URLRequest {
+    func intercept(urlRequest: URLRequest) throws -> URLRequest {
         print(self, urlRequest)
         return urlRequest
     }
