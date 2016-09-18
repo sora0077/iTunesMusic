@@ -166,6 +166,13 @@ extension Model.Rss: _Fetchable {
                 self.trackIds = response.ids
                 self.fetched = response.fetched
                 self._requestState.value = .none
+                let realm = iTunesRealm()
+                try! realm.write {
+                    let cache = getOrCreateCache(genreId: self.id, realm: realm)
+                    cache.tracks.removeAll()
+                    cache.fetched = 0
+                    cache.refreshAt = Date()
+                }
                 DispatchQueue.main.async {
                     self.request(refreshing: true, force: false, ifError: errorType, level: level, completion: completion)
                 }
