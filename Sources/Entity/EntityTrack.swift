@@ -47,7 +47,7 @@ extension Track {
 }
 
 
-class _Track: RealmSwift.Object, Track {
+final class _Track: RealmSwift.Object, Track {
 
     dynamic var _trackId: Int = 0
     dynamic var _trackName: String = ""

@@ -36,7 +36,7 @@ public protocol RssUrls {
     var topSongs: URL { get }
 }
 
-class _Genre: RealmSwift.Object {
+final class _Genre: RealmSwift.Object {
 
     fileprivate(set) dynamic var _name: String = ""
 

@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 
 
-class _RssCache: _Cache {
+final class _RssCache: _Cache {
 
     dynamic var _genreId: Int = 0
 
@@ -32,7 +32,7 @@ class _RssCache: _Cache {
     override class func primaryKey() -> String? { return "_genreId" }
 }
 
-class _RssItem: RealmSwift.Object, Decodable {
+final class _RssItem: RealmSwift.Object, Decodable {
 
     dynamic var id: Int = 0
 
@@ -60,7 +60,7 @@ extension _RssCache: Decodable {
 
 private struct Feed: Decodable {
     struct Entry: Decodable {
-        
+
         let item: _RssItem
 
         static func decode(_ e: Extractor) throws -> Entry {

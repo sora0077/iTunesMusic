@@ -12,7 +12,7 @@ import RxSwift
 import Himotoki
 
 
-class _SearchCache: _Cache, SearchWithKeywordResponseType {
+final class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     let objects = List<_Media>()
 

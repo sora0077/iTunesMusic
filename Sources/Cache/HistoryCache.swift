@@ -12,7 +12,7 @@ import RxSwift
 import Himotoki
 
 
-class _HistoryCache: _Cache {
+final class _HistoryCache: _Cache {
 
     let objects = List<_HistoryRecord>()
 }
