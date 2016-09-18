@@ -32,28 +32,45 @@ class _RssCache: _Cache {
     override class func primaryKey() -> String? { return "_genreId" }
 }
 
-class _RssItem: RealmSwift.Object {
+class _RssItem: RealmSwift.Object, Decodable {
 
     dynamic var id: Int = 0
 
+    static func decode(_ e: Extractor) throws -> Self {
+        let imid: String = try e.value("im:id")
+        guard let id = Int(imid) else {
+            throw DecodeError.typeMismatch(expected: "Int", actual: imid, keyPath: "im:id")
+        }
+        let obj = self.init()
+        obj.id = id
+        return obj
+    }
 }
 
 extension _RssCache: Decodable {
 
     static func decode(_ e: Extractor) throws -> Self {
+        let feed: Feed = try e.value("feed")
+        let items = feed.entities.map { $0.item }
         let obj = self.init()
-        let entry = (e.rawValue as! [String: [String: Any]])["feed"]!["entry"] as! [[String: AnyObject]]
-        let items = entry
-            .map { $0["id"] as! [String: AnyObject] }
-            .map { $0["attributes"] as! [String: AnyObject] }
-            .map { $0["im:id"] as! String }
-            .map { Int($0)! }
-            .map { (id) -> _RssItem in
-                let item = _RssItem()
-                item.id = id
-                return item
-            }
         obj.items.append(objectsIn: items)
         return obj
+    }
+}
+
+private struct Feed: Decodable {
+    struct Entry: Decodable {
+        
+        let item: _RssItem
+
+        static func decode(_ e: Extractor) throws -> Entry {
+            return Entry(item: try e.value(["id", "attributes"]))
+        }
+    }
+
+    let entities: [Entry]
+
+    static func decode(_ e: Extractor) throws -> Feed {
+        return Feed(entities: try e.arrayOptional("entry") ?? [])
     }
 }
