@@ -13,9 +13,10 @@ protocol RouterMiddleware {
 
 }
 
+
 final class Router {
 
-    public typealias Request = (URL, [String: String])
+    public typealias Request = (URL, [String: String], () -> Void)
     public typealias Handler = (Request) -> Void
 
 
@@ -42,5 +43,18 @@ final class Router {
 
     func get(pattern: String, handler: @escaping Handler) {
         elements.append(Element(pattern: pattern, handler: handler))
+    }
+
+    func canOpenURL(_ url: URL) -> Bool {
+
+        return false
+    }
+
+    func open(_ url: URL) {
+
+    }
+    
+    private func handle(_ url: URL) throws {
+        
     }
 }

@@ -140,8 +140,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         manager[.background].backgroundColor = UIColor(hex: 0x3b393a)
 
-        Router.default.get(pattern: "") { request in
+        Router.default.get(pattern: "/track/:trackId") { request, params, next in
 
+            next()
         }
 
         print(UIWindowLevelNormal)
@@ -151,5 +152,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
 
         return true
+    }
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+
+        if Router.default.canOpenURL(url) {
+            Router.default.open(url)
+            return true
+        }
+        return false
     }
 }
