@@ -112,7 +112,7 @@ extension Model.Rss: _Fetchable {
             completion(.done)
             return
         }
-        Session.sharedSession.send(LookupWithIds<LookupResponse>(ids: Array(ids)), callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(LookupWithIds<LookupResponse>(ids: Array(ids)), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -159,7 +159,7 @@ extension Model.Rss: _Fetchable {
     }
 
     fileprivate func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        Session.sharedSession.send(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success(let response):

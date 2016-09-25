@@ -119,7 +119,7 @@ extension Model.Album: _Fetchable {
             return
         }
 
-        let session = Session.sharedSession
+        let session = Session.shared
 
         let lookup = LookupWithIds<LookupResponse>(id: collectionId)
         session.send(lookup, callbackQueue: callbackQueue) { [weak self] result in

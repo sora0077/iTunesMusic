@@ -89,7 +89,7 @@ extension Model.Reviews: _Fetchable {
         let collectionId = self.collectionId
 
         let request = ListReviews<_Review>(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
-        Session.sharedSession.send(request, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(request, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {

@@ -66,7 +66,7 @@ extension Model.Track: _Fetchable {
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
-        Session.sharedSession.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {

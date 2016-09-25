@@ -18,6 +18,7 @@ import WindowKit
 import ErrorEventHandler
 import VYPlayIndicatorSwift
 import MMWormhole
+import Routing
 
 
 enum WindowLevel: Int, WindowKit.WindowLevel {
@@ -82,6 +83,8 @@ func playingViewController() -> PlayingViewController {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private let router = Router()
+
     var window: UIWindow?
 
     fileprivate lazy var manager: Manager<WindowLevel> = Manager(mainWindow: self.window!)
@@ -140,10 +143,48 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         manager[.background].backgroundColor = UIColor(hex: 0x3b393a)
 
-        Router.default.get(pattern: "/track/:trackId") { request, params, next in
 
-            next()
+        struct Logger: Middleware {
+            fileprivate func handle(request: Routing.Request, response: Response, next: @escaping (Response) -> Void) throws {
+                print(request)
+                let date = Date()
+                var response = response
+                response.closing {
+                    print("time: ", Date().timeIntervalSince(date))
+                }
+                next(response)
+            }
         }
+
+        var track_: Model.Track?
+        router.install(middleware: Logger())
+        router.register(pattern: "/track/:trackId([0-9]+)") { [unowned self] (request, response, next) in
+            if let trackId = Int(request.parameters["trackId"] ?? "") {
+
+                let track = Model.Track(trackId: trackId)
+                if let track = track.track {
+                    player.add(track: track)
+                } else {
+                    track.requestState
+                        .asDriver(onErrorJustReturn: .none)
+                        .filter { $0 == .done }
+                        .drive(onNext: { [weak wtrack = track] _ in
+                            if let track = wtrack?.track, track.canPreview {
+                                player.add(track: track)
+                            }
+                            })
+                        .addDisposableTo(self.disposeBag)
+                    action(track.fetch)
+                    track_ = track
+                }
+            }
+            next(response)
+        }
+
+//        Router.default.get(pattern: "/track/:trackId") { request, params, next in
+//
+//            next()
+//        }
 
         print(UIWindowLevelNormal)
         print(UIWindowLevelAlert)
@@ -156,8 +197,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
 
-        if Router.default.canOpenURL(url) {
-            Router.default.open(url)
+        if router.canOpenURL(url: url) {
+            router.open(url: url)
             return true
         }
         return false

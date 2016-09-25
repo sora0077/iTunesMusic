@@ -127,7 +127,7 @@ extension Model.Search: _Fetchable {
         guard term.isEmpty else { completion(.none); return }
 
         let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
-        Session.sharedSession.send(search, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(search, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -220,7 +220,7 @@ extension Model.Search.Trends: _Fetchable {
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
         let trends = SearchHintTrends()
-        Session.sharedSession.send(trends, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(trends, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {

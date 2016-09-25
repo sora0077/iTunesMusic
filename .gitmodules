@@ -40,3 +40,6 @@
 [submodule "Carthage/Checkouts/MMWormhole"]
 	path = Carthage/Checkouts/MMWormhole
 	url = https://github.com/mutualmobile/MMWormhole.git
+[submodule "Carthage/Checkouts/Routing"]
+	path = Carthage/Checkouts/Routing
+	url = https://github.com/sora0077/Routing.git

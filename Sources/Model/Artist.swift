@@ -92,7 +92,7 @@ extension Model.Artist: _Fetchable {
             return
         }
 
-        let session = Session.sharedSession
+        let session = Session.shared
 
         let lookup = LookupWithIds<LookupResponse>(id: artistId)
         session.send(lookup, callbackQueue: callbackQueue) { [weak self] result in

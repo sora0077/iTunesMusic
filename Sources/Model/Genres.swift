@@ -110,7 +110,7 @@ extension Model.Genres: _Fetchable {
         }
 
         let listGenres = ListGenres<_Genre>()
-        Session.sharedSession.send(listGenres, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(listGenres, callbackQueue: callbackQueue) { [weak self] result in
             let requestState: RequestState
             defer {
                 completion(requestState)
