@@ -97,8 +97,8 @@ final class PlayerImpl: NSObject, Player {
         #else
             print("iphone")
         #endif
-        _player.addObserver(self, forKeyPath: "status", options: [.new, .old], context: nil)
-        _player.addObserver(self, forKeyPath: "currentItem", options: [.new, .old], context: nil)
+        _player.addObserver(self, forKeyPath: #keyPath(AVQueuePlayer.status), options: [.new, .old], context: nil)
+        _player.addObserver(self, forKeyPath: #keyPath(AVQueuePlayer.currentItem), options: [.new, .old], context: nil)
 
         //        _player.currentTime()
         _player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
@@ -108,7 +108,7 @@ final class PlayerImpl: NSObject, Player {
     }
 
     deinit {
-        ["status", "currentItem"].forEach {
+        [#keyPath(AVQueuePlayer.status), #keyPath(AVQueuePlayer.currentItem)].forEach {
             _player.removeObserver(self, forKeyPath: $0)
         }
 
