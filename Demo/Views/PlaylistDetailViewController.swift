@@ -89,6 +89,6 @@ extension PlaylistDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        player.add(track: playlist[indexPath.row])
+        player.add(track: Model.Track(track: playlist[indexPath.row]))
     }
 }

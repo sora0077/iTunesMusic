@@ -102,8 +102,6 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     func willStartPlayTrack(_ trackId: Int) {
         guard let track = Model.Track(trackId: trackId).track else { return }
 
-        print(#function, trackId, track.name)
-
         if currentTrackId == nil { currentTrackId = trackId }
 
         let commandCenter = MPRemoteCommandCenter.shared()
@@ -127,7 +125,6 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main.scale))
         downloadImage(with: artworkURL) { [weak self] result in
             guard let `self` = self else { return }
-            print(#function, result)
             guard case .success(let image) = result else { return }
 
             if trackId == self.nowPlayingInfo?["currentTrackId"] as? Int {
@@ -135,7 +132,6 @@ final class ControlCenter: NSObject, PlayerMiddleware {
                 self.nowPlayingInfo?["artworkImageUpdated"] = true
                 if #available(iOS 10.0, *) {
                     self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
-                        print(#function, " ", size)
                         return image
                     }
                 } else {

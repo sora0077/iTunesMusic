@@ -43,3 +43,6 @@
 [submodule "Carthage/Checkouts/Routing"]
 	path = Carthage/Checkouts/Routing
 	url = https://github.com/sora0077/Routing.git
+[submodule "Carthage/Checkouts/AbstractPlayerKit"]
+	path = Carthage/Checkouts/AbstractPlayerKit
+	url = https://github.com/sora0077/AbstractPlayerKit.git

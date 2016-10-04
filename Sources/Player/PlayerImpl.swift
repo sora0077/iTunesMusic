@@ -12,6 +12,7 @@ import AVFoundation
 import RxSwift
 import RealmSwift
 import ErrorEventHandler
+import AbstractPlayerKit
 
 
 fileprivate enum PlayerError: ErrorLog.Error {
@@ -27,6 +28,127 @@ fileprivate enum PlayerErrorLevel: ErrorLog.Level {
     case none
 }
 
+
+private final class TrackWorker: Worker {
+
+    var canPop: Bool = false
+
+    let track: Model.Track
+    let player: PlayerImpl
+
+    init(track: Model.Track, player: PlayerImpl) {
+        self.track = track
+        self.player = player
+    }
+
+    func run() -> Observable<URL?> {
+        func getPreviewInfo(track: Track) -> (URL, Double)? {
+            print(track.id, track.name)
+            if let duration = track.metadata?.duration {
+                if let url = track.metadata?.fileURL {
+                    return (url, duration)
+                }
+                if let url = track.metadata?.previewURL {
+                    return (url, duration)
+                }
+            }
+            return nil
+        }
+
+        func fetch() -> Observable<(URL, duration: Double)> {
+            if let track = track.track, let info = getPreviewInfo(track: track) {
+                return Observable.just(info)
+            } else {
+                defer {
+                    track.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
+                }
+                return track.requestState
+                    .filter { $0 == .done }
+                    .flatMap { [weak self] state -> Observable<(URL, duration: Double)> in
+                        if let track = self?.track.track, let info = getPreviewInfo(track: track) {
+                            return Observable.just(info)
+                        }
+                        if let previewer = self?.player.previewer, let track = self?.track.track, state == .done {
+                            return previewer.queueing(track: track).fetch()
+                        }
+                        return Observable.empty()
+                    }
+            }
+        }
+
+        return fetch()
+            .map { [weak self] (url, duration) in
+                defer {
+                    self?.canPop = true
+                }
+                if let id = self?.track.trackId {
+                    self?.player.tracks[url] = (id, duration)
+                }
+                return url
+            }
+    }
+}
+
+
+private final class PlaylistWorker: Worker {
+
+    var canPop: Bool = false
+
+    let playlist: PlaylistType
+    var index: Int
+    let player: PlayerImpl
+
+    private var trackWorker: TrackWorker?
+
+    init(playlist: PlaylistType, index: Int = 0, player: PlayerImpl) {
+        self.playlist = playlist
+        self.index = index
+        self.player = player
+    }
+
+    func run() -> Observable<URL?> {
+        return Observable<Observable<URL?>>
+            .create { [weak self] subscriber in
+                DispatchQueue.main.async {
+                    guard let `self` = self else { return }
+
+                    let index = self.index
+                    let playlist = self.playlist
+
+                    if playlist.isTrackEmpty || playlist.trackCount == index + 1 {
+                        self.canPop = true
+                        subscriber.onNext(Observable.just(nil))
+                        subscriber.onCompleted()
+                        return
+                    }
+                    if let paginator = playlist as? _Fetchable,
+                        !paginator._hasNoPaginatedContents && playlist.trackCount - index < 3 {
+                        if !paginator._requesting.value {
+                            paginator.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none) {
+                                subscriber.onNext(Observable.just(nil))
+                                subscriber.onCompleted()
+                            }
+                        } else {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                subscriber.onNext(Observable.just(nil))
+                                subscriber.onCompleted()
+                            }
+                        }
+                        return
+                    }
+                    let track = Model.Track(track: playlist.track(at: index))
+                    let worker = TrackWorker(track: track, player: self.player)
+                    self.trackWorker = worker
+                    self.index += 1
+
+                    subscriber.onNext(worker.run())
+                    subscriber.onCompleted()
+                }
+                return Disposables.create()
+            }
+            .flatMap { $0 }
+    }
+}
 
 
 fileprivate extension AVPlayerItem {
@@ -45,36 +167,20 @@ fileprivate extension AVPlayerItem {
     }
 }
 
-fileprivate class OneTrackPlaylist: PlaylistType {
-
-    var name: String { return objects[0].name }
-
-    var tracksChanges: Observable<CollectionChange> = asObservable(Variable(.initial))
-
-    var trackCount: Int { return objects.count }
-
-    var isTrackEmpty: Bool { return objects.isEmpty }
-
-    let objects: [Track]
-
-    init(track: Track) { objects = [track] }
-
-    func track(at index: Int) -> Track { return objects[index] }
-}
 
 final class PlayerImpl: NSObject, Player {
 
-    var playlists: [PlaylistType] { return _playlists.map { $0.0 } }
+    var playlists: [PlaylistType] { return [] }
 
-    fileprivate var _playlists: ArraySlice<(PlaylistType, Int, DisposeBag)> = []
-
-    fileprivate var _playingQueue: ArraySlice<Track> = []
-
-    fileprivate var _previewQueue: [Int: PreviewTrack] = [:]
+    fileprivate var tracks: [URL: (Int, Double)] = [:]
 
     fileprivate let _player = AVQueuePlayer()
-
-    fileprivate let _disposeBag = DisposeBag()
+    private var queueingItems: ArraySlice<AVPlayerItem> = [] {
+        didSet {
+            print("next player remain count", queueingItems.count)
+            queueuingCount.value = queueingItems.count
+        }
+    }
 
     private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
     private let _nowPlayingTrack = Variable<Track?>(nil)
@@ -88,9 +194,18 @@ final class PlayerImpl: NSObject, Player {
 
     fileprivate let previewer: Preview
 
+    fileprivate var queueController: QueueController<URL>!
+    private let queueuingCount = Variable<Int>(0)
+
     init(previewer: Preview) {
         self.previewer = previewer
         super.init()
+
+        queueController = QueueController(queueingCount: queueuingCount.asObservable()) { [weak self] url in
+            if let (id, duration) = self?.tracks[url] {
+                self?.configureNextPlayerItem(id: id, url: url, duration: duration)
+            }
+        }
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             _player.volume = 0.02
             print("simulator")
@@ -125,6 +240,7 @@ final class PlayerImpl: NSObject, Player {
                 _player.play()
             }
         case "currentItem":
+
             DispatchQueue.main.async {
                 let realm = iTunesRealm()
                 var track: Track?
@@ -138,11 +254,14 @@ final class PlayerImpl: NSObject, Player {
                 } else {
                     self._installs.forEach { $0.didEndPlay() }
                 }
-                self.updatePlaylistQueue()
             }
 
             if _player.currentItem == nil {
                 pause()
+            } else {
+                if _player.currentItem?.trackId != queueingItems.first?.trackId {
+                    _ = queueingItems.popFirst()
+                }
             }
         default:
             break
@@ -160,130 +279,25 @@ final class PlayerImpl: NSObject, Player {
 
     func nextTrack() { _player.advanceToNextItem() }
 
-}
-
-// control queueing
-extension PlayerImpl {
-
-    fileprivate func updateQueue() {
-
-        print("caller updateQueue")
-        if _playingQueue.isEmpty { return }
-        if _player.items().count > 2 { return }
-
-        guard doOnMainThread(execute: self.updateQueue()) else { return }
-
-        print("run updateQueue")
-        let track = _playingQueue[_playingQueue.startIndex].impl
-        guard track.canPreview else {
-            _playingQueue = _playingQueue.dropFirst()
-            return updateQueue()
-        }
-        func getPreviewInfo() -> (URL, duration: Double)? {
-            guard let duration = track.metadata?.duration else { return nil }
-
-            if let fileURL = track.metadata?.fileURL {
-                print("load from file ", track.name)
-                return (fileURL, duration)
-            }
-            if let url = track.metadata?.previewURL {
-                print("load from network ", track.name)
-                return (url, duration)
-            }
-            return nil
-        }
-        guard let (url, duration) = getPreviewInfo() else {
-            fetch(previewer.queueing(track: track))
-            return
-        }
-
-        _playingQueue = _playingQueue.dropFirst()
-
-        print("add player queue ", track._trackName, url)
+    private func configureNextPlayerItem(id: Int, url: URL, duration: Double) {
         let item = AVPlayerItem(asset: AVAsset(url: url))
-        item.trackId = track.id
+        item.trackId = id
+        queueingItems.append(item)
 
-        DispatchQueue.global(qos: .default).async {
+        print("next play ", id)
 
-            configureFading(item: item, duration: duration)
-            NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(self.didEndPlay),
-                name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-                object: item
-            )
+        configureFading(item: item, duration: duration)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didEndPlay),
+            name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+            object: item
+        )
 
-            self._player.insert(item, after: nil)
-            if self._player.status == .readyToPlay {
-                self.play()
-            }
+        self._player.insert(item, after: nil)
+        if self._player.status == .readyToPlay {
+            self.play()
         }
-    }
-
-    fileprivate func updatePlaylistQueue() {
-        if _playlists.isEmpty { updateQueue(); return }
-        if _playingQueue.count > 2 { updateQueue(); return }
-        if _player.items().count > 2 { return }
-
-        guard doOnMainThread(execute: self.updatePlaylistQueue()) else { return }
-
-        let (playlist, index, _) = _playlists[_playlists.startIndex]
-
-        let paginator = playlist as? _Fetchable
-        print(paginator, playlist)
-
-        if playlist.trackCount - index < 3 {
-            paginator?.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
-
-            if playlist.isTrackEmpty {
-                return
-            }
-        }
-        print("play", playlist.trackCount, index, _playingQueue.count)
-
-        if playlist.trackCount > index {
-            print("will play ", playlist.track(at: index).name)
-            let track = playlist.track(at: index)
-            _playingQueue.append(track)
-            _playlists[_playlists.startIndex].1 += 1
-            updateQueue()
-        } else {
-            print(playlist)
-            if let paginator = paginator, !paginator._hasNoPaginatedContents {
-                return
-            }
-            _playlists = _playlists.dropFirst()
-            updatePlaylistQueue()
-            print("drop playlist ", playlist)
-        }
-    }
-
-    private func fetch(_ preview: PreviewTrack) {
-        let id = preview.id
-        if _previewQueue[id] != nil {
-            return
-        }
-        _previewQueue[id] = preview
-
-        preview.fetch()
-            .subscribe(
-                onNext: { [weak self] url in
-                    guard let `self` = self else { return }
-                    DispatchQueue.main.async {
-                        self._previewQueue[id] = nil
-                        self.updateQueue()
-                    }
-                },
-                onError: { [weak self] error in
-                    guard let `self` = self else { return }
-                    DispatchQueue.main.async {
-                        self._previewQueue[id] = nil
-                        self._playingQueue = ArraySlice(self._playingQueue.filter { $0.id != id })
-                        self.updatePlaylistQueue()
-                    }
-                }
-            )
-            .addDisposableTo(_disposeBag)
     }
 
     @objc
@@ -299,59 +313,26 @@ extension PlayerImpl {
     }
 }
 
+
 // add/(remove)
 extension PlayerImpl {
 
-    func add(track: Track) {
-        add(track: track, afterPlaylist: false)
-    }
-
-    func add(track: Track, afterPlaylist: Bool) {
-        if afterPlaylist {
-            add(playlist: OneTrackPlaylist(track: track))
-        } else {
-            _playingQueue.append(track)
-            updateQueue()
-        }
+    func add(track: Model.Track) {
+        let worker = TrackWorker(track: track, player: self)
+        _add(worker: worker)
     }
 
     func add(playlist: PlaylistType) {
-
-        _add(playlist: playlist)
+        let worker = PlaylistWorker(playlist: playlist, player: self)
+        _add(worker: worker)
     }
 
-    private func _add(playlist: PlaylistType) {
-
-        assert(Thread.isMainThread)
-
+    private func _add<W: Worker>(worker: W) where W.Response == URL {
         if _player.status == .readyToPlay && _player.rate != 0 {
             play()
         }
 
-        let disposeBag = DisposeBag()
-        _playlists.append((playlist, 0, disposeBag))
-        updatePlaylistQueue()
-        playlist.tracksChanges
-            .subscribe(
-                onNext: { [weak self, weak playlist = playlist] changes in
-                    guard let `self` = self, let playlist = playlist else { return }
-
-                    assert(Thread.isMainThread)
-                    switch changes {
-                    case .update(deletions: _, insertions: let insertions, modifications: _) where !insertions.isEmpty:
-                        print(insertions)
-                        if self._playlists.first?.0 === playlist {
-                            self.updatePlaylistQueue()
-                        }
-                    default:
-                        break
-                    }
-                },
-                onDisposed: { [weak playlist] in
-                    print("disposed ", playlist)
-                }
-            )
-            .addDisposableTo(disposeBag)
+        queueController.add(worker)
     }
 }
 

@@ -30,8 +30,8 @@ extension Model {
         fileprivate var token: NotificationToken!
         fileprivate let caches: Results<_Track>
 
-        public convenience init(track: Track) {
-            self.init(trackId: track.trackId)
+        public convenience init(track: iTunesMusic.Track) {
+            self.init(trackId: track.id)
         }
 
         public init(trackId: Int) {

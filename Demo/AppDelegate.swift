@@ -156,27 +156,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
 
-        var track_: Model.Track?
         router.install(middleware: Logger())
         router.register(pattern: "/track/:trackId([0-9]+)") { [unowned self] (request, response, next) in
             if let trackId = Int(request.parameters["trackId"] ?? "") {
 
                 let track = Model.Track(trackId: trackId)
-                if let track = track.track {
-                    player.add(track: track)
-                } else {
-                    track.requestState
-                        .asDriver(onErrorJustReturn: .none)
-                        .filter { $0 == .done }
-                        .drive(onNext: { [weak wtrack = track] _ in
-                            if let track = wtrack?.track, track.canPreview {
-                                player.add(track: track)
-                            }
-                            })
-                        .addDisposableTo(self.disposeBag)
-                    action(track.fetch)
-                    track_ = track
-                }
+                player.add(track: track)
             }
             next(response)
         }

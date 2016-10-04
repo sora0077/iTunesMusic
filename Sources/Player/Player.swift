@@ -31,9 +31,7 @@ public protocol Player: class {
 
     func nextTrack()
 
-    func add(track: Track)
-
-    func add(track: Track, afterPlaylist: Bool)
+    func add(track: Model.Track)
 
     func add(playlist: PlaylistType)
 }

@@ -47,6 +47,13 @@ extension Fetchable {
         _request(refreshing: false, force: false, ifError: errorType, level: level)
     }
 
+    func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping () -> Void) {
+        guard doOnMainThread(execute: self.fetch(ifError: errorType, level: level, completion: completion)) else {
+            return
+        }
+        _request(refreshing: false, force: false, ifError: errorType, level: level, completion: completion)
+    }
+
     public func refresh(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
         refresh(force: false, ifError: errorType, level: level)
     }
@@ -62,7 +69,7 @@ extension Fetchable {
         }
     }
 
-    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
+    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping () -> Void = {}) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if !force && [.done, .requesting].contains(self._requestState.value) {
@@ -71,17 +78,20 @@ extension Fetchable {
 
         print("now request, \(self)")
 
+        self._requesting.value = true
         self._refreshing.value = refreshing
         self._requestState.value = .requesting
 
         self.request(refreshing: refreshing, force: force, ifError: errorType, level: level) { [weak self] requestState in
             DispatchQueue.main.async {
+                self?._requesting.value = false
                 self?._refreshing.value = false
                 self?._requestState.value = requestState
                 if case .error = requestState {
                     ErrorLog.enqueue(error: nil, with: errorType, level: level)
                 }
                 tick()
+                completion()
             }
         }
     }
@@ -92,6 +102,8 @@ extension Fetchable {
 protocol _Fetchable: class, Fetchable {
 
     var _refreshing: Variable<Bool> { get }
+
+    var _requesting: Variable<Bool> { get }
 
     var _requestState: Variable<RequestState> { get }
 
@@ -108,6 +120,7 @@ protocol _Fetchable: class, Fetchable {
 
 fileprivate struct _FetchableKey {
     static var _refreshing: UInt8 = 0
+    static var _requesting: UInt8 = 0
     static var _requestState: UInt8 = 0
 }
 
@@ -124,6 +137,15 @@ extension _Fetchable {
         let refreshing = Variable<Bool>(false)
         objc_setAssociatedObject(self, &_FetchableKey._refreshing, refreshing, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return refreshing
+    }
+
+    var _requesting: Variable<Bool> {
+        if let requesting = objc_getAssociatedObject(self, &_FetchableKey._requesting) as? Variable<Bool> {
+            return requesting
+        }
+        let requesting = Variable<Bool>(false)
+        objc_setAssociatedObject(self, &_FetchableKey._requesting, requesting, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return requesting
     }
 
     var _requestState: Variable<RequestState> {
