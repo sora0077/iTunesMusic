@@ -175,12 +175,6 @@ final class PlayerImpl: NSObject, Player {
     fileprivate var tracks: [URL: (Int, Double)] = [:]
 
     fileprivate let _player = AVQueuePlayer()
-    private var queueingItems: ArraySlice<AVPlayerItem> = [] {
-        didSet {
-            print("next player remain count", queueingItems.count)
-            queueuingCount.value = queueingItems.count
-        }
-    }
 
     private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
     private let _nowPlayingTrack = Variable<Track?>(nil)
@@ -256,12 +250,9 @@ final class PlayerImpl: NSObject, Player {
                 }
             }
 
+            queueuingCount.value = _player.items().count
             if _player.currentItem == nil {
                 pause()
-            } else {
-                if _player.currentItem?.trackId != queueingItems.first?.trackId {
-                    _ = queueingItems.popFirst()
-                }
             }
         default:
             break
@@ -282,7 +273,6 @@ final class PlayerImpl: NSObject, Player {
     private func configureNextPlayerItem(id: Int, url: URL, duration: Double) {
         let item = AVPlayerItem(asset: AVAsset(url: url))
         item.trackId = id
-        queueingItems.append(item)
 
         print("next play ", id)
 
@@ -294,7 +284,8 @@ final class PlayerImpl: NSObject, Player {
             object: item
         )
 
-        self._player.insert(item, after: nil)
+        _player.insert(item, after: nil)
+        queueuingCount.value = _player.items().count
         if self._player.status == .readyToPlay {
             self.play()
         }
