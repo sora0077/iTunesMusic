@@ -31,6 +31,8 @@ fileprivate enum PlayerErrorLevel: ErrorLog.Level {
 
 private final class TrackWorker: Worker {
 
+    typealias Response = PlayerImpl.QueueResponse
+
     var canPop: Bool = false
 
     let track: Model.Track
@@ -41,7 +43,7 @@ private final class TrackWorker: Worker {
         self.player = player
     }
 
-    func run() -> Observable<URL?> {
+    func run() -> Observable<Response?> {
         func getPreviewInfo(track: Track) -> (URL, Double)? {
             print(track.id, track.name)
             if let duration = track.metadata?.duration {
@@ -55,42 +57,40 @@ private final class TrackWorker: Worker {
             return nil
         }
 
-        func fetch() -> Observable<(URL, duration: Double)> {
-            if let track = track.track, let info = getPreviewInfo(track: track) {
+        func fetchPreviewInfo() -> Observable<(URL, duration: Double)>? {
+            guard let track = track.track else { return nil }
+
+            if let info = getPreviewInfo(track: track) {
                 return Observable.just(info)
-            } else {
-                defer {
-                    track.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
-                }
-                return track.requestState
-                    .filter { $0 == .done }
-                    .flatMap { [weak self] state -> Observable<(URL, duration: Double)> in
-                        if let track = self?.track.track, let info = getPreviewInfo(track: track) {
-                            return Observable.just(info)
-                        }
-                        if let previewer = self?.player.previewer, let track = self?.track.track, state == .done {
-                            return previewer.queueing(track: track).fetch()
-                        }
-                        return Observable.empty()
-                    }
             }
+
+            return player.previewer.queueing(track: track).fetch()
         }
 
-        return fetch()
+        func fetchMeta() -> Observable<(URL, duration: Double)> {
+            defer {
+                track.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
+            }
+            return track.requestState
+                .filter { $0 == .done }
+                .flatMap { _ in fetchPreviewInfo() ?? .empty() }
+        }
+
+        let id = self.track.trackId
+        return (fetchPreviewInfo() ?? fetchMeta())
             .map { [weak self] (url, duration) in
                 defer {
                     self?.canPop = true
                 }
-                if let id = self?.track.trackId {
-                    self?.player.tracks[url] = (id, duration)
-                }
-                return url
+                return (id, url, duration)
             }
     }
 }
 
 
 private final class PlaylistWorker: Worker {
+
+    typealias Response = PlayerImpl.QueueResponse
 
     var canPop: Bool = false
 
@@ -106,8 +106,8 @@ private final class PlaylistWorker: Worker {
         self.player = player
     }
 
-    func run() -> Observable<URL?> {
-        return Observable<Observable<URL?>>
+    func run() -> Observable<Response?> {
+        return Observable<Observable<Response?>>
             .create { [weak self] subscriber in
                 DispatchQueue.main.async {
                     guard let `self` = self else { return }
@@ -115,7 +115,7 @@ private final class PlaylistWorker: Worker {
                     let index = self.index
                     let playlist = self.playlist
 
-                    if playlist.isTrackEmpty || playlist.trackCount == index + 1 {
+                    if playlist.isTrackEmpty || playlist.trackCount < index {
                         self.canPop = true
                         subscriber.onNext(Observable.just(nil))
                         subscriber.onCompleted()
@@ -170,9 +170,9 @@ fileprivate extension AVPlayerItem {
 
 final class PlayerImpl: NSObject, Player {
 
-    var playlists: [PlaylistType] { return [] }
+    typealias QueueResponse = (id: Int, url: URL, duration: Double)
 
-    fileprivate var tracks: [URL: (Int, Double)] = [:]
+    var playlists: [PlaylistType] { return [] }
 
     fileprivate let _player = AVQueuePlayer()
 
@@ -188,17 +188,15 @@ final class PlayerImpl: NSObject, Player {
 
     fileprivate let previewer: Preview
 
-    fileprivate var queueController: QueueController<URL>!
+    fileprivate var queueController: QueueController<QueueResponse>!
     private let queueuingCount = Variable<Int>(0)
 
     init(previewer: Preview) {
         self.previewer = previewer
         super.init()
 
-        queueController = QueueController(queueingCount: queueuingCount.asObservable()) { [weak self] url in
-            if let (id, duration) = self?.tracks[url] {
-                self?.configureNextPlayerItem(id: id, url: url, duration: duration)
-            }
+        queueController = QueueController(queueingCount: queueuingCount.asObservable()) { [weak self] id, url, duration in
+            self?.configureNextPlayerItem(id: id, url: url, duration: duration)
         }
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             _player.volume = 0.02
@@ -318,7 +316,7 @@ extension PlayerImpl {
         _add(worker: worker)
     }
 
-    private func _add<W: Worker>(worker: W) where W.Response == URL {
+    private func _add<W: Worker>(worker: W) where W.Response == QueueResponse {
         if _player.status == .readyToPlay && _player.rate != 0 {
             play()
         }
