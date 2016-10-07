@@ -8,6 +8,7 @@
 
 import Foundation
 import ErrorEventHandler
+import APIKit
 
 
 extension UIAlertController {
@@ -40,24 +41,44 @@ extension AppError {
 enum CommonError: AppError {
     case none, error(Swift.Error)
 
+    private var error: Swift.Error? {
+        switch self {
+        case .error(let error):
+            return error
+        case .none:
+            return nil
+        }
+    }
+
     init(error: Swift.Error?) {
         self = error.map(CommonError.error) ?? .none
     }
 
     var title: String {
-        return "エラー"
+        return errorDescription(from: error).0
     }
 
-    #if DEBUG
     var message: String? {
-        switch self {
-        case .none:
-            return "不明なエラー"
-        case .error(let error):
-            return "\(error)"
-        }
+        return errorDescription(from: error).1
     }
-    #endif
+}
+
+private func errorDescription(from error: Swift.Error?) -> (String, String) {
+    switch error {
+    case let error as SessionTaskError:
+        return errorDescription(from: {
+            switch error {
+            case .connectionError(let error): return error
+            case .requestError(let error): return error
+            case .responseError(let error): return error
+            }
+        }())
+    case let error as NSError:
+        return (error.localizedRecoverySuggestion ?? "エラー", error.localizedFailureReason ?? error.localizedDescription)
+    default:
+        print(error)
+        return ("エラー", "不明なエラー")
+    }
 }
 
 enum AppErrorLevel: ErrorEventHandler.ErrorLevel {

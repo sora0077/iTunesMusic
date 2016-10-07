@@ -87,8 +87,8 @@ extension Fetchable {
                 self?._requesting.value = false
                 self?._refreshing.value = false
                 self?._requestState.value = requestState
-                if case .error = requestState {
-                    ErrorLog.enqueue(error: nil, with: errorType, level: level)
+                if case .error(let error) = requestState {
+                    ErrorLog.enqueue(error: error, with: errorType, level: level)
                 }
                 tick()
                 completion()

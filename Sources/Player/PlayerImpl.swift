@@ -36,11 +36,11 @@ private final class TrackWorker: Worker {
     var canPop: Bool = false
 
     let track: Model.Track
-    let player: PlayerImpl
+    let preview: Preview
 
-    init(track: Model.Track, player: PlayerImpl) {
+    init(track: Model.Track, preview: Preview) {
         self.track = track
-        self.player = player
+        self.preview = preview
     }
 
     func run() -> Observable<Response?> {
@@ -64,7 +64,7 @@ private final class TrackWorker: Worker {
                 return Observable.just(info)
             }
 
-            return player.previewer.queueing(track: track).fetch()
+            return preview.queueing(track: track).fetch()
         }
 
         func fetchMeta() -> Observable<(URL, duration: Double)> {
@@ -96,14 +96,14 @@ private final class PlaylistWorker: Worker {
 
     let playlist: PlaylistType
     var index: Int
-    let player: PlayerImpl
+    let preview: Preview
 
     private var trackWorker: TrackWorker?
 
-    init(playlist: PlaylistType, index: Int = 0, player: PlayerImpl) {
+    init(playlist: PlaylistType, index: Int = 0, preview: Preview) {
         self.playlist = playlist
         self.index = index
-        self.player = player
+        self.preview = preview
     }
 
     func run() -> Observable<Response?> {
@@ -137,7 +137,7 @@ private final class PlaylistWorker: Worker {
                         return
                     }
                     let track = Model.Track(track: playlist.track(at: index))
-                    let worker = TrackWorker(track: track, player: self.player)
+                    let worker = TrackWorker(track: track, preview: self.preview)
                     self.trackWorker = worker
                     self.index += 1
 
@@ -307,17 +307,17 @@ final class PlayerImpl: NSObject, Player {
 extension PlayerImpl {
 
     func add(track: Model.Track) {
-        let worker = TrackWorker(track: track, player: self)
+        let worker = TrackWorker(track: track, preview: previewer)
         _add(worker: worker)
     }
 
     func add(playlist: PlaylistType) {
-        let worker = PlaylistWorker(playlist: playlist, player: self)
+        let worker = PlaylistWorker(playlist: playlist, preview: previewer)
         _add(worker: worker)
     }
 
     private func _add<W: Worker>(worker: W) where W.Response == QueueResponse {
-        if _player.status == .readyToPlay && _player.rate != 0 {
+        if _player.status == .readyToPlay, !playing {
             play()
         }
 
