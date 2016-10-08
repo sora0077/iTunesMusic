@@ -11,9 +11,14 @@ import AVKit
 import AVFoundation
 import RxSwift
 import RealmSwift
+import ErrorEventHandler
 
 
 public protocol Player: class {
+
+    var errorType: ErrorLog.Error.Type { get set }
+
+    var errorLevel: ErrorLog.Level { get set }
 
     var nowPlaying: Observable<Track?> { get }
 

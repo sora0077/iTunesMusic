@@ -122,8 +122,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 case let level as AppErrorLevel:
                     switch level {
                     case .alert:
+                        let root = self?.manager[.alert].rootViewController
+                        let presented = root?.presentedViewController ?? root
                         let alert = UIAlertController.alertController(with: error)
-                        self?.manager[.alert].rootViewController?.present(alert, animated: true, completion: nil)
+                        presented?.present(alert, animated: true, completion: nil)
                     case .slirent:
                         break
                     }
@@ -137,6 +139,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
         player.install(middleware: ControlCenter())
+        player.errorType = CommonError.self
+        player.errorLevel = AppErrorLevel.alert
 
         window?.backgroundColor = .clear
         window?.tintColor = UIColor.lightGray
@@ -177,7 +181,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     item.rx.tap.asDriver()
                         .drive(onNext: { [weak wnav=nav] _ in
                             wnav?.dismiss(animated: true, completion: nil)
-                            })
+                        })
                         .addDisposableTo(self.disposeBag)
                     nav.navigationItem.rightBarButtonItem = item
                     root?.present(nav, animated: true) {

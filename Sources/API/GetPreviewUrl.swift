@@ -48,7 +48,7 @@ struct GetPreviewUrl: iTunesRequest {
                 return try getPreviewURL(item: item)
             }
         }
-        throw iTunesMusicError.notFound
+        throw iTunesMusicAPIError.notFound
     }
 }
 
@@ -70,5 +70,5 @@ fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
         }
     }
 
-    throw iTunesMusicError.notFound
+    throw iTunesMusicAPIError.notFound
 }

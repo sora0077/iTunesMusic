@@ -45,7 +45,7 @@ extension iTunesRequest where Response: Decodable {
     }
 }
 
-public enum iTunesMusicError: Error {
+public enum iTunesMusicAPIError: Swift.Error {
     case notFound
 }
 

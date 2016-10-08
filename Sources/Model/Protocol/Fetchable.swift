@@ -47,7 +47,7 @@ extension Fetchable {
         _request(refreshing: false, force: false, ifError: errorType, level: level)
     }
 
-    func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping () -> Void) {
+    func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void) {
         guard doOnMainThread(execute: self.fetch(ifError: errorType, level: level, completion: completion)) else {
             return
         }
@@ -69,7 +69,7 @@ extension Fetchable {
         }
     }
 
-    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping () -> Void = {}) {
+    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void = { _ in }) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if !force && [.done, .requesting].contains(self._requestState.value) {
@@ -89,9 +89,11 @@ extension Fetchable {
                 self?._requestState.value = requestState
                 if case .error(let error) = requestState {
                     ErrorLog.enqueue(error: error, with: errorType, level: level)
+                    completion(error)
+                } else {
+                    completion(nil)
                 }
                 tick()
-                completion()
             }
         }
     }

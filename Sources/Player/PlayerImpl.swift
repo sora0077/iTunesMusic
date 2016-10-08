@@ -15,20 +15,6 @@ import ErrorEventHandler
 import AbstractPlayerKit
 
 
-fileprivate enum PlayerError: ErrorLog.Error {
-
-    case none
-
-    init(error: Swift.Error?) {
-        self = .none
-    }
-}
-
-fileprivate enum PlayerErrorLevel: ErrorLog.Level {
-    case none
-}
-
-
 private final class TrackWorker: Worker {
 
     typealias Response = PlayerImpl.QueueResponse
@@ -38,9 +24,15 @@ private final class TrackWorker: Worker {
     let track: Model.Track
     let preview: Preview
 
-    init(track: Model.Track, preview: Preview) {
+    private let errorType: ErrorLog.Error.Type
+    private let errorLevel: ErrorLog.Level
+
+    init(track: Model.Track, preview: Preview, errorType: ErrorLog.Error.Type, errorLevel: ErrorLog.Level) {
         self.track = track
         self.preview = preview
+
+        self.errorType = errorType
+        self.errorLevel = errorLevel
     }
 
     func run() -> Observable<Response?> {
@@ -57,31 +49,38 @@ private final class TrackWorker: Worker {
             return nil
         }
 
-        func fetchPreviewInfo() -> Observable<(URL, duration: Double)>? {
+        func fetchPreviewInfo() -> Observable<(URL, duration: Double)?>? {
             guard let track = track.track else { return nil }
 
             if let info = getPreviewInfo(track: track) {
                 return Observable.just(info)
             }
 
-            return preview.queueing(track: track).fetch()
+            return preview.queueing(track: track).fetch().map { $0 }
         }
 
-        func fetchMeta() -> Observable<(URL, duration: Double)> {
-            defer {
-                track.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none)
+        func fetchMeta() -> Observable<Void> {
+            return Observable<Void>.create { [weak self] subscriber in
+                func inner() {
+                    guard let `self` = self else { return }
+
+                    self.track.fetch(ifError: self.errorType, level: self.errorLevel) { _ in
+                        subscriber.onNext()
+                        subscriber.onCompleted()
+                    }
+                }
+                inner()
+                return Disposables.create()
             }
-            return track.requestState
-                .filter { $0 == .done }
-                .flatMap { _ in fetchPreviewInfo() ?? .empty() }
         }
 
         let id = self.track.trackId
-        return (fetchPreviewInfo() ?? fetchMeta())
-            .map { [weak self] (url, duration) in
+        return (fetchPreviewInfo() ?? fetchMeta().flatMap { _ in fetchPreviewInfo() ?? .just(nil) })
+            .map { [weak self] option in
                 defer {
                     self?.canPop = true
                 }
+                guard let (url, duration) = option else { return nil }
                 return (id, url, duration)
             }
     }
@@ -98,12 +97,18 @@ private final class PlaylistWorker: Worker {
     var index: Int
     let preview: Preview
 
+    private let errorType: ErrorLog.Error.Type
+    private let errorLevel: ErrorLog.Level
+
     private var trackWorker: TrackWorker?
 
-    init(playlist: PlaylistType, index: Int = 0, preview: Preview) {
+    init(playlist: PlaylistType, index: Int = 0, preview: Preview, errorType: ErrorLog.Error.Type, errorLevel: ErrorLog.Level) {
         self.playlist = playlist
         self.index = index
         self.preview = preview
+
+        self.errorType = errorType
+        self.errorLevel = errorLevel
     }
 
     func run() -> Observable<Response?> {
@@ -124,7 +129,10 @@ private final class PlaylistWorker: Worker {
                     if let paginator = playlist as? _Fetchable,
                         !paginator._hasNoPaginatedContents && playlist.trackCount - index < 3 {
                         if !paginator._requesting.value {
-                            paginator.fetch(ifError: PlayerError.self, level: PlayerErrorLevel.none) {
+                            paginator.fetch(ifError: self.errorType, level: self.errorLevel) { error in
+                                if error != nil {
+                                    self.canPop = true
+                                }
                                 subscriber.onNext(Observable.just(nil))
                                 subscriber.onCompleted()
                             }
@@ -137,7 +145,8 @@ private final class PlaylistWorker: Worker {
                         return
                     }
                     let track = Model.Track(track: playlist.track(at: index))
-                    let worker = TrackWorker(track: track, preview: self.preview)
+                    let worker = TrackWorker(track: track, preview: self.preview,
+                                             errorType: self.errorType, errorLevel: self.errorLevel)
                     self.trackWorker = worker
                     self.index += 1
 
@@ -169,10 +178,24 @@ fileprivate extension AVPlayerItem {
 
 
 final class PlayerImpl: NSObject, Player {
+    private enum DefaultError: ErrorLog.Error {
+        case none
+
+        init(error: Swift.Error?) {
+            self = .none
+        }
+    }
+    private enum DefaultErrorLevel: ErrorLog.Level {
+        case none
+    }
 
     typealias QueueResponse = (id: Int, url: URL, duration: Double)
 
     var playlists: [PlaylistType] { return [] }
+
+    var errorType: ErrorLog.Error.Type = DefaultError.self
+
+    var errorLevel: ErrorLog.Level = DefaultErrorLevel.none
 
     fileprivate let _player = AVQueuePlayer()
 
@@ -307,12 +330,14 @@ final class PlayerImpl: NSObject, Player {
 extension PlayerImpl {
 
     func add(track: Model.Track) {
-        let worker = TrackWorker(track: track, preview: previewer)
+        let worker = TrackWorker(track: track, preview: previewer,
+                                 errorType: errorType, errorLevel: errorLevel)
         _add(worker: worker)
     }
 
     func add(playlist: PlaylistType) {
-        let worker = PlaylistWorker(playlist: playlist, preview: previewer)
+        let worker = PlaylistWorker(playlist: playlist, preview: previewer,
+                                    errorType: errorType, errorLevel: errorLevel)
         _add(worker: worker)
     }
 

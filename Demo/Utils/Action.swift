@@ -8,13 +8,14 @@
 
 import Foundation
 import ErrorEventHandler
-import APIKit
+import enum APIKit.SessionTaskError
+import enum iTunesMusic.Error
 
 
 extension UIAlertController {
 
-    static func alertController(with event: ErrorLog.Event) -> UIAlertController {
-        let alert = UIAlertController(
+    static func alertController(with event: ErrorLog.Event) -> Self {
+        let alert = self.init(
             title: (event.error as? AppError)?.title,
             message: (event.error as? AppError)?.message,
             preferredStyle: .alert
@@ -27,6 +28,7 @@ extension UIAlertController {
         return alert
     }
 }
+
 
 protocol AppError: ErrorLog.Error {
     var title: String { get }
@@ -73,6 +75,11 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
             case .responseError(let error): return error
             }
         }())
+    case let error as iTunesMusic.Error:
+        switch error {
+        case .trackNotFound(let trackId):
+            return ("エラー", "指定された曲は存在しません :\(trackId)")
+        }
     case let error as NSError:
         return (error.localizedRecoverySuggestion ?? "エラー", error.localizedFailureReason ?? error.localizedDescription)
     default:

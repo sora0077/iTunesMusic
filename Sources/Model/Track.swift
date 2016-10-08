@@ -65,6 +65,7 @@ extension Model.Track: _Fetchable {
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
+        let trackId = self.trackId
         let lookup = LookupWithIds<LookupResponse>(id: trackId)
         Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
@@ -73,7 +74,7 @@ extension Model.Track: _Fetchable {
                 completion(requestState)
             }
             switch result {
-            case .success(let response):
+            case .success(let response) where !response.objects.isEmpty:
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
                 try! realm.write {
@@ -90,6 +91,8 @@ extension Model.Track: _Fetchable {
                     }
                 }
                 requestState = .done
+            case .success:
+                requestState = .error(Error.trackNotFound(trackId))
             case .failure(let error):
                 print(error)
                 requestState = .error(error)

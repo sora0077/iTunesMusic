@@ -11,13 +11,6 @@ import APIKit
 import Himotoki
 import RxSwift
 import RealmSwift
-import ErrorEventHandler
-
-
-extension ErrorLog {
-    public typealias Error = ErrorEventHandler.Error
-    public typealias Level = ErrorEventHandler.ErrorLevel
-}
 
 
 private let _previewer = Preview()

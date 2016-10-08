@@ -132,9 +132,10 @@
 		D9AF2B011D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF2AFF1D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift */; };
 		D9AF2B021D75C70100D7751C /* AlbumListTopBottomTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9AF2B001D75C70100D7751C /* AlbumListTopBottomTableViewCell.xib */; };
 		D9AF2B041D75C83E00D7751C /* LayerDesignableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF2B031D75C83E00D7751C /* LayerDesignableView.swift */; };
-		D9B341511DA6A7090044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B341501DA6A7090044D0A3 /* AbstractPlayerKit.framework */; };
-		D9B341521DA6A7110044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B341501DA6A7090044D0A3 /* AbstractPlayerKit.framework */; };
-		D9B341531DA6A7110044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9B341501DA6A7090044D0A3 /* AbstractPlayerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9B341551DA8E9E90044D0A3 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341541DA8E9E90044D0A3 /* Error.swift */; };
+		D9B3416E1DA907560044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; };
+		D9B3416F1DA907650044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; };
+		D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9C553EE1D2E943B007C486E /* EntityPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */; };
 		D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
@@ -194,7 +195,7 @@
 				D9A33E241D6225BD00E33E5D /* PINRemoteImage.framework in Embed Frameworks */,
 				D9A33E421D622A3B00E33E5D /* RxSwift.framework in Embed Frameworks */,
 				D95085891D8063CD003A3D65 /* MMWormhole.framework in Embed Frameworks */,
-				D9B341531DA6A7110044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */,
+				D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */,
 				D9A33E481D622A3B00E33E5D /* Result.framework in Embed Frameworks */,
 				D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */,
 				D9A33E3C1D622A3B00E33E5D /* SWXMLHash.framework in Embed Frameworks */,
@@ -325,7 +326,8 @@
 		D9AF2AFF1D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumListTopBottomTableViewCell.swift; sourceTree = "<group>"; };
 		D9AF2B001D75C70100D7751C /* AlbumListTopBottomTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlbumListTopBottomTableViewCell.xib; sourceTree = "<group>"; };
 		D9AF2B031D75C83E00D7751C /* LayerDesignableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerDesignableView.swift; sourceTree = "<group>"; };
-		D9B341501DA6A7090044D0A3 /* AbstractPlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AbstractPlayerKit.framework; path = Carthage/Build/iOS/AbstractPlayerKit.framework; sourceTree = "<group>"; };
+		D9B341541DA8E9E90044D0A3 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AbstractPlayerKit.framework; path = Carthage/Build/iOS/AbstractPlayerKit.framework; sourceTree = "<group>"; };
 		D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityPlaylist.swift; sourceTree = "<group>"; };
 		D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityTrackMetadata.swift; sourceTree = "<group>"; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -349,7 +351,7 @@
 				D9A33E281D6229C800E33E5D /* Realm.framework in Frameworks */,
 				D9A33E341D6229E800E33E5D /* Timepiece.framework in Frameworks */,
 				D9A33E4B1D622EC400E33E5D /* Himotoki.framework in Frameworks */,
-				D9B341511DA6A7090044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
+				D9B3416E1DA907560044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
 				D9A33E2E1D6229DC00E33E5D /* RxSwift.framework in Frameworks */,
 				D9A33E321D6229E800E33E5D /* SnapKit.framework in Frameworks */,
 				D9A33E291D6229C800E33E5D /* RealmSwift.framework in Frameworks */,
@@ -377,7 +379,7 @@
 				D9A33E411D622A3B00E33E5D /* RxSwift.framework in Frameworks */,
 				D9A33E3F1D622A3B00E33E5D /* RxCocoa.framework in Frameworks */,
 				D95085881D8063CD003A3D65 /* MMWormhole.framework in Frameworks */,
-				D9B341521DA6A7110044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
+				D9B3416F1DA907650044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
 				D9A33E451D622A3B00E33E5D /* RealmSwift.framework in Frameworks */,
 				D9A33E211D6225BD00E33E5D /* PINCache.framework in Frameworks */,
 				D9A33E4C1D622ECA00E33E5D /* Himotoki.framework in Frameworks */,
@@ -424,7 +426,7 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D9B341501DA6A7090044D0A3 /* AbstractPlayerKit.framework */,
+				D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */,
 				D93C39841D97EB8600A523F3 /* Routing.framework */,
 				D95085871D8063C0003A3D65 /* MMWormhole.framework */,
 				D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */,
@@ -518,6 +520,7 @@
 				D91B42961D07071400AAAD58 /* API */,
 				D91B42991D070FA600AAAD58 /* iTunesMusic.swift */,
 				D9165FEE1D2C0ADD00B701E3 /* Utils.swift */,
+				D9B341541DA8E9E90044D0A3 /* Error.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -995,6 +998,7 @@
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
+				D9B341551DA8E9E90044D0A3 /* Error.swift in Sources */,
 				D9165FE81D2C040C00B701E3 /* Model.swift in Sources */,
 				D9165FED1D2C0AA300B701E3 /* Api.swift in Sources */,
 				D91B42901D044AE600AAAD58 /* EntityTrack.swift in Sources */,
