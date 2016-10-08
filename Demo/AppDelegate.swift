@@ -53,6 +53,23 @@ final class PlayingViewController: UIViewController {
             make.edges.equalTo(0)
         }
 
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.reanimate),
+            name: .UIApplicationDidBecomeActive,
+            object: nil
+        )
+    }
+
+    func setArtwork(of collection: iTunesMusic.Collection, size: CGFloat) {
+        //animator.fractionComplete = 0.9
+        artworkImageView.setArtwork(of: collection, size: size)
+    }
+
+    @objc
+    private func reanimate() {
+
+        blurView.effect = UIBlurEffect(style: .dark)
         animator = UIViewPropertyAnimator(duration: 2, curve: .linear)
         animator.addAnimations {
             self.blurView.effect = nil
@@ -61,15 +78,10 @@ final class PlayingViewController: UIViewController {
         animator.pauseAnimation()
         animator.fractionComplete = 0.8
     }
-
-    func setArtwork(of collection: iTunesMusic.Collection, size: CGFloat) {
-        //animator.fractionComplete = 0.9
-        artworkImageView.setArtwork(of: collection, size: size)
-    }
 }
 
 
-fileprivate func delegate() -> AppDelegate {
+private func delegate() -> AppDelegate {
     // swiftlint:disable force_cast
     return UIApplication.shared.delegate as! AppDelegate
 }
@@ -108,13 +120,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-
-        wormhole.listenForMessage(withIdentifier: "aaa") { (_) in
-            print("listenForMessage aaa")
-        }
-
-        clearAllImageCaches()
-
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(AVAudioSessionCategoryPlayback)

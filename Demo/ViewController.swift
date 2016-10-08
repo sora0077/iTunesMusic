@@ -35,24 +35,6 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-//        let tab = UITabBarController()
-//        tab.viewControllers = [
-//            UINavigationController(rootViewController: GenresViewController()),
-//            UINavigationController(rootViewController: PlaylistViewController())
-//        ]
-//
-//        present(tab, animated: true, completion: nil)
-//
-//        tab.viewControllers![0].childViewControllers[0].navigationItem.rightBarButtonItem = UIBarButtonItem(
-//            barButtonSystemItem: .search,
-//            target: self,
-//            action: #selector(self.searchAction)
-//        )
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -69,14 +51,34 @@ class ViewController: UIViewController {
 
 class MainViewController: UIViewController {
 
+    private let containerView = UIView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        containerView.layer.cornerRadius = 4
+        containerView.layer.masksToBounds = true
+
+        view.addSubview(containerView)
+        containerView.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
+
+        view.layer.cornerRadius = containerView.layer.cornerRadius
+        view.layer.masksToBounds = false
+        view.layer.shadowRadius = 8
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset.height = 2
+
 
         let genres = GenresViewController()
         let nav = UINavigationController(rootViewController: genres)
 
         addChildViewController(nav)
-        view.addSubview(nav.view)
+        containerView.addSubview(nav.view)
+        nav.view.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
         nav.didMove(toParentViewController: self)
     }
 }

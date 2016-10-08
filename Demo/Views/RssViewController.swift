@@ -37,7 +37,7 @@ class RssViewController: UIViewController {
         view.addSubview(tableView)
         tableView.separatorStyle = .none
         tableView.snp.makeConstraints { make in
-            make.edges.equalTo(view)
+            make.edges.equalTo(0)
         }
         view.backgroundColor = tableView.backgroundColor
         tableView.dataSource = self

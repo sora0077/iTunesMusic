@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
@@ -36,8 +36,8 @@
                         <constraints>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ioW-A5-FIW" secondAttribute="bottom" id="92g-Ym-QlY"/>
                             <constraint firstItem="ozG-eP-PMh" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="HIt-07-0CM"/>
-                            <constraint firstItem="ioW-A5-FIW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="adf-ZI-8eq"/>
-                            <constraint firstAttribute="trailing" secondItem="ioW-A5-FIW" secondAttribute="trailing" id="noH-Np-jo6"/>
+                            <constraint firstItem="ioW-A5-FIW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="28" id="adf-ZI-8eq"/>
+                            <constraint firstAttribute="trailing" secondItem="ioW-A5-FIW" secondAttribute="trailing" constant="8" id="noH-Np-jo6"/>
                             <constraint firstItem="ozG-eP-PMh" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ou4-d7-vFk"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ozG-eP-PMh" secondAttribute="bottom" id="sgY-mZ-PBl"/>
                             <constraint firstItem="ioW-A5-FIW" firstAttribute="leading" secondItem="ozG-eP-PMh" secondAttribute="trailing" id="tEO-Lk-tAa"/>
@@ -85,8 +85,12 @@
         <scene sceneID="bkY-Og-7TP">
             <objects>
                 <viewController id="eht-v0-WV9" customClass="MainViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FcV-cX-Hcq"/>
+                        <viewControllerLayoutGuide type="bottom" id="EOY-bu-NWP"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gRD-xf-3D0">
-                        <rect key="frame" x="0.0" y="0.0" width="311" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="303" height="639"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </view>
@@ -99,6 +103,10 @@
         <scene sceneID="jTL-xR-NSE">
             <objects>
                 <viewController id="rQs-6a-wCM" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7zE-Nw-Wpa"/>
+                        <viewControllerLayoutGuide type="bottom" id="tFn-9C-bT9"/>
+                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="lw2-9C-Gfm">
                         <rect key="frame" x="0.0" y="0.0" width="64" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
