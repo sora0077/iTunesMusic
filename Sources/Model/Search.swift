@@ -124,7 +124,7 @@ extension Model.Search: _Fetchable {
     var _refreshDuration: Duration { return 60.minutes }
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        guard term.isEmpty else { completion(.none); return }
+        guard !term.isEmpty else { completion(.none); return }
 
         let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
         Session.shared.send(search, callbackQueue: callbackQueue) { [weak self] result in

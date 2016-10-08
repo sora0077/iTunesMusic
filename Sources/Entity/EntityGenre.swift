@@ -51,11 +51,22 @@ final class _Genre: RealmSwift.Object {
     fileprivate let _subgenres = List<_Genre>()
 
     override class func primaryKey() -> String? { return "_id" }
+
+    override class func ignoredProperties() -> [String] {
+        return ["name"]
+    }
 }
 
 extension _Genre: Genre {
 
-    var name: String { return _name }
+    var name: String {
+        get {
+            return _name
+        }
+        set {
+            _name = newValue
+        }
+    }
 
     var id: Int { return _id }
 

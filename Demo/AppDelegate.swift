@@ -157,13 +157,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         router.install(middleware: Logger())
-        router.register(pattern: "/track/:trackId([0-9]+)") { [unowned self] (request, response, next) in
+        router.register(pattern: "/track/:trackId([0-9]+)") { request, response, next in
             if let trackId = Int(request.parameters["trackId"] ?? "") {
-
-                let track = Model.Track(trackId: trackId)
-                player.add(track: track)
+                player.add(track: Model.Track(trackId: trackId))
             }
             next(response)
+        }
+
+        router.register(pattern: "/search") { [weak self] request, response, next in
+            guard let `self` = self else { return }
+            var request = request
+            if let query = request.queryItems["q"] ?? "", !query.isEmpty {
+                let root = self.manager[.routing].rootViewController
+
+                func open() {
+                    let vc = SearchViewController(query: query)
+                    let nav = UINavigationController(rootViewController: vc)
+                    let item = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: nil)
+                    item.rx.tap.asDriver()
+                        .drive(onNext: { [weak wnav=nav] _ in
+                            wnav?.dismiss(animated: true, completion: nil)
+                            })
+                        .addDisposableTo(self.disposeBag)
+                    nav.navigationItem.rightBarButtonItem = item
+                    root?.present(nav, animated: true) {
+                        next(response)
+                    }
+                }
+
+                if let presented = root?.presentedViewController {
+                    presented.dismiss(animated: true, completion: open)
+                } else {
+                    open()
+                }
+            } else {
+                next(response)
+            }
         }
 
 //        Router.default.get(pattern: "/track/:trackId") { request, params, next in

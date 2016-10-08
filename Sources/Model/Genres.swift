@@ -54,6 +54,13 @@ extension Model {
                     .top, .jpop, .anime, .electronic, .disney, .sountTrack, .jazz
                 ]
             }
+
+            var name: String? {
+                if self == .top {
+                    return "すべてのジャンル"
+                }
+                return nil
+            }
         }
 
         public var isEmpty: Bool { return caches.isEmpty || cache.list.isEmpty }
@@ -108,7 +115,7 @@ extension Model.Genres: _Fetchable {
             completion(.done)
             return
         }
-        
+
         let listGenres = ListGenres<_Genre>()
         Session.shared.send(listGenres, callbackQueue: callbackQueue) { [weak self] result in
             let requestState: RequestState
@@ -128,8 +135,12 @@ extension Model.Genres: _Fetchable {
                         cache.refreshAt = Date()
                     }
 
-                    for genre in InitialDefaultGenre.cases {
-                        cache.list.append(realm.object(ofType: _Genre.self, forPrimaryKey: genre.rawValue)!)
+                    for genreType in InitialDefaultGenre.cases {
+                        let genre = realm.object(ofType: _Genre.self, forPrimaryKey: genreType.rawValue)!
+                        if let name = genreType.name {
+                            genre.name = name
+                        }
+                        cache.list.append(genre)
                     }
                     realm.add(cache)
                 }

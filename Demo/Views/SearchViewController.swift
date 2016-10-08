@@ -44,6 +44,15 @@ class SearchViewController: UIViewController {
     fileprivate let tableView = UITableView()
     fileprivate let searhBar = UISearchBar()
 
+    init(query: String? = nil) {
+        search = Model.Search(term: query ?? "")
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -59,6 +68,7 @@ class SearchViewController: UIViewController {
         tableView.dataSource = self
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
+        searhBar.text = search.name
 
         navigationItem.titleView = searhBar
 
