@@ -32,10 +32,61 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
 
 
+final class InnerShadowView: UIView {
+
+    private var shadowLayer = CALayer()
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        makeShadow(to: self)
+    }
+
+    func makeShadow(to view: UIView) {
+        let sublayer = CALayer()
+        shadowLayer.removeFromSuperlayer()
+        shadowLayer = sublayer
+
+        sublayer.frame = view.bounds
+        view.layer.addSublayer(sublayer)
+        sublayer.masksToBounds = true
+
+        let width: CGFloat = 20
+
+        let size = sublayer.bounds.size
+        var point = CGPoint(x: -width, y: -width)
+
+        let path = CGMutablePath()
+        path.move(to: point)
+        point.x += size.width + width
+        path.addLine(to: point)
+        point.y += width
+        path.addLine(to: point)
+        point.x -= size.width
+        path.addLine(to: point)
+        point.y += size.height
+        path.addLine(to: point)
+        point.x -= width
+        path.addLine(to: point)
+        point.y -= size.height + width
+        path.addLine(to: point)
+
+        path.closeSubpath()
+
+        sublayer.shadowOffset = CGSize(width: 10, height: 10)
+        sublayer.shadowOpacity = 0.8
+        sublayer.shadowRadius = 10
+        sublayer.shadowPath = path
+    }
+}
+
+
 final class PlayingViewController: UIViewController {
 
     private let artworkImageView = UIImageView()
-    let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+
+    private let shadowView = InnerShadowView()
 
     private var animator: UIViewPropertyAnimator!
 
@@ -45,11 +96,18 @@ final class PlayingViewController: UIViewController {
         view.addSubview(artworkImageView)
         artworkImageView.contentMode = .scaleAspectFill
         artworkImageView.snp.makeConstraints { make in
-            make.edges.equalTo(0)
+            make.top.equalTo(-20)
+            make.bottom.equalTo(20)
+            make.left.right.equalTo(-20)
         }
 
         view.addSubview(blurView)
         blurView.snp.makeConstraints { make in
+            make.edges.equalTo(0)
+        }
+
+        view.addSubview(shadowView)
+        shadowView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
 
@@ -59,6 +117,16 @@ final class PlayingViewController: UIViewController {
             name: .UIApplicationDidBecomeActive,
             object: nil
         )
+
+        let xAxis = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
+        let yAxis = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
+        xAxis.minimumRelativeValue = 20
+        xAxis.maximumRelativeValue = -20
+        yAxis.minimumRelativeValue = 40
+        yAxis.maximumRelativeValue = -40
+        let effect = UIMotionEffectGroup()
+        effect.motionEffects = [xAxis, yAxis]
+        artworkImageView.addMotionEffect(effect)
     }
 
     func setArtwork(of collection: iTunesMusic.Collection, size: CGFloat) {
@@ -76,7 +144,7 @@ final class PlayingViewController: UIViewController {
         }
         animator.startAnimation()
         animator.pauseAnimation()
-        animator.fractionComplete = 0.8
+        animator.fractionComplete = 0.94
     }
 }
 
