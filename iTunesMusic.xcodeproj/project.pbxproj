@@ -50,7 +50,6 @@
 		D93C39861D97EBAA00A523F3 /* Routing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; };
 		D93C39871D97EBAA00A523F3 /* Routing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
-		D93CDF7E1D8AE28600E8D387 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7D1D8AE28600E8D387 /* Action.swift */; };
 		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
 		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
@@ -136,6 +135,8 @@
 		D9B3416E1DA907560044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; };
 		D9B3416F1DA907650044D0A3 /* AbstractPlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; };
 		D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D9B341721DA91F2D0044D0A3 /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341711DA91F2D0044D0A3 /* Routing.swift */; };
+		D9B341741DA921D90044D0A3 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341731DA921D90044D0A3 /* ErrorHandling.swift */; };
 		D9C553EE1D2E943B007C486E /* EntityPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */; };
 		D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
@@ -271,7 +272,6 @@
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D93C39841D97EB8600A523F3 /* Routing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Routing.framework; path = Carthage/Build/iOS/Routing.framework; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		D93CDF7D1D8AE28600E8D387 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D95085871D8063C0003A3D65 /* MMWormhole.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMWormhole.framework; path = Carthage/Build/iOS/MMWormhole.framework; sourceTree = "<group>"; };
@@ -328,6 +328,8 @@
 		D9AF2B031D75C83E00D7751C /* LayerDesignableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerDesignableView.swift; sourceTree = "<group>"; };
 		D9B341541DA8E9E90044D0A3 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AbstractPlayerKit.framework; path = Carthage/Build/iOS/AbstractPlayerKit.framework; sourceTree = "<group>"; };
+		D9B341711DA91F2D0044D0A3 /* Routing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
+		D9B341731DA921D90044D0A3 /* ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityPlaylist.swift; sourceTree = "<group>"; };
 		D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityTrackMetadata.swift; sourceTree = "<group>"; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -643,6 +645,8 @@
 			isa = PBXGroup;
 			children = (
 				D9573C291D3E7ADD00783AA4 /* TableViewModule.swift */,
+				D9B341711DA91F2D0044D0A3 /* Routing.swift */,
+				D9B341731DA921D90044D0A3 /* ErrorHandling.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -671,7 +675,6 @@
 				D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */,
 				D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */,
 				D93CDF7B1D898F4F00E8D387 /* Color.swift */,
-				D93CDF7D1D8AE28600E8D387 /* Action.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1026,17 +1029,18 @@
 			files = (
 				D9AF2B011D75C70100D7751C /* AlbumListTopBottomTableViewCell.swift in Sources */,
 				D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */,
+				D9B341741DA921D90044D0A3 /* ErrorHandling.swift in Sources */,
 				D9AF2AF91D75C6DC00D7751C /* AlbumListMiddleTableViewCell.swift in Sources */,
 				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,
 				D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */,
 				D9193C731D451214006763EC /* NewPlaylistEditorViewController.swift in Sources */,
 				D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */,
 				D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */,
+				D9B341721DA91F2D0044D0A3 /* Routing.swift in Sources */,
 				D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */,
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,
 				D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */,
 				D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */,
-				D93CDF7E1D8AE28600E8D387 /* Action.swift in Sources */,
 				D9AF2AFD1D75C6F000D7751C /* AlbumListBottomTableViewCell.swift in Sources */,
 				D9A33E501D62383300E33E5D /* ImageFetcher.swift in Sources */,
 				D9AF2B041D75C83E00D7751C /* LayerDesignableView.swift in Sources */,

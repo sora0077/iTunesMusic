@@ -9,13 +9,11 @@
 import UIKit
 import AVFoundation
 import iTunesMusic
-import APIKit
 import RxSwift
 import RxCocoa
 import RealmSwift
 import MediaPlayer
 import WindowKit
-import ErrorEventHandler
 import VYPlayIndicatorSwift
 import MMWormhole
 import Routing
@@ -71,19 +69,34 @@ final class PlayingViewController: UIViewController {
 }
 
 
-func delegate() -> AppDelegate {
+fileprivate func delegate() -> AppDelegate {
+    // swiftlint:disable force_cast
     return UIApplication.shared.delegate as! AppDelegate
 }
 
 func playingViewController() -> PlayingViewController {
+    // swiftlint:disable force_cast
     return delegate().manager[.background].rootViewController as! PlayingViewController
 }
 
+func routingManageViewController() -> UIViewController {
+    // swiftlint:disable force_cast
+    return delegate().manager[.routing].rootViewController!
+}
+
+func errorManageViewController() -> UIViewController {
+    // swiftlint:disable force_cast
+    return delegate().manager[.alert].rootViewController!
+}
+
+func router() -> Router {
+    return delegate().router
+}
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    private let router = Router()
+    fileprivate let router = Router()
 
     var window: UIWindow?
 
@@ -115,27 +128,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         manager[.routing].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
 
-        ErrorLog.event
-            .drive(onNext: { [weak self] error in
-                print(error)
-                switch error.level {
-                case let level as AppErrorLevel:
-                    switch level {
-                    case .alert:
-                        let root = self?.manager[.alert].rootViewController
-                        let presented = root?.presentedViewController ?? root
-                        let alert = UIAlertController.alertController(with: error)
-                        presented?.present(alert, animated: true, completion: nil)
-                    case .slirent:
-                        break
-                    }
-                default:
-                    break
-                }
-            })
-            .addDisposableTo(disposeBag)
-
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
+
+        ErrorHandlingSettings.launch()
+        RoutingSettings.launch()
 
         launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
         player.install(middleware: ControlCenter())
@@ -146,66 +142,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.tintColor = UIColor.lightGray
 
         manager[.background].backgroundColor = UIColor(hex: 0x3b393a)
-
-
-        struct Logger: Middleware {
-            fileprivate func handle(request: Routing.Request, response: Response, next: @escaping (Response) -> Void) throws {
-                print(request)
-                let date = Date()
-                var response = response
-                response.closing {
-                    print("time: ", Date().timeIntervalSince(date))
-                }
-                next(response)
-            }
-        }
-
-        router.install(middleware: Logger())
-        router.register(pattern: "/track/:trackId([0-9]+)") { request, response, next in
-            if let trackId = Int(request.parameters["trackId"] ?? "") {
-                player.add(track: Model.Track(trackId: trackId))
-            }
-            next(response)
-        }
-
-        router.register(pattern: "/search", queue: .main) { [weak self] request, response, next in
-            guard let `self` = self else { return }
-            var request = request
-            if let query = request.queryItems["q"] ?? "", !query.isEmpty {
-                let root = self.manager[.routing].rootViewController
-
-                func open() {
-                    let vc = SearchViewController(query: query)
-                    let nav = UINavigationController(rootViewController: vc)
-                    let item = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: nil)
-                    item.rx.tap.asDriver()
-                        .drive(onNext: { [weak wnav=nav] _ in
-                            wnav?.dismiss(animated: true, completion: nil)
-                        })
-                        .addDisposableTo(self.disposeBag)
-                    nav.navigationItem.rightBarButtonItem = item
-                    root?.present(nav, animated: true) {
-                        next(response)
-                    }
-                }
-
-                if let presented = root?.presentedViewController {
-                    presented.dismiss(animated: true, completion: open)
-                } else {
-                    open()
-                }
-            } else {
-                next(response)
-            }
-        }
-
-//        Router.default.get(pattern: "/track/:trackId") { request, params, next in
-//
-//            next()
-//        }
-
-        print(UIWindowLevelNormal)
-        print(UIWindowLevelAlert)
 
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })

@@ -1,20 +1,53 @@
 //
-//  Action.swift
+//  ErrorHandling.swift
 //  iTunesMusic
 //
-//  Created by 林達也 on 2016/09/15.
+//  Created by 林達也 on 2016/10/08.
 //  Copyright © 2016年 jp.sora0077. All rights reserved.
 //
 
 import Foundation
 import ErrorEventHandler
+import RxSwift
 import enum APIKit.SessionTaskError
 import enum iTunesMusic.Error
 
 
+func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?,
+            error: AppError.Type = CommonError.self,
+            level: AppErrorLevel = .alert) {
+    handler?(error, level)
+}
+
+final class ErrorHandlingSettings {
+    private static let disposeBag = DisposeBag()
+    static func launch() {
+        ErrorLog.event
+            .drive(onNext: { error in
+                print(error)
+                switch error.level {
+                case let level as AppErrorLevel:
+                    switch level {
+                    case .alert:
+                        let root = errorManageViewController()
+                        let presented = root.presentedViewController ?? root
+                        let alert = UIAlertController.alertController(with: error)
+                        presented.present(alert, animated: true, completion: nil)
+                    case .slirent:
+                        break
+                    }
+                default:
+                    break
+                }
+            })
+            .addDisposableTo(disposeBag)
+    }
+}
+
+
 extension UIAlertController {
 
-    static func alertController(with event: ErrorLog.Event) -> Self {
+    fileprivate static func alertController(with event: ErrorLog.Event) -> Self {
         let alert = self.init(
             title: (event.error as? AppError)?.title,
             message: (event.error as? AppError)?.message,
@@ -74,7 +107,7 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
             case .requestError(let error): return error
             case .responseError(let error): return error
             }
-        }())
+            }())
     case let error as iTunesMusic.Error:
         switch error {
         case .trackNotFound(let trackId):
@@ -90,10 +123,4 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
 
 enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
     case slirent, alert
-}
-
-func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?,
-            error: AppError.Type = CommonError.self,
-            level: AppErrorLevel = .alert) {
-    handler?(error, level)
 }
