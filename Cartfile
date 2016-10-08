@@ -10,7 +10,7 @@ github "drmohundro/SWXMLHash" "master"
 github "mutualmobile/MMWormhole"
 
 
-github "SnapKit/SnapKit" "develop"
+github "SnapKit/SnapKit" "master"
 
 github "pinterest/PINRemoteImage"
 

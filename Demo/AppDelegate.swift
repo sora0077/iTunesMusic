@@ -164,7 +164,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             next(response)
         }
 
-        router.register(pattern: "/search") { [weak self] request, response, next in
+        router.register(pattern: "/search", queue: .main) { [weak self] request, response, next in
             guard let `self` = self else { return }
             var request = request
             if let query = request.queryItems["q"] ?? "", !query.isEmpty {
