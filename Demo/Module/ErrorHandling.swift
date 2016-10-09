@@ -13,11 +13,48 @@ import enum APIKit.SessionTaskError
 import enum iTunesMusic.Error
 
 
+protocol AppError: ErrorLog.Error {
+    var title: String { get }
+    var message: String? { get }
+}
+
+extension AppError {
+
+    var message: String? { return nil }
+}
+
+enum CommonError: AppError {
+    case none, error(Swift.Error)
+
+    private var error: Swift.Error? {
+        switch self {
+        case .error(let error):
+            return error
+        case .none:
+            return nil
+        }
+    }
+
+    init(error: Swift.Error?) {
+        self = error.map(CommonError.error) ?? .none
+    }
+
+    var title: String {
+        return errorDescription(from: error).0
+    }
+
+    var message: String? {
+        return errorDescription(from: error).1
+    }
+}
+
+
 func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?,
             error: AppError.Type = CommonError.self,
             level: AppErrorLevel = .alert) {
     handler?(error, level)
 }
+
 
 final class ErrorHandlingSettings {
     private static let disposeBag = DisposeBag()
@@ -63,41 +100,6 @@ extension UIAlertController {
 }
 
 
-protocol AppError: ErrorLog.Error {
-    var title: String { get }
-    var message: String? { get }
-}
-
-extension AppError {
-
-    var message: String? { return nil }
-}
-
-enum CommonError: AppError {
-    case none, error(Swift.Error)
-
-    private var error: Swift.Error? {
-        switch self {
-        case .error(let error):
-            return error
-        case .none:
-            return nil
-        }
-    }
-
-    init(error: Swift.Error?) {
-        self = error.map(CommonError.error) ?? .none
-    }
-
-    var title: String {
-        return errorDescription(from: error).0
-    }
-
-    var message: String? {
-        return errorDescription(from: error).1
-    }
-}
-
 private func errorDescription(from error: Swift.Error?) -> (String, String) {
     switch error {
     case let error as SessionTaskError:
@@ -120,6 +122,7 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
         return ("エラー", "不明なエラー")
     }
 }
+
 
 enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
     case slirent, alert
