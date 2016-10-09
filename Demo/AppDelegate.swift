@@ -84,11 +84,7 @@ final class InnerShadowView: UIView {
 final class PlayingViewController: UIViewController {
 
     private let artworkImageView = UIImageView()
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-
     private let shadowView = InnerShadowView()
-
-    private var animator: UIViewPropertyAnimator!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,51 +96,17 @@ final class PlayingViewController: UIViewController {
             make.bottom.equalTo(20)
             make.left.right.equalTo(-20)
         }
-
-        view.addSubview(blurView)
-        blurView.snp.makeConstraints { make in
-            make.edges.equalTo(0)
-        }
+        artworkImageView.addTiltEffects(tilt: .background(depth: 20))
 
         view.addSubview(shadowView)
         shadowView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.reanimate),
-            name: .UIApplicationDidBecomeActive,
-            object: nil
-        )
-
-        let xAxis = UIInterpolatingMotionEffect(keyPath: "center.x", type: .tiltAlongHorizontalAxis)
-        let yAxis = UIInterpolatingMotionEffect(keyPath: "center.y", type: .tiltAlongVerticalAxis)
-        xAxis.minimumRelativeValue = 20
-        xAxis.maximumRelativeValue = -20
-        yAxis.minimumRelativeValue = 40
-        yAxis.maximumRelativeValue = -40
-        let effect = UIMotionEffectGroup()
-        effect.motionEffects = [xAxis, yAxis]
-        artworkImageView.addMotionEffect(effect)
     }
 
     func setArtwork(of collection: iTunesMusic.Collection, size: CGFloat) {
         //animator.fractionComplete = 0.9
         artworkImageView.setArtwork(of: collection, size: size)
-    }
-
-    @objc
-    private func reanimate() {
-
-        blurView.effect = UIBlurEffect(style: .dark)
-        animator = UIViewPropertyAnimator(duration: 2, curve: .linear)
-        animator.addAnimations {
-            self.blurView.effect = nil
-        }
-        animator.startAnimation()
-        animator.pauseAnimation()
-        animator.fractionComplete = 0.94
     }
 }
 

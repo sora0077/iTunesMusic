@@ -137,6 +137,7 @@
 		D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9B341721DA91F2D0044D0A3 /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341711DA91F2D0044D0A3 /* Routing.swift */; };
 		D9B341741DA921D90044D0A3 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341731DA921D90044D0A3 /* ErrorHandling.swift */; };
+		D9B341761DAA1DD90044D0A3 /* MotionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341751DAA1DD90044D0A3 /* MotionEffect.swift */; };
 		D9C553EE1D2E943B007C486E /* EntityPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */; };
 		D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
@@ -330,6 +331,7 @@
 		D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AbstractPlayerKit.framework; path = Carthage/Build/iOS/AbstractPlayerKit.framework; sourceTree = "<group>"; };
 		D9B341711DA91F2D0044D0A3 /* Routing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
 		D9B341731DA921D90044D0A3 /* ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
+		D9B341751DAA1DD90044D0A3 /* MotionEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionEffect.swift; sourceTree = "<group>"; };
 		D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityPlaylist.swift; sourceTree = "<group>"; };
 		D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityTrackMetadata.swift; sourceTree = "<group>"; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -675,6 +677,7 @@
 				D9A33E4F1D62383300E33E5D /* ImageFetcher.swift */,
 				D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */,
 				D93CDF7B1D898F4F00E8D387 /* Color.swift */,
+				D9B341751DAA1DD90044D0A3 /* MotionEffect.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1039,6 +1042,7 @@
 				D9B341721DA91F2D0044D0A3 /* Routing.swift in Sources */,
 				D9573C2A1D3E7ADD00783AA4 /* TableViewModule.swift in Sources */,
 				D929E4561D1EE9500045C316 /* ViewController.swift in Sources */,
+				D9B341761DAA1DD90044D0A3 /* MotionEffect.swift in Sources */,
 				D929E4541D1EE9500045C316 /* AppDelegate.swift in Sources */,
 				D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */,
 				D9AF2AFD1D75C6F000D7751C /* AlbumListBottomTableViewCell.swift in Sources */,
