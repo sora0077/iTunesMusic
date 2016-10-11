@@ -14,6 +14,7 @@ import RealmSwift
 import ErrorEventHandler
 
 
+
 public protocol Player: class {
 
     var errorType: ErrorLog.Error.Type { get set }
@@ -25,6 +26,8 @@ public protocol Player: class {
     var currentTime: Observable<Float64> { get }
 
     var playing: Bool { get }
+
+    var playlingQueue: Observable<[Model.Track]> { get }
 
     func install(middleware: PlayerMiddleware)
 

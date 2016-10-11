@@ -15,7 +15,7 @@ import ErrorEventHandler
 import AbstractPlayerKit
 
 
-fileprivate extension AVPlayerItem {
+private extension AVPlayerItem {
 
     private struct AVPlayerItemKey {
         static var trackId: UInt8 = 0
@@ -31,18 +31,32 @@ fileprivate extension AVPlayerItem {
     }
 }
 
+private enum DefaultError: ErrorLog.Error {
+    case none
+
+    init(error: Swift.Error?) {
+        self = .none
+    }
+}
+
+private enum DefaultErrorLevel: ErrorLog.Level {
+    case none
+}
+
+extension Array {
+
+    func mapNotNil<T>(_ transform: (Element) throws -> T?) rethrows -> [T] {
+        var elements: [T] = []
+        try forEach {
+            if let val = try transform($0) {
+                elements.append(val)
+            }
+        }
+        return elements
+    }
+}
 
 final class PlayerImpl: NSObject, Player {
-    private enum DefaultError: ErrorLog.Error {
-        case none
-
-        init(error: Swift.Error?) {
-            self = .none
-        }
-    }
-    private enum DefaultErrorLevel: ErrorLog.Level {
-        case none
-    }
 
     typealias QueueResponse = (id: Int, url: URL, duration: Double)
 
@@ -73,15 +87,23 @@ final class PlayerImpl: NSObject, Player {
     private let queueuingCount = Variable<Int>(0)
 
 
-    fileprivate let workerFactory: WorkerFactory
+    fileprivate private(set) var workerFactory: WorkerFactory!
 
+    private(set) lazy var playlingQueue: Observable<[Model.Track]> =
+        Observable.combineLatest(self.fixedPlayingQueue.asObservable(), self.unfixedPlayingQueue.asObservable()) { (e1, e2) in
+            return e1 + e2
+        }
+    fileprivate let fixedPlayingQueue = Variable<[Model.Track]>([])
+    fileprivate let unfixedPlayingQueue = Variable<ArraySlice<Model.Track>>([])
 
     init(previewer: Preview) {
-        workerFactory = WorkerFactory(preview: previewer)
+        super.init()
+
+        workerFactory = WorkerFactory(preview: previewer) { [weak self] track in
+            self?.unfixedPlayingQueue.value.append(track)
+        }
         workerFactory.errorType = errorType
         workerFactory.errorLevel = errorLevel
-
-        super.init()
 
         queueController = QueueController(queueingCount: queueuingCount.asObservable()) { [weak self] id, url, duration in
             self?.configureNextPlayerItem(id: id, url: url, duration: duration)
@@ -106,37 +128,29 @@ final class PlayerImpl: NSObject, Player {
         [#keyPath(AVQueuePlayer.status), #keyPath(AVQueuePlayer.currentItem)].forEach {
             _player.removeObserver(self, forKeyPath: $0)
         }
-
         NotificationCenter.default.removeObserver(self)
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 
         guard let keyPath = keyPath else { return }
-
         switch keyPath {
-        case "status":
-            if _player.status == .readyToPlay {
-                _player.play()
+        case #keyPath(AVQueuePlayer.status) where _player.status == .readyToPlay:
+            _player.play()
+
+        case #keyPath(AVQueuePlayer.currentItem):
+            var track: Model.Track?
+            if let trackId = self._player.currentItem?.trackId {
+                track = Model.Track(trackId: trackId)
             }
-        case "currentItem":
+            self._nowPlayingTrack.value = track?.track
 
-            DispatchQueue.main.async {
-                let realm = iTunesRealm()
-                var track: Track?
-                if let trackId = self._player.currentItem?.trackId {
-                    track = realm.object(ofType: _Track.self, forPrimaryKey: trackId)
-                }
-                self._nowPlayingTrack.value = track
-
-                if let trackId = self._player.currentItem?.trackId {
-                    self._installs.forEach { $0.willStartPlayTrack(trackId) }
-                } else {
-                    self._installs.forEach { $0.didEndPlay() }
-                }
+            if let trackId = track?.trackId {
+                self._installs.forEach { $0.willStartPlayTrack(trackId) }
+            } else {
+                self._installs.forEach { $0.didEndPlay() }
             }
-
-            queueuingCount.value = _player.items().count
+            updatePlayerItems()
             if _player.currentItem == nil {
                 pause()
             }
@@ -170,10 +184,13 @@ final class PlayerImpl: NSObject, Player {
             object: item
         )
 
-        _player.insert(item, after: nil)
-        queueuingCount.value = _player.items().count
-        if self._player.status == .readyToPlay {
-            self.play()
+        DispatchQueue.main.async {
+            self._player.insert(item, after: nil)
+            self.unfixedPlayingQueue.value = self.unfixedPlayingQueue.value.dropFirst()
+            self.updatePlayerItems()
+            if self._player.status == .readyToPlay {
+                self.play()
+            }
         }
     }
 
@@ -188,11 +205,40 @@ final class PlayerImpl: NSObject, Player {
             pause()
         }
     }
+
+    func updatePlayerItems() {
+        fixedPlayingQueue.value = _player.items()
+            .mapNotNil { item in
+                item.trackId
+            }
+            .map(Model.Track.init)
+        queueuingCount.value = _player.items().count
+    }
+}
+
+
+extension Array {
+    fileprivate subscript (safe index: Int) -> Element? {
+        if count > index {
+            return self[index]
+        }
+        return nil
+    }
 }
 
 
 // add/(remove)
 extension PlayerImpl {
+
+    func canPop(at index: Int) -> Bool {
+        return false
+    }
+
+    func pop(at index: Int) {
+        if let item = _player.items()[safe: index] {
+            _player.remove(item)
+        }
+    }
 
     func add(track: Model.Track) {
         _add(worker: workerFactory.track(track))
@@ -206,7 +252,6 @@ extension PlayerImpl {
         if _player.status == .readyToPlay, !playing {
             play()
         }
-
         queueController.add(worker)
     }
 }

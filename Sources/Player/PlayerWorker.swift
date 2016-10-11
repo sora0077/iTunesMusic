@@ -15,17 +15,21 @@ import ErrorEventHandler
 import AbstractPlayerKit
 
 
-final class WorkerFactory {
+struct WorkerFactory {
 
     fileprivate let preview: Preview
     var errorType: ErrorLog.Error.Type!
     var errorLevel: ErrorLog.Level!
 
-    init(preview: Preview) {
+    private let generateTrackWorker: ((Model.Track) -> Void)?
+
+    init(preview: Preview, generateTrackWorker: ((Model.Track) -> Void)? = nil) {
         self.preview = preview
+        self.generateTrackWorker = generateTrackWorker
     }
 
-    func track(_ track: Model.Track) -> AnyWorker<PlayerImpl.QueueResponse> {
+    func track(_ track: Model.Track) -> AnyWorker {
+        generateTrackWorker?(track)
         let track = TrackWorker(track: track)
         track.preview = preview
         track.errorType = errorType
@@ -33,7 +37,7 @@ final class WorkerFactory {
         return AnyWorker(track)
     }
 
-    func playlist(_ playlist: PlaylistType, index: Int = 0) -> AnyWorker<PlayerImpl.QueueResponse> {
+    func playlist(_ playlist: PlaylistType, index: Int = 0) -> AnyWorker {
         let playlist = PlaylistWorker(playlist: playlist, index: index, factory: self)
         return AnyWorker(playlist)
     }
@@ -57,7 +61,10 @@ private final class _AnyWorker<W: Worker>: _AnyWorkerBase<W.Response> {
     override func run() -> Observable<W.Response?> { return worker.run() }
 }
 
-final class AnyWorker<Response>: Worker {
+final class AnyWorker: Worker {
+
+    typealias Response = PlayerImpl.QueueResponse
+
     private let base: _AnyWorkerBase<Response>
 
     fileprivate init<W: Worker>(_ base: W) where W.Response == Response {
@@ -147,7 +154,7 @@ private final class PlaylistWorker: Worker {
 
     private let factory: WorkerFactory
 
-    private var trackWorker: AnyWorker<Response>?
+    private var trackWorker: AnyWorker?
 
     init(playlist: PlaylistType, index: Int = 0, factory: WorkerFactory) {
         self.playlist = playlist
@@ -189,8 +196,7 @@ private final class PlaylistWorker: Worker {
                         }
                         return
                     }
-                    let track = Model.Track(track: playlist.track(at: index))
-                    let worker = self.factory.track(track)
+                    let worker = self.factory.track(Model.Track(track: playlist.track(at: index)))
                     self.trackWorker = worker
                     self.index += 1
 

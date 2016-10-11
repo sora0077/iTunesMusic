@@ -99,10 +99,10 @@
             </objects>
             <point key="canvasLocation" x="647.20000000000005" y="62.518740629685162"/>
         </scene>
-        <!--View Controller-->
+        <!--Playing Queue View Controller-->
         <scene sceneID="jTL-xR-NSE">
             <objects>
-                <viewController id="rQs-6a-wCM" sceneMemberID="viewController">
+                <viewController id="rQs-6a-wCM" customClass="PlayingQueueViewController" customModule="Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7zE-Nw-Wpa"/>
                         <viewControllerLayoutGuide type="bottom" id="tFn-9C-bT9"/>

@@ -161,6 +161,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         application.beginReceivingRemoteControlEvents()
 
+        print(CommandLine.arguments)
+
         manager[.background].rootViewController = PlayingViewController()
         manager[.routing].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
