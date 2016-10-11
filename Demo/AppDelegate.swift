@@ -96,9 +96,11 @@ final class PlayingViewController: UIViewController {
             make.bottom.equalTo(20)
             make.left.right.equalTo(-20)
         }
-        artworkImageView.addTiltEffects(tilt: .background(depth: 20))
+        artworkImageView.addTiltEffects(tilt: .background(depth: 10))
+        artworkImageView.layer.zPosition = -1000
 
         view.addSubview(shadowView)
+        shadowView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
         shadowView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }
