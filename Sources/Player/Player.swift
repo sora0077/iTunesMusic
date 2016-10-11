@@ -26,8 +26,6 @@ public protocol Player: class {
 
     var playing: Bool { get }
 
-    var playlists: [PlaylistType] { get }
-
     func install(middleware: PlayerMiddleware)
 
     func play()
