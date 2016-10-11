@@ -100,7 +100,7 @@ final class PlayingViewController: UIViewController {
         artworkImageView.layer.zPosition = -1000
 
         view.addSubview(shadowView)
-        shadowView.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        shadowView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         shadowView.snp.makeConstraints { make in
             make.edges.equalTo(0)
         }

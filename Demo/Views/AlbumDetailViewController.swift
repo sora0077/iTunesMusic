@@ -9,6 +9,7 @@
 import UIKit
 import StoreKit
 import RxSwift
+import RxCocoa
 import SnapKit
 import iTunesMusic
 import ErrorEventHandler
@@ -276,7 +277,6 @@ extension AlbumDetailViewController: UIScrollViewDelegate {
         if 0 < offset && offset < 200 {
             let radius = Float(round(offset / 10))
             if headerView.artworkImageView.blurRadius != radius {
-                print(radius)
                 headerView.artworkImageView.blurRadius = radius
             }
         }
@@ -338,27 +338,27 @@ extension AlbumDetailViewController: UITableViewDataSource {
 
         let id = track.id
 
+        func presentStoreProductView() -> AnyObserver<UILongPressGestureRecognizer> {
+            return UIBindingObserver(UIElement: self) { from, state in
+                let vc = SKStoreProductViewController()
+                vc.delegate = from
+                from.present(vc, animated: true, completion: {
+                    vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
+                        print(error)
+                        if !result {
+                            ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
+                        }
+                    })
+                })
+            }.asObserver()
+        }
+
         cell.gesture.rx.event.asDriver()
             .filter { (gesture) -> Bool in
                 gesture.state == .recognized
             }
             .throttle(0.1)
-            .drive(
-                onNext: { [weak self] (gesture) in
-                    let vc = SKStoreProductViewController()
-                    vc.delegate = self
-                    DispatchQueue.main.async {
-                        self?.present(vc, animated: true, completion: {
-                            vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
-                                print(error)
-                                if !result {
-                                    ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
-                                }
-                            })
-                        })
-                    }
-                }
-            )
+            .drive(presentStoreProductView())
             .addDisposableTo(cell.disposeBag)
 
         return cell
