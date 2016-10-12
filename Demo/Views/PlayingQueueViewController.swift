@@ -43,15 +43,11 @@ final class PlayingQueueViewController: UIViewController {
             make.right.bottom.equalTo(0)
         }
 
-        func layoutItems() -> AnyObserver<[Model.Track]> {
-            return UIBindingObserver(UIElement: self) { vc, tracks in
-                vc.items = tracks
-            }.asObserver()
-        }
-
         player.playlingQueue
             .asDriver(onErrorJustReturn: [])
-            .drive(layoutItems())
+            .drive(UIBindingObserver(UIElement: self) { vc, tracks in
+                vc.items = tracks
+            }.asObserver())
             .addDisposableTo(disposeBag)
     }
 

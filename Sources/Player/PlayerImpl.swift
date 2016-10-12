@@ -241,18 +241,18 @@ extension PlayerImpl {
     }
 
     func add(track: Model.Track) {
-        _add(worker: workerFactory.track(track))
+        _add(worker: workerFactory.track(track), priority: .high)
     }
 
     func add(playlist: PlaylistType) {
-        _add(worker: workerFactory.playlist(playlist))
+        _add(worker: workerFactory.playlist(playlist), priority: .default)
     }
 
-    private func _add<W: Worker>(worker: W) where W.Response == QueueResponse {
+    private func _add<W: Worker>(worker: W, priority: Priority) where W.Response == QueueResponse {
         if _player.status == .readyToPlay, !playing {
             play()
         }
-        queueController.add(worker)
+        queueController.add(worker, priority: priority)
     }
 }
 
