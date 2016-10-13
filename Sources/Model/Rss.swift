@@ -101,7 +101,12 @@ extension Model.Rss: _Fetchable {
 
     var _refreshDuration: Duration { return 3.hours }
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+    func request(refreshing: Bool,
+                 force: Bool,
+                 ifError errorType: ErrorLog.Error.Type,
+                 level: ErrorLog.Level,
+                 completion: @escaping (RequestState) -> Void) {
+
         if force || trackIds.isEmpty || (refreshing && _needRefresh) {
             fetchFeed(ifError: errorType, level: level, completion: completion)
             return
@@ -124,19 +129,7 @@ extension Model.Rss: _Fetchable {
                 let realm = iTunesRealm()
                 let cache = getOrCreateCache(genreId: self.id, realm: realm)
                 try! realm.write {
-                    var tracks: [_Track] = []
-                    response.objects.forEach {
-                        switch $0 {
-                        case .track(let obj):
-                            tracks.append(obj)
-                            realm.add(obj, update: true)
-                        case .collection(let obj):
-                            realm.add(obj, update: true)
-                        case .artist(let obj):
-                            realm.add(obj, update: true)
-                        case .unknown:()
-                        }
-                    }
+                    self.save(response.objects, to: realm)
 
                     if refreshing {
                         cache.tracks.removeAll()
@@ -144,7 +137,13 @@ extension Model.Rss: _Fetchable {
                         cache.refreshAt = Date()
                     }
                     cache.updateAt = Date()
-                    cache.tracks.append(objectsIn: tracks)
+                    cache.tracks.append(objectsIn: response.objects.reduce([]) { tracks, obj in
+                        var tracks = tracks
+                        if case .track(let track) = obj {
+                            tracks.append(track)
+                        }
+                        return tracks
+                    })
                     cache.fetched += perItems
 
                     realm.add(cache, update: true)
@@ -158,7 +157,21 @@ extension Model.Rss: _Fetchable {
         }
     }
 
-    fileprivate func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+    private func save(_ objects: [LookupResponse.Wrapper], to realm: Realm) {
+        objects.forEach {
+            switch $0 {
+            case .track(let obj):
+                realm.add(obj, update: true)
+            case .collection(let obj):
+                realm.add(obj, update: true)
+            case .artist(let obj):
+                realm.add(obj, update: true)
+            case .unknown:()
+            }
+        }
+    }
+
+    private func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
         Session.shared.send(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
@@ -169,7 +182,8 @@ extension Model.Rss: _Fetchable {
                 let realm = iTunesRealm()
                 try! realm.write {
                     let cache = getOrCreateCache(genreId: self.id, realm: realm)
-                    cache.tracks.removeAll()
+                    //NOTE: データ取得を挟むため、空のリスト表示から取得までラグがあるため、ここではリストを空にしない
+                    //      `cache.tracks.removeAll()`
                     cache.fetched = 0
                     cache.refreshAt = Date()
                 }
