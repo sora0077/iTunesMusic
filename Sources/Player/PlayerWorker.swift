@@ -93,7 +93,6 @@ private final class TrackWorker: Worker {
 
     func run() -> Observable<Response?> {
         func getPreviewInfo(track: Track) -> (URL, Double)? {
-            print(track.id, track.name)
             if let duration = track.metadata?.duration {
                 if let url = track.metadata?.fileURL {
                     return (url, duration)
@@ -116,27 +115,25 @@ private final class TrackWorker: Worker {
         }
 
         func fetchMeta() -> Observable<Void> {
-            return Observable<Void>.create { [weak self] subscriber in
-                func inner() {
+            return Observable<Void>.create { [weak self] subscriber in {
                     guard let `self` = self else { return }
 
                     self.track.fetch(ifError: self.errorType, level: self.errorLevel) { _ in
                         subscriber.onNext()
                         subscriber.onCompleted()
                     }
-                }
-                inner()
+                }()
                 return Disposables.create()
             }
         }
 
         let id = self.track.trackId
         return (fetchPreviewInfo() ?? fetchMeta().flatMap { _ in fetchPreviewInfo() ?? .just(nil) })
-            .map { [weak self] option in
+            .map { [weak self] info in
                 defer {
                     self?.canPop = true
                 }
-                guard let (url, duration) = option else { return nil }
+                guard let (url, duration) = info else { return nil }
                 return (id, url, duration)
             }
     }
@@ -168,7 +165,6 @@ private final class PlaylistWorker: Worker {
             .create { [weak self] subscriber in
                 DispatchQueue.main.async {
                     guard let `self` = self else { return }
-
                     let index = self.index
                     let playlist = self.playlist
 

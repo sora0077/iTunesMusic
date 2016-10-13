@@ -110,19 +110,22 @@ extension Model.Album: _Fetchable {
 
     var _refreshDuration: Duration { return 60.minutes }
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+    private var _collection: _Collection { return caches[0].collection }
+
+    func request(refreshing: Bool,
+                 force: Bool,
+                 ifError errorType: ErrorLog.Error.Type,
+                 level: ErrorLog.Level,
+                 completion: @escaping (RequestState) -> Void) {
 
         let collectionId = self.collectionId
-        let cache = caches[0]
-        if !refreshing && cache.collection._trackCount == cache.collection._tracks.count {
+        if !refreshing && _collection._trackCount == _collection._tracks.count {
             completion(.done)
             return
         }
 
-        let session = Session.shared
-
         let lookup = LookupWithIds<LookupResponse>(id: collectionId)
-        session.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
@@ -133,30 +136,7 @@ extension Model.Album: _Fetchable {
                 let realm = iTunesRealm()
                 // swiftlint:disable force_try
                 try! realm.write {
-                    var collectionNames: [Int: String] = [:]
-                    var collectionCensoredNames: [Int: String] = [:]
-                    response.objects.reversed().forEach {
-                        switch $0 {
-                        case .track(let obj):
-                            if let c = obj._collection {
-                                collectionNames[c._collectionId] = c._collectionName
-                                collectionCensoredNames[c._collectionId] = c._collectionCensoredName
-                            }
-                            realm.add(obj, update: true)
-                        case .collection(let obj):
-                            if let name = collectionNames[obj._collectionId] {
-                                obj._collectionName = name
-                            }
-                            if let name = collectionCensoredNames[obj._collectionId] {
-                                obj._collectionCensoredName = name
-                            }
-                            realm.add(obj, update: true)
-                        case .artist(let obj):
-                            realm.add(obj, update: true)
-                        case .unknown:()
-                        }
-                    }
-
+                    self.save(response.objects, to: realm)
                     let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
                     cache.updateAt = Date()
                     if refreshing {
@@ -167,6 +147,32 @@ extension Model.Album: _Fetchable {
             case .failure(let error):
                 print(error)
                 requestState = .error(error)
+            }
+        }
+    }
+
+    private func save(_ objects: [LookupResponse.Wrapper], to realm: Realm) {
+        var collectionNames: [Int: String] = [:]
+        var collectionCensoredNames: [Int: String] = [:]
+        objects.reversed().forEach {
+            switch $0 {
+            case .track(let obj):
+                if let c = obj._collection {
+                    collectionNames[c._collectionId] = c._collectionName
+                    collectionCensoredNames[c._collectionId] = c._collectionCensoredName
+                }
+                realm.add(obj, update: true)
+            case .collection(let obj):
+                if let name = collectionNames[obj._collectionId] {
+                    obj._collectionName = name
+                }
+                if let name = collectionCensoredNames[obj._collectionId] {
+                    obj._collectionCensoredName = name
+                }
+                realm.add(obj, update: true)
+            case .artist(let obj):
+                realm.add(obj, update: true)
+            case .unknown:()
             }
         }
     }
