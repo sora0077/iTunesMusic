@@ -1,6 +1,6 @@
 
 github "ishkawa/APIKit" "master"
-github "ikesyo/Himotoki" "swift3"
+github "ikesyo/Himotoki" "master"
 github "sora0077/Timepiece" "master"
 github "ReactiveX/RxSwift" "develop"
 github "realm/realm-cocoa" "master"

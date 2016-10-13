@@ -32,9 +32,10 @@ final class PlayingQueueViewController: UIViewController {
 
         view.addSubview(tableView)
         tableView.dataSource = self
+        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.backgroundColor = .clear
-        tableView.rowHeight = 20
+        tableView.rowHeight = 30
         tableView.tableFooterView = UIView()
         tableView.separatorInset = .zero
         tableView.snp.makeConstraints { make in
@@ -66,8 +67,15 @@ extension PlayingQueueViewController: UITableViewDataSource {
         cell.textLabel?.textColor = .white
         cell.backgroundColor = .clear
         if let font = cell.textLabel?.font {
-            cell.textLabel?.font = font.withSize(9)
+            cell.textLabel?.font = font.withSize(10)
         }
         return cell
+    }
+}
+
+extension PlayingQueueViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        player.removeAll()
     }
 }

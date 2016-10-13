@@ -40,6 +40,8 @@ public protocol Player: class {
     func add(track: Model.Track)
 
     func add(playlist: PlaylistType)
+
+    func removeAll()
 }
 
 

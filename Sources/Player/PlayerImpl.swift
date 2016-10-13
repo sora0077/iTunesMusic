@@ -230,14 +230,20 @@ extension Array {
 // add/(remove)
 extension PlayerImpl {
 
-    func canPop(at index: Int) -> Bool {
-        return false
+    func removeTrack(at index: Int) {
+
     }
 
-    func pop(at index: Int) {
-        if let item = _player.items()[safe: index] {
-            _player.remove(item)
-        }
+    func removePlaylist(at index: Int) {
+
+    }
+
+    func removeAll() {
+        queueController.removeAll()
+        _player.removeAllItems()
+
+        fixedPlayingQueue.value = []
+        unfixedPlayingQueue.value = []
     }
 
     func add(track: Model.Track) {
