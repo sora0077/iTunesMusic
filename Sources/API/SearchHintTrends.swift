@@ -19,7 +19,7 @@ struct SearchHintTrendsResponse {
 extension SearchHintTrendsResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> SearchHintTrendsResponse {
-        let trends = (e.rawValue as! [String: AnyObject])["trendingSearches"]! as? [[String: String]] ?? []
+        let trends = (e.rawValue as? [String: AnyObject])?["trendingSearches"] as? [[String: String]] ?? []
         return try SearchHintTrendsResponse(
             name: e.value(["header", "label"]),
             trends: trends.map { $0["label"]! }

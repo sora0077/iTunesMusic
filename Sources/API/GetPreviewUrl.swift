@@ -55,20 +55,31 @@ struct GetPreviewUrl: iTunesRequest {
 
 fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
 
-    if let offers = item["store-offers"] as? [String: AnyObject] {
-        let preview: String
-        let duration: Int
-        if offers["PLUS"] != nil {
-            preview = offers["PLUS"]!["preview-url"] as! String
-            duration = offers["PLUS"]!["preview-duration"] as! Int
-        } else {
-            preview = offers["HQPRE"]!["preview-url"] as! String
-            duration = offers["HQPRE"]!["preview-duration"] as! Int
-        }
-        if let url = URL(string: preview) {
-            return (url, duration)
-        }
+    func value(preview: String, duration: Int) -> (URL, Int)? {
+        guard let url = URL(string: preview) else { return nil }
+        return (url, duration)
     }
 
-    throw iTunesMusicAPIError.notFound
+    func decode() -> (URL, Int)? {
+        guard let offers = item["store-offers"] as? [String: AnyObject] else {
+            return nil
+        }
+        if let plus = offers["PLUS"] {
+            if let p = plus["preview-url"] as? String,
+                let d = plus["preview-duration"] as? Int {
+                return value(preview: p, duration: d)
+            }
+        } else if let hqpre = offers["HQPRE"] {
+            if let p = hqpre["preview-url"] as? String,
+                let d = hqpre["preview-duration"] as? Int {
+                return value(preview: p, duration: d)
+            }
+        }
+        return nil
+    }
+
+    guard let ret = decode() else {
+        throw iTunesMusicAPIError.notFound
+    }
+    return ret
 }

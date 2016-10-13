@@ -52,7 +52,7 @@ struct ListReviews<R: Decodable>: iTunesRequest {
                 "updated": entry["updated"].element!.text!,
                 "id": entry["id"].element!.text!,
                 "title": entry["title"].element!.text!,
-                "content": try! entry["content"].withAttr("type", "text").element!.text!,
+                "content": try? entry["content"].withAttr("type", "text").element?.text ?? "",
                 "rating": entry["im:rating"].element!.text!,
                 "voteSum": entry["im:voteSum"].element!.text!,
                 "voteCount": entry["im:voteCount"].element!.text!,

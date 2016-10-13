@@ -43,7 +43,9 @@ extension SearchResponse {
 extension SearchResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> SearchResponse {
-        guard let results = (e.rawValue as! [String: AnyObject])["results"] as? [[String: AnyObject]] else { return SearchResponse(objects: []) }
+        guard let results = (e.rawValue as? [String: AnyObject])?["results"] as? [[String: AnyObject]] else {
+            return SearchResponse(objects: [])
+        }
         var items: [Wrapper] = []
         for item in results {
             guard let wrapperType = WrapperType(rawValue: item["wrapperType"] as? String ?? "") else { continue }
