@@ -172,7 +172,7 @@ private final class PlaylistWorker: Worker {
                     let index = self.index
                     let playlist = self.playlist
 
-                    if playlist.isTrackEmpty || playlist.trackCount < index {
+                    if playlist.isTrackEmpty || playlist.trackCount <= index {
                         self.canPop = true
                         subscriber.onNext(Observable.just(nil))
                         subscriber.onCompleted()
