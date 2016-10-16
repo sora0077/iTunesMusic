@@ -31,13 +31,10 @@ fileprivate struct FetchableKey {
 extension Fetchable {
 
     public var requestState: Observable<RequestState> {
-        if let state = objc_getAssociatedObject(self, &FetchableKey.requestState) as? Observable<RequestState> {
-            return state
+        return associatedObject(self, &FetchableKey.requestState) {
+            // swiftlint:disable force_cast
+            asObservable((self as! _Fetchable)._requestState).distinctUntilChanged()
         }
-        // swiftlint:disable force_cast
-        let state = asObservable((self as! _Fetchable)._requestState).distinctUntilChanged()
-        objc_setAssociatedObject(self, &FetchableKey.requestState, state, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return state
     }
 
     public func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
@@ -133,30 +130,21 @@ extension _Fetchable {
     }
 
     var _refreshing: Variable<Bool> {
-        if let refreshing = objc_getAssociatedObject(self, &_FetchableKey._refreshing) as? Variable<Bool> {
-            return refreshing
+        return associatedObject(self, &_FetchableKey._refreshing) {
+            Variable(false)
         }
-        let refreshing = Variable<Bool>(false)
-        objc_setAssociatedObject(self, &_FetchableKey._refreshing, refreshing, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return refreshing
     }
 
     var _requesting: Variable<Bool> {
-        if let requesting = objc_getAssociatedObject(self, &_FetchableKey._requesting) as? Variable<Bool> {
-            return requesting
+        return associatedObject(self, &_FetchableKey._requesting) {
+            Variable(false)
         }
-        let requesting = Variable<Bool>(false)
-        objc_setAssociatedObject(self, &_FetchableKey._requesting, requesting, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return requesting
     }
 
     var _requestState: Variable<RequestState> {
-        if let state = objc_getAssociatedObject(self, &_FetchableKey._requestState) as? Variable<RequestState> {
-            return state
+        return associatedObject(self, &_FetchableKey._requestState) {
+            Variable(.none)
         }
-        let state = Variable<RequestState>(.none)
-        objc_setAssociatedObject(self, &_FetchableKey._requestState, state, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return state
     }
 
     var _hasNoPaginatedContents: Bool {

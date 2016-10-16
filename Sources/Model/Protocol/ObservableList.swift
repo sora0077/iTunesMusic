@@ -24,13 +24,10 @@ fileprivate struct ObservableListKey {
 extension ObservableList {
 
     public var changes: Observable<CollectionChange> {
-        if let changes = objc_getAssociatedObject(self, &ObservableListKey.changes) as? Observable<CollectionChange> {
-            return changes
+        return associatedObject(self, &ObservableListKey.changes) {
+            // swiftlint:disable force_cast
+            asObservable((self as! _ObservableList)._changes)
         }
-        // swiftlint:disable force_cast
-        let changes = asObservable((self as! _ObservableList)._changes)
-        objc_setAssociatedObject(self, &ObservableListKey.changes, changes, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return changes
     }
 }
 
@@ -48,12 +45,8 @@ fileprivate struct _ObservableListKey {
 extension _ObservableList {
 
     var _changes: PublishSubject<CollectionChange> {
-        if let change = objc_getAssociatedObject(self, &_ObservableListKey._changes) as? PublishSubject<CollectionChange> {
-            return change
+        return associatedObject(self, &_ObservableListKey._changes) {
+            PublishSubject<CollectionChange>()
         }
-        let change = PublishSubject<CollectionChange>()
-        objc_setAssociatedObject(self, &_ObservableListKey._changes, change, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return change
     }
-
 }

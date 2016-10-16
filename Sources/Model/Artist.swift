@@ -92,10 +92,8 @@ extension Model.Artist: _Fetchable {
             return
         }
 
-        let session = Session.shared
-
         let lookup = LookupWithIds<LookupResponse>(id: artistId)
-        session.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             let requestState: RequestState
             defer {
