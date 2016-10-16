@@ -14,7 +14,7 @@ import APIKit
 import ErrorEventHandler
 
 
-fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
+private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     if let cache = realm.object(ofType: _AlbumCache.self, forPrimaryKey: collectionId) {
         return cache
     }
@@ -28,7 +28,7 @@ fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCach
     return cache
 }
 
-fileprivate let sortConditions = [
+private let sortConditions = [
     SortDescriptor(property: "_discNumber", ascending: true),
     SortDescriptor(property: "_trackNumber", ascending: true)
 ]
@@ -38,8 +38,8 @@ extension Model {
 
     public final class Album: Fetchable, ObservableList, _ObservableList {
 
-        fileprivate var objectsToken: NotificationToken?
-        fileprivate var token: NotificationToken?
+        private var objectsToken: NotificationToken?
+        private var token: NotificationToken?
 
         fileprivate let collectionId: Int
 

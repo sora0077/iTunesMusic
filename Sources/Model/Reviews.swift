@@ -14,7 +14,7 @@ import Timepiece
 import ErrorEventHandler
 
 
-fileprivate func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
+private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
     if let cache = realm.object(ofType: _ReviewCache.self, forPrimaryKey: collectionId) {
         return cache
     }
@@ -36,8 +36,8 @@ extension Model {
 
         fileprivate let caches: Results<_ReviewCache>
 
-        fileprivate var token: NotificationToken!
-        fileprivate var objectsToken: NotificationToken!
+        private var token: NotificationToken!
+        private var objectsToken: NotificationToken!
 
         public init(collection: iTunesMusic.Collection) {
             collectionId = collection.id
@@ -125,7 +125,7 @@ extension Model.Reviews: _Fetchable {
 
 extension Model.Reviews: Swift.Collection {
 
-    fileprivate var objects: List<_Review> { return caches[0].objects }
+    private var objects: List<_Review> { return caches[0].objects }
 
     public var startIndex: Int { return objects.startIndex }
 

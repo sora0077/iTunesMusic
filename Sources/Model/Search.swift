@@ -14,7 +14,7 @@ import Timepiece
 import ErrorEventHandler
 
 
-fileprivate func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
+private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
     if let cache = realm.object(ofType: _SearchCache.self, forPrimaryKey: term) {
         return cache
     } else {
@@ -191,7 +191,7 @@ extension Model.Search: Swift.Collection {
         }
     }
 
-    fileprivate var results: List<_Media> { return caches[0].objects }
+    private var results: List<_Media> { return caches[0].objects }
 
     public var count: Int { return results.count }
 

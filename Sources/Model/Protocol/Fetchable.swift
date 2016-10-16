@@ -24,7 +24,7 @@ public protocol Fetchable: class {
     func refresh(force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
 }
 
-fileprivate struct FetchableKey {
+private struct FetchableKey {
     static var requestState: UInt8 = 0
 }
 
@@ -66,7 +66,7 @@ extension Fetchable {
         }
     }
 
-    fileprivate func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void = { _ in }) {
+    private func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void = { _ in }) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
         if !force && [.done, .requesting].contains(self._requestState.value) {
@@ -117,7 +117,7 @@ protocol _Fetchable: class, Fetchable {
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void)
 }
 
-fileprivate struct _FetchableKey {
+private struct _FetchableKey {
     static var _refreshing: UInt8 = 0
     static var _requesting: UInt8 = 0
     static var _requestState: UInt8 = 0

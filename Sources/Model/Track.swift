@@ -27,7 +27,7 @@ extension Model {
             return realm.object(ofType: _Track.self, forPrimaryKey: trackId)
         }
 
-        fileprivate var token: NotificationToken!
+        private var token: NotificationToken!
         fileprivate let caches: Results<_Track>
 
         public convenience init(track: iTunesMusic.Track) {

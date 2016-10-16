@@ -14,9 +14,9 @@ import Timepiece
 import ErrorEventHandler
 
 
-fileprivate let __requestState = Variable<RequestState>(.none)
+private let __requestState = Variable<RequestState>(.none)
 
-fileprivate func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
+private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
     if let cache = realm.object(ofType: _GenresCache.self, forPrimaryKey: key) {
         return cache
     } else {
@@ -67,9 +67,9 @@ extension Model {
 
         var _requestState: Variable<RequestState> { return __requestState }
 
-        fileprivate var token: NotificationToken?
-        fileprivate var objectsToken: NotificationToken?
-        fileprivate let caches: Results<_GenresCache>
+        private var token: NotificationToken?
+        private var objectsToken: NotificationToken?
+        private let caches: Results<_GenresCache>
         fileprivate var cache: _GenresCache {
             return caches[0]
         }
@@ -105,13 +105,13 @@ extension Model {
 
 extension Model.Genres: _Fetchable {
 
-    var _refreshAt: Date { return caches[0].refreshAt }
+    var _refreshAt: Date { return cache.refreshAt }
 
     var _refreshDuration: Duration { return 30.days }
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
-        if !refreshing && !caches[0].list.isEmpty {
+        if !refreshing && !cache.list.isEmpty {
             completion(.done)
             return
         }

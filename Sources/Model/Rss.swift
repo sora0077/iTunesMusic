@@ -14,7 +14,7 @@ import Timepiece
 import ErrorEventHandler
 
 
-fileprivate func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
+private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     if let cache = realm.object(ofType: _RssCache.self, forPrimaryKey: genreId) {
         return cache
     } else {
@@ -28,7 +28,7 @@ fileprivate func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     }
 }
 
-fileprivate let perItems = 50
+private let perItems = 50
 
 extension Model {
 
@@ -41,8 +41,8 @@ extension Model {
         public let name: String
 
         fileprivate let caches: Results<_RssCache>
-        fileprivate var token: NotificationToken!
-        fileprivate var objectsToken: NotificationToken!
+        private var token: NotificationToken!
+        private var objectsToken: NotificationToken!
 
         fileprivate var trackIds: [Int] = []
 

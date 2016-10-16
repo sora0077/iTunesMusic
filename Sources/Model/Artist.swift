@@ -15,7 +15,7 @@ import Himotoki
 import ErrorEventHandler
 
 
-fileprivate func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
+private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
     if let cache = realm.object(ofType: _ArtistCache.self, forPrimaryKey: artistId) {
         return cache
     }
@@ -33,8 +33,8 @@ extension Model {
 
     public final class Artist: Fetchable, ObservableList, _ObservableList {
 
-        fileprivate var objectsToken: NotificationToken?
-        fileprivate var token: NotificationToken?
+        private var objectsToken: NotificationToken?
+        private var token: NotificationToken?
 
         fileprivate let artistId: Int
 
