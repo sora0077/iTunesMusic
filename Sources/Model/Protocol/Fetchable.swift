@@ -31,10 +31,9 @@ private struct FetchableKey {
 extension Fetchable {
 
     public var requestState: Observable<RequestState> {
-        return associatedObject(self, &FetchableKey.requestState) {
-            // swiftlint:disable force_cast
-            asObservable((self as! _Fetchable)._requestState).distinctUntilChanged()
-        }
+        // swiftlint:disable force_cast
+        return associatedObject(self, &FetchableKey.requestState,
+                                initial: asObservable((self as! _Fetchable)._requestState).distinctUntilChanged())
     }
 
     public func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
@@ -130,21 +129,15 @@ extension _Fetchable {
     }
 
     var _refreshing: Variable<Bool> {
-        return associatedObject(self, &_FetchableKey._refreshing) {
-            Variable(false)
-        }
+        return associatedObject(self, &_FetchableKey._refreshing, initial: Variable(false))
     }
 
     var _requesting: Variable<Bool> {
-        return associatedObject(self, &_FetchableKey._requesting) {
-            Variable(false)
-        }
+        return associatedObject(self, &_FetchableKey._requesting, initial: Variable(false))
     }
 
     var _requestState: Variable<RequestState> {
-        return associatedObject(self, &_FetchableKey._requestState) {
-            Variable(.none)
-        }
+        return associatedObject(self, &_FetchableKey._requestState, initial: Variable(.none))
     }
 
     var _hasNoPaginatedContents: Bool {

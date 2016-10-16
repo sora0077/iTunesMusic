@@ -23,10 +23,9 @@ private struct ObservableListKey {
 extension ObservableList {
 
     public var changes: Observable<CollectionChange> {
-        return associatedObject(self, &ObservableListKey.changes) {
-            // swiftlint:disable force_cast
-            asObservable((self as! _ObservableList)._changes)
-        }
+        // swiftlint:disable force_cast
+        return associatedObject(self, &ObservableListKey.changes,
+                                initial: asObservable((self as! _ObservableList)._changes))
     }
 }
 
@@ -44,8 +43,6 @@ private struct _ObservableListKey {
 extension _ObservableList {
 
     var _changes: PublishSubject<CollectionChange> {
-        return associatedObject(self, &_ObservableListKey._changes) {
-            PublishSubject<CollectionChange>()
-        }
+        return associatedObject(self, &_ObservableListKey._changes, initial: PublishSubject<CollectionChange>())
     }
 }
