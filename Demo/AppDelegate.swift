@@ -152,8 +152,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        let session = AVAudioSession.sharedInstance()
         do {
+            let session = AVAudioSession.sharedInstance()
             try session.setCategory(AVAudioSessionCategoryPlayback)
             try session.setActive(true)
         } catch {
@@ -178,9 +178,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player.errorLevel = AppErrorLevel.alert
 
         window?.backgroundColor = .clear
-        window?.tintColor = UIColor.lightGray
+        window?.tintColor = .lightGray
 
-        manager[.background].backgroundColor = UIColor(hex: 0x3b393a)
+        manager[.background].backgroundColor = .hex(0x3b393a)
 
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })

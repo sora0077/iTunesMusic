@@ -174,8 +174,6 @@ final class PlayerImpl: NSObject, Player {
         let item = AVPlayerItem(asset: AVAsset(url: url))
         item.trackId = id
 
-        print("next play ", id)
-
         configureFading(item: item, duration: duration)
         NotificationCenter.default.addObserver(
             self,
@@ -219,10 +217,12 @@ final class PlayerImpl: NSObject, Player {
 
 extension Array {
     fileprivate subscript (safe index: Int) -> Element? {
-        if count > index {
+        switch index {
+        case indices:
             return self[index]
+        default:
+            return nil
         }
-        return nil
     }
 }
 

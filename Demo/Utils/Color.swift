@@ -17,4 +17,8 @@ extension UIColor {
         let b = CGFloat(hex & 0x0000FF) / 255.0
         self.init(red: r, green: g, blue: b, alpha: alpha)
     }
+
+    static func hex(_ hex: Int, alpha: CGFloat = 1) -> UIColor {
+        return UIColor(hex: hex, alpha: alpha)
+    }
 }
