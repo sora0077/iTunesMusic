@@ -28,6 +28,9 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
     static let mainWindowLevel: WindowLevel = .main
 }
 
+func appURL(path: String) -> URL {
+    return URL(string: "itunesmusic://\(path)")!
+}
 
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
 

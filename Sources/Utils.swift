@@ -51,7 +51,7 @@ func associatedObject<Value>(
     _ key: inout UInt8,
     _ policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC,
     _ initial: () -> Value
-    ) -> Value {
+) -> Value {
     return associatedObject(target, &key, policy, initial: initial())
 }
 
@@ -60,7 +60,7 @@ func associatedObject<Value>(
     _ key: inout UInt8,
     _ policy: objc_AssociationPolicy = .OBJC_ASSOCIATION_RETAIN_NONATOMIC,
     initial: @autoclosure () -> Value
-    ) -> Value {
+) -> Value {
     if let value = objc_getAssociatedObject(target, &key) as? Value {
         return value
     }

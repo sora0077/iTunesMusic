@@ -380,12 +380,6 @@ extension AlbumDetailViewController: UITableViewDelegate {
         let track = album[indexPath.row]
         guard track.canPreview else { return }
 
-        if let url = URL(string: "itunesmusic://test/track/\(track.id)") {
-            UIApplication.shared.open(url, options: [:], completionHandler: { (done) in
-                print("openURL done: ", done)
-            })
-        }
-
-//        player.add(track: track)
+        UIApplication.shared.open(appURL(path: "/track/\(track.id)"))
     }
 }
