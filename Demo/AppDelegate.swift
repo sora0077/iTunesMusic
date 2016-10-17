@@ -14,7 +14,6 @@ import RxCocoa
 import RealmSwift
 import MediaPlayer
 import WindowKit
-import VYPlayIndicatorSwift
 import MMWormhole
 import Routing
 
@@ -35,95 +34,14 @@ func appURL(path: String) -> URL {
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
 
 
-final class InnerShadowView: UIView {
-
-    private var shadowLayer = CALayer()
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        makeShadow(to: self)
-    }
-
-    func makeShadow(to view: UIView) {
-        let sublayer = CALayer()
-        shadowLayer.removeFromSuperlayer()
-        shadowLayer = sublayer
-
-        sublayer.frame = view.bounds
-        view.layer.addSublayer(sublayer)
-        sublayer.masksToBounds = true
-
-        let width: CGFloat = 20
-
-        let size = sublayer.bounds.size
-        var point = CGPoint(x: -width, y: -width)
-
-        let path = CGMutablePath()
-        path.move(to: point)
-        point.x += size.width + width
-        path.addLine(to: point)
-        point.y += width
-        path.addLine(to: point)
-        point.x -= size.width
-        path.addLine(to: point)
-        point.y += size.height
-        path.addLine(to: point)
-        point.x -= width
-        path.addLine(to: point)
-        point.y -= size.height + width
-        path.addLine(to: point)
-
-        path.closeSubpath()
-
-        sublayer.shadowOffset = CGSize(width: 10, height: 10)
-        sublayer.shadowOpacity = 0.8
-        sublayer.shadowRadius = 10
-        sublayer.shadowPath = path
-    }
-}
-
-
-final class PlayingViewController: UIViewController {
-
-    private let artworkImageView = UIImageView()
-    private let shadowView = InnerShadowView()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.addSubview(artworkImageView)
-        artworkImageView.contentMode = .scaleAspectFill
-        artworkImageView.snp.makeConstraints { make in
-            make.top.equalTo(-20)
-            make.bottom.equalTo(20)
-            make.left.right.equalTo(-20)
-        }
-        artworkImageView.addTiltEffects(tilt: .background(depth: 10))
-        artworkImageView.layer.zPosition = -1000
-
-        view.addSubview(shadowView)
-        shadowView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        shadowView.snp.makeConstraints { make in
-            make.edges.equalTo(0)
-        }
-    }
-
-    func setArtwork(of collection: iTunesMusic.Collection, size: CGFloat) {
-        //animator.fractionComplete = 0.9
-        artworkImageView.setArtwork(of: collection, size: size)
-    }
-}
-
-
 private func delegate() -> AppDelegate {
     // swiftlint:disable force_cast
     return UIApplication.shared.delegate as! AppDelegate
 }
 
-func playingViewController() -> PlayingViewController {
+func playbackViewController() -> PlaybackViewController {
     // swiftlint:disable force_cast
-    return delegate().manager[.background].rootViewController as! PlayingViewController
+    return delegate().manager[.background].rootViewController as! PlaybackViewController
 }
 
 func routingManageViewController() -> UIViewController {
@@ -166,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print(CommandLine.arguments)
 
-        manager[.background].rootViewController = PlayingViewController()
+        manager[.background].rootViewController = PlaybackViewController()
         manager[.routing].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
 
