@@ -34,9 +34,9 @@ final class RoutingSettings {
 }
 
 
-extension RoutingSettings {
+private extension RoutingSettings {
 
-    fileprivate static let disposeBag = DisposeBag()
+    static let disposeBag = DisposeBag()
 
     static func playTrack(request: Request, response: Response, next: @escaping (Response) -> Void) {
         if let trackId = Int(request.parameters["trackId"] ?? "") {
