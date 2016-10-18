@@ -30,6 +30,7 @@ final class RoutingSettings {
         router().install(middleware: Logger())
         router().register(pattern: "/track/:trackId([0-9]+)", handlers: playTrack)
         router().register(pattern: "/search", queue: .main, handlers: openSearchViewController)
+        router().register(pattern: "/history", queue: .main, handlers: openHistoryViewController)
     }
 }
 
@@ -59,7 +60,7 @@ private extension RoutingSettings {
                         wnav?.dismiss(animated: true, completion: nil)
                         })
                     .addDisposableTo(self.disposeBag)
-                nav.navigationItem.rightBarButtonItem = item
+                vc.navigationItem.rightBarButtonItem = item
                 root.present(nav, animated: true) {
                     next(response)
                 }
@@ -72,6 +73,31 @@ private extension RoutingSettings {
             }
         } else {
             next(response)
+        }
+    }
+
+    static func openHistoryViewController(request: Request, response: Response, next: @escaping (Response) -> Void) {
+        let root = routingManageViewController()
+
+        func open() {
+            let vc = HistoryViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            let item = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: nil)
+            item.rx.tap.asDriver()
+                .drive(onNext: { [weak wnav=nav] _ in
+                    wnav?.dismiss(animated: true, completion: nil)
+                    })
+                .addDisposableTo(self.disposeBag)
+            vc.navigationItem.rightBarButtonItem = item
+            root.present(nav, animated: true) {
+                next(response)
+            }
+        }
+
+        if let presented = root.presentedViewController {
+            presented.dismiss(animated: true, completion: open)
+        } else {
+            open()
         }
     }
 }

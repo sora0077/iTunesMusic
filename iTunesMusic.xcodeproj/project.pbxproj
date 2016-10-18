@@ -75,6 +75,7 @@
 		D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */; };
 		D96C95831D3A840F000116FD /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */; };
 		D975B63E1DB5051B00AC9639 /* PlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D975B63D1DB5051B00AC9639 /* PlaybackViewController.swift */; };
+		D975B65E1DB65EDE00AC9639 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D975B65D1DB65EDE00AC9639 /* HistoryViewController.swift */; };
 		D98D566A1D20270C007B09DB /* RssCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98D56691D20270C007B09DB /* RssCache.swift */; };
 		D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164091D37CEA90091BF09 /* ControlCenter.swift */; };
 		D99164121D37D37C0091BF09 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164101D37D36D0091BF09 /* Track.swift */; };
@@ -297,6 +298,7 @@
 		D96C957F1D3A6E7B000116FD /* MyPlaylistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPlaylistCache.swift; sourceTree = "<group>"; };
 		D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
 		D975B63D1DB5051B00AC9639 /* PlaybackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackViewController.swift; sourceTree = "<group>"; };
+		D975B65D1DB65EDE00AC9639 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		D97716661D803D4700547FD4 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		D98D56691D20270C007B09DB /* RssCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssCache.swift; sourceTree = "<group>"; };
 		D99164091D37CEA90091BF09 /* ControlCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenter.swift; sourceTree = "<group>"; };
@@ -635,6 +637,7 @@
 				D9193C721D451214006763EC /* NewPlaylistEditorViewController.swift */,
 				D9B3417A1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift */,
 				D975B63D1DB5051B00AC9639 /* PlaybackViewController.swift */,
+				D975B65D1DB65EDE00AC9639 /* HistoryViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1043,6 +1046,7 @@
 				D9B341741DA921D90044D0A3 /* ErrorHandling.swift in Sources */,
 				D9AF2AF91D75C6DC00D7751C /* AlbumListMiddleTableViewCell.swift in Sources */,
 				D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */,
+				D975B65E1DB65EDE00AC9639 /* HistoryViewController.swift in Sources */,
 				D95E4D011D35284500985C66 /* ArtistDetailViewController.swift in Sources */,
 				D9193C731D451214006763EC /* NewPlaylistEditorViewController.swift in Sources */,
 				D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */,
