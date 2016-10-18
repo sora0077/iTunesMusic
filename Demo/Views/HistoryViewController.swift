@@ -63,5 +63,10 @@ extension HistoryViewController: UITableViewDataSource {
 }
 
 extension HistoryViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let (track, _) = history[indexPath.row]
+        guard track.canPreview else { return }
 
+        UIApplication.shared.open(appURL(path: "/track/\(track.id)"))
+    }
 }
