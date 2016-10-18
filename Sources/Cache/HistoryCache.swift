@@ -15,4 +15,6 @@ import Himotoki
 final class _HistoryCache: _Cache {
 
     let objects = List<_HistoryRecord>()
+
+    private(set) lazy var sortedObjects: Results<_HistoryRecord> = self.objects.sorted(byProperty: "createAt", ascending: false)
 }

@@ -40,7 +40,7 @@ extension Model {
 
             let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)
-            objectsToken = cache.objects.addNotificationBlock { [weak self] changes in
+            objectsToken = cache.sortedObjects.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 self._changes.onNext(CollectionChange(changes))
@@ -49,17 +49,6 @@ extension Model {
 
     }
 }
-
-
-extension Model.History: PlaylistType {
-
-    public var trackCount: Int { return cache.objects.count }
-
-    public var isTrackEmpty: Bool { return cache.objects.isEmpty }
-
-    public func track(at index: Int) -> Track { return cache.objects[index].track }
-}
-
 
 extension Model.History: PlayerMiddleware {
 
@@ -76,19 +65,30 @@ extension Model.History: PlayerMiddleware {
 }
 
 
-extension Model.History: Swift.Collection {
+extension Model.History: Swift.Collection, PlaylistType {
+
+    private var objects: Results<_HistoryRecord> {
+        return cache.sortedObjects
+    }
 
     public var count: Int { return trackCount }
 
     public var isEmpty: Bool { return isTrackEmpty }
 
-    public var startIndex: Int { return cache.objects.startIndex }
+    public var startIndex: Int { return objects.startIndex }
 
-    public var endIndex: Int { return cache.objects.endIndex }
+    public var endIndex: Int { return objects.endIndex }
 
-    public subscript (index: Int) -> (Track, Date) { return (cache.objects[index].track, cache.objects[index].createAt) }
+    public subscript (index: Int) -> (Track, Date) { return (objects[index].track, objects[index].createAt) }
 
     public func index(after i: Int) -> Int {
-        return cache.objects.index(after: i)
+        return objects.index(after: i)
     }
+
+
+    public var trackCount: Int { return objects.count }
+
+    public var isTrackEmpty: Bool { return objects.isEmpty }
+
+    public func track(at index: Int) -> Track { return objects[index].track }
 }
