@@ -105,7 +105,7 @@ private final class TrackWorker: Worker {
         }
 
         func fetchPreviewInfo() -> Observable<(URL, duration: Double)?>? {
-            guard let track = track.track else { return nil }
+            guard let track = track.track, track.canPreview else { return nil }
 
             if let info = getPreviewInfo(track: track) {
                 return Observable.just(info)
