@@ -57,8 +57,7 @@ extension Model.History: PlayerMiddleware {
         let cache = getOrCreateCache(realm: realm)
         if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
             try! realm.write {
-                let record = _HistoryRecord(track: track)
-                cache.objects.append(record)
+                cache.add(track: track)
             }
         }
     }
