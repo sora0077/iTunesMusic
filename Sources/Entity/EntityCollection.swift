@@ -61,23 +61,26 @@ final class _Collection: RealmSwift.Object, Collection {
 
     dynamic var _artist: _Artist?
 
-    let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
+    private let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
+
+    private(set) lazy var sortedTracks: Results<_Track> = self._tracks.sorted(by: [
+        SortDescriptor(property: "_discNumber", ascending: true),
+        SortDescriptor(property: "_trackNumber", ascending: true)]
+    )
 
     override class func primaryKey() -> String? { return "_collectionId" }
 }
 
 extension _Collection: Swift.Collection {
 
-    var startIndex: Int { return _tracks.startIndex }
+    var startIndex: Int { return sortedTracks.startIndex }
 
-    var endIndex: Int { return _tracks.endIndex }
+    var endIndex: Int { return sortedTracks.endIndex }
 
-    subscript (index: Int) -> Track {
-        return _tracks.sorted(byProperty: "_trackNumber")[index]
-    }
+    subscript (index: Int) -> Track { return sortedTracks[index] }
 
     func index(after i: Int) -> Int {
-        return _tracks.sorted(byProperty: "_trackNumber").index(after: i)
+        return sortedTracks.index(after: i)
     }
 }
 

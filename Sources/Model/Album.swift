@@ -28,11 +28,6 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     return cache
 }
 
-private let sortConditions = [
-    SortDescriptor(property: "_discNumber", ascending: true),
-    SortDescriptor(property: "_trackNumber", ascending: true)
-]
-
 
 extension Model {
 
@@ -55,14 +50,12 @@ extension Model {
             let realm = iTunesRealm()
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.objects(_AlbumCache.self).filter("collectionId = \(collectionId)")
-            tracks = caches[0].collection._tracks.sorted(by: sortConditions)
+            tracks = caches[0].collection.sortedTracks
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_AlbumCache>) {
-                    let tracks = results[0].collection
-                        ._tracks
-                        .sorted(by: sortConditions)
+                    let tracks = results[0].collection.sortedTracks
                     self.objectsToken = tracks.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
@@ -119,7 +112,7 @@ extension Model.Album: _Fetchable {
                  completion: @escaping (RequestState) -> Void) {
 
         let collectionId = self.collectionId
-        if !refreshing && _collection._trackCount == _collection._tracks.count {
+        if !refreshing && _collection._trackCount == _collection.sortedTracks.count {
             completion(.done)
             return
         }
