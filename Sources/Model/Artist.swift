@@ -51,12 +51,12 @@ extension Model {
             let realm = iTunesRealm()
             _ = getOrCreateCache(artistId: artistId, realm: realm)
             caches = realm.objects(_ArtistCache.self).filter("artistId = \(artistId)")
-            collections = caches[0].artist._collections.sorted(byProperty: "_collectionId", ascending: false)
+            collections = caches[0].artist.sortedCollections
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_ArtistCache>) {
-                    self.collections = results[0].artist._collections.sorted(byProperty: "_collectionId", ascending: false)
+                    self.collections = results[0].artist.sortedCollections
                     self.objectsToken = self.collections.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
