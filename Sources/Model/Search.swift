@@ -122,53 +122,46 @@ extension Model.Search: _Fetchable {
     var _refreshAt: Date { return caches[0].refreshAt }
 
     var _refreshDuration: Duration { return 60.minutes }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        guard !term.isEmpty else { completion(.none); return }
+extension Model.Search: _FetchableSimple {
 
-        let search = SearchWithKeyword<SearchResponse>(term: term, offset: refreshing ? 0 : caches[0].offset)
-        Session.shared.send(search, callbackQueue: callbackQueue) { [weak self] result in
-            guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                completion(requestState)
-            }
-            switch result {
-            case .success(let response):
-                let realm = iTunesRealm()
-                let cache = getOrCreateCache(term: self.term, realm: realm)
-                // swiftlint:disable force_try
-                try! realm.write {
-                    var medias: [_Media] = []
-                    response.objects.reversed().forEach {
-                        switch $0 {
-                        case .track(let obj):
-                            medias.append(_Media.track(track: obj))
-                            realm.add(obj, update: true)
-                        case .collection(let obj):
-                            medias.append(_Media.collection(collection: obj))
-                            realm.add(obj, update: true)
-                        case .artist(let obj):
-                            medias.append(_Media.artist(artist: obj))
-                            realm.add(obj, update: true)
-                        }
-                    }
-                    if refreshing {
-                        cache.objects.removeAll()
-                        cache.refreshAt = Date()
-                        cache.offset = 0
-                    }
-                    cache.objects.append(objectsIn: medias.reversed())
-                    cache.updateAt = Date()
-                    cache.offset += response.objects.count
+    typealias Request = SearchWithKeyword<SearchResponse>
+
+    func makeRequest(refreshing: Bool) -> Request? {
+        if term.isEmpty { return nil }
+        return SearchWithKeyword(term: term, offset: refreshing ? 0 : caches[0].offset)
+    }
+
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        let realm = iTunesRealm()
+        let cache = getOrCreateCache(term: self.term, realm: realm)
+        // swiftlint:disable force_try
+        try! realm.write {
+            var medias: [_Media] = []
+            response.objects.reversed().forEach {
+                switch $0 {
+                case .track(let obj):
+                    medias.append(_Media.track(track: obj))
+                    realm.add(obj, update: true)
+                case .collection(let obj):
+                    medias.append(_Media.collection(collection: obj))
+                    realm.add(obj, update: true)
+                case .artist(let obj):
+                    medias.append(_Media.artist(artist: obj))
+                    realm.add(obj, update: true)
                 }
-                print("search result cached")
-                requestState = response.objects.count != search.limit ? .done : .none
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
             }
+            if refreshing {
+                cache.objects.removeAll()
+                cache.refreshAt = Date()
+                cache.offset = 0
+            }
+            cache.objects.append(objectsIn: medias.reversed())
+            cache.updateAt = Date()
+            cache.offset += response.objects.count
         }
+        return response.objects.count != request.limit ? .done : .none
     }
 }
 

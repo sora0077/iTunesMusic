@@ -76,6 +76,7 @@
 		D96C95831D3A840F000116FD /* PlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */; };
 		D975B63E1DB5051B00AC9639 /* PlaybackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D975B63D1DB5051B00AC9639 /* PlaybackViewController.swift */; };
 		D975B65E1DB65EDE00AC9639 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D975B65D1DB65EDE00AC9639 /* HistoryViewController.swift */; };
+		D975B6611DBA52E200AC9639 /* Fetchable+Simple.swift in Sources */ = {isa = PBXBuildFile; fileRef = D975B65F1DBA51E400AC9639 /* Fetchable+Simple.swift */; };
 		D98D566A1D20270C007B09DB /* RssCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98D56691D20270C007B09DB /* RssCache.swift */; };
 		D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164091D37CEA90091BF09 /* ControlCenter.swift */; };
 		D99164121D37D37C0091BF09 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164101D37D36D0091BF09 /* Track.swift */; };
@@ -299,6 +300,7 @@
 		D96C95821D3A840F000116FD /* PlaylistDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailViewController.swift; sourceTree = "<group>"; };
 		D975B63D1DB5051B00AC9639 /* PlaybackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaybackViewController.swift; sourceTree = "<group>"; };
 		D975B65D1DB65EDE00AC9639 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		D975B65F1DBA51E400AC9639 /* Fetchable+Simple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Fetchable+Simple.swift"; sourceTree = "<group>"; };
 		D97716661D803D4700547FD4 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		D98D56691D20270C007B09DB /* RssCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssCache.swift; sourceTree = "<group>"; };
 		D99164091D37CEA90091BF09 /* ControlCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlCenter.swift; sourceTree = "<group>"; };
@@ -463,6 +465,7 @@
 			isa = PBXGroup;
 			children = (
 				D912A8771D55946B00C62617 /* Fetchable.swift */,
+				D975B65F1DBA51E400AC9639 /* Fetchable+Simple.swift */,
 				D96A67C11D55959900390D03 /* ObservableList.swift */,
 			);
 			path = Protocol;
@@ -1009,6 +1012,7 @@
 				D96A93E11D4909F000B693D4 /* Reviews.swift in Sources */,
 				D96C95811D3A6F4B000116FD /* MyPlaylistCache.swift in Sources */,
 				D929E44A1D1C44E50045C316 /* GetRss.swift in Sources */,
+				D975B6611DBA52E200AC9639 /* Fetchable+Simple.swift in Sources */,
 				D96A93E31D49110A00B693D4 /* ListReviews.swift in Sources */,
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,

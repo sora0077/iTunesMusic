@@ -108,48 +108,41 @@ extension Model.Genres: _Fetchable {
     var _refreshAt: Date { return cache.refreshAt }
 
     var _refreshDuration: Duration { return 30.days }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+extension Model.Genres: _FetchableSimple {
 
+    typealias Request = ListGenres<_Genre>
+
+    func makeRequest(refreshing: Bool) -> Request? {
         if !refreshing && !cache.list.isEmpty {
-            completion(.done)
-            return
+            return nil
         }
+        return ListGenres()
+    }
 
-        let listGenres = ListGenres<_Genre>()
-        Session.shared.send(listGenres, callbackQueue: callbackQueue) { [weak self] result in
-            let requestState: RequestState
-            defer {
-                completion(requestState)
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        let realm = iTunesRealm()
+        try! realm.write {
+            realm.add(response, update: true)
+
+            let cache = getOrCreateCache(key: "default", realm: realm)
+            cache.updateAt = Date()
+            if refreshing {
+                cache.list.removeAll()
+                cache.refreshAt = Date()
             }
-            switch result {
-            case .success(let cache):
-                let realm = iTunesRealm()
-                try! realm.write {
-                    realm.add(cache, update: true)
 
-                    let cache = getOrCreateCache(key: "default", realm: realm)
-                    cache.updateAt = Date()
-                    if refreshing {
-                        cache.list.removeAll()
-                        cache.refreshAt = Date()
-                    }
-
-                    for genreType in InitialDefaultGenre.cases {
-                        let genre = realm.object(ofType: _Genre.self, forPrimaryKey: genreType.rawValue)!
-                        if let name = genreType.name {
-                            genre.name = name
-                        }
-                        cache.list.append(genre)
-                    }
-                    realm.add(cache)
+            for genreType in InitialDefaultGenre.cases {
+                let genre = realm.object(ofType: _Genre.self, forPrimaryKey: genreType.rawValue)!
+                if let name = genreType.name {
+                    genre.name = name
                 }
-                requestState = .done
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
+                cache.list.append(genre)
             }
+            realm.add(cache)
         }
+        return .done
     }
 }
 

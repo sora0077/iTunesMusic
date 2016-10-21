@@ -75,51 +75,39 @@ extension Model.Reviews: _Fetchable {
     var _refreshAt: Date { return caches[0].refreshAt }
 
     var _refreshDuration: Duration { return 6.hours }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+extension Model.Reviews: _FetchableSimple {
 
+    typealias Request = ListReviews<_Review>
+
+    func makeRequest(refreshing: Bool) -> Request? {
         let cache = caches[0]
-        print(cache)
-
         if !refreshing && cache.fetched {
-            completion(.done)
-            return
+            return nil
         }
+        return ListReviews(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
+    }
 
-        let collectionId = self.collectionId
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        let realm = iTunesRealm()
+        // swiftlint:disable force_try
+        try! realm.write {
+            realm.add(response, update: true)
 
-        let request = ListReviews<_Review>(id: collectionId, page: refreshing ? 1 : UInt(cache.page))
-        Session.shared.send(request, callbackQueue: callbackQueue) { [weak self] result in
-            guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                completion(requestState)
+            let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
+            if refreshing {
+                cache.refreshAt = Date()
+                cache.page = 1
+                cache.fetched = false
+                cache.objects.removeAll()
             }
-            switch result {
-            case .success(let response):
-                let realm = iTunesRealm()
-                // swiftlint:disable force_try
-                try! realm.write {
-                    realm.add(response, update: true)
-
-                    let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
-                    if refreshing {
-                        cache.refreshAt = Date()
-                        cache.page = 1
-                        cache.fetched = false
-                        cache.objects.removeAll()
-                    }
-                    cache.updateAt = Date()
-                    cache.fetched = response.isEmpty
-                    cache.page += 1
-                    cache.objects.append(objectsIn: response)
-                }
-                requestState = response.isEmpty ? .done : .none
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
-            }
+            cache.updateAt = Date()
+            cache.fetched = response.isEmpty
+            cache.page += 1
+            cache.objects.append(objectsIn: response)
         }
+        return response.isEmpty ? .done : .none
     }
 }
 

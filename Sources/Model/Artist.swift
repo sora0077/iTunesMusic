@@ -82,53 +82,43 @@ extension Model.Artist: _Fetchable {
     var _refreshAt: Date { return caches[0].refreshAt }
 
     var _refreshDuration: Duration { return 60.minutes }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+extension Model.Artist: _FetchableSimple {
 
-        let artistId = self.artistId
-        let cache = caches[0]
-        if !refreshing && cache.fetched {
-            completion(.done)
-            return
+    typealias Request = LookupWithIds<LookupResponse>
+
+    func makeRequest(refreshing: Bool) -> Request? {
+        if !refreshing && caches[0].fetched {
+            return nil
         }
+        return LookupWithIds(id: artistId)
+    }
 
-        let lookup = LookupWithIds<LookupResponse>(id: artistId)
-        Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
-            guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                completion(requestState)
-            }
-            switch result {
-            case .success(let response):
-                let realm = iTunesRealm()
-                // swiftlint:disable force_try
-                try! realm.write {
-                    response.objects.forEach {
-                        switch $0 {
-                        case .track(let obj):
-                            realm.add(obj, update: true)
-                        case .collection(let obj):
-                            realm.add(obj, update: true)
-                        case .artist(let obj):
-                            realm.add(obj, update: true)
-                        case .unknown:()
-                        }
-                    }
-
-                    let cache = getOrCreateCache(artistId: artistId, realm: realm)
-                    if refreshing {
-                        cache.refreshAt = Date()
-                    }
-                    cache.updateAt = Date()
-                    cache.fetched = true
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        let realm = iTunesRealm()
+        // swiftlint:disable force_try
+        try! realm.write {
+            response.objects.forEach {
+                switch $0 {
+                case .track(let obj):
+                    realm.add(obj, update: true)
+                case .collection(let obj):
+                    realm.add(obj, update: true)
+                case .artist(let obj):
+                    realm.add(obj, update: true)
+                case .unknown:()
                 }
-                requestState = .done
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
             }
+
+            let cache = getOrCreateCache(artistId: artistId, realm: realm)
+            if refreshing {
+                cache.refreshAt = Date()
+            }
+            cache.updateAt = Date()
+            cache.fetched = true
         }
+        return .done
     }
 }
 

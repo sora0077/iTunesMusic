@@ -62,41 +62,35 @@ extension Model.Track: _Fetchable {
     var _refreshAt: Date { return caches.first?._createAt ?? Date.distantPast }
 
     var _refreshDuration: Duration { return 18.hours }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+extension Model.Track: _FetchableSimple {
 
-        let trackId = self.trackId
-        let lookup = LookupWithIds<LookupResponse>(id: trackId)
-        Session.shared.send(lookup, callbackQueue: callbackQueue) { [weak self] result in
-            guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                completion(requestState)
-            }
-            switch result {
-            case .success(let response) where !response.objects.isEmpty:
-                let realm = iTunesRealm()
-                // swiftlint:disable force_try
-                try! realm.write {
-                    response.objects.reversed().forEach {
-                        switch $0 {
-                        case .track(let obj):
-                            realm.add(obj, update: true)
-                        case .collection(let obj):
-                            realm.add(obj, update: true)
-                        case .artist(let obj):
-                            realm.add(obj, update: true)
-                        case .unknown:()
-                        }
-                    }
+    typealias Request = LookupWithIds<LookupResponse>
+
+    func makeRequest(refreshing: Bool) -> Request? {
+        return LookupWithIds(id: trackId)
+    }
+
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        if response.objects.isEmpty {
+            return .error(Error.trackNotFound(trackId))
+        }
+        let realm = iTunesRealm()
+        // swiftlint:disable force_try
+        try! realm.write {
+            response.objects.reversed().forEach {
+                switch $0 {
+                case .track(let obj):
+                    realm.add(obj, update: true)
+                case .collection(let obj):
+                    realm.add(obj, update: true)
+                case .artist(let obj):
+                    realm.add(obj, update: true)
+                case .unknown:()
                 }
-                requestState = .done
-            case .success:
-                requestState = .error(Error.trackNotFound(trackId))
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
             }
         }
+        return .done
     }
 }
