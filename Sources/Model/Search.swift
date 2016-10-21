@@ -31,7 +31,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 extension Model {
 
     public final class Search: Fetchable, ObservableList, _ObservableList {
-        public let trends = Trends()
+        public private(set) lazy var trends = Trends()
 
         public var name: String { return term }
 
