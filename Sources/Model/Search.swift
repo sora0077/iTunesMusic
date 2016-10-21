@@ -31,29 +31,6 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 extension Model {
 
     public final class Search: Fetchable, ObservableList, _ObservableList {
-
-        // swiftlint:disable nesting
-        public final class Trends: Fetchable, ObservableList, _ObservableList {
-            public var name: String {
-                return cache.name
-            }
-            fileprivate var results: [String] = []
-
-            fileprivate let cache: _SearchTrendsCache
-
-            fileprivate init() {
-                let realm = iTunesRealm()
-                self.cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
-                try! realm.write {
-                    realm.add(self.cache, update: true)
-                }
-                DispatchQueue.main.async {
-                    self.results = self.cache.trendings
-                    self._changes.onNext(.initial)
-                }
-            }
-        }
-
         public let trends = Trends()
 
         public var name: String { return term }
@@ -204,51 +181,68 @@ extension Model.Search: Swift.Collection {
 }
 
 //MARK: - Search.Trends
+extension Model.Search {
+    public final class Trends: Fetchable, ObservableList, _ObservableList {
+        public var name: String {
+            return cache.name
+        }
+        fileprivate var results: [String] = []
+
+        fileprivate let cache: _SearchTrendsCache
+
+        fileprivate init() {
+            let realm = iTunesRealm()
+            self.cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
+            try! realm.write {
+                realm.add(self.cache, update: true)
+            }
+            DispatchQueue.main.async {
+                self.results = self.cache.trendings
+                self._changes.onNext(.initial)
+            }
+        }
+    }
+}
+
 extension Model.Search.Trends: _Fetchable {
 
     var _refreshAt: Date { return cache.refreshAt }
 
     var _refreshDuration: Duration { return 60.minutes }
+}
 
-    func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+extension Model.Search.Trends: _FetchableSimple {
 
-        let trends = SearchHintTrends()
-        Session.shared.send(trends, callbackQueue: callbackQueue) { [weak self] result in
-            guard let `self` = self else { return }
-            let requestState: RequestState
-            defer {
-                completion(requestState)
+    typealias Request = SearchHintTrends
+
+    func makeRequest(refreshing: Bool) -> Request? {
+        return SearchHintTrends()
+    }
+
+    func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
+        let realm = iTunesRealm()
+        try! realm.write {
+            let cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
+            cache.name = response.name
+            cache.trendings = response.trends
+            cache.updateAt = Date()
+            if refreshing {
+                cache.refreshAt = Date()
             }
-            switch result {
-            case .success(let response):
-                let realm = iTunesRealm()
-                try! realm.write {
-                    let cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
-                    cache.name = response.name
-                    cache.trendings = response.trends
-                    cache.updateAt = Date()
-                    if refreshing {
-                        cache.refreshAt = Date()
-                    }
-                    realm.add(cache, update: true)
-                }
-                let indices = response.trends.enumerated().map { $0.offset }
-                let changes: CollectionChange
-                if self.results.count == indices.count {
-                    changes = .update(deletions: [], insertions: [], modifications: indices)
-                } else {
-                    changes = .update(deletions: [], insertions: indices, modifications: [])
-                }
-                self.results = response.trends
-                DispatchQueue.main.async {
-                    self._changes.onNext(changes)
-                }
-                requestState = .done
-            case .failure(let error):
-                print(error)
-                requestState = .error(error)
-            }
+            realm.add(cache, update: true)
         }
+        let indices = response.trends.enumerated().map { $0.offset }
+        let changes: CollectionChange
+        if self.results.count == indices.count {
+            changes = .update(deletions: [], insertions: [], modifications: indices)
+        } else {
+            changes = .update(deletions: [], insertions: indices, modifications: [])
+        }
+        self.results = response.trends
+        DispatchQueue.main.async {
+            self._changes.onNext(changes)
+        }
+        return .done
     }
 }
 
