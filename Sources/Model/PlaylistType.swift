@@ -1,5 +1,5 @@
 //
-//  PlaylistType.swift
+//  Playlist.swift
 //  iTunesMusic
 //
 //  Created by 林達也 on 2016/06/17.
@@ -11,7 +11,7 @@ import RealmSwift
 import RxSwift
 
 
-public protocol PlaylistType: class {
+public protocol Playlist: class {
 
     var name: String { get }
 
@@ -23,7 +23,7 @@ public protocol PlaylistType: class {
     func track(at index: Int) -> Track
 }
 
-extension PlaylistType where Self: ObservableList {
+extension Playlist where Self: ObservableList {
 
     public var tracksChanges: Observable<CollectionChange> { return changes }
 }

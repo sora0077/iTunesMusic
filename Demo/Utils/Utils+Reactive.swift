@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 
-func prefetchArtworkURLs<Playlist: PlaylistType>(size: Int) -> AnyObserver<Playlist> where Playlist: Swift.Collection, Playlist.Iterator.Element == Track {
+func prefetchArtworkURLs<P: Playlist>(size: Int) -> AnyObserver<P> where P: Swift.Collection, P.Iterator.Element == Track {
     return AnyObserver { on in
         if case .next(let playlist) = on {
             let urls = playlist.flatMap { $0.artworkURL(size: size) }

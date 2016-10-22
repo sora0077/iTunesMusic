@@ -78,7 +78,7 @@ extension Model {
 }
 
 
-extension Model.Album: PlaylistType {
+extension Model.Album: Playlist {
 
     public var name: String { return collection.name }
 

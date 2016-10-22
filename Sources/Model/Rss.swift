@@ -83,7 +83,7 @@ extension Model {
 }
 
 
-extension Model.Rss: PlaylistType {
+extension Model.Rss: Playlist {
 
     public var trackCount: Int { return tracks.count }
 

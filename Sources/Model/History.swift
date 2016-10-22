@@ -64,7 +64,7 @@ extension Model.History: PlayerMiddleware {
 }
 
 
-extension Model.History: Swift.Collection, PlaylistType {
+extension Model.History: Swift.Collection, Playlist {
 
     private var objects: Results<_HistoryRecord> {
         return cache.sortedObjects

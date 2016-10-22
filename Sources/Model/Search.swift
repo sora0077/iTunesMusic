@@ -84,7 +84,7 @@ extension Model {
 }
 
 
-extension Model.Search: PlaylistType {
+extension Model.Search: Playlist {
 
     public var trackCount: Int { return tracks.count }
 

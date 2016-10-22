@@ -250,7 +250,7 @@ extension PlayerImpl {
         _add(worker: workerFactory.track(track), priority: .high)
     }
 
-    func add(playlist: PlaylistType) {
+    func add(playlist: Playlist) {
         _add(worker: workerFactory.playlist(playlist), priority: .default)
     }
 

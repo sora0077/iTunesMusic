@@ -37,7 +37,7 @@ struct WorkerFactory {
         return AnyWorker(track)
     }
 
-    func playlist(_ playlist: PlaylistType, index: Int = 0) -> AnyWorker {
+    func playlist(_ playlist: Playlist, index: Int = 0) -> AnyWorker {
         let playlist = PlaylistWorker(playlist: playlist, index: index, factory: self)
         return AnyWorker(playlist)
     }
@@ -146,14 +146,14 @@ private final class PlaylistWorker: Worker {
 
     var canPop: Bool = false
 
-    let playlist: PlaylistType
+    let playlist: Playlist
     var index: Int
 
     private let factory: WorkerFactory
 
     private var trackWorker: AnyWorker?
 
-    init(playlist: PlaylistType, index: Int = 0, factory: WorkerFactory) {
+    init(playlist: Playlist, index: Int = 0, factory: WorkerFactory) {
         self.playlist = playlist
         self.index = index
 

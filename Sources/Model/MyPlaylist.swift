@@ -117,7 +117,7 @@ extension Model {
 }
 
 
-extension Model.MyPlaylist: PlaylistType {
+extension Model.MyPlaylist: Playlist {
 
     public var name: String { return playlist.title }
 
