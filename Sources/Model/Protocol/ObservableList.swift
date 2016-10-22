@@ -11,7 +11,7 @@ import RxSwift
 
 
 //MARK: - ObservableList
-public protocol ObservableList: class {
+public protocol ObservableList {
 
     var changes: Observable<CollectionChange> { get }
 }
@@ -31,7 +31,7 @@ extension ObservableList {
 
 
 //MARK: - _ObservableList
-protocol _ObservableList: class {
+protocol _ObservableList {
 
     var _changes: PublishSubject<CollectionChange> { get }
 }

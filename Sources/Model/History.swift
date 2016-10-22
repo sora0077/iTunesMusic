@@ -78,7 +78,7 @@ extension Model.History: Swift.Collection, PlaylistType {
 
     public var endIndex: Int { return objects.endIndex }
 
-    public subscript (index: Int) -> (Track, Date) { return (objects[index].track, objects[index].createAt) }
+    public subscript (index: Int) -> (Track, Date) { let r = objects[index]; return (r.track, r.createAt) }
 
     public func index(after i: Int) -> Int {
         return objects.index(after: i)

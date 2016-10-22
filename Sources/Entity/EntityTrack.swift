@@ -83,7 +83,9 @@ final class _Track: RealmSwift.Object, Track {
 
     dynamic var _artist: _Artist?
 
-    let histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
+    private let _histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
+
+    private(set) lazy var histories: Results<_HistoryRecord> = self._histories.sorted(byProperty: "createAt", ascending: false)
 
     fileprivate let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
 
