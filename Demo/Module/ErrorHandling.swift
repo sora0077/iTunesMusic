@@ -57,27 +57,24 @@ func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?,
 
 
 final class ErrorHandlingSettings {
-    private static let disposeBag = DisposeBag()
     static func launch() {
-        ErrorLog.event
-            .drive(onNext: { error in
-                print(error)
-                switch error.level {
-                case let level as AppErrorLevel:
-                    switch level {
-                    case .alert:
-                        let root = errorManageViewController()
-                        let presented = root.presentedViewController ?? root
-                        let alert = UIAlertController.alertController(with: error)
-                        presented.present(alert, animated: true, completion: nil)
-                    case .slirent:
-                        break
-                    }
-                default:
+        ErrorLog.observe { error in
+            print(error)
+            switch error.level {
+            case let level as AppErrorLevel:
+                switch level {
+                case .alert:
+                    let root = errorManageViewController()
+                    let presented = root.presentedViewController ?? root
+                    let alert = UIAlertController.alertController(with: error)
+                    presented.present(alert, animated: true, completion: nil)
+                case .slirent:
                     break
                 }
-            })
-            .addDisposableTo(disposeBag)
+            default:
+                break
+            }
+        }
     }
 }
 

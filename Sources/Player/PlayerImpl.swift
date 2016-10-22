@@ -83,7 +83,7 @@ final class PlayerImpl: NSObject, Player {
 
     var playing: Bool { return _player.rate != 0 }
 
-    fileprivate var queueController: QueueController<QueueResponse>!
+    fileprivate var queueController: WorkerController<QueueResponse>!
     private let queueuingCount = Variable<Int>(0)
 
 
@@ -105,7 +105,7 @@ final class PlayerImpl: NSObject, Player {
         workerFactory.errorType = errorType
         workerFactory.errorLevel = errorLevel
 
-        queueController = QueueController(queueingCount: queueuingCount.asObservable()) { [weak self] id, url, duration in
+        queueController = WorkerController(bufferSize: 3, queueingCount: queueuingCount.asObservable()) { [weak self] id, url, duration in
             self?.configureNextPlayerItem(id: id, url: url, duration: duration)
         }
         #if (arch(i386) || arch(x86_64)) && os(iOS)

@@ -111,7 +111,7 @@ class RssViewController: UIViewController {
             .map { $0 != .requesting }
             .distinctUntilChanged()
             .asDriver(onErrorJustReturn: false)
-            .drive(refreshControl.rx.enabled)
+            .drive(refreshControl.rx.isEnabled)
             .addDisposableTo(disposeBag)
 
         action(rss.refresh)

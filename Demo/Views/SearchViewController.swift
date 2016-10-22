@@ -82,6 +82,8 @@ class SearchViewController: UIViewController {
 
         searhBar.rx.text
             .debounce(0.3, scheduler: MainScheduler.instance)
+            .filter { $0 != nil }
+            .map { $0 ?? "" }
             .distinctUntilChanged()
             .do(onNext: { str in
                 print(str)
