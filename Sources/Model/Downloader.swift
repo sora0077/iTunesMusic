@@ -16,11 +16,13 @@ final class Downloader {
     fileprivate let disposeBag = DisposeBag()
 
     fileprivate let previewer: Preview
+    fileprivate let threshold: Int
 
     fileprivate var downloaded: Set<Int> = []
 
-    init(previewer: Preview) {
+    init(previewer: Preview, threshold: Int = 2) {
         self.previewer = previewer
+        self.threshold = threshold
     }
 }
 
@@ -28,19 +30,16 @@ extension Downloader: PlayerMiddleware {
 
     func didEndPlayTrack(_ trackId: Int) {
         if downloaded.contains(trackId) { return }
-        let previewer = self.previewer
         let realm = iTunesRealm()
-        if let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) {
-            if track.histories.count > 2 {
-                let preview = previewer.queueing(track: track)
-                print("will cache in disk", track.name)
-                preview.download()
-                    .subscribe(onNext: { [weak self] url, _ in
-                        print("cache ", url)
-                        self?.downloaded.insert(trackId)
-                    })
-                    .addDisposableTo(disposeBag)
-            }
+        guard let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId), track.histories.count > threshold else {
+            return
         }
+        print("will cache in disk", track.name)
+        previewer.queueing(track: track).download()
+            .subscribe(onNext: { [weak self] url, _ in
+                print("cache ", url)
+                self?.downloaded.insert(trackId)
+            })
+            .addDisposableTo(disposeBag)
     }
 }
