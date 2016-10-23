@@ -49,6 +49,16 @@ enum CommonError: AppError {
 }
 
 
+func partial<A, B, R>(_ f: @escaping (A, B) -> R, _ val: @escaping @autoclosure () -> A) -> (B) -> R {
+    return { f(val(), $0) }
+}
+
+
+func partial<A, B, C, R>(_ f: @escaping (A, B, C) -> R, _ val: @escaping @autoclosure () -> A) -> (B, C) -> R {
+    return { f(val(), $0, $1) }
+}
+
+
 func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?,
             error: AppError.Type = CommonError.self,
             level: AppErrorLevel = .alert) {

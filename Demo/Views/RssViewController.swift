@@ -9,6 +9,7 @@
 import UIKit
 import iTunesMusic
 import RxSwift
+import RxCocoa
 import SnapKit
 
 
@@ -61,16 +62,16 @@ class RssViewController: UIViewController {
         let refreshControl = UIRefreshControl()
         refreshControl.rx.controlEvent(.valueChanged)
             .delay(0.8, scheduler: MainScheduler.instance)
-            .subscribe { [weak self] event in
-                action({ error, level in self?.rss.refresh(force: true, ifError: error, level: level) })
-            }
+            .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
+                action(partial(vc.rss.refresh, true))
+            })
             .addDisposableTo(disposeBag)
         tableView.refreshControl = refreshControl
 
         tableView.rx.reachedBottom()
             .filter { $0 }
-            .subscribe(onNext: { [weak self] _ in
-                self?.rss.fetch(ifError: CommonError.self, level: AppErrorLevel.alert)
+            .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
+                action(vc.rss.fetch)
             })
             .addDisposableTo(disposeBag)
 
@@ -90,7 +91,7 @@ class RssViewController: UIViewController {
             .addDisposableTo(disposeBag)
 
         rss.requestState
-            .subscribe(onNext: { [weak self] state in
+            .subscribe(UIBindingObserver(UIElement: self) { vc, state in
                 func title() -> String {
                     switch state {
                     case .none:
@@ -103,7 +104,7 @@ class RssViewController: UIViewController {
                         return "エラー"
                     }
                 }
-                self?.title = title()
+                vc.title = title()
             })
             .addDisposableTo(disposeBag)
 

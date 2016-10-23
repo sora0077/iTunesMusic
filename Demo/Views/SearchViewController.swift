@@ -9,6 +9,7 @@
 import UIKit
 import iTunesMusic
 import RxSwift
+import RxCocoa
 
 
 enum SearchError: AppError {
@@ -75,8 +76,8 @@ class SearchViewController: UIViewController {
 
         tableView.rx.reachedBottom()
             .filter { $0 }
-            .subscribe(onNext: { [weak self] _ in
-                action(self?.search.fetch, error: SearchError.self)
+            .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
+                action(vc.search.fetch, error: SearchError.self)
             })
             .addDisposableTo(disposeBag)
 
@@ -88,8 +89,8 @@ class SearchViewController: UIViewController {
             .do(onNext: { str in
                 print(str)
             })
-            .subscribe(onNext: { [weak self] str in
-                self?.search = Model.Search(term: str)
+            .subscribe(UIBindingObserver(UIElement: self) { vc, str in
+                vc.search = Model.Search(term: str)
             })
             .addDisposableTo(disposeBag)
     }
@@ -105,6 +106,7 @@ class SearchViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
 }
+
 
 extension SearchViewController: UITableViewDataSource {
 
