@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 
 extension UIViewController {
@@ -81,5 +82,31 @@ class MainViewController: UIViewController {
             make.edges.equalTo(0)
         }
         nav.didMove(toParentViewController: self)
+
+        var animator: UIViewPropertyAnimator?
+        let pan = UIPanGestureRecognizer()
+        pan.rx.event.asDriver()
+            .drive(UIBindingObserver(UIElement: self) { vc, pan in
+                switch pan.state {
+                case .began:
+                    let center = vc.containerView.center
+                    let timing = UISpringTimingParameters(dampingRatio: 0.6)
+                    animator = UIViewPropertyAnimator(duration: 0.3, timingParameters: timing)
+                    animator?.addAnimations {
+                        vc.containerView.center = center
+                    }
+                case .changed:
+                    let location = pan.translation(in: vc.view)
+                    var moved = vc.containerView.center
+                    moved.y += location.y
+                    vc.containerView.center = moved
+                    pan.setTranslation(.zero, in: vc.view)
+                case .ended:
+                    animator?.startAnimation()
+                default:()
+                }
+            })
+            .addDisposableTo(disposeBag)
+        containerView.addGestureRecognizer(pan)
     }
 }
