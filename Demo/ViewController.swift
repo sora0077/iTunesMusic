@@ -75,6 +75,14 @@ class MainViewController: UIViewController {
 
         let genres = GenresViewController()
         let nav = UINavigationController(rootViewController: genres)
+        let settings = UIBarButtonItem(title: "設定", style: .plain, target: nil, action: nil)
+        genres.navigationItem.rightBarButtonItem = settings
+        settings.rx.tap.asDriver()
+            .drive(UIBindingObserver(UIElement: genres) { vc, _ in
+                let settings = SettingsViewController()
+                vc.navigationController?.pushViewController(settings, animated: true)
+            })
+            .addDisposableTo(disposeBag)
 
         addChildViewController(nav)
         containerView.addSubview(nav.view)

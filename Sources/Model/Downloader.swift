@@ -41,7 +41,7 @@ extension Downloader: PlayerMiddleware {
         }
         guard cache.counter >= threshold else { return }
         guard !downloading.contains(trackId) else { return }
-        
+
         downloading.insert(trackId)
         previewer.queueing(track: track).download()
             .subscribe(onNext: { [weak self] _ in
