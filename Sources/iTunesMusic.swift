@@ -23,6 +23,7 @@ private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Collection.self,
     _ChartUrls.self,
     _HistoryCache.self,
+    _DiskCacheCounter.self,
     _SearchCache.self,
     _SearchTrendsCache.self,
     _ArtistCache.self,

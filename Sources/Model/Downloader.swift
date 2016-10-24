@@ -18,9 +18,9 @@ final class Downloader {
     fileprivate let previewer: Preview
     fileprivate let threshold: Int
 
-    fileprivate var downloaded: Set<Int> = []
+    fileprivate var downloading: Set<Int> = []
 
-    init(previewer: Preview, threshold: Int = 2) {
+    init(previewer: Preview, threshold: Int = 3) {
         self.previewer = previewer
         self.threshold = threshold
     }
@@ -29,17 +29,30 @@ final class Downloader {
 extension Downloader: PlayerMiddleware {
 
     func didEndPlayTrack(_ trackId: Int) {
-        if downloaded.contains(trackId) { return }
         let realm = iTunesRealm()
-        guard let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId), track.histories.count > threshold else {
+        guard let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) else {
             return
         }
-        print("will cache in disk", track.name)
+        let cache = realm.object(ofType: _DiskCacheCounter.self, forPrimaryKey: trackId) ?? newCache(with: trackId)
+        // swiftlint:disable force_try
+        try! realm.write {
+            cache.counter += 1
+            realm.add(cache, update: true)
+        }
+        guard cache.counter >= threshold else { return }
+        guard !downloading.contains(trackId) else { return }
+        
+        downloading.insert(trackId)
         previewer.queueing(track: track).download()
-            .subscribe(onNext: { [weak self] url, _ in
-                print("cache ", url)
-                self?.downloaded.insert(trackId)
+            .subscribe(onNext: { [weak self] _ in
+                _ = self?.downloading.remove(trackId)
             })
             .addDisposableTo(disposeBag)
+    }
+
+    private func newCache(with trackId: Int) -> _DiskCacheCounter {
+        let cache = _DiskCacheCounter()
+        cache.trackId = trackId
+        return cache
     }
 }
