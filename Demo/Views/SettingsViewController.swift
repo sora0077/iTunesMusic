@@ -76,7 +76,7 @@ extension SettingsViewController.Section {
                             required init?(coder aDecoder: NSCoder) {
                                 fatalError("init(coder:) has not been implemented")
                             }
-                            
+
                             private override func prepareForReuse() {
                                 super.prepareForReuse()
                                 disposeBag = DisposeBag()
@@ -99,7 +99,11 @@ extension SettingsViewController.Section {
                 func action(_ tableView: UITableView, at indexPath: IndexPath, parent: UIViewController) {
                     let sheet = UIAlertController(title: "キャッシュの削除", message: "本当に削除しますか？", preferredStyle: .actionSheet)
                     sheet.addAction(UIAlertAction(title: "削除", style: .destructive) { action in
+                        Model.DiskCache.shared.removeAll()
+                            .subscribe(UIBindingObserver(UIElement: parent) { vc, _ in
 
+                            })
+                            .addDisposableTo(parent.disposeBag)
                     })
                     sheet.addAction(UIAlertAction(title: "キャンセル", style: .cancel) { action in
 

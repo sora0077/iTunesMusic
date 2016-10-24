@@ -56,15 +56,18 @@ extension Model.DiskCache {
         return Observable.create { subscriber in
             do {
                 try FileManager.default.removeItem(at: dir)
+                try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
                 let realm = iTunesRealm()
                 try realm.write {
                     realm.delete(realm.objects(_DiskCacheCounter.self))
                 }
+                subscriber.onNext(())
+                subscriber.onCompleted()
             } catch {
                 subscriber.onError(error)
             }
             return Disposables.create()
-        }
+        }.subscribeOn(SerialDispatchQueueScheduler(qos: .background))
     }
 }
 
