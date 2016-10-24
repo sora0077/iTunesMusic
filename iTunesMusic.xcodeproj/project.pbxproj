@@ -144,6 +144,7 @@
 		D9B3417B1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3417A1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift */; };
 		D9C31D0C1DBE30A10057DF00 /* DiskCacheCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C31D0B1DBE30A10057DF00 /* DiskCacheCounter.swift */; };
 		D9C31D0E1DBE3FD10057DF00 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C31D0D1DBE3FD10057DF00 /* SettingsViewController.swift */; };
+		D9C31D121DBE4DD60057DF00 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C31D101DBE4DC90057DF00 /* DiskCache.swift */; };
 		D9C553EE1D2E943B007C486E /* EntityPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */; };
 		D9C553F01D2FDD62007C486E /* EntityTrackMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */; };
 		D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9EA0B4E1D27EC60001C3F2F /* Album.swift */; };
@@ -344,6 +345,7 @@
 		D9B3417A1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayingQueueViewController.swift; sourceTree = "<group>"; };
 		D9C31D0B1DBE30A10057DF00 /* DiskCacheCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheCounter.swift; sourceTree = "<group>"; };
 		D9C31D0D1DBE3FD10057DF00 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		D9C31D101DBE4DC90057DF00 /* DiskCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		D9C553ED1D2E943B007C486E /* EntityPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityPlaylist.swift; sourceTree = "<group>"; };
 		D9C553EF1D2FDD62007C486E /* EntityTrackMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityTrackMetadata.swift; sourceTree = "<group>"; };
 		D9EA0B4E1D27EC60001C3F2F /* Album.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
@@ -594,20 +596,20 @@
 		D91B429C1D08625200AAAD58 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D9C31D0F1DBE4D9F0057DF00 /* Internal */,
 				D912A8761D5593E300C62617 /* Protocol */,
 				D9165FE71D2C040C00B701E3 /* Model.swift */,
 				D9542EF61D136A450073C8EE /* PlaylistType.swift */,
 				D91B429F1D08640800AAAD58 /* Search.swift */,
-				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
 				D91B42A71D0EFBF700AAAD58 /* History.swift */,
 				D9FD12EB1D1831D50010E81D /* Genres.swift */,
 				D929E4471D1C44C70045C316 /* Rss.swift */,
-				D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */,
 				D9EA0B4E1D27EC60001C3F2F /* Album.swift */,
 				D9EA0B581D2AAD74001C3F2F /* Artist.swift */,
 				D99164101D37D36D0091BF09 /* Track.swift */,
 				D96C957C1D3A66D2000116FD /* MyPlaylist.swift */,
 				D96A93E01D4909F000B693D4 /* Reviews.swift */,
+				D9C31D101DBE4DC90057DF00 /* DiskCache.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -721,6 +723,15 @@
 				D9AF2B001D75C70100D7751C /* AlbumListTopBottomTableViewCell.xib */,
 			);
 			path = Album;
+			sourceTree = "<group>";
+		};
+		D9C31D0F1DBE4D9F0057DF00 /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
+				D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */,
+			);
+			name = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -991,6 +1002,7 @@
 				D91E68D01D4A4A40005CF411 /* ReviewCache.swift in Sources */,
 				D98D566A1D20270C007B09DB /* RssCache.swift in Sources */,
 				D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */,
+				D9C31D121DBE4DD60057DF00 /* DiskCache.swift in Sources */,
 				D9134E2C1D5779F200636C10 /* SearchHintTrends.swift in Sources */,
 				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
 				D9165FE61D2C03C300B701E3 /* PlayerImpl.swift in Sources */,

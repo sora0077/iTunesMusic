@@ -22,6 +22,7 @@ enum WindowLevel: Int, WindowKit.WindowLevel {
     case background = -1
     case main
     case routing
+    case indicator
     case alert = 10
 
     static let mainWindowLevel: WindowLevel = .main
@@ -47,6 +48,11 @@ func playbackViewController() -> PlaybackViewController {
 func routingManageViewController() -> UIViewController {
     // swiftlint:disable force_cast
     return delegate().manager[.routing].rootViewController!
+}
+
+func indicatorManageViewController() -> UIViewController {
+    // swiftlint:disable force_cast
+    return delegate().manager[.indicator].rootViewController!
 }
 
 func errorManageViewController() -> UIViewController {
@@ -86,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         manager[.background].rootViewController = PlaybackViewController()
         manager[.routing].rootViewController = UIViewController()
+        manager[.indicator].rootViewController = UIViewController()
         manager[.alert].rootViewController = UIViewController()
 
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])

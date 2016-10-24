@@ -10,13 +10,30 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SnapKit
+import iTunesMusic
+
+
+private extension Reactive where Base: Model.DiskCache {
+    var diskSizeText: Observable<String> {
+        return diskSizeInBytes.map { bytes in
+            switch bytes {
+            case 0...1024*1024:
+                return String(format: "%.2fKB", Float(bytes)/1024)
+            case 1024*1024...1024*1024*1024:
+                return String(format: "%.2fMB", Float(bytes)/1024/1024)
+            default:
+                return String(format: "%.2fGB", Float(bytes)/1024/1024/1024)
+            }
+        }
+    }
+}
 
 
 private protocol RowType {
 
     var cellClass: UITableViewCell.Type { get }
 
-    func configure(cell: UITableViewCell)
+    func configure(cell: UITableViewCell, parent: UIViewController)
 
     func action(_ tableView: UITableView, at indexPath: IndexPath, parent: UIViewController)
 }
@@ -29,7 +46,6 @@ extension RowType {
 
     func cell(_ tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: cellClass), for: indexPath)
-        configure(cell: cell)
         return cell
     }
 
@@ -52,12 +68,32 @@ extension SettingsViewController.Section {
                 var cellClass: UITableViewCell.Type {
                     switch self {
                     case .cache:
-                        return UITableViewCell.self
+                        class Cell: UITableViewCell {
+                            override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+                                super.init(style: .value1, reuseIdentifier: reuseIdentifier)
+                            }
+
+                            required init?(coder aDecoder: NSCoder) {
+                                fatalError("init(coder:) has not been implemented")
+                            }
+                            
+                            private override func prepareForReuse() {
+                                super.prepareForReuse()
+                                disposeBag = DisposeBag()
+                            }
+                        }
+                        return Cell.self
                     }
                 }
 
-                func configure(cell: UITableViewCell) {
+                func configure(cell: UITableViewCell, parent: UIViewController) {
                     cell.textLabel?.text = "キャッシュの削除"
+                    if let text = cell.detailTextLabel?.rx.text {
+                        Model.DiskCache.shared.rx.diskSizeText
+                            .asDriver(onErrorJustReturn: "")
+                            .drive(text)
+                            .addDisposableTo(cell.disposeBag)
+                    }
                 }
 
                 func action(_ tableView: UITableView, at indexPath: IndexPath, parent: UIViewController) {
@@ -113,6 +149,7 @@ extension SettingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = sections[indexPath.section].rows[indexPath.row]
         let cell = row.cell(tableView, at: indexPath)
+        row.configure(cell: cell, parent: self)
 
         return cell
     }

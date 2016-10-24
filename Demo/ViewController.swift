@@ -27,6 +27,26 @@ extension UIViewController {
     }
 }
 
+extension UIView {
+    private struct Key {
+        static var disposeBag: UInt8 = 0
+    }
+
+    var disposeBag: DisposeBag {
+        set {
+            objc_setAssociatedObject(self, &Key.disposeBag, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            if let bag = objc_getAssociatedObject(self, &Key.disposeBag) as? DisposeBag {
+                return bag
+            }
+            let bag = DisposeBag()
+            objc_setAssociatedObject(self, &Key.disposeBag, bag, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return bag
+        }
+    }
+}
+
 
 
 class ViewController: UIViewController {

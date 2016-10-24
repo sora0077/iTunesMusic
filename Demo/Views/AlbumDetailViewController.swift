@@ -80,8 +80,6 @@ fileprivate class TableViewCell: UITableViewCell {
 
     let gesture = UILongPressGestureRecognizer()
 
-    private(set) var disposeBag = DisposeBag()
-
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 

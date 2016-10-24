@@ -60,8 +60,7 @@ final class PreviewTrack {
 
                     let task = URLSession.shared.downloadTask(with: url, completionHandler: { (url, response, error) in
                         if let src = url {
-                            let path = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-                            let to = URL(fileURLWithPath: path).appendingPathComponent(filename)
+                            let to = Model.DiskCache.shared.dir.appendingPathComponent(filename)
                             do {
                                 try FileManager.default.moveItem(at: src, to: to)
                             } catch {
