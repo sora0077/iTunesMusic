@@ -109,7 +109,7 @@ final class PreviewTrack {
             let task = Session.shared.send(GetPreviewUrl(id: id, url: url), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .success(let (url, duration)):
-                    let duration = Double(duration) / 10000
+                    let duration = Double(duration) / 1000
                     let realm = iTunesRealm()
                     try? realm.write {
                         guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
