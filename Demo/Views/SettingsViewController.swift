@@ -77,7 +77,7 @@ extension SettingsViewController.Section {
                                 fatalError("init(coder:) has not been implemented")
                             }
 
-                            private override func prepareForReuse() {
+                            override func prepareForReuse() {
                                 super.prepareForReuse()
                                 disposeBag = DisposeBag()
                             }
