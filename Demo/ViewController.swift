@@ -111,18 +111,13 @@ class MainViewController: UIViewController {
         }
         nav.didMove(toParentViewController: self)
 
-        var animator: UIViewPropertyAnimator?
+        var center: CGPoint = .zero
         let pan = UIPanGestureRecognizer()
         pan.rx.event.asDriver()
             .drive(UIBindingObserver(UIElement: self) { vc, pan in
                 switch pan.state {
                 case .began:
-                    let center = vc.containerView.center
-                    let timing = UISpringTimingParameters(dampingRatio: 0.6)
-                    animator = UIViewPropertyAnimator(duration: 0.3, timingParameters: timing)
-                    animator?.addAnimations {
-                        vc.containerView.center = center
-                    }
+                    center = vc.containerView.center
                 case .changed:
                     let location = pan.translation(in: vc.view)
                     var moved = vc.containerView.center
@@ -130,7 +125,12 @@ class MainViewController: UIViewController {
                     vc.containerView.center = moved
                     pan.setTranslation(.zero, in: vc.view)
                 case .ended:
-                    animator?.startAnimation()
+                    let timing = UISpringTimingParameters(dampingRatio: 0.6)
+                    let animator = UIViewPropertyAnimator(duration: 1, timingParameters: timing)
+                    animator.addAnimations {
+                        vc.containerView.center = center
+                    }
+                    animator.startAnimation()
                 default:()
                 }
             })
