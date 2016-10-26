@@ -18,6 +18,11 @@ extension Model {
 
         var dir: URL { return impl.dir }
 
+        fileprivate var downloading: Set<Int> = []
+        fileprivate let threshold = 3
+
+        private init() {}
+
         public var diskSizeInBytes: Int {
             return impl.diskSizeInBytes
         }
@@ -25,6 +30,64 @@ extension Model {
         public func removeAll() -> Observable<Void> {
             return impl.removeAll()
         }
+    }
+}
+
+extension Model.DiskCache: PlayerMiddleware {
+    public func didEndPlayTrack(_ trackId: Int) {
+        guard canDownload(trackId: trackId) else { return }
+
+        let realm = iTunesRealm()
+        guard
+            let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId),
+            let url = track.metadata?.previewURL,
+            let duration = track.metadata?.duration,
+            track.metadata?.fileURL == nil else {
+                return
+        }
+
+        let dir = self.dir
+        let filename = url.lastPathComponent
+
+        downloading.insert(trackId)
+        URLSession.shared.downloadTask(with: url, completionHandler: { [weak self] (url, response, error) in
+            defer {
+                _ = self?.downloading.remove(trackId)
+            }
+            guard let src = url else { return }
+
+            let realm = iTunesRealm()
+            guard let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) else { return }
+
+            try? realm.write {
+                try FileManager.default.moveItem(at: src, to: dir.appendingPathComponent(filename))
+                let metadata = _TrackMetadata(track: track)
+                metadata.updateCache(filename: filename)
+                metadata.duration = duration
+                realm.add(metadata, update: true)
+            }
+        }).resume()
+    }
+
+    private func canDownload(trackId: Int) -> Bool {
+        if downloading.contains(trackId) { return false }
+
+        let realm = iTunesRealm()
+        let cache = realm.object(ofType: _DiskCacheCounter.self, forPrimaryKey: trackId) ?? {
+            let cache = _DiskCacheCounter()
+            cache.trackId = trackId
+            return cache
+        }()
+
+        // swiftlint:disable force_try
+        try! realm.write {
+            cache.counter += 1
+            realm.add(cache, update: true)
+        }
+
+        guard cache.counter >= threshold else { return false }
+
+        return true
     }
 }
 
