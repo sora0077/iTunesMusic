@@ -11,34 +11,56 @@ import RxSwift
 
 
 extension Model {
-    public final class DiskCache: NSObject, NSFilePresenter {
+    public final class DiskCache {
         public static let shared = DiskCache()
 
-        fileprivate private(set) lazy var _diskSizeInBytes: Variable<Int> = Variable<Int>(self.diskSizeInBytes)
+        fileprivate let impl = DiskCacheImpl()
 
-        let dir: URL
+        var dir: URL { return impl.dir }
 
-        public var presentedItemURL: URL? { return dir }
-        public let presentedItemOperationQueue = OperationQueue()
-
-        private override init() {
-            let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-            dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
-            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
-
-            super.init()
-
-            NSFileCoordinator.addFilePresenter(self)
+        public var diskSizeInBytes: Int {
+            return impl.diskSizeInBytes
         }
 
-        public func presentedSubitemDidChange(at url: URL) {
-            _diskSizeInBytes.value = diskSizeInBytes
+        public func removeAll() -> Observable<Void> {
+            return impl.removeAll()
         }
     }
 }
 
-extension Model.DiskCache {
-    public var diskSizeInBytes: Int {
+extension Model.DiskCache: ReactiveCompatible {}
+
+extension Reactive where Base: Model.DiskCache {
+    public var diskSizeInBytes: Observable<Int> {
+        return base.impl._diskSizeInBytes.asObservable()
+    }
+}
+
+
+private final class DiskCacheImpl: NSObject, NSFilePresenter {
+
+    fileprivate private(set) lazy var _diskSizeInBytes: Variable<Int> = Variable<Int>(self.diskSizeInBytes)
+
+    let dir: URL
+
+    var presentedItemURL: URL? { return dir }
+    let presentedItemOperationQueue = OperationQueue()
+
+    override init() {
+        let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+        dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
+
+        super.init()
+
+        NSFileCoordinator.addFilePresenter(self)
+    }
+
+    func presentedSubitemDidChange(at url: URL) {
+        _diskSizeInBytes.value = diskSizeInBytes
+    }
+
+    var diskSizeInBytes: Int {
         do {
             let paths = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.fileSizeKey])
             let sizes = try paths.map {
@@ -51,7 +73,7 @@ extension Model.DiskCache {
         }
     }
 
-    public func removeAll() -> Observable<Void> {
+    func removeAll() -> Observable<Void> {
         let dir = self.dir
         return Observable.create { subscriber in
             do {
@@ -68,11 +90,5 @@ extension Model.DiskCache {
             }
             return Disposables.create()
         }.subscribeOn(SerialDispatchQueueScheduler(qos: .background))
-    }
-}
-
-extension Reactive where Base: Model.DiskCache {
-    public var diskSizeInBytes: Observable<Int> {
-        return base._diskSizeInBytes.asObservable()
     }
 }
