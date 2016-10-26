@@ -13,25 +13,23 @@ import RxSwift
 import RealmSwift
 import ErrorEventHandler
 import AbstractPlayerKit
+import APIKit
 
 
 struct WorkerFactory {
 
-    fileprivate let preview: Preview
     var errorType: ErrorLog.Error.Type!
     var errorLevel: ErrorLog.Level!
 
     private let generateTrackWorker: ((Model.Track) -> Void)?
 
-    init(preview: Preview, generateTrackWorker: ((Model.Track) -> Void)? = nil) {
-        self.preview = preview
+    init(_ generateTrackWorker: ((Model.Track) -> Void)? = nil) {
         self.generateTrackWorker = generateTrackWorker
     }
 
     func track(_ track: Model.Track) -> AnyWorker {
         generateTrackWorker?(track)
         let track = TrackWorker(track: track)
-        track.preview = preview
         track.errorType = errorType
         track.errorLevel = errorLevel
         return AnyWorker(track)
@@ -82,7 +80,6 @@ private final class TrackWorker: Worker {
     var canPop: Bool = false
 
     let track: Model.Track
-    fileprivate var preview: Preview!
 
     fileprivate var errorType: ErrorLog.Error.Type!
     fileprivate var errorLevel: ErrorLog.Level!
@@ -92,28 +89,6 @@ private final class TrackWorker: Worker {
     }
 
     func run() -> Observable<Response?> {
-        func getPreviewInfo(track: Track) -> (URL, Double)? {
-            if let duration = track.metadata?.duration {
-                if let url = track.metadata?.fileURL {
-                    return (url, duration)
-                }
-                if let url = track.metadata?.previewURL {
-                    return (url, duration)
-                }
-            }
-            return nil
-        }
-
-        func fetchPreviewInfo() -> Observable<(URL, duration: Double)?>? {
-            guard let track = track.track, track.canPreview else { return nil }
-
-            if let info = getPreviewInfo(track: track) {
-                return Observable.just(info)
-            }
-
-            return preview.queueing(track: track).fetch().map { $0 }
-        }
-
         func fetchMeta() -> Observable<Void> {
             return Observable<Void>.create { [weak self] subscriber in {
                     guard let `self` = self else { return }
@@ -128,7 +103,7 @@ private final class TrackWorker: Worker {
         }
 
         let id = self.track.trackId
-        return (fetchPreviewInfo() ?? fetchMeta().flatMap { _ in fetchPreviewInfo() ?? .just(nil) })
+        return (fetch() ?? fetchMeta().flatMap { [weak self] _ in self?.fetch() ?? .just(nil) })
             .map { [weak self] info in
                 defer {
                     self?.canPop = true
@@ -136,6 +111,47 @@ private final class TrackWorker: Worker {
                 guard let (url, duration) = info else { return nil }
                 return (id, url, duration)
             }
+    }
+
+    private func fetch() -> Observable<(URL, duration: Double)?>? {
+        let id = track.trackId
+        guard let track = track.track, track.canPreview else {
+            return nil
+        }
+
+        if let duration = track.metadata?.duration {
+            if let fileURL = track.metadata?.fileURL {
+                return .just((fileURL, duration))
+            }
+            if let url = track.metadata?.previewURL {
+                return .just((url, duration))
+            }
+        }
+
+        let viewURL = track.viewURL
+        return Observable.create { subscriber in
+            let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { result in
+                switch result {
+                case .success(let (url, duration)):
+                    let duration = Double(duration) / 1000
+                    let realm = iTunesRealm()
+                    try? realm.write {
+                        guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
+                        let metadata = _TrackMetadata(track: track)
+                        metadata.updatePreviewURL(url)
+                        metadata.duration = duration
+                        realm.add(metadata, update: true)
+                    }
+                    subscriber.onNext((url, duration))
+                    subscriber.onCompleted()
+                case .failure(let error):
+                    subscriber.onError(error)
+                }
+            }
+            return Disposables.create {
+                task?.cancel()
+            }
+        }
     }
 }
 

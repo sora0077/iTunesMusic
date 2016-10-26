@@ -13,7 +13,7 @@ import RxSwift
 import RealmSwift
 
 
-public let player: Player = PlayerImpl(previewer: Preview())
+public let player: Player = PlayerImpl()
 
 private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,

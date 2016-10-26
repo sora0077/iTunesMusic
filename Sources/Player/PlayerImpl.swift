@@ -96,10 +96,10 @@ final class PlayerImpl: NSObject, Player {
     fileprivate let fixedPlayingQueue = Variable<[Model.Track]>([])
     fileprivate let unfixedPlayingQueue = Variable<ArraySlice<Model.Track>>([])
 
-    init(previewer: Preview) {
+    override init() {
         super.init()
 
-        workerFactory = WorkerFactory(preview: previewer) { [weak self] track in
+        workerFactory = WorkerFactory { [weak self] track in
             self?.unfixedPlayingQueue.value.append(track)
         }
         workerFactory.errorType = errorType
