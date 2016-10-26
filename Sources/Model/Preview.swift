@@ -47,48 +47,6 @@ final class PreviewTrack {
         id = track.id
         url = track.viewURL
     }
-    func download() -> Observable<(URL, duration: Double)> {
-        let id = self.id
-
-        return fetch()
-            .flatMap { url, duration -> Observable<(URL, duration: Double)> in
-                if url.isFileURL {
-                    return Observable.just((url, duration))
-                }
-                return Observable.create { subscriber in
-                    let filename = url.lastPathComponent
-
-                    let task = URLSession.shared.downloadTask(with: url, completionHandler: { (url, response, error) in
-                        if let src = url {
-                            let to = Model.DiskCache.shared.dir.appendingPathComponent(filename)
-                            do {
-                                try FileManager.default.moveItem(at: src, to: to)
-                            } catch {
-                                subscriber.onError(error)
-                                return
-                            }
-
-                            let realm = iTunesRealm()
-                            let track = realm.object(ofType: _Track.self, forPrimaryKey: id)!
-                            try? realm.write {
-                                let metadata = _TrackMetadata(track: track)
-                                metadata.updateCache(filename: filename)
-                                metadata.duration = duration
-                                realm.add(metadata, update: true)
-                            }
-                            subscriber.onNext((to, duration))
-                            subscriber.onCompleted()
-                        } else {
-                            subscriber.onError(error!)
-                        }
-                    })
-                    task.resume()
-                    return Disposables.create {
-                        task.cancel()
-                    }
-                }
-            }
-    }
 
     func fetch() -> Observable<(URL, duration: Double)> {
         let id = self.id

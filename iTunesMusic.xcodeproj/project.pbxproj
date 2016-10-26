@@ -121,7 +121,6 @@
 		D9A399221D69630A00D0F9A4 /* WindowKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */; };
 		D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9A9386B1D697EC800F91D0F /* Utils+Reactive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */; };
-		D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */; };
 		D9AAE06D1D27622600FF29C3 /* AlbumDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */; };
 		D9AAE0711D276DFB00FF29C3 /* EntityCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */; };
 		D9AF2AF51D75C6C700D7751C /* AlbumListTopTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9AF2AF31D75C6C700D7751C /* AlbumListTopTableViewCell.swift */; };
@@ -324,7 +323,6 @@
 		D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WindowKit.framework; path = Carthage/Build/iOS/WindowKit.framework; sourceTree = "<group>"; };
 		D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ErrorEventHandler.framework; path = Carthage/Build/iOS/ErrorEventHandler.framework; sourceTree = "<group>"; };
 		D9A9386A1D697EC800F91D0F /* Utils+Reactive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utils+Reactive.swift"; sourceTree = "<group>"; };
-		D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Downloader.swift; sourceTree = "<group>"; };
 		D9AAE06C1D27622600FF29C3 /* AlbumDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumDetailViewController.swift; sourceTree = "<group>"; };
 		D9AAE06F1D276B1600FF29C3 /* EntityCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityCollection.swift; sourceTree = "<group>"; };
 		D9AF2AF31D75C6C700D7751C /* AlbumListTopTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlbumListTopTableViewCell.swift; sourceTree = "<group>"; };
@@ -729,7 +727,6 @@
 			isa = PBXGroup;
 			children = (
 				D91B42A31D0CFA2700AAAD58 /* Preview.swift */,
-				D9AAE06A1D261FBE00FF29C3 /* Downloader.swift */,
 			);
 			name = Internal;
 			sourceTree = "<group>";
@@ -997,7 +994,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D9AAE06B1D261FBE00FF29C3 /* Downloader.swift in Sources */,
 				D9FD12EE1D18324F0010E81D /* GenresCache.swift in Sources */,
 				D91E68D01D4A4A40005CF411 /* ReviewCache.swift in Sources */,
 				D98D566A1D20270C007B09DB /* RssCache.swift in Sources */,

@@ -13,9 +13,7 @@ import RxSwift
 import RealmSwift
 
 
-private let _previewer = Preview()
-
-public let player: Player = PlayerImpl(previewer: _previewer)
+public let player: Player = PlayerImpl(previewer: Preview())
 
 private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,
@@ -80,7 +78,7 @@ public func migrateRealm(from: RealmLocation, to: RealmLocation) {
 public func launch(with options: LaunchOptions = LaunchOptions()) {
     launchOptions = options
     player.install(middleware: Model.History.shared)
-    player.install(middleware: Downloader(previewer: _previewer))
+    player.install(middleware: Model.DiskCache.shared)
 }
 
 public func iTunesRealm() -> Realm {
