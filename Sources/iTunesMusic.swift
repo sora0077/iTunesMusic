@@ -44,14 +44,7 @@ private let realmObjectTypes: [RealmSwift.Object.Type] = [
 private let configuration: Realm.Configuration = {
     var config = Realm.Configuration()
     config.objectTypes = realmObjectTypes
-    switch launchOptions.location {
-    case .default:
-        let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
-        config.fileURL = URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
-    case .group(let identifier):
-        let dir = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
-        config.fileURL = dir!.appendingPathComponent("itunes.realm")
-    }
+    config.fileURL = launchOptions.location.url
     return config
 }()
 
@@ -59,6 +52,17 @@ private let configuration: Realm.Configuration = {
 public enum RealmLocation {
     case `default`
     case group(String)
+
+    var url: URL {
+        switch self {
+        case .default:
+            let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0]
+            return URL(fileURLWithPath: path).appendingPathComponent("itunes.realm")
+        case .group(let identifier):
+            let dir = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
+            return dir!.appendingPathComponent("itunes.realm")
+        }
+    }
 }
 
 public struct LaunchOptions {
@@ -70,9 +74,17 @@ public struct LaunchOptions {
 }
 private var launchOptions: LaunchOptions!
 
-/// TODO:
-public func migrateRealm(from: RealmLocation, to: RealmLocation) {
 
+public func migrateRealm(from: RealmLocation, to: RealmLocation) throws {
+    let (from, to) = (from.url, to.url)
+    if from == to { return }
+
+    let manager = FileManager.default
+    if manager.fileExists(atPath: to.absoluteString) {
+        return
+    }
+
+    try manager.moveItem(at: from, to: to)
 }
 
 public func launch(with options: LaunchOptions = LaunchOptions()) {

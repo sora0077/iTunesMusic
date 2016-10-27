@@ -100,7 +100,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ErrorHandlingSettings.launch()
         RoutingSettings.launch()
 
-        launch(with: LaunchOptions(location: .group(appGroupIdentifier)))
+        let location = RealmLocation.group(appGroupIdentifier)
+        do {
+            try migrateRealm(from: .default, to: location)
+        } catch {
+            fatalError("\(error)")
+        }
+        launch(with: LaunchOptions(location: location))
         player.install(middleware: ControlCenter())
         player.errorType = CommonError.self
         player.errorLevel = AppErrorLevel.alert
