@@ -83,8 +83,12 @@ public func migrateRealm(from: RealmLocation, to: RealmLocation) throws {
     if manager.fileExists(atPath: to.absoluteString) {
         return
     }
+    if !manager.fileExists(atPath: from.absoluteString) {
+        return
+    }
 
     try manager.moveItem(at: from, to: to)
+    try manager.removeItem(at: from)
 }
 
 public func launch(with options: LaunchOptions = LaunchOptions()) {
