@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 import AVFoundation
 import iTunesMusic
 import RxSwift
@@ -77,6 +78,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private let wormhole = MMWormhole(applicationGroupIdentifier: appGroupIdentifier, optionalDirectory: "wormhole")
 
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        UNUserNotificationCenter.current().delegate = self
+        return true
+    }
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         do {
@@ -108,6 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         launch(with: LaunchOptions(location: location))
         player.install(middleware: ControlCenter())
+        player.install(middleware: PlayingInfoNotification())
         player.errorType = CommonError.self
         player.errorLevel = AppErrorLevel.alert
 
@@ -119,6 +126,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
 
+        UNUserNotificationCenter.current().delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
+            print(error)
+            if granted {
+                application.registerForRemoteNotifications()
+            }
+        }
+
         return true
     }
 
@@ -129,5 +144,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         }
         return false
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        if let options = PlayingInfoNotification.shouldHandle(notification) {
+            completionHandler(options)
+        } else {
+            completionHandler([])
+        }
     }
 }
