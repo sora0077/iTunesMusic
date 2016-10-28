@@ -47,12 +47,13 @@ struct ListReviews<R: Decodable>: iTunesRequest {
         guard entries.count > 1 else {
             return []
         }
-        return try entries[1..<entries.endIndex].map { entry in
+        return entries[1..<entries.endIndex].map { entry -> [String: String] in
+            let content = try? entry["contnet"].withAttr("type", "text").element?.text ?? ""
             return [
                 "updated": entry["updated"].element!.text!,
                 "id": entry["id"].element!.text!,
                 "title": entry["title"].element!.text!,
-                "content": try entry["content"].withAttr("type", "text").element?.text ?? "",
+                "content": content ?? "",
                 "rating": entry["im:rating"].element!.text!,
                 "voteSum": entry["im:voteSum"].element!.text!,
                 "voteCount": entry["im:voteCount"].element!.text!,
