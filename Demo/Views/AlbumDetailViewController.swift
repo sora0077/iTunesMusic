@@ -342,7 +342,6 @@ extension AlbumDetailViewController: UITableViewDataSource {
                 vc.delegate = from
                 from.present(vc, animated: true, completion: {
                     vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
-                        print(error)
                         if !result {
                             ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
                         }

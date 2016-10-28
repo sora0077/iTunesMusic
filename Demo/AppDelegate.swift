@@ -128,7 +128,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
-            print(error)
             if granted {
                 application.registerForRemoteNotifications()
             }

@@ -52,7 +52,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         launch(with: LaunchOptions(location: .group("group.jp.sora0077.itunesmusic")))
 
         wormhole.listenForMessage(withIdentifier: "playerWidgetNeedsUpdating") { [weak self] info in
-            print(info)
             let info = info as? [String: Any]
             let trackId = info?["currentTrackId"] as? Int
             self?.track = trackId.map(Model.Track.init)

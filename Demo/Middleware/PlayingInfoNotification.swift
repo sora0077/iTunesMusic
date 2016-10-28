@@ -36,8 +36,6 @@ final class PlayingInfoNotification: PlayerMiddleware {
             content: content,
             trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false))
 
-        UNUserNotificationCenter.current().add(request) { error in
-            print(error)
-        }
+        UNUserNotificationCenter.current().add(request)
     }
 }

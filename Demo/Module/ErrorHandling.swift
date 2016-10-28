@@ -125,7 +125,6 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
     case let error as NSError:
         return (error.localizedRecoverySuggestion ?? "エラー", error.localizedFailureReason ?? error.localizedDescription)
     default:
-        print(error)
         return ("エラー", "不明なエラー")
     }
 }

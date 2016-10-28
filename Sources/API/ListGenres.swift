@@ -29,7 +29,7 @@ struct ListGenres<Response: Decodable>: iTunesRequest {
     }
 
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
-        let root = (object as? [String: AnyObject])?.values.first as? [String: AnyObject]
+        let root = (object as? [String: AnyObject])?.values.first as? [String: AnyObject] ?? [:]
         return try Response.decodeValue(root)
     }
 }
