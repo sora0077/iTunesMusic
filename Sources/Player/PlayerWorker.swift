@@ -115,7 +115,7 @@ private final class TrackWorker: Worker {
 
     private func fetch() -> Observable<(URL, duration: Double)?>? {
         let id = track.trackId
-        guard let track = track.track, track.canPreview else {
+        guard let track = track.entity, track.canPreview else {
             return nil
         }
 

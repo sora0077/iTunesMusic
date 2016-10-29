@@ -19,7 +19,7 @@ extension Model {
     public final class Track: Fetchable {
 
         public let trackId: Int
-        public var track: iTunesMusic.Track? {
+        public var entity: iTunesMusic.Track? {
             if Thread.isMainThread {
                 return caches.first
             }

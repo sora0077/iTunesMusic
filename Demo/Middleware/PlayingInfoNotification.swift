@@ -21,7 +21,7 @@ final class PlayingInfoNotification: PlayerMiddleware {
     }
 
     func willStartPlayTrack(_ trackId: Int) {
-        guard let track = Model.Track(trackId: trackId).track else {
+        guard let track = Model.Track(trackId: trackId).entity else {
             return
         }
 

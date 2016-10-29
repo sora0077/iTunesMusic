@@ -36,12 +36,13 @@ class TodayViewController: UIViewController, NCWidgetProviding {
 
 
     private func updateView() {
-        if let track = track?.track {
+        if let track = track?.entity {
             artworkImageView.setArtwork(of: track, size: 100)
+            label.text = track.name
         } else {
             artworkImageView.image = nil
+            label.text = ""
         }
-        label.text = track?.track?.name
     }
 
 

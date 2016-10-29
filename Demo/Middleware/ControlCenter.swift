@@ -100,7 +100,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
 
     func willStartPlayTrack(_ trackId: Int) {
-        guard let track = Model.Track(trackId: trackId).track else { return }
+        guard let track = Model.Track(trackId: trackId).entity else { return }
 
         if currentTrackId == nil { currentTrackId = trackId }
 
@@ -180,7 +180,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     @objc
     fileprivate func bookmark() {
         guard let trackId = currentTrackId else { return }
-        guard let track = Model.Track(trackId: trackId).track else { return }
+        guard let track = Model.Track(trackId: trackId).entity else { return }
 
         let playlist = Model.MyPlaylist(playlist: Model.MyPlaylists()[0])
         playlist.append(track: track)

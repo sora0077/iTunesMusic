@@ -143,7 +143,7 @@ final class PlayerImpl: NSObject, Player {
             if let trackId = self._player.currentItem?.trackId {
                 track = Model.Track(trackId: trackId)
             }
-            self._nowPlayingTrack.value = track?.track
+            self._nowPlayingTrack.value = track?.entity
 
             if let trackId = track?.trackId {
                 self._installs.forEach { $0.willStartPlayTrack(trackId) }
