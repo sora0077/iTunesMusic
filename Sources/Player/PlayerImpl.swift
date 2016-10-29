@@ -58,7 +58,7 @@ extension Array {
 
 final class PlayerImpl: NSObject, Player {
 
-    typealias QueueResponse = (id: Int, url: URL, duration: Double)
+    typealias QueueResponse = (id: Int, url: URL)
 
     var errorType: ErrorLog.Error.Type = DefaultError.self {
         didSet {
@@ -105,8 +105,8 @@ final class PlayerImpl: NSObject, Player {
         workerFactory.errorType = errorType
         workerFactory.errorLevel = errorLevel
 
-        queueController = WorkerController(bufferSize: 3, queueingCount: queueuingCount.asObservable()) { [weak self] id, url, duration in
-            self?.configureNextPlayerItem(id: id, url: url, duration: duration)
+        queueController = WorkerController(bufferSize: 3, queueingCount: queueuingCount.asObservable()) { [weak self] id, url in
+            self?.configureNextPlayerItem(id: id, url: url)
         }
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             _player.volume = 0.02
@@ -170,24 +170,36 @@ final class PlayerImpl: NSObject, Player {
 
     func nextTrack() { _player.advanceToNextItem() }
 
-    private func configureNextPlayerItem(id: Int, url: URL, duration: Double) {
-        let item = AVPlayerItem(asset: AVAsset(url: url))
-        item.trackId = id
+    private func configureNextPlayerItem(id: Int, url: URL) {
+        let asset = AVAsset(url: url)
+        asset.loadValuesAsynchronously(forKeys: ["duration"]) { [weak self] in
+            guard let `self` = self else { return }
+            var error: NSError?
+            let status = asset.statusOfValue(forKey: "duration", error: &error)
+            print("loadValuesAsynchronously", CMTimeGetSeconds(asset.duration), "\(error)")
+            switch status {
+            case .loaded:
+                let item = AVPlayerItem(asset: asset)
+                item.trackId = id
 
-        configureFading(item: item, duration: duration)
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.didEndPlay),
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: item
-        )
+                configureFading(item: item)
+                NotificationCenter.default.addObserver(
+                    self,
+                    selector: #selector(self.didEndPlay),
+                    name: .AVPlayerItemDidPlayToEndTime,
+                    object: item
+                )
 
-        DispatchQueue.main.async {
-            self._player.insert(item, after: nil)
-            self.unfixedPlayingQueue.value = self.unfixedPlayingQueue.value.dropFirst()
-            self.updatePlayerItems()
-            if self._player.status == .readyToPlay {
-                self.play()
+                DispatchQueue.main.async {
+                    self._player.insert(item, after: nil)
+                    self.unfixedPlayingQueue.value = self.unfixedPlayingQueue.value.dropFirst()
+                    self.updatePlayerItems()
+                    if self._player.status == .readyToPlay {
+                        self.play()
+                    }
+                }
+            default:
+                break
             }
         }
     }
@@ -262,14 +274,14 @@ extension PlayerImpl {
     }
 }
 
-private func configureFading(item: AVPlayerItem, duration: Double) {
+private func configureFading(item: AVPlayerItem) {
 
     guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
 
     let inputParams = AVMutableAudioMixInputParameters(track: track)
 
     let fadeDuration = CMTimeMakeWithSeconds(5, 600)
-    let fadeOutStartTime = CMTimeMakeWithSeconds(duration - 5, 600)
+    let fadeOutStartTime = item.asset.duration - fadeDuration
     let fadeInStartTime = CMTimeMakeWithSeconds(0, 600)
 
     inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))

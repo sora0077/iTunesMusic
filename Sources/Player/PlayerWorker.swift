@@ -104,28 +104,26 @@ private final class TrackWorker: Worker {
 
         let id = self.track.trackId
         return (fetch() ?? fetchMeta().flatMap { [weak self] _ in self?.fetch() ?? .just(nil) })
-            .map { [weak self] info in
+            .map { [weak self] url in
                 defer {
                     self?.canPop = true
                 }
-                guard let (url, duration) = info else { return nil }
-                return (id, url, duration)
+                guard let url = url else { return nil }
+                return (id, url)
             }
     }
 
-    private func fetch() -> Observable<(URL, duration: Double)?>? {
+    private func fetch() -> Observable<URL?>? {
         let id = track.trackId
         guard let track = track.entity, track.canPreview else {
             return nil
         }
 
-        if let duration = track.metadata?.duration {
-            if let fileURL = track.metadata?.fileURL {
-                return .just((fileURL, duration))
-            }
-            if let url = track.metadata?.previewURL {
-                return .just((url, duration))
-            }
+        if let fileURL = track.metadata?.fileURL {
+            return .just(fileURL)
+        }
+        if let url = track.metadata?.previewURL {
+            return .just(url)
         }
 
         let viewURL = track.viewURL
@@ -133,16 +131,15 @@ private final class TrackWorker: Worker {
             let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .success(let (url, duration)):
-                    let duration = Double(duration) / 1000
                     let realm = iTunesRealm()
                     try? realm.write {
                         guard let track = realm.object(ofType: _Track.self, forPrimaryKey: id) else { return }
                         let metadata = _TrackMetadata(track: track)
                         metadata.updatePreviewURL(url)
-                        metadata.duration = duration
+                        metadata.duration = Double(duration) / 1000
                         realm.add(metadata, update: true)
                     }
-                    subscriber.onNext((url, duration))
+                    subscriber.onNext(url)
                     subscriber.onCompleted()
                 case .failure(let error):
                     subscriber.onError(error)
