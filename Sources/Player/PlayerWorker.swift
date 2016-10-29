@@ -151,7 +151,7 @@ private final class TrackWorker: Worker {
             return Disposables.create {
                 task?.cancel()
             }
-        }
+        }.catchErrorJustReturn(nil)
     }
 }
 

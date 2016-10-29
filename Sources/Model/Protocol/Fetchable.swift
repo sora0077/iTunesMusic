@@ -37,10 +37,7 @@ extension Fetchable {
     }
 
     public func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
-        guard doOnMainThread(execute: self.fetch(ifError: errorType, level: level)) else {
-            return
-        }
-        _request(refreshing: false, force: false, ifError: errorType, level: level)
+        fetch(ifError: errorType, level: level, completion: { _ in })
     }
 
     func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void) {
