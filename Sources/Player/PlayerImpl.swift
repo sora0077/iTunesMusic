@@ -176,7 +176,6 @@ final class PlayerImpl: NSObject, Player {
             guard let `self` = self else { return }
             var error: NSError?
             let status = asset.statusOfValue(forKey: "duration", error: &error)
-            print("loadValuesAsynchronously", CMTimeGetSeconds(asset.duration), "\(error)")
             switch status {
             case .loaded:
                 let item = AVPlayerItem(asset: asset)
@@ -282,7 +281,7 @@ private func configureFading(item: AVPlayerItem) {
 
     let fadeDuration = CMTimeMakeWithSeconds(5, 600)
     let fadeOutStartTime = item.asset.duration - fadeDuration
-    let fadeInStartTime = CMTimeMakeWithSeconds(0, 600)
+    let fadeInStartTime = kCMTimeZero
 
     inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
     inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
