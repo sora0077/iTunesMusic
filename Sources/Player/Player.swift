@@ -35,7 +35,7 @@ public protocol Player: class {
 
     func pause()
 
-    func nextTrack()
+    func advanceToNextItem()
 
     func add(track: Model.Track)
 

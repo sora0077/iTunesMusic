@@ -206,7 +206,7 @@ final class Player2: NSObject {
         return Observable.just([])
     }
 
-    var playing: Bool = false
+    var playing: Bool { return queuePlayer.rate != 0 }
 
     fileprivate var middlewares: [PlayerMiddleware] = []
 
@@ -279,11 +279,11 @@ final class Player2: NSObject {
         middleware.middlewareInstalled(self)
     }
 
-    func play() {  }
+    func play() { core.play() }
 
-    func pause() {  }
+    func pause() { core.pause() }
 
-    func nextTrack() {  }
+    func advanceToNextItem() { core.advanceToNextItem() }
 
     func add(track: Model.Track) {
         let item = PlayerTrackItem(track: track)
@@ -296,7 +296,7 @@ final class Player2: NSObject {
     }
 
     func removeAll() {
-
+        core.removeAll()
     }
 }
 

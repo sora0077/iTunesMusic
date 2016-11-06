@@ -100,6 +100,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
 
     func willStartPlayTrack(_ trackId: Int) {
+        guard doOnMainThread(execute: self.willStartPlayTrack(trackId)) else { return }
         guard let track = Model.Track(trackId: trackId).entity else { return }
 
         if currentTrackId == nil { currentTrackId = trackId }
@@ -142,6 +143,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
 
     func didEndPlay() {
+        guard doOnMainThread(execute: self.didEndPlay()) else { return }
         nowPlayingInfo = nil
 
         let commandCenter = MPRemoteCommandCenter.shared()
@@ -173,7 +175,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     }
     @objc
     fileprivate func nextTrackCommand() {
-        player?.nextTrack()
+        player?.advanceToNextItem()
 
     }
 
