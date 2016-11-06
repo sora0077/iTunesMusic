@@ -13,7 +13,6 @@
 		D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */; };
 		D9165FE41D2C03C300B701E3 /* CrossFadePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */; };
 		D9165FE51D2C03C300B701E3 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE21D2C03C300B701E3 /* Player.swift */; };
-		D9165FE61D2C03C300B701E3 /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */; };
 		D9165FE81D2C040C00B701E3 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE71D2C040C00B701E3 /* Model.swift */; };
 		D9165FED1D2C0AA300B701E3 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FEC1D2C0AA300B701E3 /* Api.swift */; };
 		D9165FEF1D2C0ADD00B701E3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FEE1D2C0ADD00B701E3 /* Utils.swift */; };
@@ -138,7 +137,6 @@
 		D9B341721DA91F2D0044D0A3 /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341711DA91F2D0044D0A3 /* Routing.swift */; };
 		D9B341741DA921D90044D0A3 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341731DA921D90044D0A3 /* ErrorHandling.swift */; };
 		D9B341761DAA1DD90044D0A3 /* MotionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341751DAA1DD90044D0A3 /* MotionEffect.swift */; };
-		D9B341791DAD20720044D0A3 /* PlayerWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B341771DAD200B0044D0A3 /* PlayerWorker.swift */; };
 		D9B3417B1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B3417A1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift */; };
 		D9C31D0C1DBE30A10057DF00 /* DiskCacheCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C31D0B1DBE30A10057DF00 /* DiskCacheCounter.swift */; };
 		D9C31D0E1DBE3FD10057DF00 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C31D0D1DBE3FD10057DF00 /* SettingsViewController.swift */; };
@@ -244,7 +242,6 @@
 		D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCache.swift; sourceTree = "<group>"; };
 		D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CrossFadePlayer.swift; sourceTree = "<group>"; };
 		D9165FE21D2C03C300B701E3 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 		D9165FE71D2C040C00B701E3 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		D9165FEC1D2C0AA300B701E3 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		D9165FEE1D2C0ADD00B701E3 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -338,7 +335,6 @@
 		D9B341711DA91F2D0044D0A3 /* Routing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
 		D9B341731DA921D90044D0A3 /* ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		D9B341751DAA1DD90044D0A3 /* MotionEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionEffect.swift; sourceTree = "<group>"; };
-		D9B341771DAD200B0044D0A3 /* PlayerWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerWorker.swift; sourceTree = "<group>"; };
 		D9B3417A1DAD4CAE0044D0A3 /* PlayingQueueViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayingQueueViewController.swift; sourceTree = "<group>"; };
 		D9C31D0B1DBE30A10057DF00 /* DiskCacheCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiskCacheCounter.swift; sourceTree = "<group>"; };
 		D9C31D0D1DBE3FD10057DF00 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -480,8 +476,6 @@
 			children = (
 				D9165FE11D2C03C300B701E3 /* CrossFadePlayer.swift */,
 				D9165FE21D2C03C300B701E3 /* Player.swift */,
-				D9165FE31D2C03C300B701E3 /* PlayerImpl.swift */,
-				D9B341771DAD200B0044D0A3 /* PlayerWorker.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -993,7 +987,6 @@
 				D9C31D121DBE4DD60057DF00 /* DiskCache.swift in Sources */,
 				D9134E2C1D5779F200636C10 /* SearchHintTrends.swift in Sources */,
 				D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */,
-				D9165FE61D2C03C300B701E3 /* PlayerImpl.swift in Sources */,
 				D99164121D37D37C0091BF09 /* Track.swift in Sources */,
 				D91B42951D05BBDB00AAAD58 /* SearchCache.swift in Sources */,
 				D929E4481D1C44C70045C316 /* Rss.swift in Sources */,
@@ -1023,7 +1016,6 @@
 				D91B42A01D08640800AAAD58 /* Search.swift in Sources */,
 				D9EA0B4F1D27EC60001C3F2F /* Album.swift in Sources */,
 				D91B429A1D070FA600AAAD58 /* iTunesMusic.swift in Sources */,
-				D9B341791DAD20720044D0A3 /* PlayerWorker.swift in Sources */,
 				D9B341551DA8E9E90044D0A3 /* Error.swift in Sources */,
 				D9165FE81D2C040C00B701E3 /* Model.swift in Sources */,
 				D9165FED1D2C0AA300B701E3 /* Api.swift in Sources */,

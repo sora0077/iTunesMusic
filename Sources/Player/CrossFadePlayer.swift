@@ -16,13 +16,34 @@ import RealmSwift
 import AbstractPlayerKit
 
 
+private extension AVPlayerItem {
+
+    private struct AVPlayerItemKey {
+        static var trackId: UInt8 = 0
+    }
+
+    var trackId: Int? {
+        get {
+            return objc_getAssociatedObject(self, &AVPlayerItemKey.trackId) as? Int
+        }
+        set {
+            objc_setAssociatedObject(self, &AVPlayerItemKey.trackId, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
+}
+
+
+private extension Notification.Name {
+    static let PlayerTrackItemPrepareForPlay = Notification.Name("PlayerTrackItemPrepareForPlay")
+}
+
 private class PlayerItem: AbstractPlayerKit.PlayerItem {
 
 }
 
 private final class PlayerTrackItem: PlayerItem {
 
-    private let track: Model.Track
+    fileprivate let track: Model.Track
 
     init(track: Model.Track) {
         self.track = track
@@ -35,46 +56,59 @@ private final class PlayerTrackItem: PlayerItem {
             return .just(nil)
         }
 
-        func fetchPreviewURL() -> Observable<URL?> {
-            let (id, viewURL) = (track.id, track.viewURL)
-            return Observable<URL?>.create { subscriber in
-                let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { [weak self] result in
-                    switch result {
-                    case .success(let (url, duration)):
-                        let realm = iTunesRealm()
-                        try? realm.write {
-                            guard let track = self?.track.entity?.impl else { return }
-                            let metadata = _TrackMetadata(track: track)
-                            metadata.updatePreviewURL(url)
-                            metadata.duration = Double(duration) / 1000
-                            realm.add(metadata, update: true)
-                        }
-                        subscriber.onNext(url)
-                    case .failure:
-                        subscriber.onNext(nil)
-                    }
-                }
-                task?.resume()
-                return Disposables.create {
-                    task?.cancel()
-                }
-            }
-        }
-
         func getPreviewURL() -> Observable<URL?>? {
             guard let url = track.metadata?.fileURL ?? track.metadata?.previewURL else { return nil }
             return .just(url)
         }
 
-        return (getPreviewURL() ?? fetchPreviewURL()).flatMap { url -> Observable<AVPlayerItem?> in
+        let id = track.id
+        return (getPreviewURL() ?? fetchPreviewURL(from: track)).flatMap { url -> Observable<AVPlayerItem?> in
             guard let url = url else { return .just(nil) }
             return Observable.create { subscriber in
                 let asset = AVURLAsset(url: url)
                 asset.loadValuesAsynchronously(forKeys: ["duration"]) {
-                    let item = AVPlayerItem(asset: asset)
-                    subscriber.onNext(item)
+                    var error: NSError?
+                    let status = asset.statusOfValue(forKey: "duration", error: &error)
+                    switch status {
+                    case .loaded:
+                        let item = AVPlayerItem(asset: asset)
+                        item.trackId = id
+                        configureFading(item: item)
+                        NotificationCenter.default.post(
+                            name: .PlayerTrackItemPrepareForPlay,
+                            object: item)
+                        subscriber.onNext(item)
+                    default:
+                        subscriber.onNext(nil)
+                    }
                 }
                 return Disposables.create()
+            }
+        }
+    }
+
+    private func fetchPreviewURL(from track: Track) -> Observable<URL?> {
+        let (id, viewURL) = (track.id, track.viewURL)
+        return Observable<URL?>.create { subscriber in
+            let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { [weak self] result in
+                switch result {
+                case .success(let (url, duration)):
+                    let realm = iTunesRealm()
+                    try? realm.write {
+                        guard let track = self?.track.entity?.impl else { return }
+                        let metadata = _TrackMetadata(track: track)
+                        metadata.updatePreviewURL(url)
+                        metadata.duration = Double(duration) / 1000
+                        realm.add(metadata, update: true)
+                    }
+                    subscriber.onNext(url)
+                case .failure:
+                    subscriber.onNext(nil)
+                }
+            }
+            task?.resume()
+            return Disposables.create {
+                task?.cancel()
             }
         }
     }
@@ -154,7 +188,7 @@ private enum DefaultErrorLevel: ErrorLog.Level {
     case none
 }
 
-final class Player2 {
+final class Player2: NSObject {
 
     fileprivate let core: AbstractPlayerKit.Player
 
@@ -162,13 +196,11 @@ final class Player2 {
 
     var errorLevel: ErrorLog.Level = DefaultErrorLevel.none
 
-    var nowPlaying: Observable<Track?> {
-        return Observable.just(nil)
-    }
+    private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
+    private let _nowPlayingTrack = Variable<Track?>(nil)
 
-    var currentTime: Observable<Float64> {
-        return Observable.just(1)
-    }
+    private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
+    private let _currentTime = Variable<Float64>(0)
 
     var playlingQueue: Observable<[Model.Track]> {
         return Observable.just([])
@@ -176,34 +208,82 @@ final class Player2 {
 
     var playing: Bool = false
 
+    fileprivate var middlewares: [PlayerMiddleware] = []
+
     private let queuePlayer = AVQueuePlayer()
 
-    init() {
+    override init() {
         core = AbstractPlayerKit.Player(queuePlayer: queuePlayer)
 
+        super.init()
         #if (arch(i386) || arch(x86_64)) && os(iOS)
             queuePlayer.volume = 0.02
             print("simulator")
         #else
             print("iphone")
         #endif
+
+        queuePlayer.addObserver(self, forKeyPath: #keyPath(AVQueuePlayer.currentItem), options: .new, context: nil)
+        queuePlayer.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
+            guard let `self` = self else { return }
+            self._currentTime.value = CMTimeGetSeconds(time)
+        }
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.trackItemGenerateAVPlayerItem(notification:)),
+            name: .PlayerTrackItemPrepareForPlay,
+            object: nil)
+    }
+
+    deinit {
+        queuePlayer.removeObserver(self, forKeyPath: #keyPath(AVQueuePlayer.currentItem))
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard let keyPath = keyPath else { return }
+        switch keyPath {
+        case #keyPath(AVQueuePlayer.currentItem):
+            DispatchQueue.main.async {
+                var track: Model.Track?
+                if let trackId = self.queuePlayer.currentItem?.trackId {
+                    track = Model.Track(trackId: trackId)
+                }
+                self._nowPlayingTrack.value = track?.entity
+
+                if let trackId = track?.trackId {
+                    self.middlewares.forEach { $0.willStartPlayTrack(trackId) }
+                } else {
+                    self.middlewares.forEach { $0.didEndPlay() }
+                }
+            }
+        default:()
+        }
+    }
+
+    @objc
+    private func trackItemGenerateAVPlayerItem(notification: Notification) {
+        guard doOnMainThread(execute: self.trackItemGenerateAVPlayerItem(notification: notification)) else { return }
+        guard let avPlayerItem = notification.object as? AVPlayerItem else { return }
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.didEndPlay(notification:)),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: avPlayerItem)
     }
 
     func install(middleware: PlayerMiddleware) {
-
+        middlewares.append(middleware)
+        middleware.middlewareInstalled(self)
     }
 
-    func play() {
+    func play() {  }
 
-    }
+    func pause() {  }
 
-    func pause() {
-
-    }
-
-    func nextTrack() {
-
-    }
+    func nextTrack() {  }
 
     func add(track: Model.Track) {
         let item = PlayerTrackItem(track: track)
@@ -222,4 +302,30 @@ final class Player2 {
 
 extension Player2: Player {
 
+    @objc
+    fileprivate func didEndPlay(notification: Notification) {
+        guard doOnMainThread(execute: self.didEndPlay(notification: notification)) else { return }
+
+        if let item = notification.object as? AVPlayerItem, let trackId = item.trackId {
+            middlewares.forEach { $0.didEndPlayTrack(trackId) }
+        }
+    }
+}
+
+private func configureFading(item: AVPlayerItem) {
+
+    guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
+
+    let inputParams = AVMutableAudioMixInputParameters(track: track)
+
+    let fadeDuration = CMTimeMakeWithSeconds(5, 600)
+    let fadeOutStartTime = item.asset.duration - fadeDuration
+    let fadeInStartTime = kCMTimeZero
+
+    inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
+    inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+
+    let audioMix = AVMutableAudioMix()
+    audioMix.inputParameters = [inputParams]
+    item.audioMix = audioMix
 }
