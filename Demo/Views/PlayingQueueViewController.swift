@@ -13,17 +13,37 @@ import RxCocoa
 import iTunesMusic
 
 
+private extension Array {
+    subscript (safe index: Int) -> Element? {
+        if indices.contains(index) {
+            return self[index]
+        }
+        return nil
+    }
+}
+
+
+private final class TableView: UITableViewCell {
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
 final class PlayingQueueViewController: UIViewController {
+
+    fileprivate enum Item {
+        case track(PlayerTrackItem)
+        case playlist(PlayerListItem)
+    }
 
     fileprivate let tableView = UITableView()
 
-    fileprivate var items: [Model.Track] = [] {
-        didSet {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
+    fileprivate var sections: [Item] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +53,7 @@ final class PlayingQueueViewController: UIViewController {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(TableView.self, forCellReuseIdentifier: "Cell")
         tableView.backgroundColor = .clear
         tableView.rowHeight = 30
         tableView.tableFooterView = UIView()
@@ -47,7 +67,18 @@ final class PlayingQueueViewController: UIViewController {
         player.playlingQueue
             .asDriver(onErrorJustReturn: [])
             .drive(UIBindingObserver(UIElement: self) { vc, tracks in
-                vc.items = tracks
+                vc.sections = tracks.map {
+                    switch $0 {
+                    case let v as PlayerTrackItem:
+                        return .track(v)
+                    case let v as PlayerListItem:
+                        return .playlist(v)
+                    default: fatalError()
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    self.tableView.reloadData()
+                }
             }.asObserver())
             .addDisposableTo(disposeBag)
     }
@@ -56,18 +87,57 @@ final class PlayingQueueViewController: UIViewController {
 
 extension PlayingQueueViewController: UITableViewDataSource {
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        switch sections[section] {
+        case .track:
+            return 1
+        case .playlist(let list):
+            return list.tracks.count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        let track = items[indexPath.row]
-        cell.textLabel?.text = track.entity?.name
+        let item = sections[indexPath.section]
+
+        func requestState(_ state: PlayerItem.ItemState?) -> String {
+            guard let state = state else {
+                return "requesting"
+            }
+            switch state {
+            case .waiting:
+                return "waiting"
+            case .readyToPlay:
+                return "readyToPlay"
+            case .nowPlaying:
+                return "nowPlaying"
+            case .didFinishPlaying:
+                return "didFinishPlaying"
+            }
+        }
+
+        switch item {
+        case .track(let track):
+            cell.textLabel?.text = track.name
+            cell.detailTextLabel?.text = requestState(track.items.first)
+        case .playlist(let list):
+            let track = list.tracks[indexPath.row]
+            cell.textLabel?.text = track.name
+            cell.detailTextLabel?.text = requestState(list.items[safe: indexPath.row])
+        }
         cell.textLabel?.textColor = .white
+        cell.detailTextLabel?.textColor = .white
+        cell.indentationLevel = indexPath.row == 0 ? 0 : 1
         cell.backgroundColor = .clear
         if let font = cell.textLabel?.font {
-            cell.textLabel?.font = font.withSize(10)
+            cell.textLabel?.font = font.withSize(8)
+        }
+        if let font = cell.detailTextLabel?.font {
+            cell.detailTextLabel?.font = font.withSize(7)
         }
         return cell
     }

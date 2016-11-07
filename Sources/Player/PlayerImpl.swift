@@ -37,13 +37,11 @@ private extension Notification.Name {
     static let PlayerTrackItemPrepareForPlay = Notification.Name("PlayerTrackItemPrepareForPlay")
 }
 
-private class PlayerItem: AbstractPlayerKit.PlayerItem {
-
-}
-
-private final class PlayerTrackItem: PlayerItem {
+public final class PlayerTrackItem: PlayerItem {
 
     fileprivate let track: Model.Track
+
+    override public var name: String? { return track.entity?.name }
 
     init(track: Model.Track) {
         self.track = track
@@ -51,7 +49,7 @@ private final class PlayerTrackItem: PlayerItem {
         super.init()
     }
 
-    override func fetcher() -> Observable<AVPlayerItem?> {
+    override public func fetcher() -> Observable<AVPlayerItem?> {
         guard let track = track.entity, track.canPreview else {
             return .just(nil)
         }
@@ -116,16 +114,18 @@ private final class PlayerTrackItem: PlayerItem {
         }
     }
 
-    override func didFinishRequest() -> PlayerItem.RequestState {
+    override public func didFinishRequest() -> PlayerItem.RequestState {
         return .done
     }
 }
 
-private final class PlayerListItem: PlayerItem {
+public final class PlayerListItem: PlayerItem {
+
+    override public var name: String? { return playlist.name }
 
     private let playlist: Playlist
 
-    private var items: [PlayerTrackItem] = []
+    public var tracks: [PlayerTrackItem] = []
 
     init(playlist: Playlist) {
         self.playlist = playlist
@@ -133,7 +133,7 @@ private final class PlayerListItem: PlayerItem {
         super.init()
     }
 
-    override func fetcher() -> Observable<AVPlayerItem?> {
+    override public func fetcher() -> Observable<AVPlayerItem?> {
         return Observable<Observable<AVPlayerItem?>>.create { [weak self] subscriber in
                 DispatchQueue.main.async {
                     guard let `self` = self else { return }
@@ -159,14 +159,14 @@ private final class PlayerListItem: PlayerItem {
                     }
                     let track = Model.Track(track: playlist.track(at: index))
                     let item = PlayerTrackItem(track: track)
-                    self.items.append(item)
+                    self.tracks.append(item)
                     subscriber.onNext(item.fetcher())
                 }
                 return Disposables.create()
             }.flatMap { $0 }
     }
 
-    override func didFinishRequest() -> PlayerItem.RequestState {
+    override public func didFinishRequest() -> PlayerItem.RequestState {
         return DispatchQueue.main.sync {
             if self.playlist.isTrackEmpty {
                 return .done
@@ -205,8 +205,8 @@ final class Player2: NSObject {
     private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
     private let _currentTime = Variable<Float64>(0)
 
-    var playlingQueue: Observable<[Model.Track]> {
-        return Observable.just([])
+    var playlingQueue: Observable<[PlayerItem]> {
+        return core.items.map { $0.map { $0 as! PlayerItem } }.subscribeOn(MainScheduler.instance)
     }
 
     var playing: Bool { return queuePlayer.rate != 0 }
@@ -290,7 +290,7 @@ final class Player2: NSObject {
 
     func add(track: Model.Track) {
         let item = PlayerTrackItem(track: track)
-        core.insert(item)
+        core.insert(inPriorityHigh: item)
     }
 
     func add(playlist: Playlist) {

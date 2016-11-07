@@ -12,8 +12,13 @@ import AVFoundation
 import RxSwift
 import RealmSwift
 import ErrorEventHandler
+import AbstractPlayerKit
 
 
+public class PlayerItem: AbstractPlayerKit.PlayerItem {
+
+    public var name: String? { fatalError() }
+}
 
 public protocol Player: class {
 
@@ -27,7 +32,7 @@ public protocol Player: class {
 
     var playing: Bool { get }
 
-    var playlingQueue: Observable<[Model.Track]> { get }
+    var playlingQueue: Observable<[PlayerItem]> { get }
 
     func install(middleware: PlayerMiddleware)
 
