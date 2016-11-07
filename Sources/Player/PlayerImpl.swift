@@ -205,7 +205,7 @@ final class Player2: NSObject {
     private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
     private let _currentTime = Variable<Float64>(0)
 
-    var playlingQueue: Observable<[PlayerItem]> {
+    var playingQueue: Observable<[PlayerItem]> {
         return core.items.map { $0.map { $0 as! PlayerItem } }.subscribeOn(MainScheduler.instance)
     }
 

@@ -64,7 +64,7 @@ final class PlayingQueueViewController: UIViewController {
             make.right.bottom.equalTo(0)
         }
 
-        player.playlingQueue
+        player.playingQueue
             .asDriver(onErrorJustReturn: [])
             .drive(UIBindingObserver(UIElement: self) { vc, tracks in
                 vc.sections = tracks.map {

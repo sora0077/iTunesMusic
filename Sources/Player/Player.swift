@@ -32,7 +32,7 @@ public protocol Player: class {
 
     var playing: Bool { get }
 
-    var playlingQueue: Observable<[PlayerItem]> { get }
+    var playingQueue: Observable<[PlayerItem]> { get }
 
     func install(middleware: PlayerMiddleware)
 
