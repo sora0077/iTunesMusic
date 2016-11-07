@@ -12,5 +12,5 @@ github "sora0077/VYPlayIndicatorSwift" "55ecb8ed3b482a3d302f68e1f8ba138fd570c994
 github "sora0077/WindowKit" "aa2c2c828d5514118600fa8e2ba9f3fea66f6fe3"
 github "realm/realm-cocoa" "eb4c36f2b7e287f82bb1ca67602fff20ac030a1a"
 github "ishkawa/APIKit" "c76d3e20c374c4c62bdbfb92d797db4e022622af"
-github "sora0077/AbstractPlayerKit" "d3e79acdabe9ae403da4558bcc1efa1ccf69eefd"
+github "sora0077/AbstractPlayerKit" "89354b77bc7d782515b94b27e573b105e3b4f2bc"
 github "pinterest/PINRemoteImage" "2.1.4"
