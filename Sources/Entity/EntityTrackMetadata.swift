@@ -66,9 +66,9 @@ extension _TrackMetadata {
 
     var fileURL: URL? {
         guard let filename = _longPreviewFileUrl else { return nil }
-
-        let cachePath = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        let fileURL = URL(fileURLWithPath: cachePath).appendingPathComponent(filename)
+        //TODO: Remove Model reference
+        let dir = Model.DiskCache.directory
+        let fileURL = dir.appendingPathComponent(filename)
         if FileManager.default.fileExists(atPath: fileURL.path) {
             return fileURL
         }

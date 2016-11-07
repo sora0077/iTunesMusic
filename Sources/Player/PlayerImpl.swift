@@ -58,6 +58,7 @@ private final class PlayerTrackItem: PlayerItem {
 
         func getPreviewURL() -> Observable<URL?>? {
             guard let url = track.metadata?.fileURL ?? track.metadata?.previewURL else { return nil }
+            print(url)
             return .just(url)
         }
 
@@ -93,15 +94,17 @@ private final class PlayerTrackItem: PlayerItem {
             let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { [weak self] result in
                 switch result {
                 case .success(let (url, duration)):
+                    var fileURL: URL?
                     let realm = iTunesRealm()
                     try? realm.write {
                         guard let track = self?.track.entity?.impl else { return }
+                        fileURL = track.metadata?.fileURL
                         let metadata = _TrackMetadata(track: track)
                         metadata.updatePreviewURL(url)
                         metadata.duration = Double(duration) / 1000
                         realm.add(metadata, update: true)
                     }
-                    subscriber.onNext(url)
+                    subscriber.onNext(fileURL ?? url)
                 case .failure:
                     subscriber.onNext(nil)
                 }

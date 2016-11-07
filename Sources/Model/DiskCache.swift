@@ -12,9 +12,16 @@ import RxSwift
 
 extension Model {
     public final class DiskCache {
+        static let directory: URL = {
+            let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+            let dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
+            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
+            return dir
+        }()
+
         public static let shared = DiskCache()
 
-        fileprivate let impl = DiskCacheImpl()
+        fileprivate let impl = DiskCacheImpl(dir: DiskCache.directory)
 
         var dir: URL { return impl.dir }
 
@@ -59,12 +66,18 @@ extension Model.DiskCache: PlayerMiddleware {
             let realm = iTunesRealm()
             guard let track = realm.object(ofType: _Track.self, forPrimaryKey: trackId) else { return }
 
-            try? realm.write {
-                try FileManager.default.moveItem(at: src, to: dir.appendingPathComponent(filename))
-                let metadata = _TrackMetadata(track: track)
-                metadata.updateCache(filename: filename)
-                metadata.duration = duration
-                realm.add(metadata, update: true)
+            do {
+                try realm.write {
+                    let to = dir.appendingPathComponent(filename)
+                    try? FileManager.default.removeItem(at: to)
+                    try FileManager.default.moveItem(at: src, to: to)
+                    let metadata = _TrackMetadata(track: track)
+                    metadata.updateCache(filename: filename)
+                    metadata.duration = duration
+                    realm.add(metadata, update: true)
+                }
+            } catch {
+                print("\(error)")
             }
         }).resume()
     }
@@ -109,11 +122,8 @@ private final class DiskCacheImpl: NSObject, NSFilePresenter {
     var presentedItemURL: URL? { return dir }
     let presentedItemOperationQueue = OperationQueue()
 
-    override init() {
-        let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-        dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
-        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
-
+    init(dir: URL) {
+        self.dir = dir
         super.init()
 
         NSFileCoordinator.addFilePresenter(self)
