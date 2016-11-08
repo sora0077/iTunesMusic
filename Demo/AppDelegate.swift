@@ -15,7 +15,6 @@ import RxCocoa
 import RealmSwift
 import MediaPlayer
 import WindowKit
-import MMWormhole
 import Routing
 
 
@@ -76,8 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private let disposeBag = DisposeBag()
 
-    private let wormhole = MMWormhole(applicationGroupIdentifier: appGroupIdentifier, optionalDirectory: "wormhole")
-
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         UNUserNotificationCenter.current().delegate = self
         return true
@@ -114,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         launch(with: LaunchOptions(location: location))
         player.install(middleware: ControlCenter())
-        player.install(middleware: PlayingInfoNotification())
+        //player.install(middleware: PlayingInfoNotification())
         player.errorType = CommonError.self
         player.errorLevel = AppErrorLevel.alert
 

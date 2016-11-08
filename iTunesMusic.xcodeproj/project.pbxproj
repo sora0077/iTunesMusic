@@ -51,9 +51,6 @@
 		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
 		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
-		D95085881D8063CD003A3D65 /* MMWormhole.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95085871D8063C0003A3D65 /* MMWormhole.framework */; };
-		D95085891D8063CD003A3D65 /* MMWormhole.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D95085871D8063C0003A3D65 /* MMWormhole.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D950858A1D8063D8003A3D65 /* MMWormhole.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D95085871D8063C0003A3D65 /* MMWormhole.framework */; };
 		D950858B1D8063DD003A3D65 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E2F1D6229E800E33E5D /* SnapKit.framework */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
 		D9542EF71D136A450073C8EE /* PlaylistType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF61D136A450073C8EE /* PlaylistType.swift */; };
@@ -201,7 +198,6 @@
 				D9A33E221D6225BD00E33E5D /* PINCache.framework in Embed Frameworks */,
 				D9A33E241D6225BD00E33E5D /* PINRemoteImage.framework in Embed Frameworks */,
 				D9A33E421D622A3B00E33E5D /* RxSwift.framework in Embed Frameworks */,
-				D95085891D8063CD003A3D65 /* MMWormhole.framework in Embed Frameworks */,
 				D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */,
 				D9A33E481D622A3B00E33E5D /* Result.framework in Embed Frameworks */,
 				D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */,
@@ -278,7 +274,6 @@
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
-		D95085871D8063C0003A3D65 /* MMWormhole.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MMWormhole.framework; path = Carthage/Build/iOS/MMWormhole.framework; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
 		D95736971D80443A00A0B188 /* iTunesMusicPlayerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = iTunesMusicPlayerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,7 +387,6 @@
 				D9A399201D69630500D0F9A4 /* ErrorEventHandler.framework in Frameworks */,
 				D9A33E411D622A3B00E33E5D /* RxSwift.framework in Frameworks */,
 				D9A33E3F1D622A3B00E33E5D /* RxCocoa.framework in Frameworks */,
-				D95085881D8063CD003A3D65 /* MMWormhole.framework in Frameworks */,
 				D9B3416F1DA907650044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
 				D9A33E451D622A3B00E33E5D /* RealmSwift.framework in Frameworks */,
 				D9A33E211D6225BD00E33E5D /* PINCache.framework in Frameworks */,
@@ -427,7 +421,6 @@
 				D950858B1D8063DD003A3D65 /* SnapKit.framework in Frameworks */,
 				D9F8D45F1D8048360006F7C1 /* Realm.framework in Frameworks */,
 				D9F8D4601D8048360006F7C1 /* RealmSwift.framework in Frameworks */,
-				D950858A1D8063D8003A3D65 /* MMWormhole.framework in Frameworks */,
 				D91D68221D809EDE00EB883D /* PINCache.framework in Frameworks */,
 				D91D68231D809EDE00EB883D /* PINRemoteImage.framework in Frameworks */,
 				D9F8D4611D8048360006F7C1 /* Result.framework in Frameworks */,
@@ -442,7 +435,6 @@
 			children = (
 				D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */,
 				D93C39841D97EB8600A523F3 /* Routing.framework */,
-				D95085871D8063C0003A3D65 /* MMWormhole.framework */,
 				D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */,
 				D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */,
 				D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */,

@@ -7,7 +7,7 @@ github "realm/realm-cocoa" "master"
 
 github "drmohundro/SWXMLHash" "master"
 
-github "mutualmobile/MMWormhole"
+#github "mutualmobile/MMWormhole"
 
 
 github "SnapKit/SnapKit" "master"

@@ -11,7 +11,6 @@ import UIKit
 import MediaPlayer
 import iTunesMusic
 import RxSwift
-import MMWormhole
 import NotificationCenter
 
 
@@ -25,24 +24,8 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     private var nowPlayingInfo: [String: Any]? = nil {
         didSet {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
-            if let nowPlayingInfo = nowPlayingInfo, let trackId = nowPlayingInfo["currentTrackId"] as? Int {
-                let trackId2 = encodableNowPlayingInfo?["currentTrackId"] as? Int
-                if trackId != trackId2 || nowPlayingInfo.keys.contains("artworkImageUpdated") {
-                    encodableNowPlayingInfo = nowPlayingInfo
-                }
-            } else {
-                encodableNowPlayingInfo = nil
-            }
-            nowPlayingInfo?["artworkImageUpdated"] = nil
         }
     }
-    private var encodableNowPlayingInfo: [String: Any]? = nil {
-        didSet {
-            sendMessage()
-        }
-    }
-
-    private let wormhole = MMWormhole(applicationGroupIdentifier: appGroupIdentifier, optionalDirectory: "wormhole")
 
     func middlewareInstalled(_ player: Player) {
         self.player = player
@@ -78,25 +61,6 @@ final class ControlCenter: NSObject, PlayerMiddleware {
                 }
             })
             .addDisposableTo(disposeBag)
-
-        wormhole.listenForMessage(withIdentifier: "playerWidgetDidFinishLaunching") { [weak self] _ in
-            print("widget wake ")
-            self?.sendMessage()
-        }
-    }
-
-    private func sendMessage() {
-        var encodables: [String: Any] = [:]
-        if let info = encodableNowPlayingInfo {
-            encodables = [:]
-            for (key, value) in info {
-                if let value = value as? NSCoding {
-                    encodables[key] = value
-                }
-            }
-        }
-        wormhole.passMessageObject(encodables as NSCoding?, identifier: "playerWidgetNeedsUpdating")
-        NCWidgetController.widgetController().setHasContent(!encodables.isEmpty, forWidgetWithBundleIdentifier: "jp.sora0077.Demo.iTunesMusicPlayerWidget")
     }
 
     func willStartPlayTrack(_ trackId: Int) {
@@ -130,7 +94,6 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
             if trackId == self.nowPlayingInfo?["currentTrackId"] as? Int {
                 self.nowPlayingInfo?["artworkImage"] = image
-                self.nowPlayingInfo?["artworkImageUpdated"] = true
                 if #available(iOS 10.0, *) {
                     self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
                         return image
