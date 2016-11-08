@@ -66,9 +66,7 @@ extension _TrackMetadata {
 
     var fileURL: URL? {
         guard let filename = _longPreviewFileUrl else { return nil }
-        //TODO: Remove Model reference
-        let dir = Model.DiskCache.directory
-        let fileURL = dir.appendingPathComponent(filename)
+        let fileURL = Settings.Track.Cache.directory.appendingPathComponent(filename)
         if FileManager.default.fileExists(atPath: fileURL.path) {
             return fileURL
         }

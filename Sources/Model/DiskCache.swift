@@ -12,23 +12,16 @@ import RxSwift
 
 extension Model {
     public final class DiskCache {
-        static let directory: URL = {
-            let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-            let dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
-            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
-            return dir
-        }()
+        public static let shared = DiskCache(dir: Settings.Track.Cache.directory)
 
-        public static let shared = DiskCache()
-
-        fileprivate let impl = DiskCacheImpl(dir: DiskCache.directory)
-
-        var dir: URL { return impl.dir }
+        fileprivate let impl: DiskCacheImpl
 
         fileprivate var downloading: Set<Int> = []
         fileprivate let threshold = 3
 
-        private init() {}
+        private init(dir: URL) {
+            impl = DiskCacheImpl(dir: dir)
+        }
 
         public var diskSizeInBytes: Int {
             return impl.diskSizeInBytes
@@ -53,7 +46,7 @@ extension Model.DiskCache: PlayerMiddleware {
                 return
         }
 
-        let dir = self.dir
+        let dir = impl.dir
         let filename = url.lastPathComponent
 
         downloading.insert(trackId)
