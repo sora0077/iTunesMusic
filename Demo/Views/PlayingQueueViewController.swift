@@ -54,6 +54,7 @@ final class PlayingQueueViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(TableView.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
         tableView.backgroundColor = .clear
         tableView.rowHeight = 30
         tableView.tableFooterView = UIView()
@@ -147,5 +148,28 @@ extension PlayingQueueViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         player.removeAll()
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        switch sections[section] {
+        case .track:
+            return 0
+        case .playlist:
+            return 12
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        switch sections[section] {
+        case .track:
+            return nil
+        case .playlist(let playlist):
+            let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Header")
+            view?.textLabel?.text = playlist.name
+            if let font = view?.textLabel?.font {
+                view?.textLabel?.font = font.withSize(6)
+            }
+            return view
+        }
     }
 }
