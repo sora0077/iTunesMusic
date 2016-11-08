@@ -24,6 +24,8 @@ public protocol Collection {
 
     var artist: Artist { get }
 
+    var trackCount: Int { get }
+
     subscript (index: Int) -> Track { get }
 
     func artworkURL(size: Int) -> URL
@@ -126,6 +128,8 @@ extension _Collection {
     var name: String { return _collectionName }
 
     var artist: Artist { return _artist! }
+
+    var trackCount: Int { return _trackCount }
 
     func artworkURL(size: Int) -> URL {
         let base = _artworkUrl100

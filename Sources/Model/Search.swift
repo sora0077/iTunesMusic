@@ -86,6 +86,8 @@ extension Model {
 
 extension Model.Search: Playlist {
 
+    public var allTrackCount: Int { return tracks.count }
+
     public var trackCount: Int { return tracks.count }
 
     public var isTrackEmpty: Bool { return tracks.isEmpty }

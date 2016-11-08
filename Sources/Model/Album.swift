@@ -82,6 +82,8 @@ extension Model.Album: Playlist {
 
     public var name: String { return collection.name }
 
+    public var allTrackCount: Int { return collection.trackCount }
+
     public var trackCount: Int { return tracks.count }
 
     public var isTrackEmpty: Bool { return tracks.isEmpty }

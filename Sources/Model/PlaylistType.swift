@@ -17,6 +17,7 @@ public protocol Playlist: class {
 
     var tracksChanges: Observable<CollectionChange> { get }
 
+    var allTrackCount: Int { get }
     var trackCount: Int { get }
     var isTrackEmpty: Bool { get }
 

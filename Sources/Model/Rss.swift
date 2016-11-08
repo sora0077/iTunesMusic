@@ -85,6 +85,8 @@ extension Model {
 
 extension Model.Rss: Playlist {
 
+    public var allTrackCount: Int { return caches[0].ids.count }
+
     public var trackCount: Int { return tracks.count }
 
     public var isTrackEmpty: Bool { return tracks.isEmpty }
@@ -99,7 +101,7 @@ extension Model.Rss: _Fetchable {
 
     var _refreshAt: Date { return caches[0].refreshAt }
 
-    var _refreshDuration: Duration { return 3.hours }
+    var _refreshDuration: Duration { return 12.hours }
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
@@ -200,7 +202,7 @@ extension Model.Rss: Swift.Collection {
         return caches[0].tracks
     }
 
-    public var count: Int { return trackCount }
+    public var count: Int { return tracks.count }
 
     public var isEmpty: Bool { return tracks.isEmpty }
 

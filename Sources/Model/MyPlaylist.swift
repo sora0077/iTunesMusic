@@ -121,6 +121,8 @@ extension Model.MyPlaylist: Playlist {
 
     public var name: String { return playlist.title }
 
+    public var allTrackCount: Int { return trackCount }
+
     public var trackCount: Int { return playlist.tracks.count }
 
     public var isTrackEmpty: Bool { return playlist.tracks.isEmpty }

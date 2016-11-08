@@ -84,6 +84,7 @@ extension Model.History: Swift.Collection, Playlist {
         return objects.index(after: i)
     }
 
+    public var allTrackCount: Int { return count }
 
     public var trackCount: Int { return objects.count }
 

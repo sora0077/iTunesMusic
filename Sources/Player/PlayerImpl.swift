@@ -127,6 +127,8 @@ public final class PlayerListItem: PlayerItem {
 
     public var tracks: [PlayerTrackItem] = []
 
+    private var requesting: Bool = false
+
     init(playlist: Playlist) {
         self.playlist = playlist
 
@@ -134,13 +136,18 @@ public final class PlayerListItem: PlayerItem {
     }
 
     override public func fetcher() -> Observable<AVPlayerItem?> {
+        if self.requesting {
+            return .just(nil)
+        }
         return Observable<Observable<AVPlayerItem?>>.create { [weak self] subscriber in
                 DispatchQueue.main.async {
                     guard let `self` = self else { return }
+                    self.requesting = true
                     let index = self.items.count
                     let playlist = self.playlist
 
                     if playlist.isTrackEmpty || playlist.trackCount <= index {
+                        self.requesting = false
                         subscriber.onNext(.just(nil))
                         return
                     }
@@ -148,10 +155,12 @@ public final class PlayerListItem: PlayerItem {
                         !paginator._hasNoPaginatedContents && playlist.trackCount - index < 3 {
                         if !paginator._requesting.value {
                             paginator.fetch(ifError: DefaultError.self, level: DefaultErrorLevel.none) { error in
+                                self.requesting = false
                                 subscriber.onNext(.just(nil))
                             }
                         } else {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                self.requesting = false
                                 subscriber.onNext(.just(nil))
                             }
                         }
@@ -160,6 +169,7 @@ public final class PlayerListItem: PlayerItem {
                     let track = Model.Track(track: playlist.track(at: index))
                     let item = PlayerTrackItem(track: track)
                     self.tracks.append(item)
+                    self.requesting = false
                     subscriber.onNext(item.fetcher())
                 }
                 return Disposables.create()
@@ -171,7 +181,7 @@ public final class PlayerListItem: PlayerItem {
             if self.playlist.isTrackEmpty {
                 return .done
             }
-            if self.playlist.trackCount == self.items.count {
+            if self.playlist.allTrackCount == self.items.count {
                 return .done
             }
             return .prepareForRequest
@@ -206,6 +216,7 @@ final class Player2: NSObject {
     private let _currentTime = Variable<Float64>(0)
 
     var playingQueue: Observable<[PlayerItem]> {
+        //swiftlint:disable force_cast
         return core.items.map { $0.map { $0 as! PlayerItem } }.subscribeOn(MainScheduler.instance)
     }
 
