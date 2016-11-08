@@ -143,7 +143,7 @@ public final class PlayerListItem: PlayerItem {
                 DispatchQueue.main.async {
                     guard let `self` = self else { return }
                     self.requesting = true
-                    let index = self.items.count
+                    let index = self.tracks.count
                     let playlist = self.playlist
 
                     if playlist.isTrackEmpty || playlist.trackCount <= index {
