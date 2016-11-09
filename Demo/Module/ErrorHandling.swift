@@ -59,7 +59,7 @@ func partial<A, B, C, R>(_ f: @escaping (A, B, C) -> R, _ val: @escaping @autocl
 }
 
 
-func action(_ handler: ((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)? = nil,
+func action(_ handler: (((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?),
             error: AppError.Type = CommonError.self,
             level: AppErrorLevel = .alert) {
     handler?(error, level)

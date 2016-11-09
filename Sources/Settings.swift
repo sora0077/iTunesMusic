@@ -10,20 +10,22 @@ import Foundation
 
 
 struct Settings {
+    private init() {}
+
     struct Track {
-        struct Cache {
-            static let directory: URL = {
-                let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
-                let dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
-                try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
-                return dir
-            }()
-
-            private init() {}
-        }
-
         private init() {}
     }
+}
 
-    private init() {}
+extension Settings.Track {
+    struct Cache {
+        private init() {}
+
+        static let directory: URL = {
+            let base = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0]
+            let dir = URL(fileURLWithPath: base).appendingPathComponent("tracks", isDirectory: true)
+            try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
+            return dir
+        }()
+    }
 }
