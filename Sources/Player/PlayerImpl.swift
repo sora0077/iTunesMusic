@@ -220,7 +220,7 @@ final class Player2: NSObject {
         return core.items.map { $0.map { $0 as! PlayerItem } }.subscribeOn(MainScheduler.instance)
     }
 
-    var playing: Bool { return queuePlayer.rate != 0 }
+    var playing: Bool { return core.playing }
 
     fileprivate var middlewares: [PlayerMiddleware] = []
 
@@ -310,7 +310,7 @@ final class Player2: NSObject {
     }
 
     func removeAll() {
-        core.removeAll()
+        core.removeAllItems()
     }
 }
 
