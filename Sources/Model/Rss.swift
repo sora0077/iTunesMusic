@@ -40,16 +40,23 @@ extension Model {
         fileprivate let url: URL
         public let name: String
 
-        fileprivate let caches: Results<_RssCache>
+        fileprivate var caches: Results<_RssCache>!
         private var token: NotificationToken!
         private var objectsToken: NotificationToken!
 
         fileprivate var trackIds: [Int] = []
 
-        public init(genre: Genre) {
-            id = genre.id
-            url = genre.rssUrls.topSongs
-            name = genre.name
+        fileprivate var tracks: AnyRealmCollection<_Track>!
+
+        public convenience init(genre: Genre) {
+            self.init(genreId: genre.id, rssURL: genre.rssUrls.topSongs, genreName: genre.name, filter: { $0 })
+        }
+
+        private init<C: RealmCollection>(genreId: Int, rssURL: URL, genreName: String, filter: @escaping (List<_Track>) -> C)
+            where C.Element == _Track {
+            id = genreId
+            url = rssURL
+            name = genreName
 
             let realm = iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
@@ -57,11 +64,14 @@ extension Model {
             trackIds = feed.ids
 
             caches = realm.objects(_RssCache.self).filter("_genreId = \(id)")
+            tracks = AnyRealmCollection(filter(caches[0].tracks))
             token = caches.addNotificationBlock { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_RssCache>) {
-                    self.objectsToken = results[0].tracks.addNotificationBlock { [weak self] changes in
+                    self.caches = results
+                    self.tracks = AnyRealmCollection(filter(results[0].tracks))
+                    self.objectsToken = self.tracks.addNotificationBlock { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -78,6 +88,12 @@ extension Model {
                 }
 
             }
+        }
+
+        public func filter(_ keyword: String) -> Rss {
+            let rss = Rss(genreId: id, rssURL: url, genreName: name, filter: { $0.filter("_trackName contains '\(keyword)'") })
+            rss.trackIds = trackIds
+            return rss
         }
     }
 }
@@ -197,10 +213,6 @@ extension Model.Rss: _Fetchable {
 }
 
 extension Model.Rss: Swift.Collection {
-
-    var tracks: List<_Track> {
-        return caches[0].tracks
-    }
 
     public var count: Int { return tracks.count }
 

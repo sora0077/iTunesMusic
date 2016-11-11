@@ -15,7 +15,7 @@ import SnapKit
 
 class RssViewController: UIViewController {
 
-    fileprivate let rss: Model.Rss
+    fileprivate private(set) var rss: Model.Rss
 
     fileprivate let tableView = UITableView()
 
@@ -68,6 +68,28 @@ class RssViewController: UIViewController {
             .addDisposableTo(disposeBag)
         tableView.refreshControl = refreshControl
 
+        startObserving()
+
+        action(rss.refresh)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            self.rss = self.rss.filter("君")
+            self.startObserving()
+            action(self.rss.refresh)
+
+        }
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        if let indexPath = tableView.indexPathForSelectedRow {
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    }
+
+    private func startObserving() {
+
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
@@ -80,7 +102,9 @@ class RssViewController: UIViewController {
             .addDisposableTo(disposeBag)
 
         rss.changes
-            .subscribe { _ in refreshControl.endRefreshing() }
+            .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
+                vc.tableView.refreshControl?.endRefreshing()
+            })
             .addDisposableTo(disposeBag)
 
         rss.changes
@@ -108,21 +132,13 @@ class RssViewController: UIViewController {
             })
             .addDisposableTo(disposeBag)
 
-        rss.requestState
-            .map { $0 != .requesting }
-            .distinctUntilChanged()
-            .asDriver(onErrorJustReturn: false)
-            .drive(refreshControl.rx.isEnabled)
-            .addDisposableTo(disposeBag)
-
-        action(rss.refresh)
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        if let indexPath = tableView.indexPathForSelectedRow {
-            tableView.deselectRow(at: indexPath, animated: true)
+        if let refreshControl = tableView.refreshControl {
+            rss.requestState
+                .map { $0 != .requesting }
+                .distinctUntilChanged()
+                .asDriver(onErrorJustReturn: false)
+                .drive(refreshControl.rx.isEnabled)
+                .addDisposableTo(disposeBag)
         }
     }
 
