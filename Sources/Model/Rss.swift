@@ -48,15 +48,24 @@ extension Model {
 
         fileprivate var tracks: AnyRealmCollection<_Track>!
 
+        fileprivate let isFiltered: Bool
+
         public convenience init(genre: Genre) {
-            self.init(genreId: genre.id, rssURL: genre.rssUrls.topSongs, genreName: genre.name, filter: { $0 })
+            self.init(genreId: genre.id, rssURL: genre.rssUrls.topSongs, genreName: genre.name, isFiltered: false, filter: { $0 })
         }
 
-        private init<C: RealmCollection>(genreId: Int, rssURL: URL, genreName: String, filter: @escaping (List<_Track>) -> C)
-            where C.Element == _Track {
+        private init<C: RealmCollection>(
+            genreId: Int,
+            rssURL: URL,
+            genreName: String,
+            isFiltered: Bool,
+            filter: @escaping (List<_Track>) -> C
+            ) where C.Element == _Track {
+
             id = genreId
             url = rssURL
             name = genreName
+            self.isFiltered = isFiltered
 
             let realm = iTunesRealm()
             let feed = getOrCreateCache(genreId: id, realm: realm)
@@ -86,12 +95,15 @@ extension Model {
                 case .error(let error):
                     fatalError("\(error)")
                 }
-
             }
         }
 
         public func filter(_ keyword: String) -> Rss {
-            let rss = Rss(genreId: id, rssURL: url, genreName: name, filter: { $0.filter("_trackName contains '\(keyword)'") })
+            let rss = Rss(genreId: id, rssURL: url, genreName: name, isFiltered: true,
+                          filter: {
+                            $0.filter("_trackName contains '\(keyword)' OR _collection._collectionName contains '\(keyword)'")
+                          })
+            rss.fetched = fetched
             rss.trackIds = trackIds
             return rss
         }
@@ -101,7 +113,7 @@ extension Model {
 
 extension Model.Rss: Playlist {
 
-    public var allTrackCount: Int { return caches[0].ids.count }
+    public var allTrackCount: Int { return isFiltered ? tracks.count : caches[0].ids.count }
 
     public var trackCount: Int { return tracks.count }
 
@@ -114,12 +126,19 @@ extension Model.Rss: Playlist {
 
 
 extension Model.Rss: _Fetchable {
+    
+    private static let limit = 200
 
     var _refreshAt: Date { return caches[0].refreshAt }
 
     var _refreshDuration: Duration { return 12.hours }
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
+
+        if fetched == Model.Rss.limit {
+            completion(.done)
+            return
+        }
 
         if force || trackIds.isEmpty || (refreshing && _needRefresh) {
             fetchFeed(ifError: errorType, level: level, completion: completion)
@@ -186,7 +205,7 @@ extension Model.Rss: _Fetchable {
     }
 
     private func fetchFeed(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
-        Session.shared.send(GetRss<_RssCache>(url: url, limit: 200), callbackQueue: callbackQueue) { [weak self] result in
+        Session.shared.send(GetRss<_RssCache>(url: url, limit: Model.Rss.limit), callbackQueue: callbackQueue) { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success(let response):
