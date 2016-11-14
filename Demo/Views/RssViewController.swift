@@ -71,13 +71,6 @@ class RssViewController: UIViewController {
         startObserving()
 
         action(rss.refresh)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-            self.rss = self.rss.filter("君")
-            self.startObserving()
-            action(self.rss.refresh)
-
-        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

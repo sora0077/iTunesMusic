@@ -126,7 +126,7 @@ extension Model.Rss: Playlist {
 
 
 extension Model.Rss: _Fetchable {
-    
+
     private static let limit = 200
 
     var _refreshAt: Date { return caches[0].refreshAt }

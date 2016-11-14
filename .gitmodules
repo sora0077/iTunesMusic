@@ -46,3 +46,6 @@
 [submodule "Carthage/Checkouts/AbstractPlayerKit"]
 	path = Carthage/Checkouts/AbstractPlayerKit
 	url = https://github.com/sora0077/AbstractPlayerKit.git
+[submodule "Carthage/Checkouts/ExceptionToSwift"]
+	path = Carthage/Checkouts/ExceptionToSwift
+	url = https://github.com/sora0077/ExceptionToSwift.git
