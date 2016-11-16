@@ -23,7 +23,9 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 
     private var nowPlayingInfo: [String: Any]? = nil {
         didSet {
-            MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            DispatchQueue.main.async {
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = self.nowPlayingInfo
+            }
         }
     }
 
