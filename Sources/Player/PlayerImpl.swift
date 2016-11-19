@@ -88,8 +88,8 @@ public final class PlayerTrackItem: PlayerItem {
 
     private func fetchPreviewURL(from track: Track) -> Observable<URL?> {
         let (id, viewURL) = (track.id, track.viewURL)
-        return Observable<URL?>.create { subscriber in
-            let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { [weak self] result in
+        return Observable<URL?>.create { [weak self] subscriber in
+            let task = Session.shared.send(GetPreviewUrl(id: id, url: viewURL), callbackQueue: callbackQueue) { result in
                 switch result {
                 case .success(let (url, duration)):
                     var fileURL: URL?
@@ -154,8 +154,8 @@ public final class PlayerListItem: PlayerItem {
                     if let paginator = playlist as? _Fetchable,
                         !paginator._hasNoPaginatedContents && playlist.trackCount - index < 3 {
                         if !paginator._requesting.value {
-                            paginator.fetch(ifError: DefaultError.self, level: DefaultErrorLevel.none) { error in
-                                self.requesting = false
+                            paginator.fetch(ifError: DefaultError.self, level: DefaultErrorLevel.none) { [weak self] error in
+                                self?.requesting = false
                                 subscriber.onNext(.just(nil))
                             }
                         } else {
@@ -212,8 +212,7 @@ final class Player2: NSObject {
     private(set) lazy var nowPlaying: Observable<Track?> = asObservable(self._nowPlayingTrack)
     private let _nowPlayingTrack = Variable<Track?>(nil)
 
-    private(set) lazy var currentTime: Observable<Float64> = asObservable(self._currentTime)
-    private let _currentTime = Variable<Float64>(0)
+    let currentTime = Variable<Float64>(0)
 
     var playingQueue: Observable<[PlayerItem]> {
         //swiftlint:disable force_cast
@@ -239,8 +238,7 @@ final class Player2: NSObject {
 
         queuePlayer.addObserver(self, forKeyPath: #keyPath(AVQueuePlayer.currentItem), options: .new, context: nil)
         queuePlayer.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(0.1, 600), queue: nil) { [weak self] (time) in
-            guard let `self` = self else { return }
-            self._currentTime.value = CMTimeGetSeconds(time)
+            self?.currentTime.value = CMTimeGetSeconds(time)
         }
 
         NotificationCenter.default.addObserver(

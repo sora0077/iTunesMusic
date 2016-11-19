@@ -55,9 +55,12 @@ final class ControlCenter: NSObject, PlayerMiddleware {
             .addDisposableTo(disposeBag)
 
         player.currentTime
+            .asObservable()
             .map(Int.init)
             .distinctUntilChanged()
+            .filter { [0, 45].contains($0) }
             .subscribe(onNext: { [weak self] time in
+                print(time)
                 if self?.currentTrackId == self?.nowPlayingInfo?["currentTrackId"] as? Int {
                     self?.nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time
                 }
@@ -136,6 +139,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
     @objc
     fileprivate func pause() {
         player?.pause()
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Int(player?.currentTime.value ?? 0)
         nowPlayingInfo?[MPNowPlayingInfoPropertyPlaybackRate] = 0
     }
     @objc

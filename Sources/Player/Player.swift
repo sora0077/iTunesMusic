@@ -28,7 +28,7 @@ public protocol Player: class {
 
     var nowPlaying: Observable<Track?> { get }
 
-    var currentTime: Observable<Float64> { get }
+    var currentTime: Variable<Float64> { get }
 
     var playing: Bool { get }
 
