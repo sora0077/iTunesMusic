@@ -49,3 +49,6 @@
 [submodule "Carthage/Checkouts/ExceptionToSwift"]
 	path = Carthage/Checkouts/ExceptionToSwift
 	url = https://github.com/sora0077/ExceptionToSwift.git
+[submodule "Carthage/Checkouts/KeyboardBoundsKit"]
+	path = Carthage/Checkouts/KeyboardBoundsKit
+	url = https://github.com/sora0077/KeyboardBoundsKit.git

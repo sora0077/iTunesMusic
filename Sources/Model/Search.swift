@@ -22,7 +22,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
         // swiftlint:disable force_try
         try! realm.write {
             cache.term = term
-            realm.add(cache)
+            realm.add(cache, update: true)
         }
         return cache
     }
@@ -37,7 +37,7 @@ extension Model {
 
         fileprivate let term: String
         fileprivate let caches: Results<_SearchCache>
-        fileprivate var tracks: Results<_Media>
+        fileprivate var tracks: Results<_Media>!
         private var token: NotificationToken!
         private var objectsToken: NotificationToken?
         private var tracksToken: NotificationToken?
@@ -51,32 +51,36 @@ extension Model {
 
             let realm = iTunesRealm()
             _ = getOrCreateCache(term: term, realm: realm)
-            caches = realm.objects(_SearchCache.self).filter("term = %@", term)
+            caches = realm.objects(_SearchCache.self).filter("term = '\(term)'")
             tracks = caches[0].objects.filter("track != nil")
-            token = caches.addNotificationBlock { [weak self] changes in
-                guard let `self` = self else { return }
+            // 実行をずらさないとエラーが発生するため
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                self.token = self.caches.addNotificationBlock { [weak self] changes in
+                    guard let `self` = self else { return }
 
-                func updateObserver(with results: Results<_SearchCache>) {
-                    self.tracks = results[0].objects.filter("track != nil")
-                    self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
-                        self?._tracksChanges.onNext(CollectionChange(changes))
+                    func updateObserver(with results: Results<_SearchCache>) {
+                        let objects = results[0].objects
+                        self.tracks = objects.filter("track != nil")
+                        self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
+                            self?._tracksChanges.onNext(CollectionChange(changes))
+                        }
+                        self.objectsToken = objects.addNotificationBlock { [weak self] changes in
+                            self?._changes.onNext(CollectionChange(changes))
+                        }
                     }
-                    self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
-                        self?._changes.onNext(CollectionChange(changes))
-                    }
-                }
 
-                switch changes {
-                case .initial(let results):
-                    updateObserver(with: results)
-                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
-                    if !insertions.isEmpty {
+                    switch changes {
+                    case .initial(let results):
                         updateObserver(with: results)
+                    case .update(let results, deletions: _, insertions: let insertions, modifications: _):
+                        if !insertions.isEmpty {
+                            updateObserver(with: results)
+                        }
+                    case .error(let error):
+                        fatalError("\(error)")
                     }
-                case .error(let error):
-                    fatalError("\(error)")
-                }
 
+                }
             }
         }
 
@@ -195,8 +199,11 @@ extension Model.Search {
         fileprivate init() {
             let realm = iTunesRealm()
             self.cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
-            try! realm.write {
-                realm.add(self.cache, update: true)
+            if self.cache.realm == nil {
+
+                try! realm.write {
+                    realm.add(self.cache, update: true)
+                }
             }
             DispatchQueue.main.async {
                 self.results = self.cache.trendings

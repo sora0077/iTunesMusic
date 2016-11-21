@@ -10,6 +10,8 @@
 		D912A8781D55946B00C62617 /* Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D912A8771D55946B00C62617 /* Fetchable.swift */; };
 		D9134E2C1D5779F200636C10 /* SearchHintTrends.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9134E2B1D5779F200636C10 /* SearchHintTrends.swift */; };
 		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
+		D913B14B1DE30F4000989C5B /* KeyboardBoundsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D913B1491DE30F2900989C5B /* KeyboardBoundsKit.framework */; };
+		D913B14C1DE30F4000989C5B /* KeyboardBoundsKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D913B1491DE30F2900989C5B /* KeyboardBoundsKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9165FDF1D2BF2B900B701E3 /* ArtistCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */; };
 		D9165FE41D2C03C300B701E3 /* PlayerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE11D2C03C300B701E3 /* PlayerImpl.swift */; };
 		D9165FE51D2C03C300B701E3 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9165FE21D2C03C300B701E3 /* Player.swift */; };
@@ -44,12 +46,9 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
-		D93C39851D97EB9F00A523F3 /* Routing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; };
 		D93C39861D97EBAA00A523F3 /* Routing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; };
 		D93C39871D97EBAA00A523F3 /* Routing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
-		D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; };
-		D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
 		D950858B1D8063DD003A3D65 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E2F1D6229E800E33E5D /* SnapKit.framework */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
@@ -202,10 +201,10 @@
 				D9A33E481D622A3B00E33E5D /* Result.framework in Embed Frameworks */,
 				D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */,
 				D9A33E3C1D622A3B00E33E5D /* SWXMLHash.framework in Embed Frameworks */,
+				D913B14C1DE30F4000989C5B /* KeyboardBoundsKit.framework in Embed Frameworks */,
 				D9A33E441D622A3B00E33E5D /* Realm.framework in Embed Frameworks */,
 				D9A33E381D622A3B00E33E5D /* APIKit.framework in Embed Frameworks */,
 				D9A33E461D622A3B00E33E5D /* RealmSwift.framework in Embed Frameworks */,
-				D94785911D788F37007A74CE /* VYPlayIndicatorSwift.framework in Embed Frameworks */,
 				D9A33E401D622A3B00E33E5D /* RxCocoa.framework in Embed Frameworks */,
 				D9A399211D69630500D0F9A4 /* ErrorEventHandler.framework in Embed Frameworks */,
 				D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */,
@@ -236,6 +235,7 @@
 		D912A8771D55946B00C62617 /* Fetchable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fetchable.swift; sourceTree = "<group>"; };
 		D9134E2B1D5779F200636C10 /* SearchHintTrends.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchHintTrends.swift; sourceTree = "<group>"; };
 		D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		D913B1491DE30F2900989C5B /* KeyboardBoundsKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeyboardBoundsKit.framework; path = Carthage/Build/iOS/KeyboardBoundsKit.framework; sourceTree = "<group>"; };
 		D9165FDE1D2BF2B800B701E3 /* ArtistCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArtistCache.swift; sourceTree = "<group>"; };
 		D9165FE11D2C03C300B701E3 /* PlayerImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerImpl.swift; sourceTree = "<group>"; };
 		D9165FE21D2C03C300B701E3 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -272,7 +272,6 @@
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D93C39841D97EB8600A523F3 /* Routing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Routing.framework; path = Carthage/Build/iOS/Routing.framework; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VYPlayIndicatorSwift.framework; path = Carthage/Build/iOS/VYPlayIndicatorSwift.framework; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
@@ -368,7 +367,6 @@
 				D9A33E331D6229E800E33E5D /* SWXMLHash.framework in Frameworks */,
 				D9A33E361D6229F300E33E5D /* APIKit.framework in Frameworks */,
 				D9A33E2A1D6229C800E33E5D /* Result.framework in Frameworks */,
-				D93C39851D97EB9F00A523F3 /* Routing.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,10 +389,10 @@
 				D9A33E451D622A3B00E33E5D /* RealmSwift.framework in Frameworks */,
 				D9A33E211D6225BD00E33E5D /* PINCache.framework in Frameworks */,
 				D9A33E4C1D622ECA00E33E5D /* Himotoki.framework in Frameworks */,
+				D913B14B1DE30F4000989C5B /* KeyboardBoundsKit.framework in Frameworks */,
 				D9A33E3B1D622A3B00E33E5D /* SWXMLHash.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
 				D9A33E231D6225BD00E33E5D /* PINRemoteImage.framework in Frameworks */,
-				D94785901D788F37007A74CE /* VYPlayIndicatorSwift.framework in Frameworks */,
 				D9A33E471D622A3B00E33E5D /* Result.framework in Frameworks */,
 				D9A33E3D1D622A3B00E33E5D /* Timepiece.framework in Frameworks */,
 				D9A33E391D622A3B00E33E5D /* SnapKit.framework in Frameworks */,
@@ -433,9 +431,9 @@
 		636759DDAED094E189FCD6B0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D913B1491DE30F2900989C5B /* KeyboardBoundsKit.framework */,
 				D9B3416D1DA907560044D0A3 /* AbstractPlayerKit.framework */,
 				D93C39841D97EB8600A523F3 /* Routing.framework */,
-				D947858E1D788F24007A74CE /* VYPlayIndicatorSwift.framework */,
 				D9A3991E1D6962E900D0F9A4 /* ErrorEventHandler.framework */,
 				D9A3991D1D6962E000D0F9A4 /* WindowKit.framework */,
 				D9A33E4A1D622EC400E33E5D /* Himotoki.framework */,
