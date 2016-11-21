@@ -225,6 +225,8 @@ final class Player2: NSObject {
 
     private let queuePlayer = AVQueuePlayer()
 
+    private let disposeBag = DisposeBag()
+
     override init() {
         core = AbstractPlayerKit.Player(queuePlayer: queuePlayer)
 
@@ -246,6 +248,16 @@ final class Player2: NSObject {
             selector: #selector(self.trackItemGenerateAVPlayerItem(notification:)),
             name: .PlayerTrackItemPrepareForPlay,
             object: nil)
+
+        nowPlaying.map { $0?.id }.distinctUntilChanged { $0 == $1 }
+            .subscribe(onNext: { [weak self] trackId in
+                if let trackId = trackId {
+                    self?.middlewares.forEach { $0.willStartPlayTrack(trackId) }
+                } else {
+                    self?.middlewares.forEach { $0.didEndPlay() }
+                }
+            })
+            .addDisposableTo(disposeBag)
     }
 
     deinit {
@@ -263,12 +275,6 @@ final class Player2: NSObject {
                     track = Model.Track(trackId: trackId)
                 }
                 self._nowPlayingTrack.value = track?.entity
-
-                if let trackId = track?.trackId {
-                    self.middlewares.forEach { $0.willStartPlayTrack(trackId) }
-                } else {
-                    self.middlewares.forEach { $0.didEndPlay() }
-                }
             }
         default:()
         }

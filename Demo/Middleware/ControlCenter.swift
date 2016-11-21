@@ -47,18 +47,11 @@ final class ControlCenter: NSObject, PlayerMiddleware {
 //        commandCenter.skipBackwardCommand.addTarget(self, action: "skipBackward")
 //        commandCenter.skipBackwardCommand.enabled = true
 
-
-        player.nowPlaying
-            .subscribe(onNext: { [weak self] track in
-                self?.currentTrackId = track?.id
-            })
-            .addDisposableTo(disposeBag)
-
         player.currentTime
             .asObservable()
             .map(Int.init)
             .distinctUntilChanged()
-            .filter { [0, 45].contains($0) }
+            .filter { $0 == 45 }
             .subscribe(onNext: { [weak self] time in
                 print(time)
                 if self?.currentTrackId == self?.nowPlayingInfo?["currentTrackId"] as? Int {
@@ -72,7 +65,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         guard doOnMainThread(execute: self.willStartPlayTrack(trackId)) else { return }
         guard let track = Model.Track(trackId: trackId).entity else { return }
 
-        if currentTrackId == nil { currentTrackId = trackId }
+        currentTrackId = trackId
 
         let commandCenter = MPRemoteCommandCenter.shared()
         commandCenter.bookmarkCommand.isEnabled = true
@@ -81,31 +74,34 @@ final class ControlCenter: NSObject, PlayerMiddleware {
         commandCenter.pauseCommand.isEnabled = true
         commandCenter.nextTrackCommand.isEnabled = true
 
-        let info: [String: Any] = [
+        var info: [String: Any] = [
             MPMediaItemPropertyTitle: track.name,
             MPMediaItemPropertyArtist: track.artist.name,
             MPMediaItemPropertyAlbumTitle: track.collection.name,
             MPNowPlayingInfoPropertyPlaybackRate: 1,
             MPMediaItemPropertyPlaybackDuration: track.metadata?.duration ?? 0,
+            MPNowPlayingInfoPropertyElapsedPlaybackTime: 0,
             "currentTrackId": trackId
         ]
-        nowPlayingInfo = info
-
         let size = UIScreen.main.bounds.size
         let artworkURL = track.artworkURL(size: Int(min(size.width, size.height) * UIScreen.main.scale))
+        self.nowPlayingInfo = info
         downloadImage(with: artworkURL) { [weak self] result in
             guard let `self` = self else { return }
             guard case .success(let image) = result else { return }
 
             if trackId == self.nowPlayingInfo?["currentTrackId"] as? Int {
-                self.nowPlayingInfo?["artworkImage"] = image
-                if #available(iOS 10.0, *) {
-                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: size) { size in
-                        return image
+                info["artworkImage"] = image
+                info[MPMediaItemPropertyArtwork] = {
+                    if #available(iOS 10.0, *) {
+                        return MPMediaItemArtwork(boundsSize: size) { size in
+                            return image
+                        }
+                    } else {
+                        return MPMediaItemArtwork(image: image)
                     }
-                } else {
-                    self.nowPlayingInfo?[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(image: image)
-                }
+                }()
+                self.nowPlayingInfo = info
             }
         }
     }
