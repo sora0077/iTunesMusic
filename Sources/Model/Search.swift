@@ -53,34 +53,31 @@ extension Model {
             _ = getOrCreateCache(term: term, realm: realm)
             caches = realm.objects(_SearchCache.self).filter("term = '\(term)'")
             tracks = caches[0].objects.filter("track != nil")
-            // 実行をずらさないとエラーが発生するため
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                self.token = self.caches.addNotificationBlock { [weak self] changes in
-                    guard let `self` = self else { return }
+            token = caches.addNotificationBlock { [weak self] changes in
+                guard let `self` = self else { return }
 
-                    func updateObserver(with results: Results<_SearchCache>) {
-                        let objects = results[0].objects
-                        self.tracks = objects.filter("track != nil")
-                        self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
-                            self?._tracksChanges.onNext(CollectionChange(changes))
-                        }
-                        self.objectsToken = objects.addNotificationBlock { [weak self] changes in
-                            self?._changes.onNext(CollectionChange(changes))
-                        }
+                func updateObserver(with results: Results<_SearchCache>) {
+                    let objects = results[0].objects
+                    self.tracks = objects.filter("track != nil")
+                    self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
+                        self?._tracksChanges.onNext(CollectionChange(changes))
                     }
-
-                    switch changes {
-                    case .initial(let results):
-                        updateObserver(with: results)
-                    case .update(let results, deletions: _, insertions: let insertions, modifications: _):
-                        if !insertions.isEmpty {
-                            updateObserver(with: results)
-                        }
-                    case .error(let error):
-                        fatalError("\(error)")
+                    self.objectsToken = objects.addNotificationBlock { [weak self] changes in
+                        self?._changes.onNext(CollectionChange(changes))
                     }
-
                 }
+
+                switch changes {
+                case .initial(let results):
+                    updateObserver(with: results)
+                case .update(let results, deletions: _, insertions: let insertions, modifications: _):
+                    if !insertions.isEmpty {
+                        updateObserver(with: results)
+                    }
+                case .error(let error):
+                    fatalError("\(error)")
+                }
+
             }
         }
 

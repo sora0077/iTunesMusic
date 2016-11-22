@@ -28,7 +28,7 @@ enum SearchError: AppError {
 
 class SearchViewController: UIViewController {
 
-    fileprivate var search: Model.Search = Model.Search(term: "") {
+    fileprivate var search: Model.Search {
         didSet {
             searchDisposeBag = DisposeBag()
             search.trends.changes
