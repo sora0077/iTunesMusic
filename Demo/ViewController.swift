@@ -50,10 +50,16 @@ extension UIView {
 
 
 class ViewController: UIViewController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    override var prefersStatusBarHidden: Bool { return false }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        setNeedsStatusBarAppearanceUpdate()
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,6 +74,10 @@ class ViewController: UIViewController {
 
         presentedViewController?.present(nav, animated: true, completion: nil)
     }
+}
+
+class PlayerViewController: UIViewController {
+
 }
 
 class MainViewController: UIViewController {
