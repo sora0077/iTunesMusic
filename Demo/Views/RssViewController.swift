@@ -63,7 +63,7 @@ class RssViewController: UIViewController {
         refreshControl.rx.controlEvent(.valueChanged)
             .delay(0.8, scheduler: MainScheduler.instance)
             .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
-                action(partial(vc.rss.refresh, true))
+                action(partial(vc.rss.refresh, (force: true)))
             })
             .addDisposableTo(disposeBag)
         tableView.refreshControl = refreshControl
