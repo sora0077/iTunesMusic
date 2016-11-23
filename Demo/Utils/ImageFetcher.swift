@@ -28,6 +28,18 @@ func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSErr
     }
 }
 
+func cachedImage(with url: URL, _ completion: @escaping (Result<UIImage?, NSError>) -> Void) {
+    let cache = PINRemoteImageManager.shared()
+    cache.imageFromCache(withCacheKey: cache.cacheKey(for: url, processorKey: nil), options: [], completion: { r in
+        if let error = r.error as? NSError {
+            completion(.failure(error))
+        } else {
+            completion(.success(r.image))
+        }
+    })
+}
+
+
 fileprivate struct UIImageViewKey {
     static var itm_imageURL: UInt8 = 0
 }
@@ -44,8 +56,8 @@ extension UIImageView {
     }
 }
 
-fileprivate var localCache: [Int: [Int: URL]] = [:]
 
+private var localCache: [Int: [Int: URL]] = [:]
 extension UIImageView {
 
     func setArtwork(of artwork: Track, size width: CGFloat) {
@@ -60,41 +72,41 @@ extension UIImageView {
         guard doOnMainThread(execute: self._setArtwork(id: id, generator: generator, size: width)) else {
             return
         }
-
-        let placeholderURL = localCache[id]?.sorted(by: { $0.key > $1.key }).first?.value
         let size = { Int($0 * UIScreen.main.scale) }
 
         let thumbnailURL = generator(size(width / 2))
         let artworkURL = generator(size(width))
 
-        var imageURLs = [thumbnailURL, artworkURL]
-        if let url = placeholderURL, ![thumbnailURL, artworkURL].contains(url) {
-            imageURLs = [url, thumbnailURL, artworkURL]
+        var imageURLs: [(size: Int, url: URL)] = [(size(width / 2), thumbnailURL), (size(width), artworkURL)]
+        let isNotContained = { !imageURLs.lazy.map { $1 }.contains($0) }
+
+        if let (key, cachedURL) = localCache[id]?.lazy.sorted(by: { $0.key > $1.key }).first, isNotContained(cachedURL) {
+            imageURLs.insert((key, cachedURL), at: 0)
         }
 
-        localCache[id] = localCache[id] ?? [:]
-        localCache[id]![size(width / 2)] = thumbnailURL
-        localCache[id]![size(width)] = artworkURL
-
-        if let url = itm_imageURL, !imageURLs.contains(url) {
+        if itm_imageURL.map(isNotContained) ?? false {
             image = nil
             setNeedsLayout()
         }
-        _setImage(from: imageURLs)
-    }
 
-    private func _setImage(from urls: [URL], placeholder: UIImage? = nil) {
-        guard !urls.isEmpty else { return }
-
-        var urls = urls
-        let url = urls.remove(at: 0)
-        itm_imageURL = url
-        pin_setImage(from: url, placeholderImage: placeholder) { [weak self] result in
-            DispatchQueue.main.async {
-                if url == self?.itm_imageURL {
-                    self?._setImage(from: urls, placeholder: result.image)
+        func setImage(from urls: ArraySlice<(size: Int, url: URL)>, placeholder: UIImage? = nil) {
+            guard !urls.isEmpty else { return }
+            var urls = urls
+            let (size, url) = urls[urls.startIndex]
+            itm_imageURL = url
+            pin_setImage(from: url, placeholderImage: placeholder) { [weak self] result in
+                if result.image != nil {
+                    var cache = localCache.removeValue(forKey: id) ?? [:]
+                    cache[size] = url
+                    localCache[id] = cache
+                }
+                DispatchQueue.main.async {
+                    if url == self?.itm_imageURL {
+                        setImage(from: urls.dropFirst(), placeholder: result.image)
+                    }
                 }
             }
         }
+        setImage(from: ArraySlice(imageURLs))
     }
 }
