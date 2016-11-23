@@ -135,7 +135,7 @@ extension Model.Rss: _Fetchable {
 
     func request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (RequestState) -> Void) {
 
-        if fetched == Model.Rss.limit {
+        if !refreshing && fetched == Model.Rss.limit {
             completion(.done)
             return
         }
