@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         print(CommandLine.arguments)
 
-        UIViewController.swizzle()
+        UIViewController.swizzle_setNeedsStatusBarAppearanceUpdate()
         manager[.background].rootViewController = PlaybackViewController()
         manager[.routing].rootViewController = MainStatusBarStyleUpdaterViewController()
         manager[.indicator].rootViewController = MainStatusBarStyleUpdaterViewController()
@@ -160,21 +160,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
 //MARK: - status bar hack
 private extension UIViewController {
-    static var swizzle: () -> Void = {
+    static var swizzle_setNeedsStatusBarAppearanceUpdate: () -> Void = {
         let original = class_getInstanceMethod(
             UIViewController.self, #selector(UIViewController.setNeedsStatusBarAppearanceUpdate))
         let replaced = class_getInstanceMethod(
-            UIViewController.self, #selector(UIViewController.swizzle_setNeedsStatusBarAppearanceUpdate))
+            UIViewController.self, #selector(UIViewController.swizzled_setNeedsStatusBarAppearanceUpdate))
         method_exchangeImplementations(original, replaced)
         return {}
     }()
 
     @objc
-    func swizzle_setNeedsStatusBarAppearanceUpdate() {
+    func swizzled_setNeedsStatusBarAppearanceUpdate() {
         if let vc = delegate().manager[.alert].rootViewController {
-            vc.swizzle_setNeedsStatusBarAppearanceUpdate()
+            vc.swizzled_setNeedsStatusBarAppearanceUpdate()
         } else {
-            swizzle_setNeedsStatusBarAppearanceUpdate()
+            swizzled_setNeedsStatusBarAppearanceUpdate()
         }
     }
 }
