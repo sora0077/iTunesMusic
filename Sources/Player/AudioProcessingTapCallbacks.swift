@@ -45,8 +45,7 @@ private func initialize(
 
 
 private func finalize(tap: MTAudioProcessingTap) {
-//    let context = MTAudioProcessingTapGetStorage(tap).assumingMemoryBound(to: AVAudioTapProcessorContext<Player>.self)
-//    context.deinitialize()
+    Unmanaged<AVAudioTapProcessorContext<Player>>.fromOpaque(UnsafeRawPointer(MTAudioProcessingTapGetStorage(tap))).release()
 }
 
 
@@ -130,7 +129,12 @@ private func prepare(
 
 
 private func unprepare(tap: MTAudioProcessingTap) {
-
+    let context = bridgeUnretained(from: MTAudioProcessingTapGetStorage(tap)) as AVAudioTapProcessorContext<Player>
+    if let unit = context.audioUnit {
+        AudioUnitUninitialize(unit)
+        AudioComponentInstanceDispose(unit)
+        context.audioUnit = nil
+    }
 }
 
 
