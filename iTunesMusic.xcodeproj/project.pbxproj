@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D90985AA1DEA9B91007B6489 /* AudioProcessingTapCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = D90985A91DEA9B91007B6489 /* AudioProcessingTapCallbacks.swift */; };
 		D912A8781D55946B00C62617 /* Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D912A8771D55946B00C62617 /* Fetchable.swift */; };
 		D9134E2C1D5779F200636C10 /* SearchHintTrends.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9134E2B1D5779F200636C10 /* SearchHintTrends.swift */; };
 		D91390AB1D1F8F0F00E7FE61 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D91390AA1D1F8F0F00E7FE61 /* SearchViewController.swift */; };
@@ -230,6 +231,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D90985A91DEA9B91007B6489 /* AudioProcessingTapCallbacks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioProcessingTapCallbacks.swift; sourceTree = "<group>"; };
 		D90AAA071D4B7B94007D701B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Main.strings; sourceTree = "<group>"; };
 		D90AAA081D4B7B94007D701B /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D912A8771D55946B00C62617 /* Fetchable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fetchable.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 			children = (
 				D9165FE11D2C03C300B701E3 /* PlayerImpl.swift */,
 				D9165FE21D2C03C300B701E3 /* Player.swift */,
+				D90985A91DEA9B91007B6489 /* AudioProcessingTapCallbacks.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1018,6 +1021,7 @@
 				D9C93E791DD237D700F8FA0A /* Settings.swift in Sources */,
 				D9165FE41D2C03C300B701E3 /* PlayerImpl.swift in Sources */,
 				D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */,
+				D90985AA1DEA9B91007B6489 /* AudioProcessingTapCallbacks.swift in Sources */,
 				D91B42A21D0C5D9600AAAD58 /* GetPreviewUrl.swift in Sources */,
 				D9EA0B591D2AAD74001C3F2F /* Artist.swift in Sources */,
 				D91B42AA1D0EFCD700AAAD58 /* HistoryCache.swift in Sources */,

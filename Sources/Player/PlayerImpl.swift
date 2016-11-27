@@ -77,6 +77,7 @@ public final class PlayerTrackItem: PlayerItem {
                             name: .PlayerTrackItemPrepareForPlay,
                             object: item)
                         subscriber.onNext(item)
+                        subscriber.onCompleted()
                     default:
                         subscriber.onNext(nil)
                     }
@@ -331,19 +332,6 @@ extension Player2: Player {
 }
 
 private func configureFading(item: AVPlayerItem) {
-
-    var callbacks = MTAudioProcessingTapCallbacks(
-        version: kMTAudioProcessingTapCallbacksVersion_0,
-        clientInfo: nil,
-        init: tapInit,
-        finalize: tapFinalize,
-        prepare: tapPrepare,
-        unprepare: nil,
-        process: tapProcess)
-
-    var tap: Unmanaged<MTAudioProcessingTap>?
-    MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
-
     guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
 
     let inputParams = AVMutableAudioMixInputParameters(track: track)
@@ -354,6 +342,10 @@ private func configureFading(item: AVPlayerItem) {
 
     inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
     inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
+
+    var callbacks = AudioProcessingTapCallbacks()
+    var tap: Unmanaged<MTAudioProcessingTap>?
+    MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
     inputParams.audioTapProcessor = tap?.takeUnretainedValue()
     tap?.release()
 
@@ -361,26 +353,4 @@ private func configureFading(item: AVPlayerItem) {
     let audioMix = AVMutableAudioMix()
     audioMix.inputParameters = [inputParams]
     item.audioMix = audioMix
-}
-
-private let tapInit: MTAudioProcessingTapInitCallback = { tap, info, storageOut in
-
-    print(tap, info, storageOut)
-}
-
-
-private let tapFinalize: MTAudioProcessingTapFinalizeCallback = { tap in
-    print(tap)
-}
-
-
-private let tapPrepare: MTAudioProcessingTapPrepareCallback = { tap, maxFrames, processingFormat in
-    print(tap, maxFrames, processingFormat)
-}
-
-
-private let tapProcess: MTAudioProcessingTapProcessCallback = { tap, numberFrames, flags, bufferListInOut, numberFramesOut, flagsOut in
-    print(tap, numberFrames, flags, bufferListInOut, numberFramesOut, flagsOut)
-    let status = MTAudioProcessingTapGetSourceAudio(tap, numberFrames, bufferListInOut, flagsOut, nil, numberFramesOut)
-    print("get audio: \(status)\n")
 }
