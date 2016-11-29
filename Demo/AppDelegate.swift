@@ -83,46 +83,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(AVAudioSessionCategoryPlayback)
-            try session.setActive(true)
-        } catch {
-            fatalError()
-        }
-        application.beginReceivingRemoteControlEvents()
 
         print(CommandLine.arguments)
-
-        UIViewController.swizzle_setNeedsStatusBarAppearanceUpdate()
-        manager[.background].rootViewController = PlaybackViewController()
-        manager[.routing].rootViewController = MainStatusBarStyleUpdaterViewController()
-        manager[.indicator].rootViewController = MainStatusBarStyleUpdaterViewController()
-        manager[.alert].rootViewController = MainStatusBarStyleViewController()
-        manager[.background].backgroundColor = .hex(0x3b393a)
-
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
+
+        setupWindow()
 
         ErrorHandlingSettings.launch()
         RoutingSettings.launch()
 
-        let location = RealmLocation.group(appGroupIdentifier)
-        if UserDefaults.standard.bool(forKey: "SettingsBundle::deleteRealm") {
-            do {
-                try deleteRealm(from: location)
-                UserDefaults.standard.set(false, forKey: "SettingsBundle::deleteRealm")
-            } catch {}
-        }
-        do {
-            try migrateRealm(from: .default, to: location)
-        } catch {
-            fatalError("\(error)")
-        }
-        launch(with: LaunchOptions(location: location))
-        player.install(middleware: ControlCenter())
-        //player.install(middleware: PlayingInfoNotification())
-        player.errorType = CommonError.self
-        player.errorLevel = AppErrorLevel.alert
+        setupiTunesMusic()
+        setupPlayer()
 
         window?.backgroundColor = .clear
         window?.tintColor = .lightGray
@@ -140,6 +111,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         return true
+    }
+
+    private func setupWindow() {
+        UIViewController.swizzle_setNeedsStatusBarAppearanceUpdate()
+        manager[.background].rootViewController = PlaybackViewController()
+        manager[.routing].rootViewController = MainStatusBarStyleUpdaterViewController()
+        manager[.indicator].rootViewController = MainStatusBarStyleUpdaterViewController()
+        manager[.alert].rootViewController = MainStatusBarStyleViewController()
+        manager[.background].backgroundColor = .hex(0x3b393a)
+    }
+
+    private func setupiTunesMusic() {
+        let location = RealmLocation.group(appGroupIdentifier)
+        if UserDefaults.standard.bool(forKey: "SettingsBundle::deleteRealm") {
+            do {
+                try deleteRealm(from: location)
+                UserDefaults.standard.set(false, forKey: "SettingsBundle::deleteRealm")
+            } catch {}
+        }
+        do {
+            try migrateRealm(from: .default, to: location)
+        } catch {
+            fatalError("\(error)")
+        }
+        launch(with: LaunchOptions(location: location))
+    }
+
+    private func setupPlayer() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(AVAudioSessionCategoryPlayback)
+            try session.setActive(true)
+        } catch {
+            fatalError()
+        }
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+
+        player.install(middleware: ControlCenter())
+        //player.install(middleware: PlayingInfoNotification())
+        player.errorType = CommonError.self
+        player.errorLevel = AppErrorLevel.alert
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
