@@ -91,6 +91,10 @@ public func migrateRealm(from: RealmLocation, to: RealmLocation) throws {
     try manager.removeItem(at: from)
 }
 
+public func deleteRealm(from: RealmLocation) throws {
+    try FileManager.default.removeItem(at: from.url)
+}
+
 public func launch(with options: LaunchOptions = LaunchOptions()) {
     launchOptions = options
     player.install(middleware: Model.History.shared)

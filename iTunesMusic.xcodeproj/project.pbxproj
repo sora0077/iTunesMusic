@@ -50,6 +50,7 @@
 		D93C39861D97EBAA00A523F3 /* Routing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; };
 		D93C39871D97EBAA00A523F3 /* Routing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
+		D941458D1DEDB73A00C273D6 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D941458C1DEDB73A00C273D6 /* Settings.bundle */; };
 		D9494CA01D4DBE8400A77C45 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9494C9F1D4DBE8400A77C45 /* Entity.swift */; };
 		D950858B1D8063DD003A3D65 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E2F1D6229E800E33E5D /* SnapKit.framework */; };
 		D9542EF51D12DB370073C8EE /* EntityHistoryRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */; };
@@ -274,6 +275,7 @@
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D93C39841D97EB8600A523F3 /* Routing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Routing.framework; path = Carthage/Build/iOS/Routing.framework; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		D941458C1DEDB73A00C273D6 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		D9494C9F1D4DBE8400A77C45 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		D9542EF41D12DB370073C8EE /* EntityHistoryRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityHistoryRecord.swift; sourceTree = "<group>"; };
 		D9542EF61D136A450073C8EE /* PlaylistType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistType.swift; sourceTree = "<group>"; };
@@ -617,6 +619,7 @@
 				D929E45A1D1EE9500045C316 /* Assets.xcassets */,
 				D929E45C1D1EE9500045C316 /* LaunchScreen.storyboard */,
 				D929E45F1D1EE9500045C316 /* Info.plist */,
+				D941458C1DEDB73A00C273D6 /* Settings.bundle */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -889,6 +892,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D941458D1DEDB73A00C273D6 /* Settings.bundle in Resources */,
 				D9AF2AFE1D75C6F000D7751C /* AlbumListBottomTableViewCell.xib in Resources */,
 				D9AF2AFA1D75C6DC00D7751C /* AlbumListMiddleTableViewCell.xib in Resources */,
 				D929E45E1D1EE9500045C316 /* LaunchScreen.storyboard in Resources */,

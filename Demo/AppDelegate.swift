@@ -107,6 +107,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RoutingSettings.launch()
 
         let location = RealmLocation.group(appGroupIdentifier)
+        if UserDefaults.standard.bool(forKey: "SettingsBundle::deleteRealm") {
+            do {
+                try deleteRealm(from: location)
+                UserDefaults.standard.set(false, forKey: "SettingsBundle::deleteRealm")
+            } catch {}
+        }
         do {
             try migrateRealm(from: .default, to: location)
         } catch {
