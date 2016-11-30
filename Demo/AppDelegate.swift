@@ -79,39 +79,39 @@ extension AppDelegate {
         UNUserNotificationCenter.current().delegate = self
         return true
     }
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
+
         print(CommandLine.arguments)
         print(NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])
-        
+
         setupWindow()
-        
+
         ErrorHandlingSettings.launch()
         RoutingSettings.launch()
-        
+
         setupiTunesMusic()
         setupPlayer()
-        
+
         window?.backgroundColor = .clear
         window?.tintColor = .lightGray
         window?.makeKey()
-        
-        
+
+
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
-        
+
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
             if granted {
                 application.registerForRemoteNotifications()
             }
         }
-        
+
         return true
     }
-    
+
     private func setupWindow() {
         UIViewController.swizzle_setNeedsStatusBarAppearanceUpdate()
         manager[.background].rootViewController = PlaybackViewController()
@@ -120,23 +120,29 @@ extension AppDelegate {
         manager[.alert].rootViewController = MainStatusBarStyleViewController()
         manager[.background].backgroundColor = .hex(0x3b393a)
     }
-    
+
     private func setupiTunesMusic() {
+        let defaults = UserDefaults.standard
         let location = RealmLocation.group(appGroupIdentifier)
-        if UserDefaults.standard.bool(forKey: "SettingsBundle::deleteRealm") {
+        if defaults.bool(forKey: "SettingsBundle::deleteRealm") {
             do {
                 try deleteRealm(from: location)
-                UserDefaults.standard.set(false, forKey: "SettingsBundle::deleteRealm")
+                defaults.set(false, forKey: "SettingsBundle::deleteRealm")
+                defaults.synchronize()
             } catch {}
         }
         do {
+            defaults.set(true, forKey: "SettingsBundle::deleteRealm")
+            defaults.synchronize()
             try migrateRealm(from: .default, to: location)
+            defaults.set(false, forKey: "SettingsBundle::deleteRealm")
+            defaults.synchronize()
         } catch {
             fatalError("\(error)")
         }
         launch(with: LaunchOptions(location: location))
     }
-    
+
     private func setupPlayer() {
         do {
             let session = AVAudioSession.sharedInstance()
@@ -146,7 +152,7 @@ extension AppDelegate {
             fatalError()
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
-        
+
         player.install(middleware: ControlCenter())
         //player.install(middleware: PlayingInfoNotification())
         player.errorType = CommonError.self
@@ -157,7 +163,7 @@ extension AppDelegate {
 
 extension AppDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        
+
         if router.canOpenURL(url: url) {
             router.open(url: url)
             return true
