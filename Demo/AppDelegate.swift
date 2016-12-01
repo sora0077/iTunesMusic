@@ -127,8 +127,6 @@ extension AppDelegate {
         if defaults.bool(forKey: "SettingsBundle::deleteRealm") {
             do {
                 try deleteRealm(from: location)
-                defaults.set(false, forKey: "SettingsBundle::deleteRealm")
-                defaults.synchronize()
             } catch {}
         }
         do {

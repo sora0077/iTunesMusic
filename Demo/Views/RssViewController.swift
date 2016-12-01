@@ -102,8 +102,7 @@ class RssViewController: UIViewController {
 
         rss.changes
             .map { [weak self] _ in self?.rss }
-            .filter { $0 != nil }
-            .map { $0! }
+            .flatMap()
             .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
