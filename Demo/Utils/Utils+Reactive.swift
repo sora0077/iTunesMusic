@@ -23,19 +23,11 @@ func prefetchArtworkURLs<P: Playlist>(size: Int) -> AnyObserver<P> where P: Swif
     }
 }
 
-protocol _Optional {
-    associatedtype Element
-    var unsafelyUnwrapped: Element { get }
-}
 
-extension Optional: _Optional {
-    typealias Element = Wrapped
-}
-
-extension ObservableType where E: _Optional {
-    func flatMap() -> Observable<E.Element> {
+extension ObservableType {
+    func flatMap<T>(_ transform: @escaping (E) -> T?) -> Observable<T> {
         func notNil(_ val: Any?) -> Bool { return val != nil }
-        return filter(notNil).map({ $0.unsafelyUnwrapped })
+        return map(transform).filter({ $0 != nil }).map({ $0! })
     }
 }
 

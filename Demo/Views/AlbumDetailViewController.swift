@@ -251,8 +251,7 @@ class AlbumDetailViewController: UIViewController {
             .addDisposableTo(disposeBag)
 
         album.changes
-            .map { [weak self] _ in self?.album }
-            .flatMap()
+            .flatMap { [weak self] _ in self?.album }
             .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 

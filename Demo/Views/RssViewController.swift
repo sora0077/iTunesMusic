@@ -101,8 +101,7 @@ class RssViewController: UIViewController {
             .addDisposableTo(disposeBag)
 
         rss.changes
-            .map { [weak self] _ in self?.rss }
-            .flatMap()
+            .flatMap { [weak self] _ in self?.rss }
             .subscribe(prefetchArtworkURLs(size: Int(60 * UIScreen.main.scale)))
             .addDisposableTo(disposeBag)
 
