@@ -343,11 +343,11 @@ private func configureFading(item: AVPlayerItem) {
     inputParams.setVolumeRamp(fromStartVolume: 1, toEndVolume: 0, timeRange: CMTimeRangeMake(fadeOutStartTime, fadeDuration))
     inputParams.setVolumeRamp(fromStartVolume: 0, toEndVolume: 1, timeRange: CMTimeRangeMake(fadeInStartTime, fadeDuration))
 
-    var callbacks = AudioProcessingTapCallbacks()
-    var tap: Unmanaged<MTAudioProcessingTap>?
-    MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
-    inputParams.audioTapProcessor = tap?.takeUnretainedValue()
-    tap?.release()
+//    var callbacks = AudioProcessingTapCallbacks()
+//    var tap: Unmanaged<MTAudioProcessingTap>?
+//    MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
+//    inputParams.audioTapProcessor = tap?.takeUnretainedValue()
+//    tap?.release()
 
 
     let audioMix = AVMutableAudioMix()

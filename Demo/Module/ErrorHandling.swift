@@ -122,6 +122,8 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
         case .trackNotFound(let trackId):
             return ("エラー", "指定された曲は存在しません :\(trackId)")
         }
+    case _ as RealmError:
+        return ("エラー", "致命的なエラーが発生したためデータベースを初期化しました")
     case let error as NSError:
         return (error.localizedRecoverySuggestion ?? "エラー", error.localizedFailureReason ?? error.localizedDescription)
     default:

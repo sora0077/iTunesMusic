@@ -14,6 +14,7 @@ import RxSwift
 import RxCocoa
 import RealmSwift
 import MediaPlayer
+import ErrorEventHandler
 import WindowKit
 import Routing
 
@@ -65,6 +66,11 @@ func router() -> Router {
 }
 
 
+enum RealmError: Swift.Error {
+    case initializeError
+}
+
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     fileprivate let router = Router()
@@ -98,7 +104,6 @@ extension AppDelegate {
         window?.tintColor = .lightGray
         window?.makeKey()
 
-
         print((iTunesRealm()).configuration.fileURL?.absoluteString ?? "")
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
 
@@ -127,6 +132,7 @@ extension AppDelegate {
         if defaults.bool(forKey: "SettingsBundle::deleteRealm") {
             do {
                 try deleteRealm(from: location)
+                ErrorLog.enqueue(error: RealmError.initializeError, with: CommonError.self, level: AppErrorLevel.alert)
             } catch {}
         }
         do {
@@ -161,7 +167,6 @@ extension AppDelegate {
 
 extension AppDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-
         if router.canOpenURL(url: url) {
             router.open(url: url)
             return true
@@ -172,7 +177,6 @@ extension AppDelegate {
 
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         if let options = PlayingInfoNotification.shouldHandle(notification) {
             completionHandler(options)
