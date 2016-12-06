@@ -15,6 +15,14 @@ import iTunesMusic
 import ErrorEventHandler
 
 
+private final class StoreProductViewController: SKStoreProductViewController {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        setNeedsStatusBarAppearanceUpdate()
+    }
+}
+
+
 extension Track {
 
     var time: String {
@@ -336,15 +344,14 @@ extension AlbumDetailViewController: UITableViewDataSource {
 
         func presentStoreProductView() -> AnyObserver<UILongPressGestureRecognizer> {
             return UIBindingObserver(UIElement: self) { from, state in
-                let vc = SKStoreProductViewController()
+                let vc = StoreProductViewController()
                 vc.delegate = from
-                from.present(vc, animated: true, completion: {
-                    vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
-                        if !result {
-                            ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
-                        }
-                    })
+                vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in
+                    if !result {
+                        ErrorLog.enqueue(error: error, with: CommonError.self, level: AppErrorLevel.alert)
+                    }
                 })
+                from.present(vc, animated: true, completion: nil)
             }.asObserver()
         }
 
