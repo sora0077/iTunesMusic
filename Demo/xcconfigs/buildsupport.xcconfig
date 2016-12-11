@@ -1,0 +1,8 @@
+//
+//  buildsupport.xcconfig
+//  iTunesMusic
+//
+//  Created by 林達也 on 2016/12/11.
+//  Copyright © 2016年 jp.sora0077. All rights reserved.
+//
+OTHER_SWIFT_FLAGS = $(inherited) -Xfrontend -warn-long-function-bodies=100

@@ -273,6 +273,7 @@
 		D929E45F1D1EE9500045C316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
+		D92B37521DFD8B2600579C40 /* buildsupport.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = buildsupport.xcconfig; sourceTree = "<group>"; };
 		D93C39841D97EB8600A523F3 /* Routing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Routing.framework; path = Carthage/Build/iOS/Routing.framework; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D941458C1DEDB73A00C273D6 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -606,6 +607,7 @@
 		D929E4521D1EE9500045C316 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				D92B37511DFD8AEC00579C40 /* xcconfigs */,
 				D97716661D803D4700547FD4 /* Demo.entitlements */,
 				D9A33E4E1D6237FF00E33E5D /* Utils */,
 				D9573C281D3E7ACC00783AA4 /* Module */,
@@ -641,6 +643,14 @@
 				D9C31D0D1DBE3FD10057DF00 /* SettingsViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		D92B37511DFD8AEC00579C40 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				D92B37521DFD8B2600579C40 /* buildsupport.xcconfig */,
+			);
+			path = xcconfigs;
 			sourceTree = "<group>";
 		};
 		D957369A1D80443A00A0B188 /* iTunesMusicPlayerWidget */ = {
@@ -1307,6 +1317,7 @@
 		};
 		D929E46C1D1EE9510045C316 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D92B37521DFD8B2600579C40 /* buildsupport.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1318,7 +1329,7 @@
 				);
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDEBUG";
+				OTHER_SWIFT_FLAGS = "$(inherited) -DDEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.sora0077.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
