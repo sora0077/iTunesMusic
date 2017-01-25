@@ -13,7 +13,6 @@ import RealmSwift
 import Timepiece
 import ErrorEventHandler
 
-
 extension Model {
 
     public final class Track: Fetchable {

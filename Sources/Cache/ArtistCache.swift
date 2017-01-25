@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _ArtistCache: _Cache {
 
     dynamic var artistId: Int = 0

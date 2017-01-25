@@ -11,7 +11,6 @@ import iTunesMusic
 import RxSwift
 import SnapKit
 
-
 final class PlaylistDetailViewController: UIViewController {
 
     fileprivate let playlist: Model.MyPlaylist

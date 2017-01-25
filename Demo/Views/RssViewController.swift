@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import SnapKit
 
-
 class RssViewController: UIViewController {
 
     fileprivate private(set) var rss: Model.Rss

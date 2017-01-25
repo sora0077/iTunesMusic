@@ -13,7 +13,6 @@ import APIKit
 import Timepiece
 import ErrorEventHandler
 
-
 private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
     if let cache = realm.object(ofType: _SearchCache.self, forPrimaryKey: term) {
         return cache
@@ -41,7 +40,6 @@ extension Model {
         private var token: NotificationToken!
         private var objectsToken: NotificationToken?
         private var tracksToken: NotificationToken?
-
 
         public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
         private let _tracksChanges = PublishSubject<CollectionChange>()
@@ -84,7 +82,6 @@ extension Model {
     }
 }
 
-
 extension Model.Search: Playlist {
 
     public var allTrackCount: Int { return tracks.count }
@@ -95,7 +92,6 @@ extension Model.Search: Playlist {
 
     public func track(at index: Int) -> Track { return tracks[index].track! }
 }
-
 
 extension Model.Search: _Fetchable {
 
@@ -183,7 +179,7 @@ extension Model.Search: Swift.Collection {
     }
 }
 
-//MARK: - Search.Trends
+// MARK: - Search.Trends
 extension Model.Search {
     public final class Trends: Fetchable, ObservableList, _ObservableList {
         public var name: String {

@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import iTunesMusic
 
-
 private class TableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
@@ -22,7 +21,6 @@ private class TableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
 
 final class HistoryViewController: UIViewController {
 

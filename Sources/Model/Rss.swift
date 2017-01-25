@@ -13,7 +13,6 @@ import RealmSwift
 import Timepiece
 import ErrorEventHandler
 
-
 private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
     if let cache = realm.object(ofType: _RssCache.self, forPrimaryKey: genreId) {
         return cache
@@ -110,7 +109,6 @@ extension Model {
     }
 }
 
-
 extension Model.Rss: Playlist {
 
     public var allTrackCount: Int { return isFiltered ? tracks.count : caches[0].ids.count }
@@ -123,7 +121,6 @@ extension Model.Rss: Playlist {
         return tracks[index]
     }
 }
-
 
 extension Model.Rss: _Fetchable {
 

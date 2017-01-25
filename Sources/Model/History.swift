@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import RxSwift
 
-
 private func getOrCreateCache(realm: Realm) -> _HistoryCache {
     if let cache = realm.objects(_HistoryCache.self).first {
         return cache
@@ -23,7 +22,6 @@ private func getOrCreateCache(realm: Realm) -> _HistoryCache {
         return cache
     }
 }
-
 
 extension Model {
 
@@ -62,7 +60,6 @@ extension Model.History: PlayerMiddleware {
         }
     }
 }
-
 
 extension Model.History: Swift.Collection, Playlist {
 

@@ -10,11 +10,9 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-
 public protocol EntityInterface {
 
 }
-
 
 public protocol Track: EntityInterface {
 
@@ -45,7 +43,6 @@ extension Track {
         return self as! _Track
     }
 }
-
 
 final class _Track: RealmSwift.Object, Track {
 

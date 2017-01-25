@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _Media: RealmSwift.Object {
 
     enum MediaType {

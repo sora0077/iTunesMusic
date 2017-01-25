@@ -11,7 +11,6 @@ import iTunesMusic
 import RxSwift
 import RxCocoa
 
-
 func prefetchArtworkURLs<P: Playlist>(size: Int) -> AnyObserver<P> where P: Swift.Collection, P.Iterator.Element == Track {
     return AnyObserver { on in
         if case .next(let playlist) = on {
@@ -22,7 +21,6 @@ func prefetchArtworkURLs<P: Playlist>(size: Int) -> AnyObserver<P> where P: Swif
         }
     }
 }
-
 
 extension ObservableType {
     func flatMap<T>(_ transform: @escaping (E) -> T?) -> Observable<T> {
@@ -47,7 +45,6 @@ extension Reactive where Base: UIScrollView {
             .distinctUntilChanged()
     }
 }
-
 
 extension UITableView {
 

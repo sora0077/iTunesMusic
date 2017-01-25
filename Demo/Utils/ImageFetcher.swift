@@ -12,7 +12,6 @@ import PINCache
 import Result
 import iTunesMusic
 
-
 func clearAllImageCaches() {
     PINRemoteImageManager.shared().cache.removeAllObjects()
 }
@@ -39,7 +38,6 @@ func cachedImage(with url: URL, _ completion: @escaping (Result<UIImage?, NSErro
     })
 }
 
-
 fileprivate struct UIImageViewKey {
     static var itm_imageURL: UInt8 = 0
 }
@@ -55,7 +53,6 @@ extension UIImageView {
         }
     }
 }
-
 
 private var localCache: [Int: [Int: URL]] = [:]
 extension UIImageView {

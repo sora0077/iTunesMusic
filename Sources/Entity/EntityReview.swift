@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-
 public protocol Review {
 
     var auther: String { get }

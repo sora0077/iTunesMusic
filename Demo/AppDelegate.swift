@@ -18,7 +18,6 @@ import ErrorEventHandler
 import WindowKit
 import Routing
 
-
 enum WindowLevel: Int, WindowKit.WindowLevel {
     case background = -1
     case main
@@ -34,7 +33,6 @@ func appURL(path: String) -> URL {
 }
 
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
-
 
 private func delegate() -> AppDelegate {
     // swiftlint:disable force_cast
@@ -65,11 +63,9 @@ func router() -> Router {
     return delegate().router
 }
 
-
 enum RealmError: Swift.Error {
     case initializeError
 }
-
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -108,7 +104,7 @@ extension AppDelegate {
         print((iTunesRealm()).schema.objectSchema.map { $0.className })
 
         UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.badge, .sound, .alert]) { granted, _ in
             if granted {
                 application.registerForRemoteNotifications()
             }
@@ -164,7 +160,6 @@ extension AppDelegate {
     }
 }
 
-
 extension AppDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         if router.canOpenURL(url: url) {
@@ -174,7 +169,6 @@ extension AppDelegate {
         return false
     }
 }
-
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -186,8 +180,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-
-//MARK: - status bar hack
+// MARK: - status bar hack
 private extension UIViewController {
     static var swizzle_setNeedsStatusBarAppearanceUpdate: () -> Void = {
         let original = class_getInstanceMethod(

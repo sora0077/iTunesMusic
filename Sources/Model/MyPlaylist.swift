@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import RxSwift
 
-
 private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
     if let cache = realm.objects(_MyPlaylistCache.self).first {
         return cache
@@ -92,8 +91,7 @@ extension Model.MyPlaylists: Swift.Collection {
     }
 }
 
-
-//MARK: - Model.MyPlaylist
+// MARK: - Model.MyPlaylist
 
 extension Model {
 
@@ -116,7 +114,6 @@ extension Model {
     }
 }
 
-
 extension Model.MyPlaylist: Playlist {
 
     public var name: String { return playlist.title }
@@ -129,7 +126,6 @@ extension Model.MyPlaylist: Playlist {
 
     public func track(at index: Int) -> Track { return playlist.tracks[index] }
 }
-
 
 extension Model.MyPlaylist {
 

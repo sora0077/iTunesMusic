@@ -15,7 +15,6 @@ import ErrorEventHandler
 import RealmSwift
 import AbstractPlayerKit
 
-
 private extension AVPlayerItem {
 
     private struct AVPlayerItemKey {
@@ -31,7 +30,6 @@ private extension AVPlayerItem {
         }
     }
 }
-
 
 private extension Notification.Name {
     static let PlayerTrackItemPrepareForPlay = Notification.Name("PlayerTrackItemPrepareForPlay")
@@ -155,7 +153,7 @@ public final class PlayerListItem: PlayerItem {
                     if let paginator = playlist as? _Fetchable,
                         !paginator._hasNoPaginatedContents && playlist.trackCount - index < 3 {
                         if !paginator._requesting.value {
-                            paginator.fetch(ifError: DefaultError.self, level: DefaultErrorLevel.none) { [weak self] error in
+                            paginator.fetch(ifError: DefaultError.self, level: DefaultErrorLevel.none) { [weak self] _ in
                                 self?.requesting = false
                                 subscriber.onNext(.just(nil))
                             }
@@ -348,7 +346,6 @@ private func configureFading(item: AVPlayerItem) {
 //    MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PostEffects, &tap)
 //    inputParams.audioTapProcessor = tap?.takeUnretainedValue()
 //    tap?.release()
-
 
     let audioMix = AVMutableAudioMix()
     audioMix.inputParameters = [inputParams]

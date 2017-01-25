@@ -13,7 +13,6 @@ import iTunesMusic
 import RxSwift
 import NotificationCenter
 
-
 final class ControlCenter: NSObject, PlayerMiddleware {
     fileprivate weak var player: Player?
 

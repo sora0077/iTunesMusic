@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _GenresCache: _Cache {
 
     dynamic var key: String = ""

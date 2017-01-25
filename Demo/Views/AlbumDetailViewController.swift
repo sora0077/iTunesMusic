@@ -14,14 +14,12 @@ import SnapKit
 import iTunesMusic
 import ErrorEventHandler
 
-
 private final class StoreProductViewController: SKStoreProductViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         setNeedsStatusBarAppearanceUpdate()
     }
 }
-
 
 extension Track {
 
@@ -30,7 +28,6 @@ extension Track {
         return "\(seconds/60):\(String(format: "%02d", seconds%60))"
     }
 }
-
 
 fileprivate final class HeaderView: UIView {
 
@@ -117,7 +114,6 @@ fileprivate class TableViewCell: UITableViewCell {
         button.tintColor = UIColor.black
         button.setTitle("Add", for: UIControlState())
 
-
         contentView.addGestureRecognizer(gesture)
     }
 
@@ -138,7 +134,6 @@ extension UINavigationController {
         return visibleViewController
     }
 }
-
 
 class AlbumDetailViewController: UIViewController {
 
@@ -192,7 +187,6 @@ class AlbumDetailViewController: UIViewController {
         }
         print(album.collection.artworkURL(size: Int(view.frame.height)))
         playbackViewController().setArtwork(of: album.collection, size: view.frame.height)
-
 
         title = album.collection.name
         headerView.artistButton.setTitle(album.collection.artist.name, for: .normal)
@@ -343,7 +337,7 @@ extension AlbumDetailViewController: UITableViewDataSource {
         let id = track.id
 
         func presentStoreProductView() -> AnyObserver<UILongPressGestureRecognizer> {
-            return UIBindingObserver(UIElement: self) { from, state in
+            return UIBindingObserver(UIElement: self) { from, _ in
                 let vc = StoreProductViewController()
                 vc.delegate = from
                 vc.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: id], completionBlock: { (result, error) in

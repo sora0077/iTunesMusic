@@ -14,7 +14,6 @@ import Timepiece
 import Himotoki
 import ErrorEventHandler
 
-
 private func getOrCreateCache(artistId: Int, realm: Realm) -> _ArtistCache {
     if let cache = realm.object(ofType: _ArtistCache.self, forPrimaryKey: artistId) {
         return cache

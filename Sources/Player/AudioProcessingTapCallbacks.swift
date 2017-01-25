@@ -10,7 +10,6 @@ import Foundation
 import MediaToolbox
 import CoreAudio
 
-
 class AVAudioTapProcessorContext<T> {
     var supportedTapProcessingFormat: Bool = false
     var isNonInterleaved: Bool = false
@@ -21,7 +20,6 @@ class AVAudioTapProcessorContext<T> {
     var rightChannelVolume: Float = 0.0
     var `self`: T?
 }
-
 
 func AudioProcessingTapCallbacks() -> MTAudioProcessingTapCallbacks {
     return MTAudioProcessingTapCallbacks(
@@ -34,7 +32,7 @@ func AudioProcessingTapCallbacks() -> MTAudioProcessingTapCallbacks {
         process: process)
 }
 
-//MARK: - callbacks
+// MARK: - callbacks
 private func initialize(
     tap: MTAudioProcessingTap,
     info: UnsafeMutableRawPointer?,
@@ -43,11 +41,9 @@ private func initialize(
     storageOut.pointee = bridge(to: AVAudioTapProcessorContext<Player>())
 }
 
-
 private func finalize(tap: MTAudioProcessingTap) {
     Unmanaged<AVAudioTapProcessorContext<Player>>.fromOpaque(UnsafeRawPointer(MTAudioProcessingTapGetStorage(tap))).release()
 }
-
 
 private func prepare(
     tap: MTAudioProcessingTap,
@@ -127,7 +123,6 @@ private func prepare(
     context.audioUnit = audioUnit
 }
 
-
 private func unprepare(tap: MTAudioProcessingTap) {
     let context = bridgeUnretained(from: MTAudioProcessingTapGetStorage(tap)) as AVAudioTapProcessorContext<Player>
     if let unit = context.audioUnit {
@@ -136,7 +131,6 @@ private func unprepare(tap: MTAudioProcessingTap) {
         context.audioUnit = nil
     }
 }
-
 
 //swiftlint:disable function_parameter_count
 private func process(
@@ -168,7 +162,7 @@ private func process(
     }
 }
 
-//MARK: - AURenderCallback
+// MARK: - AURenderCallback
 private func auRenderCallback(
     inRefCon: UnsafeMutableRawPointer,
     ioActionFlags: UnsafeMutablePointer<AudioUnitRenderActionFlags>,
@@ -180,7 +174,7 @@ private func auRenderCallback(
     return MTAudioProcessingTapGetSourceAudio(bridgeUnretained(from: inRefCon), CMItemCount(inNumberFrames), ioData!, nil, nil, nil)
 }
 
-//MARK: - helper
+// MARK: - helper
 
 private func bridge<T: AnyObject>(to obj: T) -> UnsafeMutableRawPointer {
     return UnsafeMutableRawPointer(Unmanaged.passRetained(obj).toOpaque())

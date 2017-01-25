@@ -9,8 +9,7 @@
 import Foundation
 import RxSwift
 
-
-//MARK: - ObservableList
+// MARK: - ObservableList
 public protocol ObservableList {
 
     var changes: Observable<CollectionChange> { get }
@@ -29,8 +28,7 @@ extension ObservableList {
     }
 }
 
-
-//MARK: - _ObservableList
+// MARK: - _ObservableList
 protocol _ObservableList {
 
     var _changes: PublishSubject<CollectionChange> { get }

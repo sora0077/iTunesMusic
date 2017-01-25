@@ -12,7 +12,6 @@ import RxCocoa
 import SnapKit
 import iTunesMusic
 
-
 private extension Reactive where Base: Model.DiskCache {
     var diskSizeText: Observable<String> {
         return diskSizeInBytes.map { bytes in
@@ -27,7 +26,6 @@ private extension Reactive where Base: Model.DiskCache {
         }
     }
 }
-
 
 private protocol RowType {
 
@@ -98,14 +96,14 @@ extension SettingsViewController.Section {
 
                 func action(_ tableView: UITableView, at indexPath: IndexPath, parent: UIViewController) {
                     let sheet = UIAlertController(title: "キャッシュの削除", message: "本当に削除しますか？", preferredStyle: .actionSheet)
-                    sheet.addAction(UIAlertAction(title: "削除", style: .destructive) { action in
+                    sheet.addAction(UIAlertAction(title: "削除", style: .destructive) { _ in
                         Model.DiskCache.shared.removeAll()
-                            .subscribe(UIBindingObserver(UIElement: parent) { vc, _ in
+                            .subscribe(UIBindingObserver(UIElement: parent) { _, _ in
 
                             })
                             .addDisposableTo(parent.disposeBag)
                     })
-                    sheet.addAction(UIAlertAction(title: "キャンセル", style: .cancel) { action in
+                    sheet.addAction(UIAlertAction(title: "キャンセル", style: .cancel) { _ in
 
                     })
                     parent.present(sheet, animated: true) {

@@ -14,7 +14,6 @@ import RealmSwift
 import ErrorEventHandler
 import AbstractPlayerKit
 
-
 public class PlayerItem: AbstractPlayerKit.PlayerItem {
 
     public var name: String? { fatalError() }
@@ -48,7 +47,6 @@ public protocol Player: class {
 
     func removeAll()
 }
-
 
 public protocol PlayerMiddleware {
 

@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 public protocol MyPlaylist {
 
     var title: String { get }
@@ -22,7 +21,6 @@ extension MyPlaylist {
         return self as! _MyPlaylist
     }
 }
-
 
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
 

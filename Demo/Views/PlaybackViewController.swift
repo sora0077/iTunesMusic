@@ -9,7 +9,6 @@
 import UIKit
 import iTunesMusic
 
-
 private final class InnerShadowView: UIView {
 
     private var shadowLayer = CALayer()
@@ -57,7 +56,6 @@ private final class InnerShadowView: UIView {
         sublayer.shadowPath = path
     }
 }
-
 
 final class PlaybackViewController: UIViewController {
 

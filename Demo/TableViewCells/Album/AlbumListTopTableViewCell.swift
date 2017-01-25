@@ -25,7 +25,6 @@ class AlbumListTopTableViewCell: UITableViewCell, AlbumListCellType {
 
     @IBOutlet weak var trackNameLabel: UILabel!
 
-
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

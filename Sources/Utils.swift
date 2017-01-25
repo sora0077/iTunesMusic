@@ -10,9 +10,7 @@ import Foundation
 import RxSwift
 import APIKit
 
-
 let callbackQueue = CallbackQueue.dispatchQueue(DispatchQueue.global(qos: .background))
-
 
 func tick() {
     DispatchQueue.main.async {
@@ -44,7 +42,6 @@ extension Array {
         return self[Swift.min(range.lowerBound, count)..<Swift.min(range.upperBound, count)]
     }
 }
-
 
 func associatedObject<Value>(
     _ target: Any,

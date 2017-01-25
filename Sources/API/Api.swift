@@ -11,7 +11,6 @@ import APIKit
 import Himotoki
 import SWXMLHash
 
-
 func appleStoreFront(locale: Locale = Locale.current) -> String {
     return "143462-9,4"
 }
@@ -19,7 +18,6 @@ func appleStoreFront(locale: Locale = Locale.current) -> String {
 func iTunesUserAgent(version: String = UIDevice.current.systemVersion) -> String {
     return "iTunes-iPhone/\(version)"
 }
-
 
 protocol iTunesRequest: Request {
 

@@ -11,7 +11,6 @@ import RealmSwift
 import RxSwift
 import Himotoki
 
-
 final class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     let objects = List<_Media>()
@@ -22,7 +21,6 @@ final class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     override class func primaryKey() -> String? { return "term" }
 }
-
 
 final class _SearchTrendsCache: _Cache {
 

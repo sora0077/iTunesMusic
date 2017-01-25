@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import Realm
 
-
 public protocol TrackMetadata {
 
     var duration: Double? { get }
@@ -19,7 +18,6 @@ public protocol TrackMetadata {
 
     var previewURL: URL? { get }
 }
-
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
 

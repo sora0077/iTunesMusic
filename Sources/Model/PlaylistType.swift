@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import RxSwift
 
-
 public protocol Playlist: class {
 
     var name: String { get }

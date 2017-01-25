@@ -11,13 +11,11 @@ import iTunesMusic
 import RxSwift
 import SnapKit
 
-
 class GenresViewController: UIViewController {
 
     fileprivate let genres = Model.Genres()
 
     fileprivate let tableView = UITableView()
-
 
     override func viewDidLoad() {
         super.viewDidLoad()

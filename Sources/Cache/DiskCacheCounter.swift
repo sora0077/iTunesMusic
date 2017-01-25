@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _DiskCacheCounter: _Cache {
 
     dynamic var trackId = 0

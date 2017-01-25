@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 final class NewPlaylistEditorViewController: UIViewController {
 
     override func viewDidLoad() {

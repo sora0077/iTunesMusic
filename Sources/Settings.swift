@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 struct Settings {
     private init() {}
 

@@ -11,7 +11,6 @@ import iTunesMusic
 import RxSwift
 import SnapKit
 
-
 fileprivate class TableViewCell: UITableViewCell {
 
     let artworkImageView = UIImageView()
@@ -42,7 +41,6 @@ fileprivate class TableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
 
 final class ArtistDetailViewController: UIViewController {
 
@@ -92,7 +90,6 @@ final class ArtistDetailViewController: UIViewController {
     }
 }
 
-
 extension ArtistDetailViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -108,7 +105,6 @@ extension ArtistDetailViewController: UITableViewDataSource {
         return cell
     }
 }
-
 
 extension ArtistDetailViewController: UITableViewDelegate {
 

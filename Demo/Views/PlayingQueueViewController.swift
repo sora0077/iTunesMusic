@@ -12,7 +12,6 @@ import RxSwift
 import RxCocoa
 import iTunesMusic
 
-
 private extension Array {
     subscript (safe index: Int) -> Element? {
         if indices.contains(index) {
@@ -21,7 +20,6 @@ private extension Array {
         return nil
     }
 }
-
 
 private final class TableView: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -32,7 +30,6 @@ private final class TableView: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
 
 final class PlayingQueueViewController: UIViewController {
 

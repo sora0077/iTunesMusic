@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 extension UIColor {
 
     convenience init(hex: Int, alpha: CGFloat = 1) {

@@ -10,7 +10,6 @@ import Foundation
 import APIKit
 import Himotoki
 
-
 struct LookupResponse {
 
     fileprivate enum WrapperType: String {

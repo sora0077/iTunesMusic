@@ -9,7 +9,6 @@
 import Foundation
 import APIKit
 
-
 struct GetPreviewUrl: iTunesRequest {
 
     typealias Response = (URL, Int)
@@ -51,7 +50,6 @@ struct GetPreviewUrl: iTunesRequest {
         throw iTunesMusicAPIError.notFound
     }
 }
-
 
 fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
 

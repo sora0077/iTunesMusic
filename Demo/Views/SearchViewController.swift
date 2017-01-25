@@ -11,7 +11,6 @@ import iTunesMusic
 import RxSwift
 import RxCocoa
 
-
 enum SearchError: AppError {
 
     case none, error(Swift.Error)
@@ -24,7 +23,6 @@ enum SearchError: AppError {
         return "検索失敗"
     }
 }
-
 
 class SearchViewController: UIViewController {
 
@@ -70,7 +68,6 @@ class SearchViewController: UIViewController {
 
         navigationItem.titleView = searhBar
 
-
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
@@ -101,7 +98,6 @@ class SearchViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
 }
-
 
 extension SearchViewController: UITableViewDataSource {
 

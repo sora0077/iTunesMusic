@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-
 public protocol Artist {
 
     var id: Int { get }

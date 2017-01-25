@@ -13,7 +13,6 @@ import APIKit
 import Timepiece
 import ErrorEventHandler
 
-
 private let __requestState = Variable<RequestState>(.none)
 
 private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {

@@ -9,7 +9,6 @@
 import Foundation
 import RxSwift
 
-
 extension Model {
     public final class DiskCache {
         public static let shared = DiskCache(dir: Settings.Track.Cache.directory)
@@ -50,7 +49,7 @@ extension Model.DiskCache: PlayerMiddleware {
         let filename = url.lastPathComponent
 
         downloading.insert(trackId)
-        URLSession.shared.downloadTask(with: url, completionHandler: { [weak self] (url, response, error) in
+        URLSession.shared.downloadTask(with: url, completionHandler: { [weak self] (url, _, error) in
             defer {
                 _ = self?.downloading.remove(trackId)
             }
@@ -104,7 +103,6 @@ extension Reactive where Base: Model.DiskCache {
         return base.impl._diskSizeInBytes.asObservable()
     }
 }
-
 
 private final class DiskCacheImpl: NSObject, NSFilePresenter {
 

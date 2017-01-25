@@ -10,7 +10,6 @@ import Foundation
 import APIKit
 import Himotoki
 
-
 struct ListGenres<Response: Decodable>: iTunesRequest {
 
     let method = HTTPMethod.get

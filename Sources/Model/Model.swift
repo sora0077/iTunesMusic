@@ -11,11 +11,9 @@ import RealmSwift
 import RxSwift
 import Timepiece
 
-
 public struct Model {}
 
-
-//MARK: - CollectionChange
+// MARK: - CollectionChange
 public enum CollectionChange {
     case initial
     case update(deletions: [Int], insertions: [Int], modifications: [Int])
@@ -33,7 +31,7 @@ public enum CollectionChange {
     }
 }
 
-//MARK: - RequestState
+// MARK: - RequestState
 public enum RequestState: Equatable {
     case none, requesting, error(Swift.Error), done
 

@@ -10,7 +10,6 @@ import Foundation
 import ErrorEventHandler
 import APIKit
 
-
 protocol _FetchableSimple: _Fetchable {
     associatedtype Request: iTunesRequest
 

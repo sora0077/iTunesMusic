@@ -10,7 +10,6 @@ import Foundation
 import APIKit
 import Himotoki
 
-
 struct SearchHintTrendsResponse {
     var name: String
     var trends: [String]

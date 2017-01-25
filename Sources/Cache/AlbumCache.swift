@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _AlbumCache: _Cache {
 
     dynamic var collectionId: Int = 0

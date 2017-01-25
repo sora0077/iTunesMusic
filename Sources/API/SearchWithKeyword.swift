@@ -10,7 +10,6 @@ import Foundation
 import APIKit
 import Himotoki
 
-
 protocol SearchWithKeywordResponseType {
 
     var term: String { get set }
@@ -61,7 +60,6 @@ extension SearchResponse: Decodable {
         return SearchResponse(objects: items)
     }
 }
-
 
 struct SearchWithKeyword<Results: SearchWithKeywordResponseType>: iTunesRequest where Results: Decodable {
 

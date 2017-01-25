@@ -39,7 +39,6 @@ extension Collection {
     }
 }
 
-
 final class _Collection: RealmSwift.Object, Collection {
 
     dynamic var _collectionId: Int = 0

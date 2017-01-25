@@ -8,7 +8,6 @@
 import UIKit
 import GLKit
 
-
 final class BlurImageView: GLKView {
 
     var blurRadius: Float = 0 {
@@ -56,7 +55,6 @@ final class BlurImageView: GLKView {
         context = glContext!
         enableSetNeedsDisplay = true
     }
-
 
     override func draw(_ rect: CGRect) {
         if let inputCIImage = inputCIImage {

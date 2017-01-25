@@ -11,8 +11,7 @@ import RxSwift
 import Timepiece
 import ErrorEventHandler
 
-
-//MARK: - Fetchable
+// MARK: - Fetchable
 public protocol Fetchable: class {
 
     var requestState: Observable<RequestState> { get }
@@ -92,7 +91,7 @@ extension Fetchable {
     }
 }
 
-//MARK: - _Fetchable
+// MARK: - _Fetchable
 
 protocol _Fetchable: class, Fetchable {
 

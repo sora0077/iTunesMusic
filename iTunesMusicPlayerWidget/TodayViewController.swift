@@ -13,9 +13,7 @@ import RxSwift
 import MediaPlayer
 import MMWormhole
 
-
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
-
 
 class TodayViewController: UIViewController, NCWidgetProviding {
 
@@ -34,7 +32,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     @IBOutlet weak var label: UILabel!
     @IBOutlet weak var artworkImageView: UIImageView!
 
-
     private func updateView() {
         if let track = track?.entity {
             artworkImageView.setArtwork(of: track, size: 100)
@@ -44,7 +41,6 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             label.text = ""
         }
     }
-
 
     override func viewDidLoad() {
         super.viewDidLoad()

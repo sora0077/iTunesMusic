@@ -12,7 +12,6 @@ import RxSwift
 import enum APIKit.SessionTaskError
 import enum iTunesMusic.Error
 
-
 protocol AppError: ErrorLog.Error {
     var title: String { get }
     var message: String? { get }
@@ -48,23 +47,19 @@ enum CommonError: AppError {
     }
 }
 
-
 func partial<A, B, R>(_ f: @escaping (A, B) -> R, _ val: @escaping @autoclosure () -> A) -> (B) -> R {
     return { f(val(), $0) }
 }
 
-
 func partial<A, B, C, R>(_ f: @escaping (A, B, C) -> R, _ val: @escaping @autoclosure () -> A) -> (B, C) -> R {
     return { f(val(), $0, $1) }
 }
-
 
 func action(_ handler: (((ErrorEventHandler.Error.Type, AppErrorLevel) -> Void)?),
             error: AppError.Type = CommonError.self,
             level: AppErrorLevel = .alert) {
     handler?(error, level)
 }
-
 
 final class ErrorHandlingSettings {
     static func launch() {
@@ -88,7 +83,6 @@ final class ErrorHandlingSettings {
     }
 }
 
-
 extension UIAlertController {
 
     fileprivate static func alertController(with event: ErrorLog.Event) -> Self {
@@ -98,14 +92,13 @@ extension UIAlertController {
             preferredStyle: .alert
         )
 
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
             event.resolved()
         }))
 
         return alert
     }
 }
-
 
 private func errorDescription(from error: Swift.Error?) -> (String, String) {
     switch error {
@@ -130,7 +123,6 @@ private func errorDescription(from error: Swift.Error?) -> (String, String) {
         return ("エラー", "不明なエラー")
     }
 }
-
 
 enum AppErrorLevel: ErrorEventHandler.ErrorLevel {
     case slirent, alert

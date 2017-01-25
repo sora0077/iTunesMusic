@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-
 extension UIViewController {
 
     private struct Key {
@@ -46,8 +45,6 @@ extension UIView {
         }
     }
 }
-
-
 
 class ViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -101,7 +98,6 @@ class MainViewController: UIViewController {
         view.layer.shadowOpacity = 0.5
         view.layer.shadowOffset.height = 2
         view.addTiltEffects(tilt: .front(depth: 10))
-
 
         let genres = GenresViewController()
         let nav = UINavigationController(rootViewController: genres)

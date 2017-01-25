@@ -10,7 +10,6 @@ import Foundation
 import UserNotifications
 import iTunesMusic
 
-
 final class PlayingInfoNotification: PlayerMiddleware {
 
     static func shouldHandle(_ notification: UNNotification) -> UNNotificationPresentationOptions? {

@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-
 final class _RssCache: _Cache {
 
     dynamic var _genreId: Int = 0

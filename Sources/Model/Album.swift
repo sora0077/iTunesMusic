@@ -13,7 +13,6 @@ import Timepiece
 import APIKit
 import ErrorEventHandler
 
-
 private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     if let cache = realm.object(ofType: _AlbumCache.self, forPrimaryKey: collectionId) {
         return cache
@@ -27,7 +26,6 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     }
     return cache
 }
-
 
 extension Model {
 
@@ -77,7 +75,6 @@ extension Model {
     }
 }
 
-
 extension Model.Album: Playlist {
 
     public var name: String { return collection.name }
@@ -90,7 +87,6 @@ extension Model.Album: Playlist {
 
     public func track(at index: Int) -> Track { return tracks[index] }
 }
-
 
 extension Model.Album {
 

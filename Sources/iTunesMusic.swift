@@ -12,7 +12,6 @@ import Himotoki
 import RxSwift
 import RealmSwift
 
-
 public let player: Player = Player2()
 
 private let realmObjectTypes: [RealmSwift.Object.Type] = [
@@ -40,14 +39,12 @@ private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _ReviewCache.self,
 ]
 
-
 private let configuration: Realm.Configuration = {
     var config = Realm.Configuration()
     config.objectTypes = realmObjectTypes
     config.fileURL = launchOptions.location.url
     return config
 }()
-
 
 public enum RealmLocation {
     case `default`
@@ -73,7 +70,6 @@ public struct LaunchOptions {
     }
 }
 private var launchOptions: LaunchOptions!
-
 
 public func migrateRealm(from: RealmLocation, to: RealmLocation) throws {
     let (from, to) = (from.url, to.url)

@@ -9,7 +9,6 @@
 import Foundation
 import RealmSwift
 
-
 final class _MyPlaylistCache: _Cache {
 
     let playlists = List<_MyPlaylist>()

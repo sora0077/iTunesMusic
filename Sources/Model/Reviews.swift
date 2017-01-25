@@ -13,7 +13,6 @@ import RxSwift
 import Timepiece
 import ErrorEventHandler
 
-
 private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
     if let cache = realm.object(ofType: _ReviewCache.self, forPrimaryKey: collectionId) {
         return cache
@@ -26,7 +25,6 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
     }
     return cache
 }
-
 
 extension Model {
 

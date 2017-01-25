@@ -11,7 +11,6 @@ import RealmSwift
 import RxSwift
 import Himotoki
 
-
 final class _HistoryRecord: RealmSwift.Object {
 
     fileprivate dynamic var _track: _Track?

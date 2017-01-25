@@ -11,7 +11,6 @@ import Routing
 import iTunesMusic
 import RxSwift
 
-
 private struct Logger: Middleware {
     fileprivate func handle(request: Routing.Request, response: Response, next: @escaping (Response) -> Void) throws {
         print(request)
@@ -24,7 +23,6 @@ private struct Logger: Middleware {
     }
 }
 
-
 final class RoutingSettings {
     static func launch() {
         router().install(middleware: Logger())
@@ -33,7 +31,6 @@ final class RoutingSettings {
         router().register(pattern: "/history", queue: .main, handlers: openHistoryViewController)
     }
 }
-
 
 private extension RoutingSettings {
 

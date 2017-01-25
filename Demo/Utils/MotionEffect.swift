@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-
 extension UIInterpolatingMotionEffect {
 
     enum Tilt {
@@ -29,7 +28,6 @@ extension UIInterpolatingMotionEffect {
         }
     }
 }
-
 
 extension UIView {
 
