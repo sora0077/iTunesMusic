@@ -19,12 +19,9 @@ func iTunesUserAgent(version: String = UIDevice.current.systemVersion) -> String
     return "iTunes-iPhone/\(version)"
 }
 
-protocol iTunesRequest: Request {
-
-}
+protocol iTunesRequest: Request {}
 
 extension iTunesRequest {
-
     func intercept(urlRequest: URLRequest) throws -> URLRequest {
         print(self, urlRequest)
         return urlRequest
@@ -32,7 +29,6 @@ extension iTunesRequest {
 }
 
 extension iTunesRequest where Response: Decodable {
-
     func response(from object: Any, urlResponse: HTTPURLResponse) throws -> Response {
         do {
             return try decodeValue(object)
@@ -48,9 +44,7 @@ public enum iTunesMusicAPIError: Swift.Error {
 }
 
 class PropertyListDataParser: DataParser {
-
     let contentType: String?
-
     let options: PropertyListSerialization.ReadOptions
 
     init(options: PropertyListSerialization.ReadOptions, contentType: String? = "application/x-apple-plist") {
@@ -64,7 +58,6 @@ class PropertyListDataParser: DataParser {
 }
 
 class XMLDataParser: DataParser {
-
     class Wrapper {
         let xml: XMLIndexer
         init(xml: XMLIndexer) {

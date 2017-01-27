@@ -11,13 +11,10 @@ import APIKit
 import Himotoki
 
 struct GetRss<R: Decodable>: iTunesRequest {
-
     typealias Response = R
 
     let method = HTTPMethod.get
-
     let baseURL: URL
-
     let path: String
 }
 

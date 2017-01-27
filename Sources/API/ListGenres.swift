@@ -11,19 +11,14 @@ import APIKit
 import Himotoki
 
 struct ListGenres<Response: Decodable>: iTunesRequest {
-
     let method = HTTPMethod.get
-
     let baseURL: URL = URL(string: "https://itunes.apple.com")!
-
     let path: String = "WebObjects/MZStoreServices.woa/ws/genres"
-
     var country = Locale.current.regionCode!
-
     var queryParameters: [String : Any]? {
         return [
             "id": 34,  // music
-            "cc": country,
+            "cc": country
         ]
     }
 

@@ -38,7 +38,7 @@ struct SearchHintTrends: iTunesRequest {
 
     var headerFields: [String : String] {
         return [
-            "X-Apple-Store-Front": appleStoreFront(locale: locale),
+            "X-Apple-Store-Front": appleStoreFront(locale: locale)
         ]
     }
 

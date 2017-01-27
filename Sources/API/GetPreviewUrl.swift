@@ -10,28 +10,21 @@ import Foundation
 import APIKit
 
 struct GetPreviewUrl: iTunesRequest {
-
     typealias Response = (URL, Int)
 
     let id: Int
-
     let baseURL: URL
-
-    private let locale: Locale
-
     let method = HTTPMethod.get
-
     let path = ""
-
     var headerFields: [String : String] {
         return [
-            "X-Apple-Store-Front": appleStoreFront(locale: locale),
+            "X-Apple-Store-Front": appleStoreFront(locale: locale)
         ]
     }
-
     var dataParser: DataParser {
         return PropertyListDataParser(options: [])
     }
+    private let locale: Locale
 
     init(id: Int, url: URL, locale: Locale = Locale.current) {
         self.id = id
@@ -52,7 +45,6 @@ struct GetPreviewUrl: iTunesRequest {
 }
 
 fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
-
     func value(preview: String, duration: Int) -> (URL, Int)? {
         guard let url = URL(string: preview) else { return nil }
         return (url, duration)

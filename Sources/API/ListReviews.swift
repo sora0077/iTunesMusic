@@ -12,29 +12,20 @@ import Himotoki
 import SWXMLHash
 
 struct ListReviews<R: Decodable>: iTunesRequest {
-
     typealias Response = [R]
 
     let method = HTTPMethod.get
-
     let baseURL: URL = URL(string: "https://itunes.apple.com")!
-
     var path: String {
         return "\(country)/rss/customerreviews/page=\(page)/id=\(id)/sortby=\(sortby)/\(format)"
     }
-
     var dataParser: DataParser {
         return XMLDataParser()
     }
-
     let id: Int
-
     var page: UInt = 0
-
     var country = Locale.current.regionCode
-
     var sortby = "mostrecent"
-
     var format = "xml"
 
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
@@ -56,7 +47,7 @@ struct ListReviews<R: Decodable>: iTunesRequest {
                 "rating": entry["im:rating"].element!.text!,
                 "voteSum": entry["im:voteSum"].element!.text!,
                 "voteCount": entry["im:voteCount"].element!.text!,
-                "auther": entry["author"]["name"].element!.text!,
+                "auther": entry["author"]["name"].element!.text!
             ]
         }
     }
@@ -67,7 +58,6 @@ struct ListReviews<R: Decodable>: iTunesRequest {
 }
 
 extension ListReviews {
-
     init(id: Int, page: UInt = 1) {
         assert(page != 0)
         self.id = id
