@@ -118,13 +118,13 @@ extension Model.Search: _FetchableSimple {
             response.objects.reversed().forEach {
                 switch $0 {
                 case .track(let obj):
-                    medias.append(_Media.track(track: obj))
+                    medias.append(.track(obj))
                     realm.add(obj, update: true)
                 case .collection(let obj):
-                    medias.append(_Media.collection(collection: obj))
+                    medias.append(.collection(obj))
                     realm.add(obj, update: true)
                 case .artist(let obj):
-                    medias.append(_Media.artist(artist: obj))
+                    medias.append(.artist(obj))
                     realm.add(obj, update: true)
                 }
             }

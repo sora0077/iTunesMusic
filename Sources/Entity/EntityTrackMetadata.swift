@@ -11,16 +11,12 @@ import RealmSwift
 import Realm
 
 public protocol TrackMetadata {
-
     var duration: Double? { get }
-
     var fileURL: URL? { get }
-
     var previewURL: URL? { get }
 }
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
-
     fileprivate dynamic var _trackId: Int = 0
 
     fileprivate dynamic var _track: _Track?
@@ -57,7 +53,6 @@ final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
 }
 
 extension _TrackMetadata {
-
     var previewURL: URL? {
         return _longPreviewUrl.flatMap(URL.init)
     }

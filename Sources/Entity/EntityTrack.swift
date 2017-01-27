@@ -87,9 +87,7 @@ extension _Track {
 }
 
 extension _Track: Decodable {
-
     static func decode(_ e: Extractor) throws -> Self {
-
         let obj = self.init()
         obj._trackId = try e.value("trackId")
         obj._trackName = try e.value("trackName")

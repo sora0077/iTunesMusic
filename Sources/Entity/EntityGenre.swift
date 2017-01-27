@@ -18,64 +18,41 @@ fileprivate let int = Transformer<String, Int> {
 }
 
 public protocol Genre {
-
     var name: String { get }
-
     var id: Int { get }
-
     var url: URL { get }
-
     var rssUrls: RssUrls { get }
 }
 
 public protocol RssUrls {
-
     var topAlbums: URL { get }
-
     var topSongs: URL { get }
 }
 
 final class _Genre: RealmSwift.Object {
-
     fileprivate(set) dynamic var _name: String = ""
-
     fileprivate(set) dynamic var _id: Int = 0
-
     fileprivate(set) dynamic var _url: String = ""
-
     fileprivate(set) dynamic var _rssUrls: _RssUrls?
-
     fileprivate(set) dynamic var _chartUrls: _ChartUrls?
-
     fileprivate let _subgenres = List<_Genre>()
-
     override class func primaryKey() -> String? { return "_id" }
-
     override class func ignoredProperties() -> [String] {
         return ["name"]
     }
 }
 
 extension _Genre: Genre {
-
     var name: String {
-        get {
-            return _name
-        }
-        set {
-            _name = newValue
-        }
+        get { return _name }
+        set { _name = newValue }
     }
-
     var id: Int { return _id }
-
     var url: URL { return URL(string: _url)! }
-
     var rssUrls: RssUrls { return _rssUrls! }
 }
 
 extension _Genre: Decodable {
-
     static func decode(_ e: Extractor) throws -> Self {
         let cache = self.init()
         cache._name = try e <| "name"
@@ -91,23 +68,17 @@ extension _Genre: Decodable {
 }
 
 class _RssUrls: RealmSwift.Object {
-
     dynamic var _topAlbums: String = ""
-
     dynamic var _topSongs: String = ""
 }
 
 extension _RssUrls: RssUrls {
-
     var topAlbums: URL { return URL(string: _topAlbums)! }
-
     var topSongs: URL { return URL(string: _topSongs)! }
 }
 
 extension _RssUrls: Decodable {
-
     static func decode(_ e: Extractor) throws -> Self {
-
         let cache = self.init()
         cache._topAlbums = try e <| "topAlbums"
         cache._topSongs = try e <| "topSongs"
@@ -116,17 +87,12 @@ extension _RssUrls: Decodable {
 }
 
 class _ChartUrls: RealmSwift.Object {
-
     dynamic var _albums: String = ""
-
     dynamic var _songs: String = ""
-
 }
 
 extension _ChartUrls: Decodable {
-
     static func decode(_ e: Extractor) throws -> Self {
-
         let cache = self.init()
         cache._albums = try e <| "albums"
         cache._songs = try e <| "songs"

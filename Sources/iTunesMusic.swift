@@ -101,3 +101,9 @@ public func iTunesRealm() -> Realm {
     // swiftlint:disable force_try
     return try! Realm(configuration: configuration)
 }
+
+extension Realm {
+    public func delete<Base: RealmCollection>(_ objects: RandomAccessSlice<Base>) where Base._Element: Object {
+        delete(Array(objects))
+    }
+}

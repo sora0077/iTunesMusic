@@ -10,45 +10,38 @@ import Foundation
 import RealmSwift
 
 final class _Media: RealmSwift.Object {
-
     enum MediaType {
         case track(Track)
         case collection(Collection)
         case artist(Artist)
     }
-
     fileprivate(set) dynamic var track: _Track?
-
     fileprivate(set) dynamic var collection: _Collection?
-
     fileprivate(set) dynamic var artist: _Artist?
 
     var type: MediaType {
-        if let obj = track {
-            return .track(obj)
+        switch (track, collection, artist) {
+        case (let track?, _, _): return .track(track)
+        case (_, let collection?, _): return .collection(collection)
+        case (_, _, let artist?): return .artist(artist)
+        default:
+            fatalError()
         }
-        if let obj = collection {
-            return .collection(obj)
-        }
-        if let obj = artist {
-            return .artist(obj)
-        }
-        fatalError()
     }
 
-    static func track(track: _Track) -> Self {
+    static func track(_ track: _Track) -> Self {
         let media = self.init()
         media.track = track
         return media
     }
 
-    static func collection(collection: _Collection) -> Self {
+    static func collection(_ collection: _Collection) -> Self {
         let media = self.init()
         media.collection = collection
         return media
     }
 
-    static func artist(artist: _Artist) -> Self {
+    static func artist(_ artist: _Artist) -> Self {
         let media = self.init()
         media.artist = artist
         return media

@@ -17,22 +17,15 @@ fileprivate let releaseDateTransformer = Transformer<String, Date> { string in
 }
 
 public protocol Collection {
-
     var id: Int { get }
-
     var name: String { get }
-
     var artist: Artist { get }
-
     var trackCount: Int { get }
-
     subscript (index: Int) -> Track { get }
-
     func artworkURL(size: Int) -> URL
 }
 
 extension Collection {
-
     var impl: _Collection {
         // swiftlint:disable force_cast
         return self as! _Collection
@@ -40,7 +33,6 @@ extension Collection {
 }
 
 final class _Collection: RealmSwift.Object, Collection {
-
     dynamic var _collectionId: Int = 0
     dynamic var _collectionName: String = ""
     dynamic var _collectionCensoredName: String = ""
@@ -73,22 +65,16 @@ final class _Collection: RealmSwift.Object, Collection {
 }
 
 extension _Collection: Swift.Collection {
-
     var startIndex: Int { return sortedTracks.startIndex }
-
     var endIndex: Int { return sortedTracks.endIndex }
-
     subscript (index: Int) -> Track { return sortedTracks[index] }
-
     func index(after i: Int) -> Int {
         return sortedTracks.index(after: i)
     }
 }
 
 extension _Collection: Decodable {
-
     static func decode(_ e: Extractor) throws -> Self {
-
         let obj = self.init()
         obj._collectionId = try e.value("collectionId")
         obj._collectionName = try e.value("collectionName")
@@ -105,7 +91,6 @@ extension _Collection: Decodable {
         obj._country = try e.value("country")
         obj._currency = try e.value("currency")
 
-//        print(e.rawValue)
         obj._copyright = try e.valueOptional("copyright")
 
         obj._releaseDate = try releaseDateTransformer.apply(e.value("releaseDate"))
@@ -121,15 +106,10 @@ fileprivate let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]0
 fileprivate let artworkCached = NSCache<NSString, NSURL>()
 
 extension _Collection {
-
     var id: Int { return _collectionId }
-
     var name: String { return _collectionName }
-
     var artist: Artist { return _artist! }
-
     var trackCount: Int { return _trackCount }
-
     func artworkURL(size: Int) -> URL {
         let base = _artworkUrl100
         let key = "\(base)_____\(size)" as NSString

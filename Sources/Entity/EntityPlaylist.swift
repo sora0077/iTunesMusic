@@ -10,12 +10,10 @@ import Foundation
 import RealmSwift
 
 public protocol MyPlaylist {
-
     var title: String { get }
 }
 
 extension MyPlaylist {
-
     var impl: _MyPlaylist {
         // swiftlint:disable force_cast
         return self as! _MyPlaylist
@@ -23,15 +21,10 @@ extension MyPlaylist {
 }
 
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
-
     dynamic var id = UUID().uuidString
-
     dynamic var title = ""
-
     let tracks = List<_Track>()
-
     fileprivate(set) dynamic var createAt = Date()
-
     dynamic var updateAt = Date()
 
 }
