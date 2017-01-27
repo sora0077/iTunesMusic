@@ -10,42 +10,25 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-public protocol EntityInterface {
-
-}
-
-public protocol Track: EntityInterface {
-
+public protocol Track {
     var id: Int { get }
-
     var name: String { get }
-
     var viewURL: URL { get }
-
     var collection: Collection { get }
-
     var artist: Artist { get }
-
     var canPreview: Bool { get }
-
     /// milli seconds
     var duration: Int { get }
-
     var metadata: TrackMetadata? { get }
-
     func artworkURL(size: Int) -> URL
 }
 
 extension Track {
-
-    var impl: _Track {
-        // swiftlint:disable force_cast
-        return self as! _Track
-    }
+    // swiftlint:disable force_cast
+    var impl: _Track { return self as! _Track }
 }
 
 final class _Track: RealmSwift.Object, Track {
-
     dynamic var _trackId: Int = 0
     dynamic var _trackName: String = ""
     dynamic var _trackCensoredName: String = ""
@@ -82,7 +65,7 @@ final class _Track: RealmSwift.Object, Track {
 
     private let _histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 
-    private(set) lazy var histories: Results<_HistoryRecord> = self._histories.sorted(byProperty: "createAt", ascending: false)
+    private(set) lazy var histories: Results<_HistoryRecord> = self._histories.sorted(byKeyPath: "createAt", ascending: false)
 
     fileprivate let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
 
@@ -92,30 +75,15 @@ final class _Track: RealmSwift.Object, Track {
 }
 
 extension _Track {
-
     var id: Int { return _trackId }
-
     var name: String { return _trackName }
-
     var viewURL: URL { return URL(string: _trackViewUrl)! }
-
     var collection: Collection { return _collection! }
-
     var artist: Artist { return _artist! }
-
-    var canPreview: Bool {
-        return _previewUrl != nil
-    }
-
+    var canPreview: Bool { return _previewUrl != nil }
     var duration: Int { return _trackTimeMillis }
-
-    var metadata: TrackMetadata? {
-        return _metadata.first
-    }
-
-    func artworkURL(size: Int) -> URL {
-        return collection.artworkURL(size: size) as URL
-    }
+    var metadata: TrackMetadata? { return _metadata.first }
+    func artworkURL(size: Int) -> URL { return collection.artworkURL(size: size) }
 }
 
 extension _Track: Decodable {

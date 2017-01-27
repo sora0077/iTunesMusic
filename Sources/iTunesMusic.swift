@@ -36,7 +36,7 @@ private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Track.self,
     _RssCache.self,
     _Review.self,
-    _ReviewCache.self,
+    _ReviewCache.self
 ]
 
 private let configuration: Realm.Configuration = {

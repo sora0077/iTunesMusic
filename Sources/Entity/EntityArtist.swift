@@ -25,7 +25,7 @@ final class _Artist: RealmSwift.Object, Artist {
 
     private let _collections = LinkingObjects(fromType: _Collection.self, property: "_artist")
 
-    private(set) lazy var sortedCollections: Results<_Collection> = self._collections.sorted(byProperty: "_collectionId", ascending: false)
+    private(set) lazy var sortedCollections: Results<_Collection> = self._collections.sorted(byKeyPath: "_collectionId", ascending: false)
 
     override class func primaryKey() -> String? { return "_artistId" }
 }

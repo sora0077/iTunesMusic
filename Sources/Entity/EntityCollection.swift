@@ -65,8 +65,8 @@ final class _Collection: RealmSwift.Object, Collection {
     private let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
 
     private(set) lazy var sortedTracks: Results<_Track> = self._tracks.sorted(by: [
-        SortDescriptor(property: "_discNumber", ascending: true),
-        SortDescriptor(property: "_trackNumber", ascending: true)]
+        SortDescriptor(keyPath: "_discNumber", ascending: true),
+        SortDescriptor(keyPath: "_trackNumber", ascending: true)]
     )
 
     override class func primaryKey() -> String? { return "_collectionId" }

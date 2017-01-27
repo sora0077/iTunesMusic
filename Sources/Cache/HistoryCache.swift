@@ -15,7 +15,7 @@ final class _HistoryCache: _Cache {
 
     private let objects = List<_HistoryRecord>()
 
-    private(set) lazy var sortedObjects: Results<_HistoryRecord> = self.objects.sorted(byProperty: "createAt", ascending: false)
+    private(set) lazy var sortedObjects: Results<_HistoryRecord> = self.objects.sorted(byKeyPath: "createAt", ascending: false)
 
     /**
      Call func in realm transaction

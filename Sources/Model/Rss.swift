@@ -59,7 +59,7 @@ extension Model {
             genreName: String,
             isFiltered: Bool,
             filter: @escaping (List<_Track>) -> C
-            ) where C.Element == _Track {
+        ) where C.Element == _Track {
 
             id = genreId
             url = rssURL
