@@ -52,3 +52,6 @@
 [submodule "Carthage/Checkouts/KeyboardBoundsKit"]
 	path = Carthage/Checkouts/KeyboardBoundsKit
 	url = https://github.com/sora0077/KeyboardBoundsKit.git
+[submodule "Carthage/Checkouts/PredicateKit"]
+	path = Carthage/Checkouts/PredicateKit
+	url = https://github.com/sora0077/PredicateKit.git
