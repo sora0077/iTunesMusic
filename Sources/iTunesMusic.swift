@@ -12,31 +12,18 @@ import Himotoki
 import RxSwift
 import RealmSwift
 
-public let player: Player = Player2()
-
 private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,
-    _GenresCache.self,
     _Collection.self,
     _ChartUrls.self,
-    _HistoryCache.self,
-    _DiskCacheCounter.self,
-    _SearchCache.self,
-    _SearchTrendsCache.self,
-    _ArtistCache.self,
     _Artist.self,
     _RssUrls.self,
-    _RssItem.self,
     _MyPlaylist.self,
-    _MyPlaylistCache.self,
-    _AlbumCache.self,
     _HistoryRecord.self,
     _Genre.self,
     _TrackMetadata.self,
     _Track.self,
-    _RssCache.self,
-    _Review.self,
-    _ReviewCache.self
+    _Review.self
 ]
 
 private let configuration: Realm.Configuration = {
@@ -93,8 +80,6 @@ public func deleteRealm(from: RealmLocation) throws {
 
 public func launch(with options: LaunchOptions = LaunchOptions()) {
     launchOptions = options
-    player.install(middleware: Model.History.shared)
-    player.install(middleware: Model.DiskCache.shared)
 }
 
 public func iTunesRealm() -> Realm {

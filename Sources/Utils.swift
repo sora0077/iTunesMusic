@@ -37,7 +37,6 @@ func asReplayObservable<T: ObservableConvertibleType>(_ input: T) -> Observable<
 extension Variable: ObservableConvertibleType {}
 
 extension Array {
-
     subscript (safe range: Range<Index>) -> ArraySlice<Element> {
         return self[Swift.min(range.lowerBound, count)..<Swift.min(range.upperBound, count)]
     }
