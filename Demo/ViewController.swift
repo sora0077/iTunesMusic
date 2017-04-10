@@ -109,6 +109,13 @@ class MainViewController: UIViewController {
                 vc.navigationController?.pushViewController(settings, animated: true)
             })
             .addDisposableTo(disposeBag)
+        let search = UIBarButtonItem(barButtonSystemItem: .search, target: nil, action: nil)
+        genres.navigationItem.leftBarButtonItem = search
+        search.rx.tap.asDriver()
+            .drive(UIBindingObserver(UIElement: genres) { _, _ in
+                router().open(url: URL(string: "itunesmusic:///search?q=")!)
+            })
+            .addDisposableTo(disposeBag)
 
         addChildViewController(nav)
         containerView.addSubview(nav.view)

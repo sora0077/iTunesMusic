@@ -26,25 +26,27 @@ enum SearchError: AppError {
 
 class SearchViewController: UIViewController {
 
-    fileprivate var search: Model.Search {
+    fileprivate var search: Model.Search? {
         didSet {
             searchDisposeBag = DisposeBag()
-            search.trends.changes
-                .subscribe(tableView.rx.itemUpdates())
-                .addDisposableTo(searchDisposeBag)
-            search.changes
+            search?.changes
                 .subscribe(tableView.rx.itemUpdates { idx in (idx, 1) })
                 .addDisposableTo(searchDisposeBag)
-            action(search.refresh, error: SearchError.self)
+            action(search?.refresh, error: SearchError.self)
+
+            if search == nil {
+                tableView.reloadData()
+            }
         }
     }
     fileprivate var searchDisposeBag = DisposeBag()
+    fileprivate lazy var trends = Model.Search.Trends()
 
     fileprivate let tableView = UITableView()
     fileprivate let searhBar = UISearchBar()
 
-    init(query: String? = nil) {
-        search = Model.Search(term: query ?? "")
+    init(query: String = "") {
+        search = Model.Search(term: query)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -64,14 +66,14 @@ class SearchViewController: UIViewController {
         tableView.dataSource = self
 //        tableView.tableHeaderView = searhBar
         searhBar.sizeToFit()
-        searhBar.text = search.name
+        searhBar.text = search?.name
 
         navigationItem.titleView = searhBar
 
         tableView.rx.reachedBottom()
             .filter { $0 }
             .subscribe(UIBindingObserver(UIElement: self) { vc, _ in
-                action(vc.search.fetch, error: SearchError.self)
+                action(vc.search?.fetch, error: SearchError.self)
             })
             .addDisposableTo(disposeBag)
 
@@ -87,6 +89,11 @@ class SearchViewController: UIViewController {
                 vc.search = Model.Search(term: str)
             })
             .addDisposableTo(disposeBag)
+
+        trends.changes
+            .subscribe(tableView.rx.itemUpdates())
+            .addDisposableTo(searchDisposeBag)
+        action(trends.refresh)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -107,10 +114,8 @@ extension SearchViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case 0:
-            return search.trends.count
-        case 1:
-            return search.count
+        case 0: return trends.count
+        case 1: return search?.count ?? 0
         default:
             fatalError()
         }
@@ -121,9 +126,9 @@ extension SearchViewController: UITableViewDataSource {
         cell.textLabel?.text = nil
         switch indexPath.section {
         case 0:
-            cell.textLabel?.text = "\(search.trends.name) - \(search.trends[indexPath.row])"
+            cell.textLabel?.text = "\(trends.name) - \(trends[indexPath.row])"
         case 1:
-            cell.textLabel?.text = search.track(at: indexPath.row).name
+            cell.textLabel?.text = search?.track(at: indexPath.row).name
         default:
             fatalError()
         }
@@ -134,12 +139,13 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-
         tableView.deselectRow(at: indexPath, animated: true)
+
+        guard let search = search else { return }
 
         switch indexPath.section {
         case 0:
-            self.search = Model.Search(term: search.trends[indexPath.row])
+            self.search = Model.Search(term: trends[indexPath.row])
         default:
             let vc = AlbumDetailViewController(collection: search.track(at: indexPath.row).collection)
             navigationController?.pushViewController(vc, animated: true)

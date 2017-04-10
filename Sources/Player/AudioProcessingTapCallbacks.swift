@@ -79,6 +79,7 @@ private func prepare(
 
         var _unit: AudioUnit?
         guard AudioComponentInstanceNew(component, &_unit) == noErr, let unit = _unit  else { return nil }
+        var status: OSStatus
         defer {
             if status == noErr {
                 status = AudioUnitInitialize(unit)
@@ -91,7 +92,6 @@ private func prepare(
         func sizeof<T>(_ type: T.Type) -> UInt32 {
             return UInt32(MemoryLayout<T>.size)
         }
-        var status: OSStatus
         status = AudioUnitSetProperty(
             unit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0,
             processingFormatPointer, sizeof(AudioStreamBasicDescription.self))

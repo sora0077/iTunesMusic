@@ -28,10 +28,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
 }
 
 extension Model {
-
     public final class Search: Fetchable, ObservableList, _ObservableList {
-        public private(set) lazy var trends = Trends()
-
         public var name: String { return term }
 
         fileprivate let term: String
@@ -44,7 +41,8 @@ extension Model {
         public private(set) lazy var tracksChanges: Observable<CollectionChange> = asObservable(self._tracksChanges)
         private let _tracksChanges = PublishSubject<CollectionChange>()
 
-        public init(term: String) {
+        public init?(term: String) {
+            guard !term.isEmpty else { return nil }
             self.term = term
 
             let realm = iTunesRealm()
@@ -105,7 +103,6 @@ extension Model.Search: _FetchableSimple {
     typealias Request = SearchWithKeyword<SearchResponse>
 
     func makeRequest(refreshing: Bool) -> Request? {
-        if term.isEmpty { return nil }
         return SearchWithKeyword(term: term, offset: refreshing ? 0 : caches[0].offset)
     }
 
@@ -189,11 +186,10 @@ extension Model.Search {
 
         fileprivate let cache: _SearchTrendsCache
 
-        fileprivate init() {
+        public init() {
             let realm = iTunesRealm()
             self.cache = realm.objects(_SearchTrendsCache.self).first ?? _SearchTrendsCache()
             if self.cache.realm == nil {
-
                 try! realm.write {
                     realm.add(self.cache, update: true)
                 }
@@ -206,14 +202,9 @@ extension Model.Search {
     }
 }
 
-extension Model.Search.Trends: _Fetchable {
-
-    var _refreshAt: Date { return cache.refreshAt }
-
-    var _refreshDuration: Duration { return 60.minutes }
-}
-
 extension Model.Search.Trends: _FetchableSimple {
+    var _refreshAt: Date { return cache.refreshAt }
+    var _refreshDuration: Duration { return 60.minutes }
 
     typealias Request = SearchHintTrends
 

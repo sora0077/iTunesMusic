@@ -113,8 +113,8 @@ extension _Collection {
     func artworkURL(size: Int) -> URL {
         let base = _artworkUrl100
         let key = "\(base)_____\(size)" as NSString
-        if let url = artworkCached.object(forKey: key) as? URL {
-            return url
+        if let url = artworkCached.object(forKey: key) {
+            return url as URL
         }
 
         let replaced = artworkRegex.stringByReplacingMatches(

@@ -12,10 +12,11 @@ github "drmohundro/SWXMLHash" "master"
 
 github "SnapKit/SnapKit" "master"
 
-github "pinterest/PINRemoteImage"
+github "pinterest/PINRemoteImage" "master"
 
 github "sora0077/WindowKit" "master"
 github "sora0077/Routing" "master"
 github "sora0077/ErrorEventHandler" "master"
 github "sora0077/KeyboardBoundsKit" "master"
 github "sora0077/AbstractPlayerKit" "master"
+github "sora0077/PredicateKit" "master"

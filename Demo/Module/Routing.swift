@@ -45,7 +45,7 @@ private extension RoutingSettings {
 
     static func openSearchViewController(request: Request, response: Response, next: @escaping (Response) -> Void) {
         var request = request
-        if let query = request.queryItems["q"] ?? "", !query.isEmpty {
+        if let query = request.queryItems["q"] ?? "" {
             let root = routingManageViewController()
 
             func open() {

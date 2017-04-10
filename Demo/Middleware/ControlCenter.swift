@@ -93,7 +93,7 @@ final class ControlCenter: NSObject, PlayerMiddleware {
                 info["artworkImage"] = image
                 info[MPMediaItemPropertyArtwork] = {
                     if #available(iOS 10.0, *) {
-                        return MPMediaItemArtwork(boundsSize: size) { size in
+                        return MPMediaItemArtwork(boundsSize: size) { _ in
                             return image
                         }
                     } else {

@@ -13,13 +13,10 @@ import ErrorEventHandler
 
 // MARK: - Fetchable
 public protocol Fetchable: class {
-
     var requestState: Observable<RequestState> { get }
 
     func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
-
     func refresh(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
-
     func refresh(force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level)
 }
 
@@ -28,7 +25,6 @@ private struct FetchableKey {
 }
 
 extension Fetchable {
-
     public var requestState: Observable<RequestState> {
         // swiftlint:disable force_cast
         return associatedObject(self, &FetchableKey.requestState,
@@ -64,7 +60,7 @@ extension Fetchable {
     private func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void = { _ in }) {
         // swiftlint:disable force_cast
         let `self` = self as! _Fetchable
-        if !force && [.done, .requesting].contains(self._requestState.value) {
+        if [.done, .requesting].contains(self._requestState.value) {
             return
         }
 

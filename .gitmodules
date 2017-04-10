@@ -52,3 +52,12 @@
 [submodule "Carthage/Checkouts/KeyboardBoundsKit"]
 	path = Carthage/Checkouts/KeyboardBoundsKit
 	url = https://github.com/sora0077/KeyboardBoundsKit.git
+[submodule "Carthage/Checkouts/PredicateKit"]
+	url = https://github.com/sora0077/PredicateKit.git
+	path = Carthage/Checkouts/PredicateKit
+[submodule "Carthage/Checkouts/libwebp"]
+	path = Carthage/Checkouts/libwebp
+	url = https://chromium.googlesource.com/webm/libwebp
+[submodule "Carthage/Checkouts/PINOperation"]
+	path = Carthage/Checkouts/PINOperation
+	url = https://github.com/pinterest/PINOperation.git

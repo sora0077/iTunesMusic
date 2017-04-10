@@ -47,6 +47,12 @@
 		D929E4721D1EE9600045C316 /* iTunesMusic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D91B42731D043D5A00AAAD58 /* iTunesMusic.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D929E4781D1F07630045C316 /* GenresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4771D1F07630045C316 /* GenresViewController.swift */; };
 		D929E47A1D1F6EBF0045C316 /* RssViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D929E4791D1F6EBF0045C316 /* RssViewController.swift */; };
+		D930982F1E9BD601007379EB /* PINCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1D1D6225AA00E33E5D /* PINCache.framework */; };
+		D93098301E9BD601007379EB /* PINCache.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1D1D6225AA00E33E5D /* PINCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D93098311E9BD613007379EB /* PINRemoteImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1E1D6225AA00E33E5D /* PINRemoteImage.framework */; };
+		D93098321E9BD613007379EB /* PINRemoteImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1E1D6225AA00E33E5D /* PINRemoteImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D93098341E9BD680007379EB /* PINOperation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93098331E9BD675007379EB /* PINOperation.framework */; };
+		D93098351E9BD680007379EB /* PINOperation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93098331E9BD675007379EB /* PINOperation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D93C39861D97EBAA00A523F3 /* Routing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; };
 		D93C39871D97EBAA00A523F3 /* Routing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D93C39841D97EB8600A523F3 /* Routing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D93CDF7C1D898F4F00E8D387 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93CDF7B1D898F4F00E8D387 /* Color.swift */; };
@@ -76,10 +82,6 @@
 		D98D566A1D20270C007B09DB /* RssCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98D56691D20270C007B09DB /* RssCache.swift */; };
 		D991640A1D37CEA90091BF09 /* ControlCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164091D37CEA90091BF09 /* ControlCenter.swift */; };
 		D99164121D37D37C0091BF09 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = D99164101D37D36D0091BF09 /* Track.swift */; };
-		D9A33E211D6225BD00E33E5D /* PINCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1D1D6225AA00E33E5D /* PINCache.framework */; };
-		D9A33E221D6225BD00E33E5D /* PINCache.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1D1D6225AA00E33E5D /* PINCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D9A33E231D6225BD00E33E5D /* PINRemoteImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1E1D6225AA00E33E5D /* PINRemoteImage.framework */; };
-		D9A33E241D6225BD00E33E5D /* PINRemoteImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E1E1D6225AA00E33E5D /* PINRemoteImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D9A33E281D6229C800E33E5D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E251D6229C800E33E5D /* Realm.framework */; };
 		D9A33E291D6229C800E33E5D /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E261D6229C800E33E5D /* RealmSwift.framework */; };
 		D9A33E2A1D6229C800E33E5D /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9A33E271D6229C800E33E5D /* Result.framework */; };
@@ -196,14 +198,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D9A33E221D6225BD00E33E5D /* PINCache.framework in Embed Frameworks */,
-				D9A33E241D6225BD00E33E5D /* PINRemoteImage.framework in Embed Frameworks */,
 				D9A33E421D622A3B00E33E5D /* RxSwift.framework in Embed Frameworks */,
 				D9B341701DA907650044D0A3 /* AbstractPlayerKit.framework in Embed Frameworks */,
 				D9A33E481D622A3B00E33E5D /* Result.framework in Embed Frameworks */,
 				D9A399231D69630A00D0F9A4 /* WindowKit.framework in Embed Frameworks */,
 				D9A33E3C1D622A3B00E33E5D /* SWXMLHash.framework in Embed Frameworks */,
 				D913B14C1DE30F4000989C5B /* KeyboardBoundsKit.framework in Embed Frameworks */,
+				D93098321E9BD613007379EB /* PINRemoteImage.framework in Embed Frameworks */,
 				D9A33E441D622A3B00E33E5D /* Realm.framework in Embed Frameworks */,
 				D9A33E381D622A3B00E33E5D /* APIKit.framework in Embed Frameworks */,
 				D9A33E461D622A3B00E33E5D /* RealmSwift.framework in Embed Frameworks */,
@@ -213,7 +214,9 @@
 				D9A33E3E1D622A3B00E33E5D /* Timepiece.framework in Embed Frameworks */,
 				D9A33E3A1D622A3B00E33E5D /* SnapKit.framework in Embed Frameworks */,
 				D9A33E4D1D622ECA00E33E5D /* Himotoki.framework in Embed Frameworks */,
+				D93098351E9BD680007379EB /* PINOperation.framework in Embed Frameworks */,
 				D93C39871D97EBAA00A523F3 /* Routing.framework in Embed Frameworks */,
+				D93098301E9BD601007379EB /* PINCache.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -274,6 +277,7 @@
 		D929E4771D1F07630045C316 /* GenresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenresViewController.swift; sourceTree = "<group>"; };
 		D929E4791D1F6EBF0045C316 /* RssViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssViewController.swift; sourceTree = "<group>"; };
 		D92B37521DFD8B2600579C40 /* buildsupport.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = buildsupport.xcconfig; sourceTree = "<group>"; };
+		D93098331E9BD675007379EB /* PINOperation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PINOperation.framework; path = Carthage/Build/iOS/PINOperation.framework; sourceTree = "<group>"; };
 		D93C39841D97EB8600A523F3 /* Routing.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Routing.framework; path = Carthage/Build/iOS/Routing.framework; sourceTree = "<group>"; };
 		D93CDF7B1D898F4F00E8D387 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D941458C1DEDB73A00C273D6 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -392,19 +396,20 @@
 				D9A33E3F1D622A3B00E33E5D /* RxCocoa.framework in Frameworks */,
 				D9B3416F1DA907650044D0A3 /* AbstractPlayerKit.framework in Frameworks */,
 				D9A33E451D622A3B00E33E5D /* RealmSwift.framework in Frameworks */,
-				D9A33E211D6225BD00E33E5D /* PINCache.framework in Frameworks */,
 				D9A33E4C1D622ECA00E33E5D /* Himotoki.framework in Frameworks */,
+				D93098311E9BD613007379EB /* PINRemoteImage.framework in Frameworks */,
 				D913B14B1DE30F4000989C5B /* KeyboardBoundsKit.framework in Frameworks */,
 				D9A33E3B1D622A3B00E33E5D /* SWXMLHash.framework in Frameworks */,
 				D929E4711D1EE9600045C316 /* iTunesMusic.framework in Frameworks */,
-				D9A33E231D6225BD00E33E5D /* PINRemoteImage.framework in Frameworks */,
 				D9A33E471D622A3B00E33E5D /* Result.framework in Frameworks */,
 				D9A33E3D1D622A3B00E33E5D /* Timepiece.framework in Frameworks */,
 				D9A33E391D622A3B00E33E5D /* SnapKit.framework in Frameworks */,
 				D9A33E371D622A3B00E33E5D /* APIKit.framework in Frameworks */,
 				D9A33E431D622A3B00E33E5D /* Realm.framework in Frameworks */,
 				D9A399221D69630A00D0F9A4 /* WindowKit.framework in Frameworks */,
+				D93098341E9BD680007379EB /* PINOperation.framework in Frameworks */,
 				D93C39861D97EBAA00A523F3 /* Routing.framework in Frameworks */,
+				D930982F1E9BD601007379EB /* PINCache.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,6 +457,7 @@
 				D9A33E261D6229C800E33E5D /* RealmSwift.framework */,
 				D9A33E271D6229C800E33E5D /* Result.framework */,
 				D9A33E1D1D6225AA00E33E5D /* PINCache.framework */,
+				D93098331E9BD675007379EB /* PINOperation.framework */,
 				D9A33E1E1D6225AA00E33E5D /* PINRemoteImage.framework */,
 				D95736981D80443A00A0B188 /* NotificationCenter.framework */,
 			);
@@ -834,6 +840,7 @@
 					};
 					D91B427C1D043D5B00AAAD58 = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0830;
 					};
 					D929E4501D1EE9500045C316 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -1301,6 +1308,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jp.sora0077.iTunesMusicTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1312,6 +1320,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = jp.sora0077.iTunesMusicTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1323,6 +1332,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = B2TD54U4MA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
@@ -1343,6 +1353,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = B2TD54U4MA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",

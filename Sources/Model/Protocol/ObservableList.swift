@@ -11,7 +11,6 @@ import RxSwift
 
 // MARK: - ObservableList
 public protocol ObservableList {
-
     var changes: Observable<CollectionChange> { get }
 }
 

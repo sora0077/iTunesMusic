@@ -37,11 +37,7 @@ final class _SearchTrendsCache: _Cache {
     }
 
     var trendings: [String] {
-        set {
-            _trendings = newValue.joined(separator: "\t")
-        }
-        get {
-            return _trendings.components(separatedBy: "\t").filter { $0 != "" }
-        }
+        set { _trendings = newValue.joined(separator: "\t") }
+        get { return _trendings.components(separatedBy: "\t").filter { $0 != "" } }
     }
 }
