@@ -1,6 +1,28 @@
+
+[submodule "Carthage/Checkouts/ErrorEventHandler"]
+	path = Carthage/Checkouts/ErrorEventHandler
+	url = https://github.com/sora0077/ErrorEventHandler.git
 [submodule "Carthage/Checkouts/Himotoki"]
 	path = Carthage/Checkouts/Himotoki
 	url = https://github.com/ikesyo/Himotoki.git
+[submodule "Carthage/Checkouts/KeyboardBoundsKit"]
+	path = Carthage/Checkouts/KeyboardBoundsKit
+	url = https://github.com/sora0077/KeyboardBoundsKit.git
+[submodule "Carthage/Checkouts/libwebp"]
+	path = Carthage/Checkouts/libwebp
+	url = https://chromium.googlesource.com/webm/libwebp
+[submodule "Carthage/Checkouts/PINOperation"]
+	path = Carthage/Checkouts/PINOperation
+	url = https://github.com/pinterest/PINOperation.git
+[submodule "Carthage/Checkouts/PINCache"]
+	path = Carthage/Checkouts/PINCache
+	url = https://github.com/pinterest/PINCache.git
+[submodule "Carthage/Checkouts/PINRemoteImage"]
+	path = Carthage/Checkouts/PINRemoteImage
+	url = https://github.com/pinterest/PINRemoteImage.git
+[submodule "Carthage/Checkouts/PredicateKit"]
+	path = Carthage/Checkouts/PredicateKit
+	url = https://github.com/sora0077/PredicateKit.git
 [submodule "Carthage/Checkouts/realm-cocoa"]
 	path = Carthage/Checkouts/realm-cocoa
 	url = https://github.com/realm/realm-cocoa.git
@@ -10,9 +32,15 @@
 [submodule "Carthage/Checkouts/APIKit"]
 	path = Carthage/Checkouts/APIKit
 	url = https://github.com/ishkawa/APIKit.git
+[submodule "Carthage/Checkouts/Routing"]
+	path = Carthage/Checkouts/Routing
+	url = https://github.com/sora0077/Routing.git
 [submodule "Carthage/Checkouts/RxSwift"]
 	path = Carthage/Checkouts/RxSwift
 	url = https://github.com/ReactiveX/RxSwift.git
+[submodule "Carthage/Checkouts/AbstractPlayerKit"]
+	path = Carthage/Checkouts/AbstractPlayerKit
+	url = https://github.com/sora0077/AbstractPlayerKit.git
 [submodule "Carthage/Checkouts/SnapKit"]
 	path = Carthage/Checkouts/SnapKit
 	url = https://github.com/SnapKit/SnapKit.git
@@ -22,42 +50,6 @@
 [submodule "Carthage/Checkouts/Timepiece"]
 	path = Carthage/Checkouts/Timepiece
 	url = https://github.com/sora0077/Timepiece.git
-[submodule "Carthage/Checkouts/PINCache"]
-	path = Carthage/Checkouts/PINCache
-	url = https://github.com/pinterest/PINCache.git
-[submodule "Carthage/Checkouts/PINRemoteImage"]
-	path = Carthage/Checkouts/PINRemoteImage
-	url = https://github.com/pinterest/PINRemoteImage.git
-[submodule "Carthage/Checkouts/ErrorEventHandler"]
-	path = Carthage/Checkouts/ErrorEventHandler
-	url = https://github.com/sora0077/ErrorEventHandler.git
 [submodule "Carthage/Checkouts/WindowKit"]
 	path = Carthage/Checkouts/WindowKit
 	url = https://github.com/sora0077/WindowKit.git
-[submodule "Carthage/Checkouts/VYPlayIndicatorSwift"]
-	path = Carthage/Checkouts/VYPlayIndicatorSwift
-	url = https://github.com/sora0077/VYPlayIndicatorSwift.git
-[submodule "Carthage/Checkouts/MMWormhole"]
-	path = Carthage/Checkouts/MMWormhole
-	url = https://github.com/mutualmobile/MMWormhole.git
-[submodule "Carthage/Checkouts/Routing"]
-	path = Carthage/Checkouts/Routing
-	url = https://github.com/sora0077/Routing.git
-[submodule "Carthage/Checkouts/AbstractPlayerKit"]
-	path = Carthage/Checkouts/AbstractPlayerKit
-	url = https://github.com/sora0077/AbstractPlayerKit.git
-[submodule "Carthage/Checkouts/ExceptionToSwift"]
-	path = Carthage/Checkouts/ExceptionToSwift
-	url = https://github.com/sora0077/ExceptionToSwift.git
-[submodule "Carthage/Checkouts/KeyboardBoundsKit"]
-	path = Carthage/Checkouts/KeyboardBoundsKit
-	url = https://github.com/sora0077/KeyboardBoundsKit.git
-[submodule "Carthage/Checkouts/PredicateKit"]
-	url = https://github.com/sora0077/PredicateKit.git
-	path = Carthage/Checkouts/PredicateKit
-[submodule "Carthage/Checkouts/libwebp"]
-	path = Carthage/Checkouts/libwebp
-	url = https://chromium.googlesource.com/webm/libwebp
-[submodule "Carthage/Checkouts/PINOperation"]
-	path = Carthage/Checkouts/PINOperation
-	url = https://github.com/pinterest/PINOperation.git
