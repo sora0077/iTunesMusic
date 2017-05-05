@@ -17,7 +17,7 @@ struct ListReviews<R: Decodable>: iTunesRequest {
     let method = HTTPMethod.get
     let baseURL: URL = URL(string: "https://itunes.apple.com")!
     var path: String {
-        return "\(country)/rss/customerreviews/page=\(page)/id=\(id)/sortby=\(sortby)/\(format)"
+        return "\(country ?? "US")/rss/customerreviews/page=\(page)/id=\(id)/sortby=\(sortby)/\(format)"
     }
     var dataParser: DataParser {
         return XMLDataParser()

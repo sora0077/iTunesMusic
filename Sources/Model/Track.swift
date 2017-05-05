@@ -52,12 +52,6 @@ extension Model {
                     fatalError("\(error)")
                 }
             }
-            let a: (Int) -> Void = { `self` in
-
-            }
-            let b: (Int) -> Void = { i in
-
-            }
         }
     }
 }

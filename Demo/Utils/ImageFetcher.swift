@@ -22,20 +22,19 @@ func prefetchImages(with urls: [URL]) {
 
 func downloadImage(with url: URL, _ completion: @escaping (Result<UIImage, NSError>) -> Void) {
     PINRemoteImageManager.shared().downloadImage(with: url, options: []) { r in
-        // swiftlint:disable force_cast
-        completion(Result(r.image, failWith: r.error as! NSError))
+        completion(Result(r.image, failWith: r.error! as NSError))
     }
 }
 
 func cachedImage(with url: URL, _ completion: @escaping (Result<UIImage?, NSError>) -> Void) {
     let cache = PINRemoteImageManager.shared()
-    cache.imageFromCache(withCacheKey: cache.cacheKey(for: url, processorKey: nil), options: [], completion: { r in
-        if let error = r.error as? NSError {
-            completion(.failure(error))
+    cache.imageFromCache(with: url, processorKey: nil, options: []) { r in
+        if let error = r.error {
+            completion(.failure(error as NSError))
         } else {
             completion(.success(r.image))
         }
-    })
+    }
 }
 
 fileprivate struct UIImageViewKey {
