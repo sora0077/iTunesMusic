@@ -21,9 +21,8 @@ private struct ObservableListKey {
 extension ObservableList {
 
     public var changes: Observable<CollectionChange> {
-        // swiftlint:disable force_cast
-        return associatedObject(self, &ObservableListKey.changes,
-                                initial: asObservable((self as! _ObservableList)._changes))
+        // swiftlint:disable:next force_cast
+        return associatedObject(self, &ObservableListKey.changes, initial: asObservable((self as! _ObservableList)._changes))
     }
 }
 

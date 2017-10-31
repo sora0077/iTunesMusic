@@ -30,7 +30,7 @@ struct ListReviews<R: Decodable>: iTunesRequest {
 
     func intercept(object: Any, urlResponse: HTTPURLResponse) throws -> Any {
 
-        // swiftlint:disable force_cast
+        // swiftlint:disable:next force_cast
         let doc = (object as! XMLDataParser.Wrapper).xml
         let entries = doc["feed"]["entry"].all
 
@@ -38,16 +38,16 @@ struct ListReviews<R: Decodable>: iTunesRequest {
             return []
         }
         return entries[1..<entries.endIndex].map { entry -> [String: String] in
-            let content = try? entry["contnet"].withAttr("type", "text").element?.text ?? ""
+            let content = try? entry["contnet"].withAttribute("type", "text").element?.text ?? ""
             return [
-                "updated": entry["updated"].element!.text!,
-                "id": entry["id"].element!.text!,
-                "title": entry["title"].element!.text!,
+                "updated": entry["updated"].element!.text,
+                "id": entry["id"].element!.text,
+                "title": entry["title"].element!.text,
                 "content": content ?? "",
-                "rating": entry["im:rating"].element!.text!,
-                "voteSum": entry["im:voteSum"].element!.text!,
-                "voteCount": entry["im:voteCount"].element!.text!,
-                "auther": entry["author"]["name"].element!.text!
+                "rating": entry["im:rating"].element!.text,
+                "voteSum": entry["im:voteSum"].element!.text,
+                "voteCount": entry["im:voteCount"].element!.text,
+                "auther": entry["author"]["name"].element!.text
             ]
         }
     }

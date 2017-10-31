@@ -132,7 +132,7 @@ private func unprepare(tap: MTAudioProcessingTap) {
     }
 }
 
-//swiftlint:disable function_parameter_count
+//swiftlint:disable:next function_parameter_count
 private func process(
     tap: MTAudioProcessingTap,
     numberFrames: CMItemCount,

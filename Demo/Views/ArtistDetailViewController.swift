@@ -11,7 +11,7 @@ import iTunesMusic
 import RxSwift
 import SnapKit
 
-fileprivate class TableViewCell: UITableViewCell {
+private class TableViewCell: UITableViewCell {
 
     let artworkImageView = UIImageView()
 

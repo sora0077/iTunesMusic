@@ -35,27 +35,24 @@ func appURL(path: String) -> URL {
 let appGroupIdentifier = "group.jp.sora0077.itunesmusic"
 
 private func delegate() -> AppDelegate {
-    // swiftlint:disable force_cast
+    // swiftlint:disable:next force_cast
     return UIApplication.shared.delegate as! AppDelegate
 }
 
 func playbackViewController() -> PlaybackViewController {
-    // swiftlint:disable force_cast
+    // swiftlint:disable:next force_cast
     return delegate().manager[.background].rootViewController as! PlaybackViewController
 }
 
 func routingManageViewController() -> UIViewController {
-    // swiftlint:disable force_cast
     return delegate().manager[.routing].rootViewController!
 }
 
 func indicatorManageViewController() -> UIViewController {
-    // swiftlint:disable force_cast
     return delegate().manager[.indicator].rootViewController!
 }
 
 func errorManageViewController() -> UIViewController {
-    // swiftlint:disable force_cast
     return delegate().manager[.alert].rootViewController!
 }
 
@@ -77,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 extension AppDelegate {
-    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
         UNUserNotificationCenter.current().delegate = self
         return true
     }
@@ -161,7 +158,7 @@ extension AppDelegate {
 }
 
 extension AppDelegate {
-    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
         if router.canOpenURL(url: url) {
             router.open(url: url)
             return true

@@ -15,7 +15,7 @@ private func getOrCreateCache(realm: Realm) -> _MyPlaylistCache {
         return cache
     }
     let cache = _MyPlaylistCache()
-    // swiftlint:disable force_try
+    // swiftlint:disable:next force_try
     try! realm.write {
         let playlist = _MyPlaylist()
         playlist.title = "お気に入り"
@@ -36,7 +36,7 @@ extension Model {
 
             let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)
-            token = cache.playlists.addNotificationBlock { [weak self] changes in
+            token = cache.playlists.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 self._changes.onNext(CollectionChange(changes))
@@ -64,7 +64,7 @@ extension Model.MyPlaylists {
     public func remove(at index: Int) {
         let realm = iTunesRealm()
         try! realm.write {
-            cache.playlists.remove(objectAtIndex: index)
+            cache.playlists.remove(at: index)
         }
     }
 
@@ -105,7 +105,7 @@ extension Model {
             let playlist = playlist.impl
             self.playlist = playlist
 
-            token = playlist.tracks.addNotificationBlock { [weak self] changes in
+            token = playlist.tracks.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 self._changes.onNext(CollectionChange(changes))
@@ -131,7 +131,7 @@ extension Model.MyPlaylist {
 
     public func insert(track: Track, at index: Int) {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             playlist.tracks.insert(track.impl, at: index)
         }
@@ -139,7 +139,7 @@ extension Model.MyPlaylist {
 
     public func append(track: Track) {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             playlist.tracks.append(track.impl)
         }
@@ -147,15 +147,15 @@ extension Model.MyPlaylist {
 
     public func remove(at index: Int) {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
-            playlist.tracks.remove(objectAtIndex: index)
+            playlist.tracks.remove(at: index)
         }
     }
 
     public func move(from src: Int, to dst: Int) {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             playlist.tracks.move(from: src, to: dst)
         }

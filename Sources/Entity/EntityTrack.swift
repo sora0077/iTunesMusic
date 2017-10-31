@@ -24,7 +24,7 @@ public protocol Track {
 }
 
 extension Track {
-    // swiftlint:disable force_cast
+    // swiftlint:disable:next force_cast
     var impl: _Track { return self as! _Track }
 }
 

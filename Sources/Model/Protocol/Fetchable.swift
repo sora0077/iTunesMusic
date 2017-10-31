@@ -26,9 +26,8 @@ private struct FetchableKey {
 
 extension Fetchable {
     public var requestState: Observable<RequestState> {
-        // swiftlint:disable force_cast
-        return associatedObject(self, &FetchableKey.requestState,
-                                initial: asObservable((self as! _Fetchable)._requestState).distinctUntilChanged())
+        // swiftlint:disable:next force_cast
+        return associatedObject(self, &FetchableKey.requestState, initial: asObservable((self as! _Fetchable)._requestState).distinctUntilChanged())
     }
 
     public func fetch(ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level) {
@@ -50,7 +49,7 @@ extension Fetchable {
         guard doOnMainThread(execute: self.refresh(force: force, ifError: errorType, level: level)) else {
             return
         }
-        // swiftlint:disable force_cast
+        // swiftlint:disable:next force_cast
         let `self` = self as! _Fetchable
         if force || self._needRefresh {
             _request(refreshing: true, force: force, ifError: errorType, level: level)
@@ -58,7 +57,7 @@ extension Fetchable {
     }
 
     private func _request(refreshing: Bool, force: Bool, ifError errorType: ErrorLog.Error.Type, level: ErrorLog.Level, completion: @escaping (Swift.Error?) -> Void = { _ in }) {
-        // swiftlint:disable force_cast
+        // swiftlint:disable:next force_cast
         let `self` = self as! _Fetchable
         if [.done, .requesting].contains(self._requestState.value) {
             return

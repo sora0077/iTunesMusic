@@ -16,7 +16,7 @@ struct GetPreviewUrl: iTunesRequest {
     let baseURL: URL
     let method = HTTPMethod.get
     let path = ""
-    var headerFields: [String : String] {
+    var headerFields: [String: String] {
         return [
             "X-Apple-Store-Front": appleStoreFront(locale: locale)
         ]
@@ -44,7 +44,7 @@ struct GetPreviewUrl: iTunesRequest {
     }
 }
 
-fileprivate func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
+private func getPreviewURL(item: [String: AnyObject]) throws -> (URL, Int) {
     func value(preview: String, duration: Int) -> (URL, Int)? {
         guard let url = URL(string: preview) else { return nil }
         return (url, duration)

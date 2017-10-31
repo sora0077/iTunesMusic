@@ -67,7 +67,7 @@ struct SearchWithKeyword<Results: SearchWithKeywordResponseType>: iTunesRequest 
     var country = Locale.current.regionCode!
     var offset: Int
     var limit: Int = 50
-    var queryParameters: [String : Any]? {
+    var queryParameters: [String: Any]? {
         return [
             "term": term,
             "media": media,

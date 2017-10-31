@@ -18,7 +18,7 @@ private func getOrCreateCache(genreId: Int, realm: Realm) -> _RssCache {
         return cache
     } else {
         let cache = _RssCache()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             cache._genreId = genreId
             realm.add(cache)
@@ -73,13 +73,13 @@ extension Model {
 
             caches = realm.objects(_RssCache.self).filter("_genreId = \(id)")
             tracks = AnyRealmCollection(filter(caches[0].tracks))
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_RssCache>) {
                     self.caches = results
                     self.tracks = AnyRealmCollection(filter(results[0].tracks))
-                    self.objectsToken = self.tracks.addNotificationBlock { [weak self] changes in
+                    self.objectsToken = self.tracks.observe { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }

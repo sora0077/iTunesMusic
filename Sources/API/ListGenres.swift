@@ -15,7 +15,7 @@ struct ListGenres<Response: Decodable>: iTunesRequest {
     let baseURL: URL = URL(string: "https://itunes.apple.com")!
     let path: String = "WebObjects/MZStoreServices.woa/ws/genres"
     var country = Locale.current.regionCode!
-    var queryParameters: [String : Any]? {
+    var queryParameters: [String: Any]? {
         return [
             "id": 34,  // music
             "cc": country

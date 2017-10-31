@@ -18,10 +18,10 @@ struct SearchHintTrendsResponse {
 extension SearchHintTrendsResponse: Decodable {
 
     static func decode(_ e: Extractor) throws -> SearchHintTrendsResponse {
-        let trends = (e.rawValue as? [String: AnyObject])?["trendingSearches"] as? [[String: String]] ?? []
+//        let trends = (e.rawValue as? [String: AnyObject])?["trendingSearches"] as? [[String: String]] ?? []
         return try SearchHintTrendsResponse(
             name: e.value(["header", "label"]),
-            trends: trends.map { $0["label"]! }
+            trends: e.arrayOptional(["trendingSearches", "label"]) ?? []
         )
     }
 }
@@ -36,7 +36,7 @@ struct SearchHintTrends: iTunesRequest {
 
     let path = "/WebObjects/MZSearchHints.woa/wa/trends"
 
-    var headerFields: [String : String] {
+    var headerFields: [String: String] {
         return [
             "X-Apple-Store-Front": appleStoreFront(locale: locale)
         ]

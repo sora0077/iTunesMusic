@@ -10,7 +10,7 @@ import Foundation
 import RealmSwift
 import Himotoki
 
-fileprivate let int = Transformer<String, Int> {
+private let int = Transformer<String, Int> {
     guard let val = Int($0) else {
         throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
     }

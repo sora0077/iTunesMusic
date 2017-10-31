@@ -18,7 +18,7 @@ private func getOrCreateCache(term: String, realm: Realm) -> _SearchCache {
         return cache
     } else {
         let cache = _SearchCache()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             cache.term = term
             realm.add(cache, update: true)
@@ -49,16 +49,16 @@ extension Model {
             _ = getOrCreateCache(term: term, realm: realm)
             caches = realm.objects(_SearchCache.self).filter("term = '\(term)'")
             tracks = caches[0].objects.filter("track != nil")
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_SearchCache>) {
                     let objects = results[0].objects
                     self.tracks = objects.filter("track != nil")
-                    self.tracksToken = self.tracks.addNotificationBlock { [weak self] changes in
+                    self.tracksToken = self.tracks.observe { [weak self] changes in
                         self?._tracksChanges.onNext(CollectionChange(changes))
                     }
-                    self.objectsToken = objects.addNotificationBlock { [weak self] changes in
+                    self.objectsToken = objects.observe { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -109,7 +109,7 @@ extension Model.Search: _FetchableSimple {
     func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
         let realm = iTunesRealm()
         let cache = getOrCreateCache(term: self.term, realm: realm)
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             var medias: [_Media] = []
             response.objects.reversed().forEach {

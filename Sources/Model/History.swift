@@ -15,7 +15,7 @@ private func getOrCreateCache(realm: Realm) -> _HistoryCache {
         return cache
     } else {
         let cache = _HistoryCache()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             realm.add(cache)
         }
@@ -38,7 +38,7 @@ extension Model {
 
             let realm = iTunesRealm()
             cache = getOrCreateCache(realm: realm)
-            objectsToken = cache.sortedObjects.addNotificationBlock { [weak self] changes in
+            objectsToken = cache.sortedObjects.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 self._changes.onNext(CollectionChange(changes))

@@ -11,7 +11,7 @@ import RealmSwift
 import Himotoki
 import Timepiece
 
-fileprivate let releaseDateTransformer = Transformer<String, Date> { string in
+private let releaseDateTransformer = Transformer<String, Date> { string in
     //  2016-06-29T07:00:00Z
     return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")!
 }
@@ -27,7 +27,7 @@ public protocol Collection {
 
 extension Collection {
     var impl: _Collection {
-        // swiftlint:disable force_cast
+        // swiftlint:disable:next force_cast
         return self as! _Collection
     }
 }
@@ -101,9 +101,9 @@ extension _Collection: Decodable {
     }
 }
 
-// swiftlint:disable force_try
-fileprivate let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
-fileprivate let artworkCached = NSCache<NSString, NSURL>()
+// swiftlint:disable:next force_try
+private let artworkRegex = try! NSRegularExpression(pattern: "[1-9]00x[1-9]00", options: [])
+private let artworkCached = NSCache<NSString, NSURL>()
 
 extension _Collection {
     var id: Int { return _collectionId }

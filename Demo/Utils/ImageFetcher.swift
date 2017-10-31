@@ -37,7 +37,7 @@ func cachedImage(with url: URL, _ completion: @escaping (Result<UIImage?, NSErro
     }
 }
 
-fileprivate struct UIImageViewKey {
+private struct UIImageViewKey {
     static var itm_imageURL: UInt8 = 0
 }
 

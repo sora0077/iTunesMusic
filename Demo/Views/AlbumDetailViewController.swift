@@ -77,7 +77,7 @@ fileprivate final class HeaderView: UIView {
     }
 }
 
-fileprivate class TableViewCell: UITableViewCell {
+private class TableViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
     let button = UIButton(type: .system)

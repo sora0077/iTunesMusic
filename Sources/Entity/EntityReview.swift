@@ -19,7 +19,7 @@ public protocol Review {
 
 extension Review {
     var impl: _Review {
-        // swiftlint:disable force_cast
+        // swiftlint:disable:next force_cast
         return self as! _Review
     }
 }
@@ -36,14 +36,14 @@ final class _Review: RealmSwift.Object, Review {
     override class func primaryKey() -> String? { return "id" }
 }
 
-fileprivate let intTransformer = Transformer<String, Int> {
+private let intTransformer = Transformer<String, Int> {
     guard let val = Int($0) else {
         throw DecodeError.typeMismatch(expected: "Int", actual: "String", keyPath: "")
     }
     return val
 }
 
-fileprivate let postedAtTransformer = Transformer<String, Date> { string in
+private let postedAtTransformer = Transformer<String, Date> { string in
     //  2016-06-29T07:00:00-07:00
     return string.dateFromFormat("yyyy-MM-dd'T'HH:mm:sszzzz")!
 }

@@ -20,7 +20,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _AlbumCache {
     let cache = _AlbumCache()
     cache.collectionId = collectionId
     cache.collection = realm.object(ofType: _Collection.self, forPrimaryKey: collectionId)!
-    // swiftlint:disable force_try
+    // swiftlint:disable:next force_try
     try! realm.write {
         realm.add(cache)
     }
@@ -49,12 +49,12 @@ extension Model {
             let cache = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.objects(_AlbumCache.self).filter("collectionId = \(collectionId)")
             tracks = caches[0].collection.sortedTracks
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_AlbumCache>) {
                     let tracks = results[0].collection.sortedTracks
-                    self.objectsToken = tracks.addNotificationBlock { [weak self] changes in
+                    self.objectsToken = tracks.observe { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                     self.tracks = tracks
@@ -117,7 +117,7 @@ extension Model.Album: _FetchableSimple {
 
     func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             var collectionNames: [Int: String] = [:]
             var collectionCensoredNames: [Int: String] = [:]

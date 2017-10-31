@@ -19,7 +19,7 @@ private func getOrCreateCache(collectionId: Int, realm: Realm) -> _ReviewCache {
     }
     let cache = _ReviewCache()
     cache.collectionId = collectionId
-    // swiftlint:disable force_try
+    // swiftlint:disable:next force_try
     try! realm.write {
         realm.add(cache)
     }
@@ -43,11 +43,11 @@ extension Model {
             let realm = iTunesRealm()
             _ = getOrCreateCache(collectionId: collectionId, realm: realm)
             caches = realm.objects(_ReviewCache.self).filter("collectionId = \(collectionId)")
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(with results: Results<_ReviewCache>) {
-                    self.objectsToken = results[0].objects.addNotificationBlock { [weak self] changes in
+                    self.objectsToken = results[0].objects.observe { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }
@@ -89,7 +89,7 @@ extension Model.Reviews: _FetchableSimple {
 
     func doResponse(_ response: Request.Response, request: Request, refreshing: Bool) -> RequestState {
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             realm.add(response, update: true)
 

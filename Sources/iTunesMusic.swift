@@ -14,6 +14,8 @@ import RealmSwift
 
 public let player: Player = Player2()
 
+typealias Decodable = Himotoki.Decodable
+
 private let realmObjectTypes: [RealmSwift.Object.Type] = [
     _Media.self,
     _GenresCache.self,
@@ -98,12 +100,12 @@ public func launch(with options: LaunchOptions = LaunchOptions()) {
 }
 
 public func iTunesRealm() -> Realm {
-    // swiftlint:disable force_try
+    // swiftlint:disable:next force_try
     return try! Realm(configuration: configuration)
 }
 
 extension Realm {
-    public func delete<Base: RealmCollection>(_ objects: RandomAccessSlice<Base>) where Base._Element: Object {
+    public func delete<Base: RealmCollection>(_ objects: RandomAccessSlice<Base>) where Base.Element: Object {
         delete(Array(objects))
     }
 }

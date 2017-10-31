@@ -21,7 +21,7 @@ private func getOrCreateCache(key: String, realm: Realm) -> _GenresCache {
     } else {
         let cache = _GenresCache()
         cache.key = key
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             realm.add(cache)
         }
@@ -33,7 +33,7 @@ extension Model {
 
     public final class Genres: Fetchable, ObservableList, _ObservableList {
 
-        // swiftlint:disable nesting
+        // swiftlint:disable:next nesting
         fileprivate enum InitialDefaultGenre: Int {
 
             case top = 34
@@ -78,11 +78,11 @@ extension Model {
             let realm = iTunesRealm()
             _ = getOrCreateCache(key: "default", realm: realm)
             caches = realm.objects(_GenresCache.self).filter("key == %@", "default").sorted(byKeyPath: "createAt", ascending: false)
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 guard let `self` = self else { return }
 
                 func updateObserver(_ results: Results<_GenresCache>) {
-                    self.objectsToken = results[0].list.addNotificationBlock { [weak self] changes in
+                    self.objectsToken = results[0].list.observe { [weak self] changes in
                         self?._changes.onNext(CollectionChange(changes))
                     }
                 }

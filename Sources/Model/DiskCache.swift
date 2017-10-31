@@ -84,7 +84,7 @@ extension Model.DiskCache: PlayerMiddleware {
             return cache
         }()
 
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             cache.counter += 1
             realm.add(cache, update: true)

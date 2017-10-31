@@ -55,7 +55,7 @@ struct LookupWithIds<Results: Decodable>: iTunesRequest {
     var lang = Locale.current.identifier
     var country = Locale.current.regionCode!
     let limit = 500
-    var queryParameters: [String : Any]? {
+    var queryParameters: [String: Any]? {
         return [
             "id": ids.map(String.init).joined(separator: ","),
             "entity": "song",

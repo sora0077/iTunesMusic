@@ -38,7 +38,7 @@ extension Model {
 
             let realm = iTunesRealm()
             caches = realm.objects(_Track.self).filter("_trackId = %@", trackId)
-            token = caches.addNotificationBlock { [weak self] changes in
+            token = caches.observe { [weak self] changes in
                 switch changes {
                 case let .initial(results):
                     if !results.isEmpty {
@@ -76,7 +76,7 @@ extension Model.Track: _FetchableSimple {
             return .error(Error.trackNotFound(trackId))
         }
         let realm = iTunesRealm()
-        // swiftlint:disable force_try
+        // swiftlint:disable:next force_try
         try! realm.write {
             response.objects.reversed().forEach {
                 switch $0 {

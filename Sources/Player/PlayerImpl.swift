@@ -214,7 +214,7 @@ final class Player2: NSObject {
     let currentTime = Variable<Float64>(0)
 
     var playingQueue: Observable<[PlayerItem]> {
-        //swiftlint:disable force_cast
+        //swiftlint:disable:next force_cast
         return core.items.map { $0.map { $0 as! PlayerItem } }.subscribeOn(MainScheduler.instance)
     }
 
@@ -264,7 +264,7 @@ final class Player2: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         guard let keyPath = keyPath else { return }
         switch keyPath {
         case #keyPath(AVQueuePlayer.currentItem):
