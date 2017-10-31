@@ -15,6 +15,7 @@ public protocol Artist {
     var name: String { get }
 }
 
+@objc
 final class _Artist: RealmSwift.Object, Artist {
     @objc dynamic var _artistId: Int = 0
     @objc dynamic var _artistName: String = ""
@@ -25,6 +26,8 @@ final class _Artist: RealmSwift.Object, Artist {
     private(set) lazy var sortedCollections: Results<_Collection> = self._collections.sorted(byKeyPath: "_collectionId", ascending: false)
 
     override class func primaryKey() -> String? { return "_artistId" }
+
+    override class func ignoredProperties() -> [String] { return ["sortedCollections"] }
 }
 
 extension _Artist {

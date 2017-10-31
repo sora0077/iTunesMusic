@@ -20,6 +20,7 @@ extension MyPlaylist {
     }
 }
 
+@objc
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
     @objc dynamic var id = UUID().uuidString
     @objc dynamic var title = ""

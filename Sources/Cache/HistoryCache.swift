@@ -17,6 +17,8 @@ final class _HistoryCache: _Cache {
 
     private(set) lazy var sortedObjects: Results<_HistoryRecord> = self.objects.sorted(byKeyPath: "createAt", ascending: false)
 
+    override class func ignoredProperties() -> [String] { return ["sortedObjects"] }
+
     /**
      Call func in realm transaction
 

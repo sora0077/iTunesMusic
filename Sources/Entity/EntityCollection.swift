@@ -32,6 +32,7 @@ extension Collection {
     }
 }
 
+@objc
 final class _Collection: RealmSwift.Object, Collection {
     @objc dynamic var _collectionId: Int = 0
     @objc dynamic var _collectionName: String = ""
@@ -56,12 +57,14 @@ final class _Collection: RealmSwift.Object, Collection {
 
     private let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
 
-    private(set) lazy var sortedTracks: Results<_Track> = self._tracks.sorted(by: [
+    @nonobjc private(set) lazy var sortedTracks: Results<_Track> = self._tracks.sorted(by: [
         SortDescriptor(keyPath: "_discNumber", ascending: true),
         SortDescriptor(keyPath: "_trackNumber", ascending: true)]
     )
 
     override class func primaryKey() -> String? { return "_collectionId" }
+
+    override class func ignoredProperties() -> [String] { return ["sortedTracks"] }
 }
 
 extension _Collection: Swift.Collection {

@@ -28,6 +28,7 @@ extension Track {
     var impl: _Track { return self as! _Track }
 }
 
+@objc
 final class _Track: RealmSwift.Object, Track {
     @objc dynamic var _trackId: Int = 0
     @objc dynamic var _trackName: String = ""
@@ -72,6 +73,8 @@ final class _Track: RealmSwift.Object, Track {
     @objc dynamic var _metadataUpdated: Int = 0
 
     override class func primaryKey() -> String? { return "_trackId" }
+
+    override class func ignoredProperties() -> [String] { return ["histories"] }
 }
 
 extension _Track {

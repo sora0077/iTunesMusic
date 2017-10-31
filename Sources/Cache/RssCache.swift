@@ -31,6 +31,7 @@ final class _RssCache: _Cache {
     override class func primaryKey() -> String? { return "_genreId" }
 }
 
+@objc
 final class _RssItem: RealmSwift.Object, Decodable {
 
     @objc dynamic var id: Int = 0

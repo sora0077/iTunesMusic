@@ -16,6 +16,7 @@ public protocol TrackMetadata {
     var previewURL: URL? { get }
 }
 
+@objc
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
     @objc fileprivate dynamic var _trackId: Int = 0
 

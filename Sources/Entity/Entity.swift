@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 
+@objc
 final class _Media: RealmSwift.Object {
     enum MediaType {
         case track(Track)

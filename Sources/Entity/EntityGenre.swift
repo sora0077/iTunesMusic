@@ -29,6 +29,7 @@ public protocol RssUrls {
     var topSongs: URL { get }
 }
 
+@objc
 final class _Genre: RealmSwift.Object {
     @objc fileprivate(set) dynamic var _name: String = ""
     @objc fileprivate(set) dynamic var _id: Int = 0
@@ -67,6 +68,7 @@ extension _Genre: Decodable {
     }
 }
 
+@objc
 class _RssUrls: RealmSwift.Object {
     @objc dynamic var _topAlbums: String = ""
     @objc dynamic var _topSongs: String = ""
@@ -86,6 +88,7 @@ extension _RssUrls: Decodable {
     }
 }
 
+@objc
 class _ChartUrls: RealmSwift.Object {
     @objc dynamic var _albums: String = ""
     @objc dynamic var _songs: String = ""

@@ -24,6 +24,7 @@ extension Review {
     }
 }
 
+@objc
 final class _Review: RealmSwift.Object, Review {
     @objc fileprivate(set) dynamic var id = 0
     @objc fileprivate(set) dynamic var auther = ""

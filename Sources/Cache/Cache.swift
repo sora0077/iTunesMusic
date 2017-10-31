@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 
+@objc
 class _Cache: RealmSwift.Object {
 
     @objc dynamic var refreshAt = Date.distantPast
