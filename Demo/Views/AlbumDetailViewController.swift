@@ -88,10 +88,10 @@ private class TableViewCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightUltraLight)
+        titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .ultraLight)
         titleLabel.numberOfLines = 0
 
-        durationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: UIFontWeightUltraLight)
+        durationLabel.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .ultraLight)
 
         contentView.addSubview(titleLabel)
         contentView.addSubview(durationLabel)
@@ -203,7 +203,7 @@ class AlbumDetailViewController: UIViewController {
 
             bar.setBackgroundImage(UIImage(), for: .default)
             bar.shadowImage = UIImage()
-            bar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.white]
+            bar.titleTextAttributes = [.foregroundColor: UIColor.white]
             bar.setTitleVerticalPositionAdjustment(60, for: .default)
             bar.clipsToBounds = true
         }

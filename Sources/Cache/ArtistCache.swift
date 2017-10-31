@@ -11,11 +11,11 @@ import RealmSwift
 
 final class _ArtistCache: _Cache {
 
-    dynamic var artistId: Int = 0
+    @objc dynamic var artistId: Int = 0
 
-    fileprivate dynamic var _artist: _Artist?
+    @objc fileprivate dynamic var _artist: _Artist?
 
-    dynamic var fetched = false
+    @objc dynamic var fetched = false
 
     override class func primaryKey() -> String? { return "artistId" }
 

@@ -23,7 +23,7 @@ private class TableViewCell: UITableViewCell {
         contentView.addSubview(artworkImageView)
         artworkImageView.snp.makeConstraints { make in
             make.top.left.equalTo(self.contentView)
-            make.bottom.equalTo(self.contentView).priority(UILayoutPriorityDefaultHigh)
+            make.bottom.equalTo(self.contentView).priority(UILayoutPriority.defaultHigh.rawValue)
             make.width.equalTo(120)
             make.height.equalTo(120)
         }

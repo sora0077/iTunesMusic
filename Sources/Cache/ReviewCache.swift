@@ -11,11 +11,11 @@ import RealmSwift
 
 final class _ReviewCache: _Cache {
 
-    dynamic var collectionId: Int = 0
+    @objc dynamic var collectionId: Int = 0
 
-    dynamic var fetched: Bool = false
+    @objc dynamic var fetched: Bool = false
 
-    dynamic var page: Int = 1
+    @objc dynamic var page: Int = 1
 
     let objects = List<_Review>()
 

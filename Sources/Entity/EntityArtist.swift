@@ -16,9 +16,9 @@ public protocol Artist {
 }
 
 final class _Artist: RealmSwift.Object, Artist {
-    dynamic var _artistId: Int = 0
-    dynamic var _artistName: String = ""
-    dynamic var _artistLinkUrl: String?
+    @objc dynamic var _artistId: Int = 0
+    @objc dynamic var _artistName: String = ""
+    @objc dynamic var _artistLinkUrl: String?
 
     private let _collections = LinkingObjects(fromType: _Collection.self, property: "_artist")
 

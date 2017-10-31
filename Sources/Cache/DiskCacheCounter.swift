@@ -11,9 +11,9 @@ import RealmSwift
 
 final class _DiskCacheCounter: _Cache {
 
-    dynamic var trackId = 0
+    @objc dynamic var trackId = 0
 
-    dynamic var counter = 0
+    @objc dynamic var counter = 0
 
     override class func primaryKey() -> String? { return "trackId" }
 }

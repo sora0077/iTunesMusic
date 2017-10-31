@@ -330,7 +330,7 @@ extension Player2: Player {
 }
 
 private func configureFading(item: AVPlayerItem) {
-    guard let track = item.asset.tracks(withMediaType: AVMediaTypeAudio).first else { return }
+    guard let track = item.asset.tracks(withMediaType: AVMediaType.audio).first else { return }
 
     let inputParams = AVMutableAudioMixInputParameters(track: track)
 

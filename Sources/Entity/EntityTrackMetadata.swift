@@ -17,17 +17,17 @@ public protocol TrackMetadata {
 }
 
 final class _TrackMetadata: RealmSwift.Object, TrackMetadata {
-    fileprivate dynamic var _trackId: Int = 0
+    @objc fileprivate dynamic var _trackId: Int = 0
 
-    fileprivate dynamic var _track: _Track?
+    @objc fileprivate dynamic var _track: _Track?
 
-    fileprivate dynamic var _longPreviewUrl: String?
+    @objc fileprivate dynamic var _longPreviewUrl: String?
 
-    fileprivate dynamic var _longPreviewFileUrl: String?
+    @objc fileprivate dynamic var _longPreviewFileUrl: String?
 
     fileprivate let _longPreviewDuration: RealmOptional<Double> = RealmOptional()
 
-    dynamic var _createAt: Date = Date()
+    @objc dynamic var _createAt: Date = Date()
 
     override class func primaryKey() -> String? { return "_trackId" }
 

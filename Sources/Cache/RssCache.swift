@@ -12,9 +12,9 @@ import Himotoki
 
 final class _RssCache: _Cache {
 
-    dynamic var _genreId: Int = 0
+    @objc dynamic var _genreId: Int = 0
 
-    dynamic var fetched: Int = 0
+    @objc dynamic var fetched: Int = 0
 
     fileprivate let items = List<_RssItem>()
 
@@ -33,7 +33,7 @@ final class _RssCache: _Cache {
 
 final class _RssItem: RealmSwift.Object, Decodable {
 
-    dynamic var id: Int = 0
+    @objc dynamic var id: Int = 0
 
     static func decode(_ e: Extractor) throws -> Self {
         let imid: String = try e.value("im:id")

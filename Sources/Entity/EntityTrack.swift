@@ -29,39 +29,39 @@ extension Track {
 }
 
 final class _Track: RealmSwift.Object, Track {
-    dynamic var _trackId: Int = 0
-    dynamic var _trackName: String = ""
-    dynamic var _trackCensoredName: String = ""
-    dynamic var _trackViewUrl: String = ""
+    @objc dynamic var _trackId: Int = 0
+    @objc dynamic var _trackName: String = ""
+    @objc dynamic var _trackCensoredName: String = ""
+    @objc dynamic var _trackViewUrl: String = ""
     let _trackPrice = RealmOptional<Float>()
-    dynamic var _trackExplicitness: String = ""
-    dynamic var _trackCount: Int = 0
-    dynamic var _trackNumber: Int = 0
-    dynamic var _trackTimeMillis: Int = 0
+    @objc dynamic var _trackExplicitness: String = ""
+    @objc dynamic var _trackCount: Int = 0
+    @objc dynamic var _trackNumber: Int = 0
+    @objc dynamic var _trackTimeMillis: Int = 0
 
-    dynamic var _discCount: Int = 0
-    dynamic var _discNumber: Int = 0
+    @objc dynamic var _discCount: Int = 0
+    @objc dynamic var _discNumber: Int = 0
 
-    dynamic var _previewUrl: String?
+    @objc dynamic var _previewUrl: String?
 
-    dynamic var _country: String = ""
-    dynamic var _currency: String = ""
+    @objc dynamic var _country: String = ""
+    @objc dynamic var _currency: String = ""
 
-    dynamic var _primaryGenreName: String = ""
+    @objc dynamic var _primaryGenreName: String = ""
 
-    dynamic var _kind: String = ""
+    @objc dynamic var _kind: String = ""
 
-    dynamic var _wrapperType: String = ""
+    @objc dynamic var _wrapperType: String = ""
 
-    dynamic var _releaseDate: String = ""
+    @objc dynamic var _releaseDate: String = ""
 
-    dynamic var _isStreamable: Bool = false
+    @objc dynamic var _isStreamable: Bool = false
 
-    dynamic var _createAt: Date = Date()
+    @objc dynamic var _createAt: Date = Date()
 
-    dynamic var _collection: _Collection?
+    @objc dynamic var _collection: _Collection?
 
-    dynamic var _artist: _Artist?
+    @objc dynamic var _artist: _Artist?
 
     private let _histories = LinkingObjects(fromType: _HistoryRecord.self, property: "_track")
 
@@ -69,7 +69,7 @@ final class _Track: RealmSwift.Object, Track {
 
     fileprivate let _metadata = LinkingObjects(fromType: _TrackMetadata.self, property: "_track")
 
-    dynamic var _metadataUpdated: Int = 0
+    @objc dynamic var _metadataUpdated: Int = 0
 
     override class func primaryKey() -> String? { return "_trackId" }
 }

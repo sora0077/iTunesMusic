@@ -15,20 +15,20 @@ final class _SearchCache: _Cache, SearchWithKeywordResponseType {
 
     let objects = List<_Media>()
 
-    dynamic var term: String = ""
+    @objc dynamic var term: String = ""
 
-    dynamic var offset: Int = 0
+    @objc dynamic var offset: Int = 0
 
     override class func primaryKey() -> String? { return "term" }
 }
 
 final class _SearchTrendsCache: _Cache {
 
-    fileprivate dynamic var id: Int = 0
+    @objc fileprivate dynamic var id: Int = 0
 
-    dynamic var name: String = ""
+    @objc dynamic var name: String = ""
 
-    fileprivate dynamic var _trendings: String = ""
+    @objc fileprivate dynamic var _trendings: String = ""
 
     override class func primaryKey() -> String? { return "id" }
 

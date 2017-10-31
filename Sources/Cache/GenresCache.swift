@@ -11,7 +11,7 @@ import RealmSwift
 
 final class _GenresCache: _Cache {
 
-    dynamic var key: String = ""
+    @objc dynamic var key: String = ""
 
     let list = List<_Genre>()
 

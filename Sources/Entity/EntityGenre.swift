@@ -30,11 +30,11 @@ public protocol RssUrls {
 }
 
 final class _Genre: RealmSwift.Object {
-    fileprivate(set) dynamic var _name: String = ""
-    fileprivate(set) dynamic var _id: Int = 0
-    fileprivate(set) dynamic var _url: String = ""
-    fileprivate(set) dynamic var _rssUrls: _RssUrls?
-    fileprivate(set) dynamic var _chartUrls: _ChartUrls?
+    @objc fileprivate(set) dynamic var _name: String = ""
+    @objc fileprivate(set) dynamic var _id: Int = 0
+    @objc fileprivate(set) dynamic var _url: String = ""
+    @objc fileprivate(set) dynamic var _rssUrls: _RssUrls?
+    @objc fileprivate(set) dynamic var _chartUrls: _ChartUrls?
     fileprivate let _subgenres = List<_Genre>()
     override class func primaryKey() -> String? { return "_id" }
     override class func ignoredProperties() -> [String] {
@@ -68,8 +68,8 @@ extension _Genre: Decodable {
 }
 
 class _RssUrls: RealmSwift.Object {
-    dynamic var _topAlbums: String = ""
-    dynamic var _topSongs: String = ""
+    @objc dynamic var _topAlbums: String = ""
+    @objc dynamic var _topSongs: String = ""
 }
 
 extension _RssUrls: RssUrls {
@@ -87,8 +87,8 @@ extension _RssUrls: Decodable {
 }
 
 class _ChartUrls: RealmSwift.Object {
-    dynamic var _albums: String = ""
-    dynamic var _songs: String = ""
+    @objc dynamic var _albums: String = ""
+    @objc dynamic var _songs: String = ""
 }
 
 extension _ChartUrls: Decodable {

@@ -11,9 +11,9 @@ import RealmSwift
 
 final class _AlbumCache: _Cache {
 
-    dynamic var collectionId: Int = 0
+    @objc dynamic var collectionId: Int = 0
 
-    fileprivate dynamic var _collection: _Collection?
+    @objc fileprivate dynamic var _collection: _Collection?
 
     override class func primaryKey() -> String? { return "collectionId" }
 

@@ -184,7 +184,7 @@ private extension UIViewController {
             UIViewController.self, #selector(UIViewController.setNeedsStatusBarAppearanceUpdate))
         let replaced = class_getInstanceMethod(
             UIViewController.self, #selector(UIViewController.swizzled_setNeedsStatusBarAppearanceUpdate))
-        method_exchangeImplementations(original, replaced)
+        method_exchangeImplementations(original!, replaced!)
         return {}
     }()
 

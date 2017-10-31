@@ -21,10 +21,10 @@ extension MyPlaylist {
 }
 
 final class _MyPlaylist: RealmSwift.Object, MyPlaylist {
-    dynamic var id = UUID().uuidString
-    dynamic var title = ""
+    @objc dynamic var id = UUID().uuidString
+    @objc dynamic var title = ""
     let tracks = List<_Track>()
-    fileprivate(set) dynamic var createAt = Date()
-    dynamic var updateAt = Date()
+    @objc fileprivate(set) dynamic var createAt = Date()
+    @objc dynamic var updateAt = Date()
 
 }

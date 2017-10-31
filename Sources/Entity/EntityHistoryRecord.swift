@@ -12,8 +12,8 @@ import RxSwift
 import Himotoki
 
 final class _HistoryRecord: RealmSwift.Object {
-    fileprivate dynamic var _track: _Track?
-    fileprivate(set) dynamic var createAt: Date = Date()
+    @objc fileprivate dynamic var _track: _Track?
+    @objc fileprivate(set) dynamic var createAt: Date = Date()
     var track: Track { return _track! }
 }
 

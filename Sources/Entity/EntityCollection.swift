@@ -33,26 +33,26 @@ extension Collection {
 }
 
 final class _Collection: RealmSwift.Object, Collection {
-    dynamic var _collectionId: Int = 0
-    dynamic var _collectionName: String = ""
-    dynamic var _collectionCensoredName: String = ""
-    dynamic var _collectionViewUrl: String = ""
+    @objc dynamic var _collectionId: Int = 0
+    @objc dynamic var _collectionName: String = ""
+    @objc dynamic var _collectionCensoredName: String = ""
+    @objc dynamic var _collectionViewUrl: String = ""
     let _collectionPrice = RealmOptional<Float>()
-    dynamic var _collectionExplicitness: String = ""
+    @objc dynamic var _collectionExplicitness: String = ""
 
-    dynamic var _artworkUrl60: String = ""
-    dynamic var _artworkUrl100: String = ""
+    @objc dynamic var _artworkUrl60: String = ""
+    @objc dynamic var _artworkUrl100: String = ""
 
-    dynamic var _trackCount: Int = 0
+    @objc dynamic var _trackCount: Int = 0
 
-    dynamic var _country: String = ""
-    dynamic var _currency: String = ""
+    @objc dynamic var _country: String = ""
+    @objc dynamic var _currency: String = ""
 
-    dynamic var _copyright: String?
+    @objc dynamic var _copyright: String?
 
-    dynamic var _releaseDate = Date()
+    @objc dynamic var _releaseDate = Date()
 
-    dynamic var _artist: _Artist?
+    @objc dynamic var _artist: _Artist?
 
     private let _tracks = LinkingObjects(fromType: _Track.self, property: "_collection")
 

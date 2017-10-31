@@ -25,14 +25,14 @@ extension Review {
 }
 
 final class _Review: RealmSwift.Object, Review {
-    fileprivate(set) dynamic var id = 0
-    fileprivate(set) dynamic var auther = ""
-    fileprivate(set) dynamic var title = ""
-    fileprivate(set) dynamic var content = ""
-    fileprivate(set) dynamic var rating = 0
-    fileprivate(set) dynamic var voteCount = 0
-    fileprivate(set) dynamic var voteSum = 0
-    fileprivate(set) dynamic var postedAt = Date.distantPast
+    @objc fileprivate(set) dynamic var id = 0
+    @objc fileprivate(set) dynamic var auther = ""
+    @objc fileprivate(set) dynamic var title = ""
+    @objc fileprivate(set) dynamic var content = ""
+    @objc fileprivate(set) dynamic var rating = 0
+    @objc fileprivate(set) dynamic var voteCount = 0
+    @objc fileprivate(set) dynamic var voteSum = 0
+    @objc fileprivate(set) dynamic var postedAt = Date.distantPast
     override class func primaryKey() -> String? { return "id" }
 }
 
